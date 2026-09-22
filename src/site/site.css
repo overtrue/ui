@@ -1728,7 +1728,8 @@
   display: grid;
   gap: 3px;
 }
-.guide-links a {
+.guide-links a,
+.docs-mobile-contents .guide-links a {
   padding: 9px 12px;
   border-radius: 5px;
   font-size: 13px;
@@ -1743,8 +1744,8 @@
   background: var(--accent);
   font-weight: 500;
 }
-.docs-sidebar .guide-links {
-  margin-inline: -12px;
+.docs-sidebar .guide-links a {
+  padding-inline: 10px;
 }
 .guide-index {
   border: 1px solid var(--border);
