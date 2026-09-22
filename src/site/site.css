@@ -956,6 +956,13 @@
   font-size: 12px;
   overflow-wrap: anywhere;
 }
+.docs-content .page-intro > .component-credit {
+  margin: 8px 0 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+}
+
 .docs-content .note {
   font-size: 12px;
   line-height: 1.8;

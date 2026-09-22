@@ -641,6 +641,19 @@ function ComponentPage() {
         </div>
         <div className="page-intro">
           <h1>{item.title}</h1>
+          {dashboardCatalog.some((entry) => entry.name === item.name) && (
+            <p className="component-credit" data-component-credit>
+              This component is adapted from{" "}
+              <a
+                href="https://dashboardcn.com/docs"
+                target="_blank"
+                rel="noreferrer"
+              >
+                dashboardcn
+              </a>
+              , with styling and examples tailored for overtrue/ui.
+            </p>
+          )}
           <p>{item.description}</p>
         </div>
         <div className="workspace-toolbar">
@@ -778,22 +791,6 @@ function ComponentPage() {
             <ArrowRight size={16} />
           </Link>
         </nav>
-        {dashboardCatalog.some((entry) => entry.name === item.name) && (
-          <p
-            className="note mt-6 border-t border-border pt-5"
-            data-component-credit
-          >
-            Based on{" "}
-            <a
-              href="https://dashboardcn.com/docs"
-              target="_blank"
-              rel="noreferrer"
-            >
-              dashboardcn
-            </a>
-            , adapted and extended with examples for overtrue/ui.
-          </p>
-        )}
       </article>
     </main>
   );
