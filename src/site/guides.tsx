@@ -135,6 +135,7 @@ const content = {
       </p>
       <Command
         label="overview.tsx"
+        language="tsx"
         text={
           'import { PageHeader } from "@/components/overtrue/page-header"\nimport { MetricGroup, MetricGroupItem } from "@/components/overtrue/metric-group"\n\nexport function Overview() {\n  return (\n    <section className="space-y-6">\n      <PageHeader title="Overview" description="Your workspace this month." />\n      <MetricGroup>\n        <MetricGroupItem label="Active projects" value="24" context="6 due this month" />\n        <MetricGroupItem label="Team members" value="18" context="Across 4 teams" />\n        <MetricGroupItem label="Open reviews" value="7" context="2 need your input" />\n        <MetricGroupItem label="Completed" value="83" context="This month" />\n      </MetricGroup>\n    </section>\n  )\n}'
         }
@@ -148,6 +149,7 @@ const content = {
       </p>
       <Command
         label="Settings with an API"
+        language="tsx"
         text={
           '<SettingsPanel\n  initialName={workspace.name}\n  initialEmail={workspace.email}\n  onSave={async (values) => {\n    const response = await fetch("/api/workspace", {\n      method: "PATCH",\n      headers: { "Content-Type": "application/json" },\n      body: JSON.stringify(values),\n    })\n    if (!response.ok) throw new Error("Save failed")\n  }}\n/>'
         }
@@ -199,6 +201,7 @@ const content = {
       </p>
       <Command
         label="A meaningful trend label"
+        language="tsx"
         text={
           '<Sparkline\n  values={[164, 152, 148, 136, 124]}\n  label="Response time fell from 164 ms to 124 ms over five days"\n/>'
         }

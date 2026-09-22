@@ -311,9 +311,11 @@ export function CardBlockPage() {
             ui.overtrue.xyz; replace it and the sample links with your own
             content.
           </p>
-          <pre className="card-usage">
-            <code>{`import Block from "@/components/overtrue/blocks/${card.id}"\n\nexport default function Page() {\n  return <Block />\n}`}</code>
-          </pre>
+          <Command
+            label="React"
+            language="tsx"
+            text={`import Block from "@/components/overtrue/blocks/${card.id}"\n\nexport default function Page() {\n  return <Block />\n}`}
+          />
         </section>
         <aside>
           <h2>From the examples</h2>

@@ -937,6 +937,27 @@
   overflow: auto;
   tab-size: 2;
 }
+.highlighted-code .code-token {
+  color: var(--shiki-light, inherit);
+}
+.dark .highlighted-code .code-token {
+  color: var(--shiki-dark, inherit);
+}
+.highlighted-code .code-line-number {
+  display: inline-block;
+  width: 2ch;
+  margin-right: 2ch;
+  color: var(--muted-foreground);
+  text-align: right;
+  user-select: none;
+}
+.highlighted-code .code-line-number::before {
+  content: attr(data-line-number);
+}
+.highlighted-code:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
 .source-view {
   margin: 0;
 }
@@ -2087,16 +2108,6 @@
   padding-block: 12px;
   border-bottom: 1px solid var(--border);
   font-size: 13px;
-}
-.card-usage {
-  background: var(--code-bg);
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow-x: auto;
-  font-size: 12px;
-  line-height: 1.7;
-  margin-top: 20px;
 }
 @media (max-width: 760px) {
   .card-collection {

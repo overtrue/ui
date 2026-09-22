@@ -714,7 +714,7 @@ function ComponentPage() {
           <Link to="/docs">New to overtrue/ui? Start here.</Link>
         </p>
         <h2>Usage</h2>
-        <Command text={usage} label="React" />
+        <Command text={usage} label="React" language="tsx" />
         {"api" in item && (
           <>
             <h2>Props</h2>
@@ -867,7 +867,11 @@ function Docs() {
           Merge this entry into your project’s <code>components.json</code>.
           Keep your existing configuration and other registries.
         </p>
-        <Command label="components.json · merge this entry" text={namespace} />
+        <Command
+          label="components.json · merge this entry"
+          text={namespace}
+          language="json"
+        />
         <p>Now you can install components with a short command:</p>
         <Command text="npx shadcn@latest add @overtrue/dashboard" />
         <p className="note">
