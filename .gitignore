@@ -1,0 +1,28 @@
+# Dependencies and builds
+node_modules/
+/dist/
+/dist-ssr/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# Generated registry and card sources
+/registry.json
+/public/r/
+/public/llms.txt
+/src/blocks/catalog.json
+/src/blocks/generated/
+/src/blocks/registry/
+
+# Local verification and old build exports
+/output/
+/.playwright-cli/
+/assets/
+
+# Local configuration
+.env*
+*.local
+*.log
+.DS_Store
+.vercel/
+.worktrees/

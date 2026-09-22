@@ -1,0 +1,659 @@
+[
+  {
+    "title": "Workspace",
+    "href": "#",
+    "children": [
+      {
+        "title": "Studio overview",
+        "href": "./index.html",
+        "children": []
+      },
+      {
+        "title": "Client relationships",
+        "href": "./client-overview.html",
+        "children": []
+      },
+      {
+        "title": "Operations overview",
+        "href": "./operations-overview.html",
+        "children": []
+      },
+      {
+        "title": "Activity",
+        "href": "./activity.html",
+        "children": []
+      },
+      {
+        "title": "Team calendar",
+        "href": "./fullcalendar.html",
+        "children": []
+      },
+      {
+        "title": "Chat",
+        "href": "./chat.html",
+        "children": []
+      },
+      {
+        "title": "Email inbox",
+        "href": "./email-inbox.html",
+        "children": []
+      }
+    ]
+  },
+  {
+    "title": "Projects",
+    "href": "#",
+    "children": [
+      {
+        "title": "Project portfolio",
+        "href": "./cards.html",
+        "children": []
+      },
+      {
+        "title": "Project board",
+        "href": "./tasks.html",
+        "children": []
+      },
+      {
+        "title": "Work queue",
+        "href": "./tasks-list.html",
+        "children": []
+      },
+      {
+        "title": "Weekly priorities",
+        "href": "./sortable.html",
+        "children": []
+      },
+      {
+        "title": "Wizard",
+        "href": "./wizard.html",
+        "children": []
+      },
+      {
+        "title": "Onboarding",
+        "href": "./onboarding.html",
+        "children": []
+      },
+      {
+        "title": "Asset library",
+        "href": "./gallery.html",
+        "children": []
+      },
+      {
+        "title": "Photogrid",
+        "href": "./photogrid.html",
+        "children": []
+      },
+      {
+        "title": "Lightbox",
+        "href": "./lightbox.html",
+        "children": []
+      },
+      {
+        "title": "Carousel",
+        "href": "./carousel.html",
+        "children": []
+      },
+      {
+        "title": "Creative review",
+        "href": "./creative-review.html",
+        "children": []
+      },
+      {
+        "title": "Artwork review",
+        "href": "./artwork-review.html",
+        "children": []
+      }
+    ]
+  },
+  {
+    "title": "People",
+    "href": "#",
+    "children": [
+      {
+        "title": "People",
+        "href": "./users.html",
+        "children": []
+      },
+      {
+        "title": "Profile",
+        "href": "./profile.html",
+        "children": []
+      },
+      {
+        "title": "Open positions",
+        "href": "./open-positions.html",
+        "children": []
+      },
+      {
+        "title": "Email signatures",
+        "href": "./signatures.html",
+        "children": []
+      },
+      {
+        "title": "Email templates",
+        "href": "./emails.html",
+        "children": []
+      }
+    ]
+  },
+  {
+    "title": "Billing",
+    "href": "#",
+    "children": [
+      {
+        "title": "Billing & payments",
+        "href": "./pay.html",
+        "children": []
+      },
+      {
+        "title": "Invoice",
+        "href": "./invoice.html",
+        "children": []
+      },
+      {
+        "title": "Pricing cards",
+        "href": "./pricing.html",
+        "children": []
+      },
+      {
+        "title": "Pricing table",
+        "href": "./pricing-table.html",
+        "children": []
+      },
+      {
+        "title": "Plans",
+        "href": "./settings-plan.html",
+        "children": []
+      }
+    ]
+  },
+  {
+    "title": "Resources",
+    "href": "#",
+    "children": [
+      {
+        "title": "Settings",
+        "href": "./settings.html",
+        "children": []
+      },
+      {
+        "title": "Frequently Asked Questions",
+        "href": "./faq.html",
+        "children": []
+      },
+      {
+        "title": "Studio handbook",
+        "href": "./search-results.html",
+        "children": []
+      },
+      {
+        "title": "Handover guide",
+        "href": "./prose.html",
+        "children": []
+      },
+      {
+        "title": "Editorial story",
+        "href": "./editorial-story.html",
+        "children": []
+      },
+      {
+        "title": "Working principles",
+        "href": "./text-features.html",
+        "children": []
+      },
+      {
+        "title": "Terms of service",
+        "href": "./terms-of-service.html",
+        "children": []
+      },
+      {
+        "title": "License",
+        "href": "./license.html",
+        "children": []
+      },
+      {
+        "title": "SVG Illustrations",
+        "href": "./illustrations.html",
+        "children": []
+      }
+    ]
+  },
+  {
+    "title": "Components",
+    "href": "#",
+    "children": [
+      {
+        "title": "High-order components",
+        "href": "./high-order.html",
+        "children": []
+      },
+      {
+        "title": "Inputs & forms",
+        "children": [
+          {
+            "title": "Color picker",
+            "href": "./colorpicker.html",
+            "children": []
+          },
+          {
+            "title": "Dropzone",
+            "href": "./dropzone.html",
+            "children": []
+          },
+          {
+            "title": "Form elements",
+            "href": "./form-elements.html",
+            "children": []
+          },
+          {
+            "title": "Client intake",
+            "href": "./form-layout.html",
+            "children": []
+          },
+          {
+            "title": "Star Ratings",
+            "href": "./stars-rating.html",
+            "children": []
+          },
+          {
+            "title": "HugeRTE",
+            "href": "./wysiwyg.html",
+            "children": []
+          }
+        ]
+      },
+      {
+        "title": "Access & states",
+        "children": [
+          {
+            "title": "2-Step Verification",
+            "href": "./2-step-verification-code.html",
+            "children": []
+          },
+          {
+            "title": "2-Step Verification",
+            "href": "./2-step-verification.html",
+            "children": []
+          },
+          {
+            "title": "Unlock workspace",
+            "href": "./auth-lock.html",
+            "children": []
+          },
+          {
+            "title": "New workspace",
+            "href": "./blank.html",
+            "children": []
+          },
+          {
+            "title": "Empty page",
+            "href": "./empty.html",
+            "children": []
+          },
+          {
+            "title": "Page 404",
+            "href": "./error-404.html",
+            "children": []
+          },
+          {
+            "title": "Page 500",
+            "href": "./error-500.html",
+            "children": []
+          },
+          {
+            "title": "Maintenance mode",
+            "href": "./error-maintenance.html",
+            "children": []
+          },
+          {
+            "title": "Forgot password",
+            "href": "./forgot-password.html",
+            "children": []
+          },
+          {
+            "title": "Page loader",
+            "href": "./page-loader.html",
+            "children": []
+          },
+          {
+            "title": "Placeholder",
+            "href": "./placeholder.html",
+            "children": []
+          },
+          {
+            "title": "Sign in with cover",
+            "href": "./sign-in-cover.html",
+            "children": []
+          },
+          {
+            "title": "Sign in with illustration",
+            "href": "./sign-in-illustration.html",
+            "children": []
+          },
+          {
+            "title": "Sign in link",
+            "href": "./sign-in-link.html",
+            "children": []
+          },
+          {
+            "title": "Sign in",
+            "href": "./sign-in.html",
+            "children": []
+          },
+          {
+            "title": "Sign up",
+            "href": "./sign-up.html",
+            "children": []
+          },
+          {
+            "title": "Trial ended",
+            "href": "./trial-ended.html",
+            "children": []
+          }
+        ]
+      },
+      {
+        "title": "Data & visualization",
+        "children": [
+          {
+            "title": "Charts advanced",
+            "href": "./charts-advanced.html",
+            "children": []
+          },
+          {
+            "title": "Charts",
+            "href": "./charts.html",
+            "children": []
+          },
+          {
+            "title": "Data grid",
+            "href": "./datagrid.html",
+            "children": []
+          },
+          {
+            "title": "Datatables",
+            "href": "./datatables.html",
+            "children": []
+          },
+          {
+            "title": "Logs",
+            "href": "./logs.html",
+            "children": []
+          },
+          {
+            "title": "Full Size Map",
+            "href": "./map-fullsize.html",
+            "children": []
+          },
+          {
+            "title": "Vector Maps",
+            "href": "./maps-vector.html",
+            "children": []
+          },
+          {
+            "title": "Maps",
+            "href": "./maps.html",
+            "children": []
+          },
+          {
+            "title": "Tables",
+            "href": "./tables.html",
+            "children": []
+          },
+          {
+            "title": "Tracking",
+            "href": "./tracking.html",
+            "children": []
+          },
+          {
+            "title": "Uptime",
+            "href": "./uptime.html",
+            "children": []
+          }
+        ]
+      },
+      {
+        "title": "Interface patterns",
+        "children": [
+          {
+            "title": "Accordion",
+            "href": "./accordion.html",
+            "children": []
+          },
+          {
+            "title": "Alerts",
+            "href": "./alerts.html",
+            "children": []
+          },
+          {
+            "title": "All Elements",
+            "href": "./all-elements.html",
+            "children": []
+          },
+          {
+            "title": "Avatars",
+            "href": "./avatars.html",
+            "children": []
+          },
+          {
+            "title": "Badges",
+            "href": "./badges.html",
+            "children": []
+          },
+          {
+            "title": "Buttons",
+            "href": "./buttons.html",
+            "children": []
+          },
+          {
+            "title": "Card actions",
+            "href": "./card-actions.html",
+            "children": []
+          },
+          {
+            "title": "Card Gradients",
+            "href": "./card-gradients.html",
+            "children": []
+          },
+          {
+            "title": "Cards Masonry",
+            "href": "./cards-masonry.html",
+            "children": []
+          },
+          {
+            "title": "Colors",
+            "href": "./colors.html",
+            "children": []
+          },
+          {
+            "title": "Cookie banner",
+            "href": "./cookie-banner.html",
+            "children": []
+          },
+          {
+            "title": "Dropdowns",
+            "href": "./dropdowns.html",
+            "children": []
+          },
+          {
+            "title": "Flags",
+            "href": "./flags.html",
+            "children": []
+          },
+          {
+            "title": "Icons",
+            "href": "./icons.html",
+            "children": []
+          },
+          {
+            "title": "Lists",
+            "href": "./lists.html",
+            "children": []
+          },
+          {
+            "title": "Modals",
+            "href": "./modals.html",
+            "children": []
+          },
+          {
+            "title": "Navigation",
+            "href": "./navigation.html",
+            "children": []
+          },
+          {
+            "title": "Offcanvas",
+            "href": "./offcanvas.html",
+            "children": []
+          },
+          {
+            "title": "Pagination",
+            "href": "./pagination.html",
+            "children": []
+          },
+          {
+            "title": "Patterns",
+            "href": "./patterns.html",
+            "children": []
+          },
+          {
+            "title": "Payment Providers",
+            "href": "./payment-providers.html",
+            "children": []
+          },
+          {
+            "title": "Progress",
+            "href": "./progress.html",
+            "children": []
+          },
+          {
+            "title": "Reading navigation",
+            "href": "./scroll-spy.html",
+            "children": []
+          },
+          {
+            "title": "Segmented control",
+            "href": "./segmented-control.html",
+            "children": []
+          },
+          {
+            "title": "Social icons",
+            "href": "./social-icons.html",
+            "children": []
+          },
+          {
+            "title": "Steps",
+            "href": "./steps.html",
+            "children": []
+          },
+          {
+            "title": "Tabs",
+            "href": "./tabs.html",
+            "children": []
+          },
+          {
+            "title": "Tags",
+            "href": "./tags.html",
+            "children": []
+          },
+          {
+            "title": "Toasts",
+            "href": "./toasts.html",
+            "children": []
+          },
+          {
+            "title": "Driver Tour",
+            "href": "./tour.html",
+            "children": []
+          },
+          {
+            "title": "Editorial typography",
+            "href": "./typography.html",
+            "children": []
+          },
+          {
+            "title": "Widgets",
+            "href": "./widgets.html",
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Layouts",
+    "href": "#",
+    "children": [
+      {
+        "title": "Boxed",
+        "href": "./layout-boxed.html",
+        "children": []
+      },
+      {
+        "title": "Condensed",
+        "href": "./layout-condensed.html",
+        "children": []
+      },
+      {
+        "title": "Fluid sidebar",
+        "href": "./layout-fluid-vertical.html",
+        "children": []
+      },
+      {
+        "title": "Fluid",
+        "href": "./layout-fluid.html",
+        "children": []
+      },
+      {
+        "title": "Expand on hover",
+        "href": "./layout-folded-hover.html",
+        "children": []
+      },
+      {
+        "title": "Folded sidebar",
+        "href": "./layout-folded.html",
+        "children": []
+      },
+      {
+        "title": "Horizontal navbar",
+        "href": "./layout-horizontal.html",
+        "children": []
+      },
+      {
+        "title": "Dark navbar",
+        "href": "./layout-navbar-dark.html",
+        "children": []
+      },
+      {
+        "title": "Overlapping navbar",
+        "href": "./layout-navbar-overlap.html",
+        "children": []
+      },
+      {
+        "title": "Sticky navbar",
+        "href": "./layout-navbar-sticky.html",
+        "children": []
+      },
+      {
+        "title": "RTL mode",
+        "href": "./layout-rtl.html",
+        "children": []
+      },
+      {
+        "title": "Right sidebar",
+        "href": "./layout-vertical-right.html",
+        "children": []
+      },
+      {
+        "title": "Transparent sidebar",
+        "href": "./layout-vertical-transparent.html",
+        "children": []
+      },
+      {
+        "title": "Sidebar",
+        "href": "./layout-vertical.html",
+        "children": []
+      }
+    ]
+  }
+]

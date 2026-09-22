@@ -1,0 +1,954 @@
+[
+  {
+    "path": "/2-step-verification-code",
+    "title": "2-Step Verification",
+    "file": "2-step-verification-code.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/2-step-verification",
+    "title": "2-Step Verification",
+    "file": "2-step-verification.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/accordion",
+    "title": "Accordion",
+    "file": "accordion.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/activity",
+    "title": "Activity",
+    "file": "activity.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/alerts",
+    "title": "Alerts",
+    "file": "alerts.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/all-elements",
+    "title": "All Elements",
+    "file": "all-elements.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/auth-lock",
+    "title": "Unlock workspace",
+    "file": "auth-lock.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/avatars",
+    "title": "Avatars",
+    "file": "avatars.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/badges",
+    "title": "Badges",
+    "file": "badges.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/blank",
+    "title": "New workspace",
+    "file": "blank.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/buttons",
+    "title": "Buttons",
+    "file": "buttons.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/card-actions",
+    "title": "Card actions",
+    "file": "card-actions.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/card-gradients",
+    "title": "Card Gradients",
+    "file": "card-gradients.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 1
+  },
+  {
+    "path": "/cards-masonry",
+    "title": "Cards Masonry",
+    "file": "cards-masonry.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/cards",
+    "title": "Project portfolio",
+    "file": "cards.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/carousel",
+    "title": "Carousel",
+    "file": "carousel.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/charts-advanced",
+    "title": "Charts advanced",
+    "file": "charts-advanced.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 8
+  },
+  {
+    "path": "/charts",
+    "title": "Charts",
+    "file": "charts.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 34
+  },
+  {
+    "path": "/chat",
+    "title": "Chat",
+    "file": "chat.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/colorpicker",
+    "title": "Color picker",
+    "file": "colorpicker.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/colors",
+    "title": "Colors",
+    "file": "colors.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/cookie-banner",
+    "title": "Cookie banner",
+    "file": "cookie-banner.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/client-overview",
+    "title": "Client relationships",
+    "file": "client-overview.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 1
+  },
+  {
+    "path": "/operations-overview",
+    "title": "Operations overview",
+    "file": "operations-overview.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 1
+  },
+  {
+    "path": "/datagrid",
+    "title": "Data grid",
+    "file": "datagrid.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/datatables",
+    "title": "Datatables",
+    "file": "datatables.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/dropdowns",
+    "title": "Dropdowns",
+    "file": "dropdowns.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/dropzone",
+    "title": "Dropzone",
+    "file": "dropzone.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/email-inbox",
+    "title": "Email inbox",
+    "file": "email-inbox.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/emails",
+    "title": "Email templates",
+    "file": "emails.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/empty",
+    "title": "Empty page",
+    "file": "empty.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/error-404",
+    "title": "Page 404",
+    "file": "error-404.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/error-500",
+    "title": "Page 500",
+    "file": "error-500.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/error-maintenance",
+    "title": "Maintenance mode",
+    "file": "error-maintenance.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/faq",
+    "title": "Frequently Asked Questions",
+    "file": "faq.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/flags",
+    "title": "Flags",
+    "file": "flags.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/forgot-password",
+    "title": "Forgot password",
+    "file": "forgot-password.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/form-elements",
+    "title": "Form elements",
+    "file": "form-elements.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/form-layout",
+    "title": "Client intake",
+    "file": "form-layout.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/fullcalendar",
+    "title": "Team calendar",
+    "file": "fullcalendar.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/gallery",
+    "title": "Asset library",
+    "file": "gallery.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/icons",
+    "title": "Icons",
+    "file": "icons.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/illustrations",
+    "title": "SVG Illustrations",
+    "file": "illustrations.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/",
+    "title": "Studio overview",
+    "file": "index.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 14
+  },
+  {
+    "path": "/artwork-review",
+    "title": "Artwork review",
+    "file": "artwork-review.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/invoice",
+    "title": "Invoice",
+    "file": "invoice.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/open-positions",
+    "title": "Open positions",
+    "file": "open-positions.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/layout-boxed",
+    "title": "Boxed layout",
+    "file": "layout-boxed.html",
+    "bare": false,
+    "layout": "boxed",
+    "charts": 14
+  },
+  {
+    "path": "/layout-condensed",
+    "title": "Condensed layout",
+    "file": "layout-condensed.html",
+    "bare": false,
+    "layout": "condensed",
+    "charts": 14
+  },
+  {
+    "path": "/layout-fluid-vertical",
+    "title": "Fluid Vertical layout",
+    "file": "layout-fluid-vertical.html",
+    "bare": false,
+    "layout": "fluid-vertical",
+    "charts": 14
+  },
+  {
+    "path": "/layout-fluid",
+    "title": "Fluid layout",
+    "file": "layout-fluid.html",
+    "bare": false,
+    "layout": "fluid",
+    "charts": 14
+  },
+  {
+    "path": "/layout-folded-hover",
+    "title": "Folded Hover layout",
+    "file": "layout-folded-hover.html",
+    "bare": false,
+    "layout": "folded-hover",
+    "charts": 14
+  },
+  {
+    "path": "/layout-folded",
+    "title": "Folded layout",
+    "file": "layout-folded.html",
+    "bare": false,
+    "layout": "folded",
+    "charts": 14
+  },
+  {
+    "path": "/layout-horizontal",
+    "title": "Horizontal layout",
+    "file": "layout-horizontal.html",
+    "bare": false,
+    "layout": "horizontal",
+    "charts": 14
+  },
+  {
+    "path": "/layout-navbar-dark",
+    "title": "Navbar Dark layout",
+    "file": "layout-navbar-dark.html",
+    "bare": false,
+    "layout": "navbar-dark",
+    "charts": 14
+  },
+  {
+    "path": "/layout-navbar-overlap",
+    "title": "Navbar Overlap layout",
+    "file": "layout-navbar-overlap.html",
+    "bare": false,
+    "layout": "navbar-overlap",
+    "charts": 14
+  },
+  {
+    "path": "/layout-navbar-sticky",
+    "title": "Navbar Sticky layout",
+    "file": "layout-navbar-sticky.html",
+    "bare": false,
+    "layout": "navbar-sticky",
+    "charts": 14
+  },
+  {
+    "path": "/layout-rtl",
+    "title": "Rtl layout",
+    "file": "layout-rtl.html",
+    "bare": false,
+    "layout": "rtl",
+    "charts": 14
+  },
+  {
+    "path": "/layout-vertical-right",
+    "title": "Vertical Right layout",
+    "file": "layout-vertical-right.html",
+    "bare": false,
+    "layout": "vertical-right",
+    "charts": 14
+  },
+  {
+    "path": "/layout-vertical-transparent",
+    "title": "Vertical Transparent layout",
+    "file": "layout-vertical-transparent.html",
+    "bare": false,
+    "layout": "vertical-transparent",
+    "charts": 14
+  },
+  {
+    "path": "/layout-vertical",
+    "title": "Vertical layout",
+    "file": "layout-vertical.html",
+    "bare": false,
+    "layout": "vertical",
+    "charts": 14
+  },
+  {
+    "path": "/license",
+    "title": "License",
+    "file": "license.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/lightbox",
+    "title": "Lightbox",
+    "file": "lightbox.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/lists",
+    "title": "Lists",
+    "file": "lists.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/logs",
+    "title": "Logs",
+    "file": "logs.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/map-fullsize",
+    "title": "Full Size Map",
+    "file": "map-fullsize.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/maps-vector",
+    "title": "Vector Maps",
+    "file": "maps-vector.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/maps",
+    "title": "Maps",
+    "file": "maps.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/editorial-story",
+    "title": "Editorial story",
+    "file": "editorial-story.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/modals",
+    "title": "Modals",
+    "file": "modals.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/creative-review",
+    "title": "Creative review",
+    "file": "creative-review.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/navigation",
+    "title": "Navigation",
+    "file": "navigation.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/offcanvas",
+    "title": "Offcanvas",
+    "file": "offcanvas.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/onboarding",
+    "title": "Onboarding",
+    "file": "onboarding.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/page-loader",
+    "title": "Page loader",
+    "file": "page-loader.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/pagination",
+    "title": "Pagination",
+    "file": "pagination.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/patterns",
+    "title": "Patterns",
+    "file": "patterns.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/pay",
+    "title": "Billing & payments",
+    "file": "pay.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/payment-providers",
+    "title": "Payment Providers",
+    "file": "payment-providers.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/photogrid",
+    "title": "Photogrid",
+    "file": "photogrid.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/placeholder",
+    "title": "Placeholder",
+    "file": "placeholder.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/pricing-table",
+    "title": "Pricing table",
+    "file": "pricing-table.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/pricing",
+    "title": "Pricing cards",
+    "file": "pricing.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/profile",
+    "title": "Profile",
+    "file": "profile.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/progress",
+    "title": "Progress",
+    "file": "progress.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/prose",
+    "title": "Handover guide",
+    "file": "prose.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/scroll-spy",
+    "title": "Reading navigation",
+    "file": "scroll-spy.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/search-results",
+    "title": "Studio handbook",
+    "file": "search-results.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/segmented-control",
+    "title": "Segmented control",
+    "file": "segmented-control.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/settings-plan",
+    "title": "Plans",
+    "file": "settings-plan.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/settings",
+    "title": "Settings",
+    "file": "settings.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/sign-in-cover",
+    "title": "Sign in with cover",
+    "file": "sign-in-cover.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/sign-in-illustration",
+    "title": "Sign in with illustration",
+    "file": "sign-in-illustration.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/sign-in-link",
+    "title": "Sign in link",
+    "file": "sign-in-link.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/sign-in",
+    "title": "Sign in",
+    "file": "sign-in.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/sign-up",
+    "title": "Sign up",
+    "file": "sign-up.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/signatures",
+    "title": "Email signatures",
+    "file": "signatures.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/social-icons",
+    "title": "Social icons",
+    "file": "social-icons.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/sortable",
+    "title": "Weekly priorities",
+    "file": "sortable.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/stars-rating",
+    "title": "Star Ratings",
+    "file": "stars-rating.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/steps",
+    "title": "Steps",
+    "file": "steps.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/tables",
+    "title": "Tables",
+    "file": "tables.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/tabs",
+    "title": "Tabs",
+    "file": "tabs.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/tags",
+    "title": "Tags",
+    "file": "tags.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/tasks-list",
+    "title": "Work queue",
+    "file": "tasks-list.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/tasks",
+    "title": "Project board",
+    "file": "tasks.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/terms-of-service",
+    "title": "Terms of service",
+    "file": "terms-of-service.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/text-features",
+    "title": "Working principles",
+    "file": "text-features.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/toasts",
+    "title": "Toasts",
+    "file": "toasts.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/tour",
+    "title": "Driver Tour",
+    "file": "tour.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/tracking",
+    "title": "Tracking",
+    "file": "tracking.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/trial-ended",
+    "title": "Trial ended",
+    "file": "trial-ended.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/typography",
+    "title": "Editorial typography",
+    "file": "typography.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/uptime",
+    "title": "Uptime",
+    "file": "uptime.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 2
+  },
+  {
+    "path": "/users",
+    "title": "People",
+    "file": "users.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/widgets",
+    "title": "Widgets",
+    "file": "widgets.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 10
+  },
+  {
+    "path": "/wizard",
+    "title": "Wizard",
+    "file": "wizard.html",
+    "bare": true,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/wysiwyg",
+    "title": "HugeRTE",
+    "file": "wysiwyg.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/high-order",
+    "title": "High-order components",
+    "file": "high-order.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 7
+  }
+]

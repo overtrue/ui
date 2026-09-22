@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>overtrue/ui social card</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; width: 1200px; height: 630px; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #19212d; background: #f8f9fb; padding: 60px 64px; }
+.brand { display: flex; align-items: center; gap: 12px; font-size: 30px; font-weight: 650; letter-spacing: -1.3px; }
+.brand em { font-style: normal; color: #066fd1; }
+main { display: grid; grid-template-columns: 1.3fr 1fr; gap: 56px; align-items: center; margin-top: 54px; }
+h1 { font-size: 62px; line-height: 1.12; font-weight: 550; letter-spacing: -2.9px; margin: 0 0 24px; }
+p { max-width: 490px; font-size: 21px; color: #697386; line-height: 1.6; margin: 0; }
+.card { border: 1px solid #e1e5eb; border-radius: 14px; background: white; padding: 30px; box-shadow: 0 12px 36px -26px #13243a50; transform: rotate(-2deg); }
+.label { font-size: 15px; color: #697386; display: flex; justify-content: space-between; }
+.value { font-size: 44px; letter-spacing: -1.8px; margin: 18px 0 7px; font-weight: 600; }
+.context { font-size: 13px; color: #697386; }
+.context strong { color: #268060; font-weight: 500; }
+svg.chart { width: 100%; height: 75px; margin-top: 28px; }
+footer { position: absolute; left: 64px; right: 64px; bottom: 38px; display: flex; justify-content: space-between; padding-top: 22px; border-top: 1px solid #e1e5eb; font-size: 15px; color: #697386; }
+</style>
+<div class="brand"><svg width="34" height="34" viewBox="0 0 28 28"><rect width="28" height="28" rx="7" fill="#19212d"/><g fill="white"><rect x="6" y="6" width="5" height="16" rx="1.5"/><rect x="14" y="6" width="8" height="7" rx="1.5"/><rect x="14" y="16" width="8" height="6" rx="1.5"/></g></svg><span>overtrue<em>/</em>ui</span></div>
+<main><div><h1>The details make<br>the dashboard.</h1><p>Editable interfaces for the work<br>behind the screen.</p></div><div class="card"><div class="label"><span>Monthly revenue</span><span>↗</span></div><div class="value">$36,800</div><div class="context"><strong>↑ 12.8%</strong> compared with last month</div><svg class="chart" viewBox="0 0 340 75" fill="none"><path d="M0 65L31 50L62 55L93 36L124 44L155 23L186 30L217 18L248 25L279 10L310 15L340 2V75H0Z" fill="#eef4fc"/><path d="M0 65L31 50L62 55L93 36L124 44L155 23L186 30L217 18L248 25L279 10L310 15L340 2" stroke="#066fd1" stroke-width="2.5"/></svg></div></main>
+<footer><span>React · Tailwind CSS · shadcn/ui</span><span>ui.overtrue.xyz</span></footer>
+</html>

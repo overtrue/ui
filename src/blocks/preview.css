@@ -1,0 +1,10 @@
+html, body { margin: 0; min-height: 0; background: transparent; }
+/* Match the site's preview surface without relying on iframe transparency. */
+html { color-scheme: light; background: #f8f9fb; }
+html.dark { color-scheme: dark; background: #141c27; }
+#root { padding: 20px; }
+.overtrue-block.overtrue-workspace { min-height: 0; padding: 0; display: block; background: transparent; }
+.overtrue-block > .scene-card { margin-bottom: 0; }
+.overtrue-block .pn-table-responsive { max-width: 100%; overflow-x: auto; }
+.overtrue-block .scene-note { margin: 0; }
+@media (max-width: 480px) { #root { padding: 12px; } }

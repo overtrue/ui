@@ -1,0 +1,88 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/r/:path*",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/workspace",
+      "destination": "/workspace/index.html"
+    },
+    {
+      "source": "/workspace/",
+      "destination": "/workspace/index.html"
+    },
+    {
+      "source": "/components",
+      "destination": "/components/index.html"
+    },
+    {
+      "source": "/components/:name",
+      "destination": "/components/:name/index.html"
+    },
+    {
+      "source": "/blocks",
+      "destination": "/blocks/index.html"
+    },
+    {
+      "source": "/blocks/:id",
+      "destination": "/blocks/:id/index.html"
+    },
+    {
+      "source": "/docs",
+      "destination": "/docs/index.html"
+    },
+    {
+      "source": "/docs/:slug",
+      "destination": "/docs/:slug/index.html"
+    },
+    {
+      "source": "/examples",
+      "destination": "/examples/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/preview",
+      "destination": "/workspace/",
+      "permanent": true
+    },
+    {
+      "source": "/preview/",
+      "destination": "/workspace/",
+      "permanent": true
+    }
+  ]
+}

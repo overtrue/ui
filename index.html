@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#066fd1" />
+    <meta
+      name="description"
+      content="Thoughtful components for admin panels, dashboards, and consoles. Built with React, Tailwind CSS, and shadcn/ui. Copy, customize, and own your code."
+    />
+    <meta
+      property="og:title"
+      content="overtrue/ui — Your next dashboard, already taking shape."
+    />
+    <meta
+      property="og:description"
+      content="An open-source admin UI toolkit for shadcn/ui. Explore components, install a dashboard, and make it yours."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ui.overtrue.xyz/" />
+    <meta property="og:image" content="https://ui.overtrue.xyz/social.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="overtrue/ui — Editable interfaces for the work behind the screen."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://ui.overtrue.xyz/" />
+    <link rel="icon" type="image/svg+xml" href="/overtrue.svg" />
+    <title>overtrue/ui — The admin UI toolkit for shadcn/ui</title>
+  </head>
+  <body>
+    <script>
+      try {
+        const theme = localStorage.getItem("overtrue-site-theme");
+        document.documentElement.classList.toggle(
+          "dark",
+          theme
+            ? theme === "dark"
+            : matchMedia("(prefers-color-scheme: dark)").matches,
+        );
+      } catch {}
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/site/main.tsx"></script>
+  </body>
+</html>
