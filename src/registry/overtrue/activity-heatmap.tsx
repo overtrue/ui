@@ -83,7 +83,6 @@ export interface ActivityHeatmapProps extends React.ComponentProps<"div"> {
   onCellClick?: (datum: { date: Date; value: number }) => void;
 }
 
-const DAY = 24 * 60 * 60 * 1000;
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function toKey(date: Date) {
@@ -98,7 +97,8 @@ function startOfDay(date: Date) {
 }
 
 function addDays(date: Date, days: number) {
-  return new Date(date.getTime() + days * DAY);
+  // Calendar days can be 23 or 25 hours across daylight-saving transitions.
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
 }
 
 function levelFor(
@@ -145,7 +145,7 @@ function ActivityHeatmap({
   const endTime = startOfDay(endDate ?? new Date()).getTime();
   const startTime = startDate
     ? startOfDay(startDate).getTime()
-    : endTime - (weeks * 7 - 1) * DAY;
+    : addDays(new Date(endTime), -(weeks * 7 - 1)).getTime();
 
   const values = React.useMemo(
     () => new Map(data.map((d) => [d.date, d.value])),

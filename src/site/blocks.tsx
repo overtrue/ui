@@ -257,7 +257,7 @@ export function CardBlockPage() {
       </div>
       <div className="workspace-toolbar">
         <div className="filter-tabs" aria-label="Block view">
-          {["Preview", "Code"].map((value) => (
+          {["Preview", "Source"].map((value) => (
             <button
               key={value}
               aria-pressed={view === value}

@@ -24,7 +24,7 @@ import {
 import { MetricGroup, MetricGroupItem } from "@/registry/overtrue/metric-group";
 import { ProjectPortfolio } from "@/registry/overtrue/project-portfolio";
 import { ServiceStatus } from "@/registry/overtrue/service-status";
-import { projects, team } from "@/data/workspace/studio";
+import { portfolioProjects } from "./demo-data";
 import type { ItemName } from "./catalog";
 
 const history = (length: number): UptimeSample[] =>
@@ -203,23 +203,7 @@ export function CompositionExample({ name }: { name: ItemName }) {
       return (
         <ProjectPortfolio
           description="Acme Studio · Current projects"
-          projects={projects.slice(0, 3).map((project) => ({
-            ...project,
-            image: {
-              src: project.image,
-              alt: `${project.client} project moodboard`,
-            },
-            status: {
-              label: project.status,
-              variant: project.status === "Complete" ? "success" : "info",
-            },
-            owner: {
-              id: project.owner,
-              name: project.owner,
-              image: `/assets/overtrue/people/${team.find((person) => person.name === project.owner)?.id ?? "guest"}.svg`,
-            },
-            href: "/workspace/#/tasks-list",
-          }))}
+          projects={portfolioProjects}
         />
       );
     case "service-status":

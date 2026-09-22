@@ -70,6 +70,11 @@ function polar(cx: number, cy: number, r: number, angleDeg: number) {
 
 function arcPath(cx: number, cy: number, r: number, from: number, to: number) {
   const start = polar(cx, cy, r, from);
+  // A single SVG arc with coincident endpoints is empty, not a full circle.
+  if (to - from >= 360) {
+    const middle = polar(cx, cy, r, from + 180);
+    return `M ${start.x} ${start.y} A ${r} ${r} 0 1 1 ${middle.x} ${middle.y} A ${r} ${r} 0 1 1 ${start.x} ${start.y}`;
+  }
   const end = polar(cx, cy, r, to);
   const largeArc = to - from > 180 ? 1 : 0;
   return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 1 ${end.x} ${end.y}`;
@@ -177,13 +182,7 @@ function RadialGauge({
         ) : (
           <>
             <path
-              d={arcPath(
-                cx,
-                cy,
-                r,
-                start,
-                start + sweep - (sweep >= 360 ? 0.01 : 0),
-              )}
+              d={arcPath(cx, cy, r, start, start + sweep)}
               fill="none"
               stroke={trackColor}
               strokeWidth={thickness}

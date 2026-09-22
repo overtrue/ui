@@ -45,7 +45,7 @@ export function SettingsPanel({
             }
           }}
         >
-          <div className="space-y-1.5">
+          <div className="grid gap-2">
             <label htmlFor={`${id}-name`} className="text-sm font-medium">
               Workspace name
             </label>
@@ -59,7 +59,7 @@ export function SettingsPanel({
               }}
             />
           </div>
-          <div className="space-y-1.5">
+          <div className="grid gap-2">
             <label htmlFor={`${id}-email`} className="text-sm font-medium">
               Contact email
             </label>

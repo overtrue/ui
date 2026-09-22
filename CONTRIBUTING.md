@@ -16,10 +16,12 @@ The website is at `/`; workspace examples are at `/workspace/`.
 
 ## Where to make changes
 
-- Installable components: `src/registry/overtrue/`. Update the matching entry in `src/site/catalog.ts` or `src/site/dashboard-catalog.ts`, and its usage examples.
+- Installable components and composed blocks: `src/registry/overtrue/`. Update the matching entry in `src/site/catalog.ts` or `src/site/dashboard-catalog.ts`, and its usage examples.
 - Workspace pages: `src/pages/workspace/` and `src/components/overtrue/scenes/`.
 - Website and documentation: `src/site/` and `docs/`.
 - Design conventions: `DESIGN.md`.
+
+Classify focused controls, data displays, and layout slots as components. Classify complete business cards, forms, and screens as blocks, even when they accept props. Keep preview imports, Source, and Usage tied to the installed exports; `pnpm usage:check` compiles every displayed Usage example. `pnpm catalog:check` checks catalog separation, Source/Usage content, redirects, and settings spacing in the browser (set `SITE_URL` to the running preview).
 
 Use semantic theme colors and Tabler Icons. Check keyboard interaction, visible focus, accessible labels, narrow screens, and dark mode. Keep sample data clearly fictional. Do not add working credentials or personal business data.
 
@@ -30,6 +32,7 @@ Do not edit generated card sources or registry JSON. Change their original sourc
 ```sh
 pnpm build
 node scripts/registry/verify.mjs
+pnpm usage:check
 pnpm content:check
 git diff --check
 ```

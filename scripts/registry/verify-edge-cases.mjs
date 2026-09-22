@@ -1,0 +1,252 @@
+// Run against the Vite dev server: SITE_URL=http://127.0.0.1:5173 node scripts/registry/verify-edge-cases.mjs
+import assert from "node:assert/strict";
+import { createRequire } from "node:module";
+
+// Reuse the browser runtime pinned by the project's existing CLI dependency.
+const require = createRequire(import.meta.url);
+const { chromium } = createRequire(
+  require.resolve("@playwright/cli/package.json"),
+)("playwright");
+const origin = process.env.SITE_URL ?? "http://127.0.0.1:5173";
+const browser = await chromium.launch({ headless: true, channel: "chrome" });
+const errors = [];
+let checks = 0;
+
+try {
+  const page = await browser.newPage({ timezoneId: "America/New_York" });
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  await page.goto(origin + "/docs");
+  await page.locator(".docs-content").waitFor();
+  await page.evaluate(async () => {
+    const { default: React } =
+      await import("/node_modules/.vite/deps/react.js");
+    const {
+      default: { createRoot },
+    } = await import("/node_modules/.vite/deps/react-dom_client.js");
+    const host = document.createElement("div");
+    host.id = "regression-fixture";
+    host.style =
+      "position:fixed;inset:0;z-index:9999;background:white;padding:24px;overflow:auto";
+    document.body.append(host);
+    const root = createRoot(host);
+    window.fixture = {
+      React,
+      async render(element) {
+        root.render(element);
+        await new Promise((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(resolve)),
+        );
+      },
+      async mount(name, exportName, props) {
+        const module = await import(`/src/registry/overtrue/${name}.tsx`);
+        await this.render(React.createElement(module[exportName], props));
+      },
+    };
+  });
+
+  // Both DST boundaries must contain each calendar date exactly once.
+  for (const [start, end] of [
+    ["2026-03-01", "2026-03-15"],
+    ["2026-10-25", "2026-11-08"],
+  ]) {
+    await page.evaluate(
+      async ([start, end]) => {
+        await window.fixture.mount("activity-heatmap", "ActivityHeatmap", {
+          data: [],
+          startDate: new Date(start + "T00:00:00"),
+          endDate: new Date(end + "T00:00:00"),
+        });
+      },
+      [start, end],
+    );
+    const dates = await page
+      .locator("#regression-fixture [data-date]")
+      .evaluateAll((cells) => cells.map((cell) => cell.dataset.date));
+    const expected = Array.from({ length: 15 }, (_, i) =>
+      new Date(Date.parse(start + "T00:00:00Z") + i * 86400000)
+        .toISOString()
+        .slice(0, 10),
+    );
+    assert.deepEqual(dates, expected);
+    checks++;
+  }
+  await page.evaluate(() =>
+    window.fixture.mount("activity-heatmap", "ActivityHeatmap", {
+      data: [],
+      weeks: 2,
+      endDate: new Date(2026, 10, 8),
+    }),
+  );
+  assert.equal(
+    await page.locator("#regression-fixture [data-date]").count(),
+    14,
+  );
+  checks++;
+
+  for (const value of [0, 50, 100]) {
+    await page.evaluate(
+      (value) =>
+        window.fixture.mount("radial-gauge", "RadialGauge", {
+          value,
+          sweep: 360,
+        }),
+      value,
+    );
+    const paths = await page
+      .locator("#regression-fixture path")
+      .evaluateAll((paths) => paths.map((path) => path.getTotalLength()));
+    assert.equal(paths.length, value ? 2 : 1);
+    if (value) assert.ok(Math.abs(paths[1] / paths[0] - value / 100) < 0.001);
+    checks++;
+  }
+
+  await page.evaluate(() =>
+    window.fixture.mount("command-palette", "CommandPalette", {
+      variant: "inline",
+      groups: [
+        {
+          items: [
+            {
+              id: "first",
+              label: "Open",
+              keywords: ["alpha"],
+              onSelect: () => (window.selectedCommand = "first"),
+            },
+            {
+              id: "second",
+              label: "Open",
+              keywords: ["beta"],
+              onSelect: () => (window.selectedCommand = "second"),
+            },
+          ],
+        },
+      ],
+    }),
+  );
+  const input = page.locator("#regression-fixture [cmdk-input]");
+  await input.focus();
+  await input.press("Home");
+  await page.waitForFunction(
+    () =>
+      document
+        .querySelector('#regression-fixture [data-value="first"]')
+        ?.getAttribute("aria-selected") === "true",
+  );
+  await input.press("ArrowDown");
+  await page.waitForFunction(
+    () =>
+      document
+        .querySelector('#regression-fixture [data-value="second"]')
+        ?.getAttribute("aria-selected") === "true",
+  );
+  assert.equal(
+    await page.locator('#regression-fixture [aria-selected="true"]').count(),
+    1,
+  );
+  await input.press("Enter");
+  assert.equal(await page.evaluate(() => window.selectedCommand), "second");
+  await input.fill("alpha");
+  await page.waitForFunction(
+    () =>
+      document.querySelectorAll("#regression-fixture [cmdk-item]").length === 1,
+  );
+  await input.press("Enter");
+  assert.equal(await page.evaluate(() => window.selectedCommand), "first");
+  checks += 2;
+
+  await page.evaluate(() =>
+    window.fixture.mount("segmented-meter", "SegmentedMeter", {
+      value: 20,
+      zones: [],
+    }),
+  );
+  assert.equal(
+    await page.locator("#regression-fixture [role=meter]").count(),
+    0,
+  );
+  assert.match(
+    await page.locator("#regression-fixture").innerText(),
+    /No ranges available/,
+  );
+  for (const [value, expected] of [
+    [-10, "0"],
+    [120, "100"],
+    [NaN, "0"],
+  ]) {
+    await page.evaluate(
+      (value) =>
+        window.fixture.mount("segmented-meter", "SegmentedMeter", {
+          value,
+          zones: [
+            { from: 0, to: 50 },
+            { from: 50, to: 100 },
+          ],
+        }),
+      value,
+    );
+    assert.equal(
+      await page
+        .locator("#regression-fixture [role=meter]")
+        .getAttribute("aria-valuenow"),
+      expected,
+    );
+    checks++;
+  }
+  checks++;
+
+  // The example controls must implement the keyboard behavior their radio roles promise.
+  for (const kind of ["segmented-control", "stars-rating"]) {
+    await page.evaluate(async (kind) => {
+      const { React, render } = window.fixture;
+      const module = await import(`/src/components/overtrue/${kind}.tsx`);
+      function Example() {
+        const [value, setValue] = React.useState(
+          kind === "stars-rating" ? 1 : "first",
+        );
+        return kind === "stars-rating"
+          ? React.createElement(module.StarsRating, {
+              value,
+              onChange: setValue,
+            })
+          : React.createElement(module.SegmentedControl, {
+              value,
+              onValueChange: setValue,
+              options: [
+                { value: "first", label: "First" },
+                { value: "second", label: "Second" },
+              ],
+            });
+      }
+      await render(React.createElement(Example));
+    }, kind);
+    const radios = page.locator("#regression-fixture [role=radio]");
+    await radios.first().focus();
+    await radios.first().press("ArrowRight", { delay: 50 });
+    await page.waitForFunction(
+      () =>
+        document
+          .querySelectorAll("#regression-fixture [role=radio]")[1]
+          ?.getAttribute("aria-checked") === "true",
+    );
+    assert.equal(await radios.nth(1).getAttribute("tabindex"), "0");
+    checks++;
+  }
+  await page.goto(origin + "/workspace/#/stars-rating");
+  const rating = page.getByRole("radiogroup", { name: "Rating" }).first();
+  await rating.waitFor();
+  const current = rating.locator('[aria-checked="true"]');
+  const nextValue = String(Number(await current.getAttribute("value")) + 1);
+  await current.focus();
+  await current.press("ArrowRight", { delay: 50 });
+  await rating.locator(`[value="${nextValue}"][aria-checked="true"]`).waitFor();
+  checks++;
+  assert.deepEqual(errors, []);
+  console.log(
+    `Passed ${checks} component edge cases; no console or runtime errors.`,
+  );
+} finally {
+  await browser.close();
+}

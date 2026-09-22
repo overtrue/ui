@@ -11,8 +11,11 @@
     "lint": "tsc -p tsconfig.app.json --noEmit",
     "registry:build": "node scripts/blocks/prepare.mjs && node scripts/registry/prepare.mjs && shadcn build",
     "blocks:prepare": "node scripts/blocks/prepare.mjs",
-    "registry:check": "npm run registry:build && node scripts/registry/verify.mjs",
+    "registry:check": "npm run registry:build && node scripts/registry/verify.mjs && node scripts/registry/verify-usage.mjs",
+    "usage:check": "node scripts/registry/verify-usage.mjs",
+    "catalog:check": "node scripts/registry/verify-catalog-browser.mjs",
     "site:check": "node scripts/registry/verify-browser.mjs",
+    "home:check": "node scripts/site/verify-home.mjs",
     "content:check": "node scripts/examples/verify-content.mjs"
   },
   "dependencies": {

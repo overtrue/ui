@@ -39,7 +39,7 @@ export const dashboardCatalog = [
     dependencies: [],
     imports: "CommandPalette, useCommandPaletteShortcut",
     usage:
-      "const [open, setOpen] = React.useState(false)\nuseCommandPaletteShortcut(setOpen)\n\n<CommandPalette\n  open={open}\n  onOpenChange={setOpen}\n  groups={groups}\n  onSelect={() => setOpen(false)}\n/>",
+      'function CommandMenu() {\n  const [open, setOpen] = React.useState(false)\n  const [selected, setSelected] = React.useState("")\n  useCommandPaletteShortcut(setOpen)\n  return <>\n    <button type="button" onClick={() => setOpen(true)}>Open commands</button>\n    <CommandPalette open={open} onOpenChange={setOpen}\n      groups={[{ heading: "Navigation", items: [{ id: "projects", label: "Projects" }, { id: "people", label: "People" }] }]}\n      onSelect={item => { setSelected(item.label); setOpen(false) }}\n    />\n    <p role="status">{selected && \'Selected: \' + selected}</p>\n  </>\n}',
     notes:
       "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow.",
     previewWidth: 560,
@@ -168,7 +168,7 @@ export const dashboardCatalog = [
     dependencies: [],
     imports: "TrendChart",
     usage:
-      '<TrendChart\n  data={data}\n  xKey="date"\n  series={[\n    { key: "desktop", label: "Desktop" },\n    { key: "mobile", label: "Mobile" },\n  ]}\n  showLegend\n/>',
+      '<TrendChart\n  data={[{ date: "Mon", desktop: 120, mobile: 80 }, { date: "Tue", desktop: 160, mobile: 110 }, { date: "Wed", desktop: 140, mobile: 95 }]}\n  xKey="date"\n  series={[\n    { key: "desktop", label: "Desktop" },\n    { key: "mobile", label: "Mobile" },\n  ]}\n  showLegend\n/>',
     notes:
       "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow.",
     previewWidth: 560,
@@ -267,7 +267,7 @@ export const dashboardCatalog = [
     dependencies: [],
     imports: "BarChart",
     usage:
-      '<BarChart\n  data={data}\n  xKey="week"\n  yKey="spend"\n  groupKey="month"\n  color="var(--color-orange-500)"\n  highlight={(row) => row.month === "Mar"}\n  yFormatter={(value) => formatNumber(value, { format: "currency" })}\n/>',
+      '<BarChart\n  data={[{ week: "W1", month: "Feb", spend: 1200 }, { week: "W2", month: "Feb", spend: 1800 }, { week: "W3", month: "Mar", spend: 2100 }]}\n  xKey="week"\n  yKey="spend"\n  groupKey="month"\n  color="var(--color-orange-500)"\n  highlight={(row) => row.month === "Mar"}\n  yFormatter={(value) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value)}\n/>',
     notes:
       "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow.",
     previewWidth: 560,
@@ -351,9 +351,9 @@ export const dashboardCatalog = [
     description:
       "Build record views with filtering, selection, column controls, and actions close to the data.",
     dependencies: [],
-    imports: "DataTable, DataTableColumnHeader, createDataTableColumnHelper,",
+    imports: "DataTable, DataTableColumnHeader, createDataTableColumnHelper",
     usage:
-      'const helper = createDataTableColumnHelper<Row>()\n\nconst columns = helper.columns([\n  helper.accessor("path", {\n    header: ({ column }) => <DataTableColumnHeader column={column} title="Page" />,\n  }),\n  helper.accessor("views", {\n    header: ({ column }) => (\n      <DataTableColumnHeader column={column} title="Views" align="right" />\n    ),\n    cell: ({ row }) => <div className="text-right">{row.original.views}</div>,\n  }),\n])\n\n<DataTable columns={columns} data={rows} searchKey="path" />\n\n// Or own the instance and lay the parts out yourself.\nconst table = useDataTable({ columns, data: rows, pageSize: 5 })\n\n<DataTableToolbar>\n  <DataTableSearch table={table} column="path" />\n  <DataTableViewOptions table={table} className="ml-auto" />\n</DataTableToolbar>\n<DataTableContent table={table} pending={isFetching} stickyHeader maxHeight={340} />\n<DataTablePagination table={table} pageSizeOptions={[5, 10, 25]} />',
+      'function TrafficTable() {\n  const rows = [{ path: "/", views: 48210 }, { path: "/pricing", views: 21480 }]\n  const helper = createDataTableColumnHelper<(typeof rows)[number]>()\n  const columns = helper.columns([\n    helper.accessor("path", {\n      header: ({ column }) => <DataTableColumnHeader column={column} title="Page" />,\n    }),\n    helper.accessor("views", {\n      header: ({ column }) => <DataTableColumnHeader column={column} title="Views" align="right" />,\n      cell: ({ row }) => <div className="text-right">{row.original.views}</div>,\n    }),\n  ])\n  return <DataTable columns={columns} data={rows} searchKey="path" />\n}',
     notes:
       "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow. This component has a separate API from the existing data-table component. ",
     previewWidth: 800,
@@ -732,7 +732,7 @@ export const dashboardCatalog = [
     dependencies: [],
     imports: "ComposedChart",
     usage:
-      '<ComposedChart\n  data={data}\n  xKey="month"\n  series={[\n    { key: "sales", label: "Sales", type: "area", highlightMax: true },\n    { key: "goal", label: "Goal", type: "line", dashed: true },\n  ]}\n  referenceLines={[{ y: 50000, label: "Target" }]}\n  showYAxis\n/>',
+      '<ComposedChart\n  data={[{ month: "Jan", sales: 36000, goal: 40000 }, { month: "Feb", sales: 42000, goal: 45000 }, { month: "Mar", sales: 51000, goal: 50000 }]}\n  xKey="month"\n  series={[\n    { key: "sales", label: "Sales", type: "area", highlightMax: true },\n    { key: "goal", label: "Goal", type: "line", dashed: true },\n  ]}\n  referenceLines={[{ y: 50000, label: "Target" }]}\n  showYAxis\n/>',
     notes:
       "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow.",
     previewWidth: 560,
@@ -1050,7 +1050,7 @@ export const dashboardCatalog = [
     dependencies: [],
     imports: "PeriodTabs",
     usage:
-      'const [period, setPeriod] = React.useState("month")\n\n<PeriodTabs value={period} onValueChange={setPeriod} />',
+      'function ReportPeriod() {\n  const [period, setPeriod] = React.useState("month")\n  return <PeriodTabs value={period} onValueChange={setPeriod} />\n}',
     notes:
       "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow.",
     previewWidth: 560,
@@ -1135,7 +1135,7 @@ export const dashboardCatalog = [
     dependencies: [],
     imports: "DotPlot",
     usage:
-      '<DotPlot data={[1, 1, 2, 1, 2, 4, 6, 4, 2, 1, 2, 1, 1, 1]} color="var(--color-green-600)" />\n<DotPlot data={[3, 5, 8, 12, 7, 4, 2]} labels={days} rows={6} />\n<DotPlot data={[2, 3, 5, 4, 6, 3, 2]} emphasis={0} className="[--dot-size:0.875rem]" />',
+      '<DotPlot data={[1, 1, 2, 1, 2, 4, 6, 4, 2, 1, 2, 1, 1, 1]} color="var(--color-green-600)" />\n<DotPlot data={[3, 5, 8, 12, 7, 4, 2]} labels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]} rows={6} />\n<DotPlot data={[2, 3, 5, 4, 6, 3, 2]} emphasis={0} className="[--dot-size:0.875rem]" />',
     notes:
       "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow.",
     previewWidth: 560,
@@ -1229,6 +1229,8 @@ export const dashboardCatalog = [
           "Record what changed between versions before the next client review.",
       },
     ],
+    exampleImports:
+      'import { IconRocket as Rocket } from "@tabler/icons-react"\nimport { Badge } from "@/components/ui/badge"',
   },
   {
     name: "activity-rings",
@@ -1370,7 +1372,7 @@ export const dashboardCatalog = [
     dependencies: [],
     imports: "RadarChart",
     usage:
-      '<RadarChart\n  data={data}\n  angleKey="month"\n  series={[\n    { key: "desktop", label: "Desktop" },\n    { key: "mobile", label: "Mobile" },\n  ]}\n  variant="line"\n  showLegend\n/>',
+      '<RadarChart\n  data={[{ month: "Jan", desktop: 120, mobile: 80 }, { month: "Feb", desktop: 160, mobile: 110 }, { month: "Mar", desktop: 140, mobile: 95 }]}\n  angleKey="month"\n  series={[\n    { key: "desktop", label: "Desktop" },\n    { key: "mobile", label: "Mobile" },\n  ]}\n  variant="line"\n  showLegend\n/>',
     notes:
       "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow.",
     previewWidth: 560,
@@ -1445,7 +1447,7 @@ export const dashboardCatalog = [
     dependencies: [],
     imports: "ScatterChart",
     usage:
-      '<ScatterChart\n  series={[\n    { label: "Free", data: free },\n    { label: "Pro", data: pro },\n    { label: "Enterprise", data: enterprise },\n  ]}\n  xKey="sessions"\n  yKey="revenue"\n  xLabel="Sessions"\n  yLabel="Revenue"\n  showLegend\n/>',
+      '<ScatterChart\n  series={[\n    { label: "Free", data: [{ sessions: 12, revenue: 0 }, { sessions: 24, revenue: 0 }] },\n    { label: "Pro", data: [{ sessions: 85, revenue: 29 }, { sessions: 120, revenue: 58 }] },\n    { label: "Enterprise", data: [{ sessions: 280, revenue: 240 }, { sessions: 420, revenue: 480 }] },\n  ]}\n  xKey="sessions"\n  yKey="revenue"\n  xLabel="Sessions"\n  yLabel="Revenue"\n  showLegend\n/>',
     notes:
       "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow.",
     previewWidth: 560,

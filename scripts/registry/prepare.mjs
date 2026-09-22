@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { catalog } from "../../src/site/catalog.ts";
+import { catalog, catalogPath } from "../../src/site/catalog.ts";
 import { prepareCardRegistry } from "../blocks/registry.mjs";
 
 const origin = (
@@ -52,7 +52,7 @@ const items = catalog.map((item) => {
       type: "registry:component",
       target: `components/overtrue/${name}.tsx`,
     })),
-    docs: `Documentation: ${origin}/components/${item.name}. Requires an initialized shadcn/ui project with Tailwind CSS v4.`,
+    docs: `Documentation: ${origin}${catalogPath(item)}. Requires an initialized shadcn/ui project with Tailwind CSS v4.`,
   };
 });
 items.push(...prepareCardRegistry(origin));

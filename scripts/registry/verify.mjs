@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { catalog } from "../../src/site/catalog.ts";
+import { catalog, catalogPath } from "../../src/site/catalog.ts";
 const index = JSON.parse(readFileSync("public/r/registry.json", "utf8"));
 const cards = JSON.parse(readFileSync("src/blocks/catalog.json", "utf8"));
 assert.equal(index.items.length, catalog.length + cards.length + 2);
@@ -11,6 +11,11 @@ const foundation = JSON.parse(
 for (const entry of index.items) {
   const item = JSON.parse(readFileSync(`public/r/${entry.name}.json`, "utf8"));
   assert.equal(item.name, entry.name);
+  const catalogItem = catalog.find(candidate => candidate.name === item.name);
+  if (catalogItem) {
+    assert.equal(item.type, catalogItem.category === "Blocks" ? "registry:block" : "registry:component");
+    assert.ok(item.docs.includes(catalogPath(catalogItem)), `${item.name}: incorrect documentation URL`);
+  }
   assert.ok(item.description);
   const ownTargets = new Set((item.files ?? []).map((file) => file.target));
   assert.equal(

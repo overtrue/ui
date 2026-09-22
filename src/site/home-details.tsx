@@ -1,18 +1,58 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { IconArrowRight, IconArrowUpRight } from "@tabler/icons-react";
-import { catalog, componentCount, blockCount, type ItemName } from "./catalog";
+import {
+  IconArrowRight,
+  IconArrowUpRight,
+  IconLayoutGrid,
+  IconChartLine,
+  IconActivity,
+} from "@tabler/icons-react";
+import { catalogPath, catalog, componentCount, blockCount } from "./catalog";
 import { Example } from "./examples";
+import { ProjectPortfolio } from "@/registry/overtrue/project-portfolio";
+import { portfolioProjects, siteOwner } from "./demo-data";
 
 const featured = [
-  "project-portfolio",
-  "analytics-overview",
-  "service-status",
+  {
+    name: "project-portfolio",
+    title: "Project portfolio",
+    label: "Projects",
+    icon: IconLayoutGrid,
+    description: "Give every project a clear next step.",
+    detail:
+      "Cover images, owners, progress, and search. A working collection, ready for your own projects.",
+  },
+  {
+    name: "analytics-overview",
+    title: "Analytics overview",
+    label: "Analytics",
+    icon: IconChartLine,
+    description: "See the story behind the numbers.",
+    detail:
+      "Compare periods, follow conversions, and export a report. Every panel stays in sync.",
+  },
+  {
+    name: "service-status",
+    title: "Service status",
+    label: "Service health",
+    icon: IconActivity,
+    description: "Keep service health easy to read.",
+    detail:
+      "Current status and availability history together. Switch the period to see the bigger picture.",
+  },
 ] as const;
+const homeProjects = [
+  { ...portfolioProjects[0], owner: siteOwner },
+  portfolioProjects[2],
+];
 
 export function HomeDetails() {
-  const [selected, setSelected] = useState<ItemName>(featured[0]);
+  const [selected, setSelected] = useState<(typeof featured)[number]["name"]>(
+    featured[0].name,
+  );
   const item = catalog.find((item) => item.name === selected)!;
+  const active = featured.find((entry) => entry.name === selected)!;
+  const PreviewIcon = active.icon;
   return (
     <>
       <section
@@ -22,37 +62,78 @@ export function HomeDetails() {
         <div className="section-heading">
           <div>
             <p className="overline">THE PIECES, PUT TOGETHER</p>
-            <h2 id="assembled-title">A useful whole.</h2>
-            <p>Start with a complete view. Make every part your own.</p>
+            <h2 id="assembled-title">From components to a working page.</h2>
+            <p>Useful layouts, with the details already connected.</p>
           </div>
           <Link className="text-link" to="/blocks">
             Browse all blocks <IconArrowRight size={16} />
           </Link>
         </div>
-        <div
-          className="showcase-switcher"
-          role="group"
-          aria-label="Featured blocks"
-        >
-          {featured.map((name) => (
-            <button
-              key={name}
-              type="button"
-              aria-pressed={selected === name}
-              onClick={() => setSelected(name)}
+        <div className="assembled-shell">
+          <div className="showcase-rail">
+            <div
+              className="showcase-switcher"
+              role="group"
+              aria-label="Featured blocks"
             >
-              {catalog.find((item) => item.name === name)!.title}
-            </button>
-          ))}
-        </div>
-        <div className="assembled-preview" key={selected}>
-          <Example name={selected} expanded />
-        </div>
-        <div className="assembled-caption">
-          <p>{item.description}</p>
-          <Link className="text-link" to={`/components/${selected}`}>
-            Source & installation <IconArrowUpRight size={15} />
-          </Link>
+              {featured.map(
+                ({ name, title, icon: Icon, description }, index) => (
+                  <button
+                    key={name}
+                    type="button"
+                    aria-label={title}
+                    aria-controls="assembled-preview"
+                    aria-pressed={selected === name}
+                    onClick={() => setSelected(name)}
+                  >
+                    <span className="showcase-option-heading">
+                      <Icon size={17} stroke={1.6} />
+                      <strong>{title}</strong>
+                      <span className="showcase-number">0{index + 1}</span>
+                    </span>
+                    <span className="showcase-option-description">
+                      {description}
+                    </span>
+                  </button>
+                ),
+              )}
+            </div>
+            <div className="showcase-detail">
+              <p>{active.detail}</p>
+              <Link className="text-link" to={catalogPath(item)}>
+                Source & installation <IconArrowUpRight size={15} />
+              </Link>
+            </div>
+          </div>
+          <div className="showcase-canvas">
+            <div className="showcase-toolbar">
+              <span>
+                <PreviewIcon size={15} stroke={1.6} />
+                Workspace<span className="showcase-slash">/</span>
+                <strong>{active.label}</strong>
+              </span>
+              <span className="showcase-preview-label">
+                <span className="live-dot" />
+                Live preview
+              </span>
+            </div>
+            <div
+              id="assembled-preview"
+              className="assembled-preview"
+              key={selected}
+              role="region"
+              aria-label={`${active.title} preview`}
+            >
+              {selected === "project-portfolio" ? (
+                <ProjectPortfolio
+                  projects={homeProjects}
+                  description="Selected projects · overtrue"
+                />
+              ) : (
+                <Example name={selected} expanded />
+              )}
+            </div>
+          </div>
         </div>
       </section>
       <section

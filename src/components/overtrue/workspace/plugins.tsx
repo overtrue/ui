@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as RadioGroup from "@radix-ui/react-radio-group";
 import "plyr/dist/plyr.css";
 import "@melloware/coloris/dist/coloris.css";
 import colorpickerConfigs from "@/data/workspace/colorpickers.json";
@@ -269,33 +270,33 @@ export function WorkspaceRating({
         : "yellow";
   const size = id.includes("size-sm") ? 16 : id.includes("size-lg") ? 32 : 24;
   return (
-    <div
+    <RadioGroup.Root
       id={id}
       className="workspace-rating"
-      role="radiogroup"
+      value={String(rating)}
+      onValueChange={(value) => setRating(Number(value))}
       aria-label="Rating"
       onMouseLeave={() => setHover(0)}
     >
       {[1, 2, 3, 4, 5].map((value) => (
-        <Button
-          key={value}
-          variant="workspace"
-          role="radio"
-          aria-label={`${value} stars`}
-          aria-checked={rating === value}
-          onClick={() => setRating(value)}
-          onMouseEnter={() => setHover(value)}
-          style={{
-            color:
-              value <= (hover || rating)
-                ? `var(--pn-${color})`
-                : "var(--pn-border-color)",
-          }}
-        >
-          <Icon size={size} stroke={1.5} fill="currentColor" />
-        </Button>
+        <RadioGroup.Item key={value} value={String(value)} asChild>
+          <Button
+            type="button"
+            variant="workspace"
+            aria-label={`${value} stars`}
+            onMouseEnter={() => setHover(value)}
+            style={{
+              color:
+                value <= (hover || rating)
+                  ? `var(--pn-${color})`
+                  : "var(--pn-border-color)",
+            }}
+          >
+            <Icon size={size} stroke={1.5} fill="currentColor" />
+          </Button>
+        </RadioGroup.Item>
       ))}
-    </div>
+    </RadioGroup.Root>
   );
 }
 let colorisInitialized = false;

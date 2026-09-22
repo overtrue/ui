@@ -96,8 +96,8 @@ try {
     await page.locator('.assembled-preview [data-slot="service-status"]').waitFor();
     check(await page.locator('.assembled-preview [data-slot="service-status"]').isVisible(), 'home service block switch');
     await page.getByRole('link',{name:'Source & installation'}).click();
-    await page.waitForURL('**/components/service-status');
-    check(page.url().endsWith('/components/service-status'), 'featured block opens matching installation page');
+    await page.waitForURL('**/blocks/service-status');
+    check(page.url().endsWith('/blocks/service-status'), 'featured block opens matching installation page');
     await page.getByRole('navigation',{name:'Component guides'}).getByRole('link',{name:'Put it to work Building a page'}).click();
     await page.getByRole('heading',{name:'Building a page',exact:true}).waitFor();
     check(await page.getByRole('heading',{name:'Building a page',exact:true}).isVisible(), 'component leads to composition guide');

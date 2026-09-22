@@ -35,8 +35,10 @@ const items = [
   },
   {
     name: "activity-feed",
+    previewWidth: 480,
+    previewHeight: 340,
     title: "Activity feed",
-    category: "Data display",
+    category: "Blocks",
     description: "A clear timeline of what happened and who made it happen.",
     dependencies: ["card"],
     usage:
@@ -52,8 +54,10 @@ const items = [
   },
   {
     name: "storage-meter",
+    previewWidth: 480,
+    previewHeight: 340,
     title: "Storage meter",
-    category: "Data display",
+    category: "Blocks",
     description: "See what is using your space, and how much is left.",
     dependencies: ["card"],
     usage:
@@ -97,8 +101,10 @@ const items = [
   },
   {
     name: "pricing-card",
+    previewWidth: 480,
+    previewHeight: 340,
     title: "Pricing card",
-    category: "Layout",
+    category: "Blocks",
     description: "A considered home for plans, features, and upgrades.",
     dependencies: ["card"],
     usage:
@@ -106,12 +112,17 @@ const items = [
   },
   {
     name: "settings-panel",
+    previewWidth: 480,
+    previewHeight: 340,
     title: "Settings panel",
-    category: "Forms",
-    description: "Workspace details with validation and async save states.",
+    category: "Blocks",
+    description:
+      "A workspace settings block with name and contact email fields, validation, and save feedback.",
     dependencies: ["card", "input", "button"],
+    notes:
+      "This block is a workspace form, not a general form component. Edit the installed fields and validation for your product. initialName and initialEmail seed the form on mount; use a key when switching workspaces. Pass an async onSave callback to persist changes. Without it, saving only updates the local demo. Errors preserve the entered values for retry.",
     usage:
-      '<SettingsPanel initialName="Acme Studio" initialEmail="team@acme.example" onSave={async values => { console.log(values) }} />',
+      '<SettingsPanel initialName="Acme Studio" initialEmail="team@acme.example" />',
   },
   {
     name: "dashboard",
@@ -247,8 +258,7 @@ const items = [
     description:
       "A complete acquisition report with period comparisons, traffic sources, conversion stages, and CSV export.",
     dependencies: ["card", "button"],
-    usage:
-      "<AnalyticsOverview />\n\n// Pass your own AnalyticsReport[] to replace the demo data.\n// <AnalyticsOverview reports={reports} />",
+    usage: "<AnalyticsOverview />",
   },
   {
     name: "section-card",
@@ -390,7 +400,7 @@ const items = [
     description:
       "Release milestones and activity history with timestamps and optional avatars.",
     dependencies: [],
-    imports: "Timeline, TimelineItem",
+    imports: "Timeline",
     usage:
       '<Timeline items={[\n  { id: "review", title: "Review approved", time: "Today, 10:24", description: "Ready for the next release." },\n  { id: "build", title: "Build completed", time: "Today, 10:12" },\n]} />',
     notes:
@@ -407,12 +417,14 @@ const items = [
   },
   {
     name: "task-list",
+    previewWidth: 480,
+    previewHeight: 340,
     title: "Task list",
-    category: "Data display",
+    category: "Blocks",
     description:
       "Compact task rows with controlled completion, due dates, and comment counts.",
     dependencies: ["card", "checkbox"],
-    imports: "TaskList, TaskCard",
+    imports: "TaskList",
     exampleImports: 'import { useState } from "react"',
     usage:
       'function ProjectTasks() {\n  const [tasks, setTasks] = useState([{ id: "brief", title: "Review the brief", due: "Today", done: false }])\n  return <TaskList tasks={tasks} onTaskChange={(id, done) => setTasks(current => current.map(task => task.id === id ? { ...task, done } : task))} />\n}',
@@ -455,8 +467,10 @@ const items = [
   },
   {
     name: "member-card",
+    previewWidth: 480,
+    previewHeight: 340,
     title: "Member card",
-    category: "Layout",
+    category: "Blocks",
     description:
       "A reusable team card with avatar, role, profile details, and actions.",
     dependencies: ["card"],
@@ -548,7 +562,11 @@ export const catalog = [...items].sort((a, b) => {
   };
   return rank(a.name) - rank(b.name);
 });
-export type ItemName = (typeof catalog)[number]["name"];
+export type CatalogItem = (typeof catalog)[number];
+export type ItemName = CatalogItem["name"];
+export function catalogPath(item: Pick<CatalogItem, "name" | "category">) {
+  return `/${item.category === "Blocks" ? "blocks" : "components"}/${item.name}`;
+}
 export const componentCount = catalog.filter(
   (item) => item.category !== "Blocks",
 ).length;

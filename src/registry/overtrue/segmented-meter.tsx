@@ -29,6 +29,8 @@
  * (https://github.com/shadcn-ui/ui), Copyright (c) 2023 shadcn, licensed under the
  * MIT License. The notice above applies to those portions as well.
  */
+"use client";
+
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -89,14 +91,25 @@ function SegmentedMeter({
     labels.forEach((label) => observer.observe(label));
     return () => observer.disconnect();
   }, [showTicks, zones, tickFormatter]);
-  const min = Math.min(...zones.map((z) => z.from));
-  const max = Math.max(...zones.map((z) => z.to));
+  const validZones = zones.filter(
+    (zone) => Number.isFinite(zone.from) && Number.isFinite(zone.to) && zone.to > zone.from,
+  );
+  if (!validZones.length) {
+    return (
+      <div data-slot="segmented-meter" className={cn("flex flex-col gap-1.5", className)} {...props}>
+        <p className="text-sm text-muted-foreground">No ranges available.</p>
+      </div>
+    );
+  }
+  const min = Math.min(...validZones.map((z) => z.from));
+  const max = Math.max(...validZones.map((z) => z.to));
   const span = max - min || 1;
-  const position = Math.min(1, Math.max(0, (value - min) / span));
-  const activeIndex = zones.findIndex(
+  const current = Math.min(max, Math.max(min, Number.isFinite(value) ? value : min));
+  const position = (current - min) / span;
+  const activeIndex = validZones.findIndex(
     (z, i) =>
-      value >= z.from &&
-      (value < z.to || (i === zones.length - 1 && value <= z.to)),
+      current >= z.from &&
+      (current < z.to || (i === validZones.length - 1 && current <= z.to)),
   );
 
   return (
@@ -105,13 +118,13 @@ function SegmentedMeter({
       role="meter"
       aria-valuemin={min}
       aria-valuemax={max}
-      aria-valuenow={value}
+      aria-valuenow={current}
       className={cn("flex flex-col gap-1.5", className)}
       {...props}
     >
       <div className="relative">
         <div className="flex h-2 w-full gap-0.5">
-          {zones.map((zone, index) => {
+          {validZones.map((zone, index) => {
             const active = index === activeIndex;
             const color = zone.color ?? "var(--color-chart-1)";
             return (
@@ -139,7 +152,7 @@ function SegmentedMeter({
       {showTicks || showLabels ? (
         <div ref={ticksRef} className="text-muted-foreground relative h-4 text-[10px] tabular-nums">
           {showTicks
-            ? [min, ...zones.map((z) => z.to)].map((tick, index, all) => (
+            ? [min, ...validZones.map((z) => z.to)].map((tick, index, all) => (
                 <span
                   key={index}
                   className={cn(
@@ -157,7 +170,7 @@ function SegmentedMeter({
                   {tickFormatter(tick)}
                 </span>
               ))
-            : zones.map((zone, index) => (
+            : validZones.map((zone, index) => (
                 <span
                   key={index}
                   className="absolute top-0 -translate-x-1/2 truncate"

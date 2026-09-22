@@ -1,8 +1,12 @@
+import * as RadioGroup from "@radix-ui/react-radio-group"
 import { IconStar } from "@tabler/icons-react"
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-export interface StarsRatingProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
+export interface StarsRatingProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "onChange"
+> {
   value: number
   max?: number
   onChange?: (v: number) => void
@@ -22,21 +26,34 @@ export function StarsRating({
   ...props
 }: StarsRatingProps) {
   return (
-    <div className={cn("inline-flex gap-0.5", className)} role="radiogroup" aria-label="Rating" {...props}>
-      {Array.from({ length: max }, (_, i) => i + 1).map((star) => (
-        <button
-          key={star}
-          type="button"
-          disabled={readOnly}
-          aria-label={`${star} star${star > 1 ? "s" : ""}`}
-          aria-checked={value === star}
-          role="radio"
-          className={cn("text-muted-foreground", star <= value && "text-warning")}
-          onClick={() => onChange?.(star)}
-        >
-          <IconStar className={cn(sizeMap[size], star <= value && "fill-current")} />
-        </button>
-      ))}
-    </div>
+    <RadioGroup.Root
+      value={String(value)}
+      onValueChange={(next) => onChange?.(Number(next))}
+      disabled={readOnly || !onChange}
+      asChild
+    >
+      <div
+        className={cn("inline-flex gap-0.5", className)}
+        aria-label="Rating"
+        {...props}
+      >
+        {Array.from({ length: max }, (_, i) => i + 1).map((star) => (
+          <RadioGroup.Item
+            key={star}
+            type="button"
+            value={String(star)}
+            aria-label={`${star} star${star > 1 ? "s" : ""}`}
+            className={cn(
+              "text-muted-foreground",
+              star <= value && "text-warning",
+            )}
+          >
+            <IconStar
+              className={cn(sizeMap[size], star <= value && "fill-current")}
+            />
+          </RadioGroup.Item>
+        ))}
+      </div>
+    </RadioGroup.Root>
   )
 }

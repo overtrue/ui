@@ -2,6 +2,7 @@ import { Link, NavLink, useParams } from "react-router-dom";
 import { IconArrowRight, IconArrowLeft } from "@tabler/icons-react";
 import { Command } from "./code";
 import { guides } from "./pages";
+import { DocsSidebar, DocsMobileNavigation } from "./docs-navigation";
 
 export function GuideLinks() {
   return (
@@ -155,9 +156,10 @@ const content = {
         }
       />
       <p className="note">
-        Import SettingsPanel from its installed file. The workspace object and
-        authenticated API endpoint belong to your application; they are not
-        included in the registry.
+        SettingsPanel is a workspace settings block with fixed fields. Edit its
+        source for other forms. Import it from its installed file. The workspace
+        object and authenticated API endpoint belong to your application; they
+        are not included in the registry.
       </p>
       <h2>Design the other states</h2>
       <p>
@@ -203,7 +205,7 @@ const content = {
         label="A meaningful trend label"
         language="tsx"
         text={
-          '<Sparkline\n  values={[164, 152, 148, 136, 124]}\n  label="Response time fell from 164 ms to 124 ms over five days"\n/>'
+          '<Sparkline\n  data={[164, 152, 148, 136, 124]}\n  label="Response time fell from 164 ms to 124 ms over five days"\n/>'
         }
       />
       <p className="note">
@@ -305,15 +307,9 @@ export function GuidePage() {
   const next = guides[index + 1];
   return (
     <main className="docs-layout section">
-      <aside className="docs-sidebar">
-        <p>Documentation</p>
-        <GuideLinks />
-      </aside>
+      <DocsSidebar />
       <article className="docs-content prose-docs">
-        <details className="docs-mobile-contents">
-          <summary>Documentation</summary>
-          <GuideLinks />
-        </details>
+        <DocsMobileNavigation />
         <div className="breadcrumbs">
           <Link to="/docs">Documentation</Link>
           <span>/</span>

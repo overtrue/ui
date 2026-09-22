@@ -4,6 +4,7 @@ import {
   IconArrowDownRight,
   IconArrowUpRight,
   IconDownload,
+  IconChevronDown,
   IconEye,
   IconTarget,
   IconUserPlus,
@@ -181,7 +182,7 @@ export function AnalyticsOverview({
       )}
     >
       <PageHeader
-        eyebrow="Acme Studio · Analytics"
+        eyebrow="Analytics"
         title="Acquisition overview"
         description={
           report?.description ?? "Connect your analytics to get started."
@@ -191,23 +192,31 @@ export function AnalyticsOverview({
             <label className="sr-only" htmlFor={periodId}>
               Analytics period
             </label>
-            <select
-              id={periodId}
-              value={report?.id ?? ""}
-              disabled={!reports.length}
-              onChange={(event) => setSelected(event.target.value)}
-              className="h-8 max-w-full rounded-md border bg-card px-2 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {!reports.length && <option value="">No reports</option>}
-              {reports.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id={periodId}
+                value={report?.id ?? ""}
+                disabled={!reports.length}
+                onChange={(event) => setSelected(event.target.value)}
+                className="h-8 max-w-full appearance-none rounded-md border bg-card py-0 pl-3 pr-8 text-xs font-medium leading-8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                {!reports.length && <option value="">No reports</option>}
+                {reports.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+              <IconChevronDown
+                aria-hidden="true"
+                className="pointer-events-none absolute top-1/2 right-2.5 size-3.5 -translate-y-1/2 text-muted-foreground"
+                stroke={1.7}
+              />
+            </div>
             <Button
               size="sm"
               variant="outline"
+              className="h-8 px-3 text-xs font-medium shadow-none"
               disabled={!report}
               onClick={exportReport}
             >

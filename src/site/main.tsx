@@ -4,6 +4,7 @@ import {
   BrowserRouter,
   Link,
   NavLink,
+  Navigate,
   Route,
   Routes,
   useLocation,
@@ -27,18 +28,23 @@ import {
 import { Dashboard } from "@/registry/overtrue/dashboard";
 import {
   catalog,
+  catalogPath,
   componentCount,
   blockCount,
   cardCount,
   type ItemName,
 } from "./catalog";
+import { usageSource } from "./usage";
 import { Example } from "./examples";
 import { dashboardCatalog } from "./dashboard-catalog";
 import { FitPreview } from "./fit-preview";
 import workspacePages from "@/data/workspace/pages.json";
 import { Command, CopyButton, HighlightedCode } from "./code";
 import { GuidePage, GuideLinks } from "./guides";
+import { DocsSidebar, DocsMobileNavigation } from "./docs-navigation";
+import { BrandMark } from "@/components/brand-mark";
 import { sitePages } from "./pages";
+import { siteOwner } from "./demo-data";
 import { HomeDetails } from "./home-details";
 import { CardCollection, CardBlockPage } from "./blocks";
 import "./site.css";
@@ -51,48 +57,11 @@ const sources = import.meta.glob("../registry/overtrue/*.tsx", {
 const origin = window.location.origin;
 const command = (name: string) =>
   `npx shadcn@latest add ${origin}/r/${name}.json`;
-const symbolName = (name: string) =>
-  name
-    .split("-")
-    .map((word) => word[0].toUpperCase() + word.slice(1))
-    .join("");
 
 function Logo() {
   return (
     <span className="wordmark">
-      <svg
-        viewBox="0 0 28 28"
-        width="25"
-        height="25"
-        fill="none"
-        aria-hidden="true"
-      >
-        <rect width="28" height="28" rx="7" fill="currentColor" />
-        <rect
-          x="6"
-          y="6"
-          width="5"
-          height="16"
-          rx="1.5"
-          className="logo-cutout"
-        />
-        <rect
-          x="14"
-          y="6"
-          width="8"
-          height="7"
-          rx="1.5"
-          className="logo-cutout"
-        />
-        <rect
-          x="14"
-          y="16"
-          width="8"
-          height="6"
-          rx="1.5"
-          className="logo-cutout"
-        />
-      </svg>
+      <BrandMark />
       <span>
         overtrue<span className="wordmark-slash">/</span>ui
       </span>
@@ -321,17 +290,17 @@ function Home() {
           <div className="product-label">
             <span>
               <span className="live-dot" />
-              Live component preview · Sample data
+              Interactive workspace · Sample data
             </span>
-            <Link to="/components/dashboard">
+            <Link to="/blocks/dashboard">
               Explore the block
               <ArrowUpRight size={13} />
             </Link>
           </div>
-          <Dashboard compact />
+          <Dashboard compact workspaceName="overtrue" user={siteOwner} />
           <div className="product-caption">
             <span>01 / A workspace that feels like yours.</span>
-            <span>React · TypeScript · Tailwind CSS</span>
+            <span>Try the navigation, filters, and export</span>
           </div>
         </div>
       </section>
@@ -373,8 +342,8 @@ function Home() {
           {(
             [
               "stat-card",
-              "activity-feed",
-              "storage-meter",
+              "metric-chart",
+              "resource-progress",
               "status-badge",
               "avatar-stack",
               "steps",
@@ -466,7 +435,9 @@ function Home() {
 function ComponentTile({ name }: { name: ItemName }) {
   const item = catalog.find((item) => item.name === name)!;
   return (
-    <article className={`component-tile tile-${name}`}>
+    <article
+      className={`component-tile tile-${name}${item.category === "Blocks" && !("previewHeight" in item) ? " tile-wide" : ""}`}
+    >
       <div className="tile-preview">
         <FitPreview
           // Keep the metric group's four-column overview at its detail-view width.
@@ -479,12 +450,18 @@ function ComponentTile({ name }: { name: ItemName }) {
                   ? 840
                   : 400
           }
-          height={item.category === "Blocks" ? 480 : 280}
+          height={
+            "previewHeight" in item
+              ? item.previewHeight
+              : item.category === "Blocks"
+                ? 480
+                : 280
+          }
         >
           <Example name={name} />
         </FitPreview>
       </div>
-      <Link className="tile-caption" to={`/components/${name}`}>
+      <Link className="tile-caption" to={catalogPath(item)}>
         <span>
           {item.title}
           <small>{item.category}</small>
@@ -552,11 +529,13 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           </label>
         </div>
       )}
-      {blocks && <CardCollection />}
       {blocks && (
         <div className="complete-block-heading">
-          <h2>Complete interfaces</h2>
-          <p>Start with a full view, then make every part your own.</p>
+          <h2>Composed blocks</h2>
+          <p>
+            Forms, business cards, and complete views. Adapt the source to your
+            workflow.
+          </p>
         </div>
       )}
       <div className={blocks ? "block-grid" : "component-grid"}>
@@ -564,6 +543,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           <ComponentTile key={item.name} name={item.name} />
         ))}
       </div>
+      {blocks && <CardCollection />}
       {!items.length && (
         <div className="search-empty">
           <Search size={24} />
@@ -583,8 +563,19 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
     </main>
   );
 }
+function BlockPage() {
+  const { id } = useParams();
+  return catalog.some(
+    (item) => item.name === id && item.category === "Blocks",
+  ) ? (
+    <ComponentPage />
+  ) : (
+    <CardBlockPage />
+  );
+}
 function ComponentPage() {
-  const { name } = useParams();
+  const { name: componentName, id } = useParams();
+  const name = componentName ?? id;
   const navigate = useNavigate();
   const item = catalog.find((item) => item.name === name);
   const [tab, setTab] = useState("Preview");
@@ -594,6 +585,14 @@ function ComponentPage() {
     setSourceFile(name);
   }, [name]);
   if (!item) return <NotFound />;
+  if (componentName && item.category === "Blocks")
+    return <Navigate to={catalogPath(item)} replace />;
+  const isBlock = item.category === "Blocks";
+  const collection = isBlock ? "Blocks" : "Components";
+  const collectionPath = isBlock ? "/blocks" : "/components";
+  const siblings = catalog.filter(
+    (entry) => (entry.category === "Blocks") === isBlock,
+  );
   const files: string[] = [];
   function addSource(name: string) {
     if (files.includes(name)) return;
@@ -604,30 +603,34 @@ function ComponentPage() {
   }
   addSource(item.name);
   const source = sources[`../registry/overtrue/${sourceFile}.tsx`] ?? "";
-  const usage = `import { ${"imports" in item ? item.imports : symbolName(item.name)} } from "@/components/overtrue/${item.name}"\n${"exampleImports" in item ? item.exampleImports + "\n" : ""}\n${item.usage}`;
+  const usage = usageSource(item);
   return (
     <main className="docs-layout section">
       <aside className="docs-sidebar">
-        <Link className="back-link" to="/components">
-          ← All components
+        <Link className="back-link" to={collectionPath}>
+          ← All {collection.toLowerCase()}
         </Link>
-        <p>Components</p>
-        {catalog.map((entry) => (
-          <NavLink key={entry.name} to={`/components/${entry.name}`}>
+        <p>{collection}</p>
+        {siblings.map((entry) => (
+          <NavLink key={entry.name} to={catalogPath(entry)}>
             {entry.title}
-            {entry.category === "Blocks" && <small>Block</small>}
           </NavLink>
         ))}
       </aside>
       <article className="docs-content">
         <label className="component-picker">
-          Browse components
+          Browse {collection.toLowerCase()}
           <select
-            aria-label="Browse components"
+            aria-label={`Browse ${collection.toLowerCase()}`}
             value={item.name}
-            onChange={(event) => navigate(`/components/${event.target.value}`)}
+            onChange={(event) => {
+              const entry = siblings.find(
+                (entry) => entry.name === event.target.value,
+              );
+              if (entry) navigate(catalogPath(entry));
+            }}
           >
-            {catalog.map((entry) => (
+            {siblings.map((entry) => (
               <option key={entry.name} value={entry.name}>
                 {entry.title}
               </option>
@@ -635,7 +638,7 @@ function ComponentPage() {
           </select>
         </label>
         <div className="breadcrumbs">
-          <Link to="/components">Components</Link>
+          <Link to={collectionPath}>{collection}</Link>
           <ChevronRight size={12} />
           {item.title}
         </div>
@@ -657,14 +660,17 @@ function ComponentPage() {
           <p>{item.description}</p>
         </div>
         <div className="workspace-toolbar">
-          <div className="filter-tabs" aria-label="Component view">
-            {["Preview", "Code"].map((value) => (
+          <div
+            className="filter-tabs"
+            aria-label={`${isBlock ? "Block" : "Component"} view`}
+          >
+            {["Preview", "Source"].map((value) => (
               <button
                 key={value}
                 aria-pressed={tab === value}
                 onClick={() => setTab(value)}
               >
-                {value === "Code" && <Code2 size={13} />}
+                {value === "Source" && <Code2 size={13} />}
                 {value}
               </button>
             ))}
@@ -676,10 +682,14 @@ function ComponentPage() {
         </div>
         {tab === "Preview" ? (
           <div className={`detail-preview detail-${item.name}`}>
-            <Example name={item.name} expanded />
+            <Example key={item.name} name={item.name} expanded />
           </div>
         ) : (
           <div className="source-view">
+            <p className="note">
+              Installed {isBlock ? "block" : "component"} source, including its
+              local dependencies. See Usage below for an import example.
+            </p>
             <div className="code-label">
               <label className="sr-only" htmlFor="source-file">
                 Source file
@@ -712,6 +722,11 @@ function ComponentPage() {
           <Link to="/docs">New to overtrue/ui? Start here.</Link>
         </p>
         <h2>Usage</h2>
+        <p>
+          {isBlock
+            ? "A starting point for your page. Edit the installed layout, fields, and actions for your product."
+            : "A minimal example. The preview above demonstrates sample data and additional variants."}
+        </p>
         <Command text={usage} label="React" language="tsx" />
         {"api" in item && (
           <>
@@ -758,13 +773,11 @@ function ComponentPage() {
                       ? "Rows are sorted by value without changing your input. Bar widths compare against the largest value; percentages use the sum of all rows. Optional icon and href fields add context or drill-down navigation. Negative and non-finite values are treated as zero."
                       : item.name === "conversion-funnel"
                         ? "Supply stages in journey order with stable IDs. Each stage shows its share of the first stage and its conversion from the previous stage. Missing denominators display an unavailable state, never an invented rate. Negative and non-finite counts are treated as zero."
-                        : item.name === "settings-panel"
-                          ? "Pass an async onSave callback to connect your API. Without it, the form is a local demo. Errors keep the current values so the user can retry."
-                          : item.name === "data-table"
-                            ? "Supply stable row IDs with getRowId. Columns define a searchable and sortable value; use render for custom cells. Filtering and pagination run on the client."
-                            : item.name === "dashboard"
-                              ? "All metrics and members are example data. Navigation, filtering, report export, and local settings work in the demo. Connect your API and authentication before using it as a real console."
-                              : "Edit the installed TypeScript source to fit your product. Components inherit your semantic color tokens and support the .dark theme convention."}
+                        : item.name === "data-table"
+                          ? "Supply stable row IDs with getRowId. Columns define a searchable and sortable value; use render for custom cells. Filtering and pagination run on the client."
+                          : item.name === "dashboard"
+                            ? "All metrics and members are example data. Navigation, filtering, report export, and local settings work in the demo. Connect your API and authentication before using it as a real console."
+                            : "Edit the installed TypeScript source to fit your product. Components inherit your semantic color tokens and support the .dark theme convention."}
         </p>
         <p className="note">
           {item.dependencies.length
@@ -801,33 +814,9 @@ function Docs() {
   );
   return (
     <main className="docs-layout section">
-      <aside className="docs-sidebar">
-        <p>Getting started</p>
-        <a href="#introduction">Introduction</a>
-        <a href="#installation">Installation</a>
-        <a href="#namespace">Namespace</a>
-        <a href="#theming">Theming</a>
-        <a href="#workspace">Workspace examples</a>
-        <a href="#credits">Credits & license</a>
-        <p>Handbook</p>
-        <GuideLinks />
-        <Link to="/components">
-          Browse components
-          <ArrowUpRight size={12} />
-        </Link>
-      </aside>
+      <DocsSidebar />
       <article className="docs-content prose-docs">
-        <details className="docs-mobile-contents">
-          <summary>On this page</summary>
-          <nav aria-label="Documentation sections">
-            <a href="#introduction">Introduction</a>
-            <a href="#installation">Installation</a>
-            <a href="#namespace">Namespace</a>
-            <a href="#theming">Theming</a>
-            <a href="#workspace">Workspace examples</a>
-            <a href="#credits">Credits & license</a>
-          </nav>
-        </details>
+        <DocsMobileNavigation />
         <p className="overline">DOCUMENTATION</p>
         <h1 id="introduction">Meet your new starting point.</h1>
         <p className="lead">
@@ -842,6 +831,15 @@ function Docs() {
             can change every detail without waiting on a library release.
           </p>
         </div>
+        <h2>Components and blocks</h2>
+        <p>
+          Components provide a focused UI behavior or presentation through data,
+          children, and callbacks: inputs, tables, charts, and layout
+          primitives. Blocks assemble these pieces into a specific interface,
+          such as workspace settings, a pricing card, or a dashboard. A block
+          can accept props and still be a block; the boundary is its purpose,
+          not its size or whether it uses other components.
+        </p>
         <h2 id="installation">Start with one component</h2>
         <p>
           Use a React project with TypeScript, Tailwind CSS v4, and an{" "}
@@ -1048,7 +1046,7 @@ function App() {
           <Route path="/components" element={<Catalog />} />
           <Route path="/components/:name" element={<ComponentPage />} />
           <Route path="/blocks" element={<Catalog blocks />} />
-          <Route path="/blocks/:id" element={<CardBlockPage />} />
+          <Route path="/blocks/:id" element={<BlockPage />} />
           <Route path="/docs" element={<Docs />} />
           <Route path="/docs/:slug" element={<GuidePage />} />
           <Route path="/examples" element={<Examples />} />

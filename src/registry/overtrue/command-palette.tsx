@@ -155,13 +155,12 @@ function CommandPaletteContent({
               {group.items.map((item) => (
                 <CommandItem
                   key={item.id}
-                  value={[
+                  value={item.id}
+                  keywords={[
                     item.label,
-                    item.description,
+                    item.description ?? "",
                     ...(item.keywords ?? []),
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
+                  ]}
                   disabled={item.disabled}
                   onSelect={() => {
                     item.onSelect?.();

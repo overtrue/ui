@@ -1,6 +1,6 @@
 # Reusable admin components
 
-The Components catalogue contains 31 portable components. The ten additions below are extracted from existing workspace and block patterns. Each has a preview, installation command, editable source, usage example, and props table at `/components/<name>`.
+The Components catalogue contains 52 portable components. The patterns below were extracted from workspace examples. Focused primitives live at `/components/<name>`; the complete task and member cards live at `/blocks/task-list` and `/blocks/member-card`. Each has a preview, installation command, editable source, Usage example, and props table.
 
 | Component | Existing adoption | Main API |
 | --- | --- | --- |
@@ -11,9 +11,9 @@ The Components catalogue contains 31 portable components. The ten additions belo
 | `filter-tabs` | Project board, asset library, tracking, and other scene filters | Required `label`, `items`, controlled `value` and `onValueChange` |
 | `chart-legend` | MetricChart, StorageMeter, high-order charts | `items`, `layout`, `label` |
 | `timeline` | High-order activity examples | `items`, `label`, `emptyMessage` |
-| `task-list` | High-order task examples | Stable task IDs, `onTaskChange(id, done)`; also exports TaskCard |
+| `task-list` (block) | High-order task examples | Stable task IDs, `onTaskChange(id, done)`; also exports TaskCard |
 | `file-list` | Workspace typography attachment example | Stable file IDs, `href`, caller-owned `actions` |
-| `member-card` | Workspace people collection | `member`, `description`, `badge`, `details`, `action` |
+| `member-card` (block) | Workspace people collection | `member`, `description`, `badge`, `details`, `action` |
 
 All ten install without workspace styles or routing. They use standard Tailwind v4 tokens and shadcn primitives; registry generation includes their local component dependencies. Icons use Tabler Icons. Status edges can use optional `--color-success`, `--color-warning`, and `--color-info` tokens, falling back to primary when those tokens are absent.
 

@@ -39,6 +39,7 @@ jobs:
       - name: Validate registry and content
         run: |
           node scripts/registry/verify.mjs
+          pnpm usage:check
           pnpm content:check
           git diff --exit-code
       - name: Package browser test build
@@ -107,8 +108,8 @@ jobs:
           SUITE: ${{ matrix.suite }}
         run: |
           case "$SUITE" in
-            site) node scripts/site/verify.mjs ;;
-            components) pnpm site:check ;;
+            site) node scripts/site/verify.mjs && pnpm home:check ;;
+            components) pnpm site:check && pnpm catalog:check ;;
             compositions) node scripts/registry/verify-compositions.mjs ;;
             workspace-desktop)
               node scripts/examples/verify-workspace.mjs

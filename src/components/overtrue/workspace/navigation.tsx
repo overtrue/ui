@@ -1,3 +1,4 @@
+import { BrandMark } from "@/components/brand-mark";
 import * as React from "react";
 import { Link, useLocation } from "react-router-dom";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
@@ -116,14 +117,7 @@ export function MenuItems({ items }: { items: Menu[] }) {
 export function Logo({ className = "workspace-logo" }: { className?: string }) {
   return (
     <Link to="/" className={className} aria-label="overtrue/ui home">
-      <svg width="24" height="24" viewBox="0 0 28 28" aria-hidden="true">
-        <rect width="28" height="28" rx="7" fill="#066fd1" />
-        <g fill="white">
-          <rect x="6" y="6" width="5" height="16" rx="1.5" />
-          <rect x="14" y="6" width="8" height="7" rx="1.5" />
-          <rect x="14" y="16" width="8" height="6" rx="1.5" />
-        </g>
-      </svg>
+      <BrandMark width="24" height="24" />
       <span>overtrue/ui</span>
     </Link>
   );

@@ -1,4 +1,4 @@
-import { catalog } from "./catalog.ts";
+import { catalog, catalogPath } from "./catalog.ts";
 import cards from "../blocks/catalog.json" with { type: "json" };
 
 export const guides = [
@@ -65,7 +65,7 @@ export const sitePages = [
     description: guide.description,
   })),
   ...catalog.map((item) => ({
-    path: `/components/${item.name}`,
+    path: catalogPath(item),
     title: item.title,
     description: item.description,
   })),

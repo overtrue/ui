@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useId, useState } from "react";
 import {
   IconDownload as Download,
   IconChartAreaLine as ChartAreaLine,
@@ -8,16 +8,16 @@ import {
   IconUsers as Users,
   IconActivity as Activity,
   IconChevronDown as ChevronDown,
+  IconArrowUpRight as ArrowUpRight,
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
-import { StatCard } from "./stat-card";
-import { PageHeader } from "./page-header";
+import { MetricGroup, MetricGroupItem } from "./metric-group";
 import { MetricChart } from "./metric-chart";
 import { ActivityFeed } from "./activity-feed";
 import { DataTable, type DataColumn } from "./data-table";
 import { StatusBadge } from "./status-badge";
 import { SettingsPanel } from "./settings-panel";
-import { AvatarStack } from "./avatar-stack";
+import { AvatarStack, type TeamMember } from "./avatar-stack";
 import { cn } from "@/lib/utils";
 import { AnalyticsOverview } from "./analytics-overview";
 
@@ -118,7 +118,16 @@ const columns: DataColumn<Member>[] = [
     ),
   },
 ];
-export function Dashboard({ compact = false }: { compact?: boolean }) {
+export function Dashboard({
+  compact = false,
+  workspaceName = "Acme Studio",
+  user = dashboardMembers[0],
+}: {
+  compact?: boolean;
+  workspaceName?: string;
+  user?: TeamMember;
+}) {
+  const periodId = useId();
   const [view, setView] = useState("Overview");
   const [period, setPeriod] = useState("12 months");
   const data =
@@ -139,30 +148,43 @@ export function Dashboard({ compact = false }: { compact?: boolean }) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   return (
-    <div className="overflow-hidden rounded-xl border bg-background text-foreground shadow-sm">
-      <div className="flex items-center justify-between gap-4 border-b bg-card px-5 py-3.5">
-        <div className="flex items-center gap-2 text-sm font-semibold">
-          <span className="flex size-6 items-center justify-center rounded-md bg-foreground text-background">
-            <LayoutDashboard className="size-3.5" />
+    <div
+      data-slot="dashboard"
+      className="@container/dashboard overflow-hidden rounded-xl border border-border bg-muted/30 text-foreground shadow-sm [&_[data-slot=metric-chart]]:shadow-none"
+    >
+      <div className="flex items-center justify-between gap-4 border-b bg-card px-4 py-3 sm:px-6">
+        <div className="flex items-center gap-3">
+          <span className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <LayoutDashboard
+              aria-hidden="true"
+              className="size-4"
+              stroke={1.7}
+            />
           </span>
-          Acme Studio
-          <ChevronDown className="size-3.5 text-muted-foreground" />
+          <div>
+            <p className="text-sm font-semibold tracking-tight">
+              {workspaceName}
+            </p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              Workspace
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className="hidden text-xs text-muted-foreground sm:block">
-            Your workspace, at a glance.
+          <span className="hidden text-xs font-medium text-muted-foreground sm:block">
+            {user.name}
           </span>
-          <AvatarStack members={dashboardMembers.slice(0, 1)} />
+          <AvatarStack members={[user]} />
         </div>
       </div>
-      <div className="flex flex-col md:flex-row">
-        <aside className="shrink-0 border-b bg-card p-3 md:w-44 md:border-r md:border-b-0">
-          <p className="hidden px-3 pt-3 pb-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground md:block">
+      <div className="flex flex-col @min-[56rem]/dashboard:flex-row">
+        <aside className="shrink-0 border-b bg-card/60 p-2.5 @min-[56rem]/dashboard:w-44 @min-[56rem]/dashboard:border-r @min-[56rem]/dashboard:border-b-0 @min-[56rem]/dashboard:p-3">
+          <p className="hidden px-3 pt-3 pb-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground @min-[56rem]/dashboard:block">
             Workspace
           </p>
           <nav
             aria-label="Dashboard"
-            className="flex gap-1 overflow-auto md:flex-col"
+            className="flex gap-1 overflow-auto @min-[56rem]/dashboard:flex-col"
           >
             {[
               { label: "Overview", icon: LayoutDashboard },
@@ -177,9 +199,9 @@ export function Dashboard({ compact = false }: { compact?: boolean }) {
                 aria-current={view === label ? "page" : undefined}
                 onClick={() => setView(label)}
                 className={cn(
-                  "flex items-center gap-2.5 rounded-md px-3 py-2 text-left text-xs font-medium transition-colors",
+                  "flex shrink-0 items-center gap-2.5 rounded-md px-3 py-2.5 text-left text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
                   view === label
-                    ? "bg-primary/10 text-primary"
+                    ? "bg-primary/8 text-primary"
                     : "text-muted-foreground hover:bg-muted",
                 )}
               >
@@ -189,71 +211,106 @@ export function Dashboard({ compact = false }: { compact?: boolean }) {
             ))}
           </nav>
         </aside>
-        <div className="min-w-0 flex-1 space-y-5 p-5 md:p-6">
+        <div className="min-w-0 flex-1 space-y-5 p-4 sm:p-6">
           {view !== "Analytics" && (
-            <PageHeader
-              eyebrow="Workspace"
-              title={view === "Overview" ? "Overview" : view}
-              actions={
-                view === "Overview" && (
-                  <>
-                    <label
-                      className="sr-only"
-                      htmlFor={compact ? "hero-period" : "dashboard-period"}
-                    >
-                      Report period
-                    </label>
+            <header className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-semibold tracking-tight">{view}</h2>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                  {view === "Overview"
+                    ? "A little perspective on your business."
+                    : `Your workspace ${view.toLowerCase()}, in one place.`}
+                </p>
+              </div>
+              {view === "Overview" && (
+                <div className="flex items-center gap-2">
+                  <label className="sr-only" htmlFor={periodId}>
+                    Report period
+                  </label>
+                  <div className="relative">
                     <select
-                      id={compact ? "hero-period" : "dashboard-period"}
+                      id={periodId}
                       value={period}
                       onChange={(event) => setPeriod(event.target.value)}
-                      className="h-8 rounded-md border bg-card px-2 text-xs"
+                      className="h-8 appearance-none rounded-md border border-border bg-card py-0 pl-3 pr-8 text-xs font-medium leading-8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                     >
                       <option>12 months</option>
                       <option>6 months</option>
                     </select>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-border bg-card text-foreground hover:bg-muted"
-                      onClick={exportReport}
-                    >
-                      <Download className="size-3.5" />
-                      Export
-                    </Button>
-                  </>
-                )
-              }
-            />
+                    <ChevronDown
+                      aria-hidden="true"
+                      className="pointer-events-none absolute top-1/2 right-2.5 size-3.5 -translate-y-1/2 text-muted-foreground"
+                      stroke={1.7}
+                    />
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-8 border-border bg-card px-3 text-xs font-medium text-foreground shadow-none hover:bg-muted"
+                    onClick={exportReport}
+                  >
+                    <Download
+                      aria-hidden="true"
+                      className="size-3.5"
+                      stroke={1.7}
+                    />
+                    Export
+                  </Button>
+                </div>
+              )}
+            </header>
           )}
           {view === "Analytics" && (
             <AnalyticsOverview className="border-0 p-0 sm:p-0" />
           )}
           {view === "Overview" && (
             <>
-              <div className="grid gap-4 sm:grid-cols-3">
-                <StatCard
-                  title="Total revenue"
-                  value={period === "12 months" ? "$36,800" : "$24,600"}
-                  change="12.8%"
-                  trend="up"
+              <MetricGroup className="grid-cols-3">
+                {[
+                  {
+                    label: "Revenue",
+                    value: period === "12 months" ? "$36,800" : "$24,600",
+                    change: "12.8%",
+                  },
+                  { label: "Subscribers", value: "2,420", change: "8.2%" },
+                  { label: "Conversion", value: "4.36%", change: "0.6%" },
+                ].map((metric) => (
+                  <MetricGroupItem
+                    key={metric.label}
+                    label={metric.label}
+                    value={metric.value}
+                    className="px-2 py-4 sm:px-5 sm:py-5 [&>p:first-child]:text-[11px] sm:[&>p:first-child]:text-xs"
+                    context={
+                      <span className="flex flex-wrap items-center gap-1.5">
+                        <span className="inline-flex items-center gap-0.5 font-medium text-emerald-700 dark:text-emerald-400">
+                          <ArrowUpRight aria-hidden="true" className="size-3" />
+                          <span className="sr-only">Increase </span>
+                          {metric.change}
+                        </span>
+                        <span className="hidden text-[11px] sm:inline">
+                          vs. last month
+                        </span>
+                      </span>
+                    }
+                  />
+                ))}
+              </MetricGroup>
+              <div className="grid gap-5 @min-[64rem]/dashboard:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]">
+                <MetricChart
+                  data={data}
+                  height={compact ? 215 : 260}
+                  description="Monthly revenue · USD"
+                  valueFormatter={(value) =>
+                    `$${value.toLocaleString("en-US")}`
+                  }
+                  axisFormatter={(value) =>
+                    value === 0 ? "$0" : `$${value / 1000}k`
+                  }
                 />
-                <StatCard
-                  title="Active subscribers"
-                  value="2,420"
-                  change="8.2%"
-                  trend="up"
+                <ActivityFeed
+                  items={dashboardActivity}
+                  className="shadow-none"
                 />
-                <StatCard
-                  title="Conversion rate"
-                  value="4.36%"
-                  change="0.6%"
-                  trend="up"
-                />
-              </div>
-              <div className="grid gap-4 xl:grid-cols-[1.65fr_1fr]">
-                <MetricChart data={data} height={compact ? 190 : 240} />
-                <ActivityFeed items={dashboardActivity} />
               </div>
               {!compact && (
                 <DataTable
@@ -273,8 +330,15 @@ export function Dashboard({ compact = false }: { compact?: boolean }) {
               getRowId={(row) => row.id}
             />
           )}
-          {view === "Activity" && <ActivityFeed items={dashboardActivity} />}
-          {view === "Settings" && <SettingsPanel />}
+          {view === "Activity" && (
+            <ActivityFeed items={dashboardActivity} className="shadow-none" />
+          )}
+          {view === "Settings" && (
+            <SettingsPanel
+              initialName={workspaceName}
+              initialEmail="team@example.com"
+            />
+          )}
         </div>
       </div>
     </div>

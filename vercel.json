@@ -83,6 +83,56 @@
       "source": "/preview/",
       "destination": "/workspace/",
       "permanent": true
+    },
+    {
+      "source": "/components/settings-panel",
+      "destination": "/blocks/settings-panel",
+      "permanent": true
+    },
+    {
+      "source": "/components/member-card",
+      "destination": "/blocks/member-card",
+      "permanent": true
+    },
+    {
+      "source": "/components/pricing-card",
+      "destination": "/blocks/pricing-card",
+      "permanent": true
+    },
+    {
+      "source": "/components/storage-meter",
+      "destination": "/blocks/storage-meter",
+      "permanent": true
+    },
+    {
+      "source": "/components/activity-feed",
+      "destination": "/blocks/activity-feed",
+      "permanent": true
+    },
+    {
+      "source": "/components/task-list",
+      "destination": "/blocks/task-list",
+      "permanent": true
+    },
+    {
+      "source": "/components/dashboard",
+      "destination": "/blocks/dashboard",
+      "permanent": true
+    },
+    {
+      "source": "/components/analytics-overview",
+      "destination": "/blocks/analytics-overview",
+      "permanent": true
+    },
+    {
+      "source": "/components/project-portfolio",
+      "destination": "/blocks/project-portfolio",
+      "permanent": true
+    },
+    {
+      "source": "/components/service-status",
+      "destination": "/blocks/service-status",
+      "permanent": true
     }
   ]
 }

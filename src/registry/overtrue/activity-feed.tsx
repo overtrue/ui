@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export interface ActivityItem {
   id: string;
@@ -9,12 +10,20 @@ export interface ActivityItem {
 export function ActivityFeed({
   items,
   title = "Recent activity",
+  className,
 }: {
   items: ActivityItem[];
   title?: string;
+  className?: string;
 }) {
   return (
-    <Card className="gap-0 rounded-lg border bg-card py-0 shadow-sm">
+    <Card
+      data-slot="activity-feed"
+      className={cn(
+        "gap-0 rounded-lg border bg-card py-0 shadow-sm",
+        className,
+      )}
+    >
       <CardHeader className="border-b px-5 py-4 [.border-b]:pb-4">
         <CardTitle className="text-sm font-semibold">{title}</CardTitle>
       </CardHeader>

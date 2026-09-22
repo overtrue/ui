@@ -1,3 +1,4 @@
+import * as RadioGroup from "@radix-ui/react-radio-group"
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -16,30 +17,30 @@ export function SegmentedControl<T extends string = string>({
   className,
 }: SegmentedControlProps<T>) {
   return (
-    <div
+    <RadioGroup.Root
       className={cn(
         "inline-flex items-center rounded-lg border border-border bg-muted p-0.5",
         className,
       )}
-      role="radiogroup"
+      value={value}
+      onValueChange={(next) => onValueChange(next as T)}
+      aria-label="Options"
     >
       {options.map((opt) => (
-        <Button
-          key={opt.value}
-          type="button"
-          role="radio"
-          aria-checked={value === opt.value}
-          size="sm"
-          variant={value === opt.value ? "secondary" : "ghost"}
-          className={cn(
-            "h-7 rounded-md px-3 shadow-none",
-            value === opt.value && "bg-background text-foreground shadow-sm",
-          )}
-          onClick={() => onValueChange(opt.value)}
-        >
-          {opt.label}
-        </Button>
+        <RadioGroup.Item key={opt.value} value={opt.value} asChild>
+          <Button
+            type="button"
+            size="sm"
+            variant={value === opt.value ? "secondary" : "ghost"}
+            className={cn(
+              "h-7 rounded-md px-3 shadow-none",
+              value === opt.value && "bg-background text-foreground shadow-sm",
+            )}
+          >
+            {opt.label}
+          </Button>
+        </RadioGroup.Item>
       ))}
-    </div>
+    </RadioGroup.Root>
   )
 }

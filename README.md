@@ -10,8 +10,8 @@ Install the pieces you need through the shadcn CLI. The source goes into your ap
 
 ## What's included
 
-- **58 components:** metrics, charts, tables, activity feeds, navigation, forms, and other building blocks for everyday admin work. Each has live examples, source, usage, and installation instructions.
-- **Four complete interfaces:** a dashboard, analytics overview, project portfolio, and service status page.
+- **52 components:** metrics, charts, tables, navigation, form controls, and other building blocks for everyday admin work. Each has live examples, source, usage, and installation instructions.
+- **10 composed blocks:** workspace settings, pricing, members, tasks, activity, storage, dashboard, analytics overview, project portfolio, and service status.
 - **368 example card patterns:** extracted from the same source used by the workspace pages, including their sample data and local interactions.
 - **119 workspace examples:** projects, people, billing, inboxes, settings, authentication, layouts, and component demonstrations.
 - **Light and dark themes:** semantic colors, responsive layouts, and Tabler Icons throughout. The workspace also includes controls for accent, typography, radius, and navigation.
@@ -78,9 +78,11 @@ npx shadcn@latest add @overtrue/dashboard
 | Choose | For | What gets installed |
 | --- | --- | --- |
 | Components | Individual UI patterns | Editable source, local helpers, required shadcn primitives, and npm dependencies |
-| Complete interfaces | A composed screen to customize | The screen and its component dependencies |
+| Composed blocks | A business card, form, or screen to customize | The layout and its component dependencies |
 | Example card blocks | A card from a workspace example | The card plus a shared foundation with scoped styles and demo interaction primitives |
 | Workspace pages | Exploring layouts and workflows | Browse or adapt the repository source; these pages are not individually installable registry items |
+
+A component owns a focused presentation or interaction contract. A block fixes a business composition, even if it accepts data and callbacks. Card size and the presence of props do not decide the category. See the [catalog review](docs/registry/catalog-review.md) for the item-by-item classification.
 
 Core components inherit your application's shadcn theme and do not require the workspace stylesheet. Example card blocks use a separate foundation under `components/overtrue/blocks/runtime/` to preserve their appearance without replacing your application's UI primitives. Some card imagery is served from the registry origin; replace it with your own assets before using it in a product.
 
