@@ -156,7 +156,9 @@ The website, workspace, and isolated card preview are separate Vite entries. Wor
 
 ## Deploy
 
-Import the repository into Vercel as a Vite project. The checked-in `vercel.json` uses `npm run build`, publishes `dist/`, and configures website routes and registry headers.
+The `overtrue/ui` GitHub repository is connected to the `overtrue-ui` Vercel project. Pushes to `main` deploy to [ui.overtrue.xyz](https://ui.overtrue.xyz); pull requests get preview deployments.
+
+For your own deployment, import the repository into Vercel as a Vite project. The checked-in `vercel.json` uses `npm run build`, publishes `dist/`, and configures website routes and registry headers.
 
 Set this build environment variable for a stable public registry origin:
 
