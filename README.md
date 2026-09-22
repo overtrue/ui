@@ -4,7 +4,7 @@ Editable components and page patterns for admin panels, dashboards, and consoles
 
 [Website](https://ui.overtrue.xyz) · [Components](https://ui.overtrue.xyz/components) · [Blocks](https://ui.overtrue.xyz/blocks) · [Documentation](https://ui.overtrue.xyz/docs) · [Examples](https://ui.overtrue.xyz/examples)
 
-[![overtrue/ui — editable interfaces for the work behind the screen](public/social.png)](https://ui.overtrue.xyz)
+[![overtrue/ui — editable interfaces for the work behind the screen](docs/images/overview.png)](https://ui.overtrue.xyz)
 
 Install the pieces you need through the shadcn CLI. The source goes into your application, where you can change the markup, styling, and behavior without maintaining a fork of a component package.
 
