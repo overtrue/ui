@@ -36,7 +36,7 @@ import { Example } from "./examples";
 import { dashboardCatalog } from "./dashboard-catalog";
 import { FitPreview } from "./fit-preview";
 import workspacePages from "@/data/workspace/pages.json";
-import { Command, CopyButton } from "./code";
+import { Command, CopyButton, HighlightedCode } from "./code";
 import { GuidePage, GuideLinks } from "./guides";
 import { sitePages } from "./pages";
 import { HomeDetails } from "./home-details";
@@ -697,9 +697,7 @@ function ComponentPage() {
               </select>
               <CopyButton text={source} label="Copy source" />
             </div>
-            <pre>
-              <code>{source}</code>
-            </pre>
+            <HighlightedCode text={source} language="tsx" />
           </div>
         )}
         <h2>Installation</h2>

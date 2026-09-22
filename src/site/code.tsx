@@ -44,7 +44,7 @@ export function CopyButton({
     </button>
   );
 }
-function HighlightedCode({
+export function HighlightedCode({
   text,
   language,
 }: {

@@ -9,7 +9,7 @@ import {
   IconDeviceMobile,
 } from "@tabler/icons-react";
 import cards from "../blocks/catalog.json";
-import { Command, CopyButton } from "./code";
+import { Command, CopyButton, HighlightedCode } from "./code";
 import { FitPreview } from "./fit-preview";
 
 const sources = import.meta.glob("../blocks/registry/*.tsx", {
@@ -292,9 +292,7 @@ export function CardBlockPage() {
         <CardPreview id={card.id} title={card.title} expanded mobile={mobile} />
       ) : (
         <div className="source-view">
-          <pre>
-            <code>{source || "Loading source…"}</code>
-          </pre>
+          <HighlightedCode text={source || "Loading source…"} language="tsx" />
         </div>
       )}
       <div className="card-install-grid">
