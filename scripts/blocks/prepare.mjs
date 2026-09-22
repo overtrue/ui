@@ -492,6 +492,7 @@ const parsed = ts.parseJsonConfigFileContent(config, ts.sys, root);
 const versions = new Map();
 const host = {
   ...ts.sys,
+  useCaseSensitiveFileNames: () => ts.sys.useCaseSensitiveFileNames,
   getScriptFileNames: () => parsed.fileNames,
   getScriptVersion: (f) => String(versions.get(f) ?? 0),
   getScriptSnapshot: (f) =>
