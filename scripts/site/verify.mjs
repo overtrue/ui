@@ -1,7 +1,6 @@
+import { browserCli } from "../browser/cli.mjs";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import { load } from "cheerio";
 import { sitePages, guides } from "../../src/site/pages.ts";
 
@@ -76,21 +75,7 @@ const png = await fs.readFile("dist/social.png");
 assert.equal(png.readUInt32BE(16), 1200);
 assert.equal(png.readUInt32BE(20), 630);
 
-const exec = promisify(execFile);
-const cli = (...args) =>
-  exec(
-    "npx",
-    [
-      "--yes",
-      "--package",
-      "@playwright/cli",
-      "playwright-cli",
-      "--session",
-      "site-complete",
-      ...args,
-    ],
-    { maxBuffer: 8 * 1024 * 1024 },
-  );
+const cli = browserCli("site-complete");
 await fs.mkdir("output/playwright/site-refinement", { recursive: true });
 await cli("open", origin);
 try {

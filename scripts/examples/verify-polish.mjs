@@ -1,10 +1,8 @@
+import { browserCli } from "../browser/cli.mjs";
 /** Full-page visual evidence; separate from the workflow interaction checks. */
 import fs from "node:fs/promises";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import { sitePages } from "../../src/site/pages.ts";
 
-const exec = promisify(execFile);
 const mobile = process.argv.includes("--mobile");
 const dark = process.argv.includes("--dark");
 const site = process.argv.includes("--site");
@@ -19,7 +17,7 @@ const routes = site
 const filter = process.env.ROUTES?.split(",");
 const selectedRoutes = filter ? routes.filter(route => filter.includes(route.name)) : routes;
 if (!selectedRoutes.length) throw new Error("No routes match ROUTES");
-const cli = (...args) => exec("npx", ["--yes", "--package", "@playwright/cli", "playwright-cli", "--session", `polish-${name}`, ...args], { maxBuffer: 16 * 1024 * 1024 });
+const cli = browserCli(`polish-${name}`);
 await fs.mkdir(output, { recursive: true });
 await cli("open", origin);
 const results = [];

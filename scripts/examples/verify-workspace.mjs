@@ -1,8 +1,6 @@
+import { browserCli } from "../browser/cli.mjs";
 /** Browser smoke checks and screenshots for every workspace route. */
 import fs from "node:fs/promises"
-import { execFile } from "node:child_process"
-import { promisify } from "node:util"
-const exec = promisify(execFile)
 const mobile = process.argv.includes("--mobile")
 const base = process.env.PREVIEW_URL ?? "http://127.0.0.1:4174/workspace/"
 const session = `overtrue-verify-${mobile ? "mobile" : "desktop"}`
@@ -10,20 +8,7 @@ const output = "output/playwright/workspace"
 const pages = JSON.parse(
   await fs.readFile("src/data/workspace/pages.json", "utf8"),
 )
-const cli = (...args) =>
-  exec(
-    "npx",
-    [
-      "--yes",
-      "--package",
-      "@playwright/cli",
-      "playwright-cli",
-      "--session",
-      session,
-      ...args,
-    ],
-    { maxBuffer: 16 * 1024 * 1024 },
-  )
+const cli = browserCli(session);
 await fs.mkdir(output, { recursive: true })
 await cli("open", base)
 const results = []

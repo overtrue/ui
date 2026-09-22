@@ -32,7 +32,7 @@ SITE_URL=http://127.0.0.1:4175 node scripts/site/verify.mjs
 SITE_URL=http://127.0.0.1:4175 node scripts/registry/verify-compositions.mjs
 ```
 
-The browser scripts use Playwright CLI and Chrome. Check the configured origin in each script if using another port. Results and screenshots go to the ignored `output/playwright/` directory.
+The browser scripts use the lockfile's Playwright CLI and Chrome. Install the browser with `pnpm exec playwright-cli install-browser chrome --with-deps`. Check the configured origin in each script if using another port. Results, CLI logs, and failure screenshots go to the ignored `output/playwright/` directory; GitHub Actions uploads these as artifacts.
 
 The website sweep derives routes from the catalog and checks desktop/mobile rendering and key interactions. The site verifier checks generated metadata, direct route responses, deployment rewrites, handbook navigation, themes, and internal links. The composition verifier covers composed components and their interactions.
 

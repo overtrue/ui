@@ -1,8 +1,6 @@
+import { browserCli } from "../browser/cli.mjs";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import { mkdir, writeFile } from "node:fs/promises";
-const exec = promisify(execFile);
 const origin = process.env.SITE_URL || "http://127.0.0.1:4177";
 const items = [
   "feature-card",
@@ -14,20 +12,7 @@ const items = [
   "project-portfolio",
   "service-status",
 ];
-const cli = (...args) =>
-  exec(
-    "npx",
-    [
-      "--yes",
-      "--package",
-      "@playwright/cli",
-      "playwright-cli",
-      "--session",
-      "overtrue-compositions-check",
-      ...args,
-    ],
-    { maxBuffer: 8 * 1024 * 1024 },
-  );
+const cli = browserCli("overtrue-compositions-check");
 async function run(code) {
   const { stdout } = await cli("run-code", code);
   const match = stdout.match(/### Result\n([\s\S]*?)\n### Ran/);

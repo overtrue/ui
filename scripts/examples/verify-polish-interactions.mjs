@@ -1,10 +1,8 @@
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
+import { browserCli } from "../browser/cli.mjs";
 import fs from "node:fs/promises";
 
-const exec = promisify(execFile);
 const origin = process.env.SITE_URL ?? "http://127.0.0.1:4178";
-const cli = (...args) => exec("npx", ["--yes", "--package", "@playwright/cli", "playwright-cli", "--session", "polish-regressions", ...args], { maxBuffer: 8 * 1024 * 1024 });
+const cli = browserCli("polish-regressions");
 await cli("open", origin);
 try {
   const { stdout } = await cli("run-code", `async page => {

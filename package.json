@@ -63,6 +63,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@playwright/cli": "0.1.21",
     "@tailwindcss/vite": "^4.0.9",
     "@types/node": "^22.13.5",
     "@types/react": "^19.0.10",

@@ -38,6 +38,20 @@ For UI changes, serve the production build with `pnpm preview --port 4175` and i
 
 The README and `docs/registry/verification.md` list browser verification commands. Generated screenshots, logs, build output, environment files, and local hosting settings must stay out of commits.
 
+## Automated checks
+
+Pull requests and pushes to `main` run the same checks in GitHub Actions:
+
+- Clean builds, TypeScript, registry integrity, and content checks on Node.js 22.18 and 24.
+- Website metadata and links, component routes, composed interfaces, workspace routes in both themes and screen sizes, and workflow interactions in Chrome.
+- CodeQL analysis for JavaScript and TypeScript. It also runs weekly.
+
+The `CI checks` job passes only when every build and browser job passes. Each browser job uploads logs, reports, and screenshots as artifacts, including a screenshot when a browser command fails. Artifacts are kept for seven days.
+
+Browser tooling is pinned in the lockfile. Run `pnpm exec playwright-cli install-browser chrome --with-deps` before your first browser check. Dependabot opens weekly updates for dependencies and pinned GitHub Actions.
+
+Vercel handles deployment through its GitHub integration. CI does not need deployment tokens; a successful Vercel deployment does not replace the `CI checks` result.
+
 ## Pull requests
 
 Explain the problem, the resulting behavior, and what you tested. Include before/after screenshots when they clarify a visual change. Call out any remaining limitations. Preserve third-party notices in adapted files and `licenses/third-party.txt`.

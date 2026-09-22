@@ -1,24 +1,9 @@
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
+import { browserCli } from "../browser/cli.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { sitePages } from "../../src/site/pages.ts";
-const exec = promisify(execFile);
 const origin = process.env.SITE_URL || "http://127.0.0.1:4175";
 const session = "overtrue-verification";
-const cli = (...args) =>
-  exec(
-    "npx",
-    [
-      "--yes",
-      "--package",
-      "@playwright/cli",
-      "playwright-cli",
-      "--session",
-      session,
-      ...args,
-    ],
-    { maxBuffer: 8 * 1024 * 1024 },
-  );
+const cli = browserCli(session);
 const run = async (code) => {
   const { stdout } = await cli("run-code", code);
   const result = stdout.match(/### Result\n([\s\S]*?)\n### Ran/);

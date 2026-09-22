@@ -132,6 +132,8 @@ PREVIEW_URL=http://127.0.0.1:4175/workspace/ node scripts/examples/verify-worksp
 
 Screenshots and verification output stay in the ignored `output/` directory. See [registry verification](docs/registry/verification.md) and [workspace verification](docs/examples/verification.md) for additional checks. A build passing does not replace reviewing the rendered interface.
 
+[GitHub Actions](https://github.com/overtrue/ui/actions) runs clean builds on Node.js 22.18 and 24, registry and content checks, browser verification, and CodeQL. See [automated checks](CONTRIBUTING.md#automated-checks) for coverage and failure artifacts.
+
 ## Repository layout
 
 ```text
