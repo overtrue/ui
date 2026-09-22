@@ -156,9 +156,18 @@ export function Example({
     case "avatar-stack":
       return (
         <div className="flex flex-col items-center gap-4 py-10">
-          <AvatarStack members={dashboardMembers} />
+          <AvatarStack
+            members={[
+              {
+                id: "overtrue",
+                name: "Chris An (@overtrue)",
+                image: "/assets/overtrue/people/overtrue.png",
+              },
+              ...dashboardMembers,
+            ]}
+          />
           <p className="text-xs text-muted-foreground">
-            Good work is a team effort.
+            Chris An (@overtrue) and the team.
           </p>
         </div>
       );

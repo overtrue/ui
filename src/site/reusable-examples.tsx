@@ -395,20 +395,24 @@ export function ReusableExample({
         <div className={expanded ? "grid gap-5 sm:grid-cols-2" : ""}>
           <MemberCard
             member={{
-              id: "maya",
-              name: "Maya Okafor",
-              image: "/assets/overtrue/people/maya.svg",
+              id: "overtrue",
+              name: "Chris An",
+              image: "/assets/overtrue/people/overtrue.png",
             }}
-            description="Design director"
-            badge={<StatusBadge variant="success">Available</StatusBadge>}
+            description="@overtrue"
+            badge={<StatusBadge variant="info">Creator</StatusBadge>}
             details={[
-              { id: "city", label: "Location", value: "Lisbon, Portugal" },
-              { id: "email", label: "Contact", value: "maya@acme.example" },
+              { id: "project", label: "Project", value: "overtrue/ui" },
+              { id: "profile", label: "Profile", value: "github.com/overtrue" },
             ]}
             action={
               <Button asChild variant="outline" size="sm">
-                <a href="/workspace/#/profile">
-                  View profile
+                <a
+                  href="https://github.com/overtrue"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  GitHub profile
                   <IconArrowUpRight data-icon="inline-end" />
                 </a>
               </Button>

@@ -170,7 +170,7 @@ The output is static and can be hosted elsewhere. Preserve the generated page pa
 
 ## Demo boundaries
 
-Acme Studio is a sample workspace. People, client records, contact details, and financial figures are demo data. Forms and business workflows use local state; the examples do not provide authentication, payment processing, email delivery, or a backend. Wire those behaviors into your own application.
+Acme Studio is a sample workspace. Client records, contact details, and financial figures are demo data. People are fictional except for the maintainer’s public GitHub profile used in a few avatar examples. Forms and business workflows use local state; the examples do not provide authentication, payment processing, email delivery, or a backend. Wire those behaviors into your own application.
 
 Maps fetch external tiles. Charts and tables declare their own dependencies; the newer analytics charts use a separate Recharts 3 alias so they can coexist with the existing Recharts 2 examples. Review the [compatibility notes](docs/registry/dashboard-components.md) before changing chart dependencies.
 

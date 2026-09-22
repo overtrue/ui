@@ -160,7 +160,7 @@ export function TopNavbar({
           <NotificationMenu items={notifications} />
           <AppsMenu apps={apps} />
           <span className="mx-1 hidden text-sm text-muted-foreground sm:inline">EN</span>
-          <UserMenu name="Chris An" role="Workspace owner" avatar="/assets/overtrue/people/chris-an.png" />
+          <UserMenu name="Chris An" role="@overtrue" avatar="/assets/overtrue/people/overtrue.png" />
         </div>
       </div>
       {layout === "horizontal" ? (

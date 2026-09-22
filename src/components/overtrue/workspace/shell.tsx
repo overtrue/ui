@@ -157,14 +157,14 @@ function HeaderActions() {
         <Dropdown.Trigger asChild>
           <Button variant="workspace" className="workspace-user" aria-label="Account menu for Chris An">
             <img
-              src="/assets/overtrue/people/chris-an.png"
+              src="/assets/overtrue/people/overtrue.png"
               width="32"
               height="32"
               alt="Chris An"
             />
             <span>
               <span>Chris An</span>
-              <small>Workspace owner</small>
+              <small>@overtrue</small>
             </span>
           </Button>
         </Dropdown.Trigger>
