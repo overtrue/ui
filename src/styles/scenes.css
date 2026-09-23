@@ -1292,6 +1292,7 @@
   padding: 9px 11px;
   font: inherit;
   font-size: 12px;
+  font-weight: 400;
   color: var(--scene-ink);
   max-width: 100%;
 }
