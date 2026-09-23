@@ -187,6 +187,35 @@ try {
     await page.locator(".source-view pre").textContent(),
     readFileSync(`src/blocks/registry/${cards[0].id}.tsx`, "utf8"),
   );
+  // Unknown routes must never invoke a loader inherited from Object.prototype.
+  await page.addInitScript(() => {
+    Object.defineProperty(
+      Object.prototype,
+      "../blocks/registry/unregistered-source.tsx",
+      {
+        configurable: true,
+        value: () => {
+          document.documentElement.dataset.unexpectedLoader = "called";
+          return Promise.resolve("unexpected source");
+        },
+      },
+    );
+  });
+  for (const id of ["unregistered-source", "constructor", "__proto__"]) {
+    await page.goto(origin + `/blocks/${id}`);
+    await page.getByRole("heading", { name: "Card not found." }).waitFor();
+    await page.evaluate(
+      () =>
+        new Promise((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(resolve)),
+        ),
+    );
+    assert.equal(
+      await page.locator("html").getAttribute("data-unexpected-loader"),
+      null,
+      `${id}: invoked an inherited loader`,
+    );
+  }
   assert.deepEqual(errors, []);
   writeFileSync(
     `${output}/results.json`,

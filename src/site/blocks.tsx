@@ -12,10 +12,14 @@ import cards from "../blocks/catalog.json";
 import { Command, CopyButton, HighlightedCode } from "./code";
 import { FitPreview } from "./fit-preview";
 
-const sources = import.meta.glob("../blocks/registry/*.tsx", {
-  query: "?raw",
-  import: "default",
-});
+const sources = new Map(
+  Object.entries(
+    import.meta.glob<string>("../blocks/registry/*.tsx", {
+      query: "?raw",
+      import: "default",
+    }),
+  ),
+);
 const categories = [
   "All cards",
   ...new Set(cards.map((card) => card.category)),
@@ -225,10 +229,10 @@ export function CardBlockPage() {
     let active = true;
     setSource("");
     setView("Preview");
-    const load = sources[`../blocks/registry/${id}.tsx`];
+    const load = sources.get(`../blocks/registry/${id}.tsx`);
     if (load)
       load().then((value) => {
-        if (active) setSource(value as string);
+        if (active) setSource(value);
       });
     return () => {
       active = false;
