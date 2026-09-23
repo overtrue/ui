@@ -6,6 +6,7 @@ import ts from "typescript";
 // hidden full-page render. A repeated collection is one editable block pattern.
 const root = process.cwd();
 const output = "src/blocks/generated";
+fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
 const pages = JSON.parse(
   fs.readFileSync("src/data/workspace/pages.json", "utf8"),

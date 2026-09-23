@@ -1,9 +1,16 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { catalog, catalogPath } from "../../src/site/catalog.ts";
 const index = JSON.parse(readFileSync("public/r/registry.json", "utf8"));
 const cards = JSON.parse(readFileSync("src/blocks/catalog.json", "utf8"));
+for (const directory of ["src/blocks/generated", "src/blocks/registry"]) {
+  assert.deepEqual(
+    readdirSync(directory).filter((file) => file.endsWith(".tsx")).sort(),
+    cards.map((card) => `${card.id}.tsx`).sort(),
+    `${directory}: generated modules must match the current catalog`,
+  );
+}
 const cardTitles = JSON.parse(
   readFileSync("scripts/blocks/titles.json", "utf8"),
 );

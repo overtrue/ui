@@ -9,6 +9,7 @@ export function prepareCardRegistry(origin) {
   );
   const directory = "src/blocks/registry";
   const runtime = directory + "/runtime";
+  fs.rmSync(directory, { recursive: true, force: true });
   fs.mkdirSync(runtime, { recursive: true });
   const dependencies = new Set(),
     copied = new Map();
