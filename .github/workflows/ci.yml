@@ -44,7 +44,7 @@ jobs:
           git diff --exit-code
       - name: Package browser test build
         if: matrix.node == '24'
-        run: tar -czf "$RUNNER_TEMP/site-build.tar.gz" dist src/blocks/catalog.json
+        run: tar -czf "$RUNNER_TEMP/site-build.tar.gz" dist src/blocks/catalog.json src/blocks/registry
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: matrix.node == '24'
         with:
