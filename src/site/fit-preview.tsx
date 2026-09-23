@@ -40,24 +40,28 @@ export function FitPreview({
     return () => observer.disconnect();
   }, [width]);
 
+  // Keep narrow thumbnails proportional instead of leaving desktop-sized gaps.
+  const viewportHeight = size.available
+    ? Math.min(height, size.available * 0.75)
+    : height;
   const scale =
     size.available && size.height
       ? Math.min(
           1,
           size.available / size.width,
           fit === "contain" || size.height <= size.width * 1.5
-            ? height / size.height
+            ? viewportHeight / size.height
             : 1,
         )
       : 1;
 
   return (
-    <div ref={viewport} className="fit-preview" style={{ height }}>
+    <div ref={viewport} className="fit-preview" style={{ height: viewportHeight }}>
       <div
         className="fit-preview-stage"
         style={{
           width: size.width * scale,
-          height: Math.min(height, size.height * scale),
+          height: Math.min(viewportHeight, size.height * scale),
         }}
       >
         <div

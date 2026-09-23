@@ -235,6 +235,17 @@ export function prepareCardRegistry(origin) {
     styles +
       '\n.overtrue-block.overtrue-workspace { min-height: 0; display: block; background: transparent; padding: 0; }\n.overtrue-block > .scene-card { margin-bottom: 0; }\n.overtrue-block { --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }\n.overtrue-block .pn-table-responsive { max-width: 100%; overflow-x: auto; }\n',
   );
+  // Compile preview utilities like a consumer app: exported tokens are colors,
+  // while the website's own stylesheet still uses HSL channel values.
+  const previewTheme = postcss.parse(fs.readFileSync("src/index.css", "utf8"));
+  for (const node of [...previewTheme.nodes]) {
+    if (node.type !== "atrule" || !["import", "custom-variant", "theme"].includes(node.name))
+      node.remove();
+  }
+  previewTheme.walkDecls((declaration) => {
+    declaration.value = declaration.value.replace(/hsl\(var\((--[^)]+)\)\)/g, "var($1)");
+  });
+  fs.writeFileSync(directory + "/preview.css", previewTheme.toString());
   copy("src/types/jsvectormap.d.ts");
   fs.copyFileSync("licenses/third-party.txt", runtime + "/third-party.txt");
   if (dependencies.has("@fullcalendar/react"))

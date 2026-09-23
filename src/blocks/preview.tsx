@@ -8,7 +8,7 @@ import {
 } from "react";
 import { createRoot } from "react-dom/client";
 import catalog from "./catalog.json";
-import "../index.css";
+import "./registry/preview.css";
 import "./preview.css";
 
 const modules = import.meta.glob<{ default: ComponentType }>(

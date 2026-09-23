@@ -41,5 +41,6 @@ Every detail route gets its own initial HTML metadata and sitemap entry. Vercel 
 Run `pnpm build`, `node scripts/registry/verify.mjs`, and `node scripts/examples/verify-content.mjs`. Registry checks include the shared dependency graph, generated source freshness, unique file targets, required package dependencies, and icon consistency.
 
 Card previews load the exported modules from `src/blocks/registry/`, including their shared foundation and scoped CSS. They do not import the workspace styles separately, so missing installation styles are visible in the gallery too.
+Their Tailwind theme is generated from the site's theme mapping with complete color values, matching the installed foundation's tokens rather than the website's HSL channel format.
 
 Browser validation must cover the card previews themselves, filters and pagination, source display, preview widths and themes, and representative interactions. Validate installation in a fresh consumer project as well; workspace rendering alone does not prove portability.

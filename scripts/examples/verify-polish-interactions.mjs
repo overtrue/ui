@@ -84,6 +84,32 @@ try {
     await installedPicker.getByRole('button', { name: 'Close color picker', exact: true }).click();
     check(await installedColor.evaluate(el => el === document.activeElement), 'installed popup returns focus to its input');
 
+    await page.setViewportSize({ width: 840, height: 844 });
+    for (const theme of ['light', 'dark']) {
+      await page.goto(${JSON.stringify(origin)} + '/card-preview.html?id=overview-overview-1-1&theme=' + theme);
+      const metrics = page.locator('[data-slot="metric-group"]');
+      await metrics.waitFor();
+      check(await metrics.evaluate(el => {
+        const probe = document.createElement('span');
+        el.append(probe);
+        const color = token => { probe.style.color = 'var(' + token + ')'; return getComputedStyle(probe).color; };
+        const surface = getComputedStyle(el.firstElementChild);
+        const group = getComputedStyle(el);
+        const valid = surface.backgroundColor === color('--card') &&
+          group.borderTopColor === color('--border') && group.color === color('--card-foreground');
+        probe.remove();
+        return valid;
+      }), 'exported metric colors match their ' + theme + ' theme tokens');
+      check(await metrics.evaluate(el => new Set([...el.children].map(child => child.offsetTop)).size === 1),
+        'exported metric overview keeps all four columns in ' + theme + ' mode');
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(${JSON.stringify(origin)} + '/blocks');
+    const thumbnail = page.locator('.tile-service-status .fit-preview');
+    await thumbnail.scrollIntoViewIfNeeded();
+    check(await thumbnail.evaluate(el => el.getBoundingClientRect().height <= 300),
+      'mobile block thumbnails avoid desktop-sized empty space');
+
     await go('form-elements');
     await page.getByRole('button', { name: 'Dates & files', exact: true }).click();
     const datepicker = page.locator('.workspace-datepicker');

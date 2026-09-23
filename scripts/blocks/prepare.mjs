@@ -291,7 +291,9 @@ for (const file of files) {
           rendered,
         )
           ? 1280
-          : 640;
+          : /<MetricGroup\b/.test(rendered)
+            ? 840
+            : 640;
       const seed = rendered + "\n" + effects;
       const used = identifiers(
         parse(
