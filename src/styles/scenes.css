@@ -1361,6 +1361,9 @@
   color: #398067;
   font-size: 12px;
 }
+.dark .scene-form-footer span {
+  color: #34d399;
+}
 .scene-toggle-row {
   display: flex !important;
   flex-direction: row !important;
