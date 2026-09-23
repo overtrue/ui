@@ -1,4 +1,5 @@
 import type { ComponentProps, ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import { SectionCard } from "./section-card";
 import { AvatarStack, type TeamMember } from "./avatar-stack";
 import { DetailList } from "./detail-list";
@@ -20,7 +21,7 @@ export function MemberCard({
   className,
 }: MemberCardProps) {
   return (
-    <SectionCard data-slot="member-card" className={className}>
+    <SectionCard data-slot="member-card" className={cn("shadow-none", className)}>
       <div className="flex items-center justify-between gap-3">
         <AvatarStack members={[member]} />
         {badge}
