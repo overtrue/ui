@@ -24,6 +24,7 @@ import {
   IconCode as Code2,
   IconBox as Box,
   IconChevronRight as ChevronRight,
+  IconBrandGithub as Github,
 } from "@tabler/icons-react";
 import { Dashboard } from "@/registry/overtrue/dashboard";
 import {
@@ -176,6 +177,16 @@ function Header() {
           </NavLink>
         </nav>
         <div className="header-actions">
+          <a
+            className="icon-button"
+            href="https://github.com/overtrue/ui"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="overtrue/ui on GitHub"
+            title="View on GitHub"
+          >
+            <Github size={18} aria-hidden="true" />
+          </a>
           <ThemeToggle />
           <a className="header-preview" href="/workspace/">
             Live preview
@@ -220,6 +231,20 @@ function Footer() {
         </div>
         <div>
           <span>Resources</span>
+          <a
+            href="https://github.com/overtrue/ui"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub repository
+          </a>
+          <a
+            href="https://github.com/overtrue/ui/issues"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Report an issue
+          </a>
           <a href="/r/registry.json">Registry JSON</a>
           <a href="/llms.txt">For agents</a>
           <a href="/LICENSE.txt">MIT license</a>
