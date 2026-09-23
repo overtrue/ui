@@ -52,8 +52,8 @@ const items = [
     previewWidth: 600,
     previewHeight: 420,
     description:
-      "A searchable team roster with read-only owner roles and editable workspace access.",
-    dependencies: ["card", "input"],
+      "A searchable team roster with protected owner roles, pending changes, and save recovery.",
+    dependencies: ["card", "input", "button"],
     imports: "TeamAccess, type AccessMember",
     exampleImports: 'import { useState } from "react"',
     usage: `function Example() {
@@ -67,7 +67,7 @@ const items = [
   }} />
 }`,
     notes:
-      "A controlled workspace access block. Without onRoleChange, roles are read-only. Owner transfer is intentionally outside this flow. The example updates local state; enforce permissions and persist changes in your application before updating members. Search matches names and email addresses.",
+      "A controlled workspace access block. Without onRoleChange, roles are read-only. Return a promise to keep a member’s role disabled while saving; rejected saves show an inline error and allow retry. Other members remain editable, and filtering preserves pending changes. Enforce permissions and persist changes before updating members. Owner transfer is outside this flow. Search matches names and email addresses and includes a clear action.",
     api: [
       [
         "members",
@@ -76,8 +76,8 @@ const items = [
       ],
       [
         "onRoleChange",
-        "(id, role) => void",
-        "Requests an Admin or Member role; the caller owns state and persistence.",
+        "(id, role) => void | Promise<void>",
+        "Requests an Admin or Member role; update members after persistence succeeds. Reject to show an error without changing the current role.",
       ],
     ],
   },

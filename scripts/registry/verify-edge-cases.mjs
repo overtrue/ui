@@ -351,6 +351,152 @@ try {
   );
   assert.equal(await fixture.getByRole("combobox").count(), 0);
   checks++;
+  // Role persistence stays controlled, survives filtering, and isolates each member.
+  await page.setViewportSize({ width: 320, height: 900 });
+  await page.evaluate(async () => {
+    const { TeamAccess } =
+      await import("/src/registry/overtrue/team-access.tsx");
+    const { React, render } = window.fixture;
+    window.roleSaves = [];
+    function ControlledTeam() {
+      const [members, setMembers] = React.useState([
+        {
+          id: "owner",
+          name: "Chris",
+          email: "chris@example.com",
+          role: "Owner",
+        },
+        {
+          id: "__proto__",
+          name: "Maya",
+          email: "maya@example.com",
+          role: "Admin",
+        },
+        { id: "leo", name: "Leo", email: "leo@example.com", role: "Member" },
+      ]);
+      return React.createElement(TeamAccess, {
+        members,
+        onRoleChange: (id, role) =>
+          new Promise((resolve, reject) => {
+            window.roleSaves.push({ id, role, resolve, reject });
+          }).then(() =>
+            setMembers((current) =>
+              current.map((member) =>
+                member.id === id ? { ...member, role } : member,
+              ),
+            ),
+          ),
+      });
+    }
+    await render(React.createElement(ControlledTeam));
+  });
+  assert.equal(
+    await fixture
+      .getByRole("combobox", { name: "Role for Chris", exact: true })
+      .count(),
+    0,
+  );
+  const mayaRole = fixture.getByRole("combobox", {
+    name: "Role for Maya",
+    exact: true,
+  });
+  const leoRole = fixture.getByRole("combobox", {
+    name: "Role for Leo",
+    exact: true,
+  });
+  const memberSearch = fixture.getByRole("searchbox", {
+    name: "Search team members",
+    exact: true,
+  });
+  await mayaRole.focus();
+  await mayaRole.selectOption("Member");
+  assert.ok(await mayaRole.isDisabled());
+  assert.equal(await mayaRole.inputValue(), "Admin");
+  assert.equal(await mayaRole.getAttribute("aria-busy"), "true");
+  await mayaRole.evaluate((el) => {
+    el.value = "Member";
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  assert.equal(await page.evaluate(() => window.roleSaves.length), 1);
+  assert.ok(await leoRole.isEnabled());
+  await leoRole.selectOption("Admin");
+  assert.equal(await page.evaluate(() => window.roleSaves.length), 2);
+  await memberSearch.fill("no match");
+  assert.equal(await fixture.getByRole("listitem").count(), 0);
+  await fixture
+    .getByRole("button", { name: "Clear search", exact: true })
+    .click();
+  assert.ok(await memberSearch.evaluate((el) => el === document.activeElement));
+  assert.ok(await mayaRole.isDisabled());
+  assert.ok(await leoRole.isDisabled());
+  await page.evaluate(() => window.roleSaves[0].resolve());
+  await page.waitForFunction(
+    () =>
+      !document.querySelector(
+        '#regression-fixture select[aria-label="Role for Maya"]',
+      ).disabled,
+  );
+  assert.equal(await mayaRole.inputValue(), "Member");
+  assert.ok(await memberSearch.evaluate((el) => el === document.activeElement));
+  assert.ok(await leoRole.isDisabled());
+  await page.evaluate(() =>
+    window.roleSaves[1].reject(new Error("Persistence failed")),
+  );
+  await fixture.getByRole("alert").waitFor();
+  assert.equal(await leoRole.inputValue(), "Member");
+  assert.ok(await leoRole.isEnabled());
+  assert.ok(await fixture.evaluate((el) => el.scrollWidth <= el.clientWidth));
+  assert.ok(
+    await fixture
+      .getByRole("alert")
+      .evaluate((el) => el.scrollWidth <= el.clientWidth),
+  );
+  assert.ok(
+    await leoRole.evaluate((el) =>
+      document
+        .getElementById(el.getAttribute("aria-describedby"))
+        ?.textContent.includes("Could not update"),
+    ),
+  );
+  await memberSearch.fill("LEO@EXAMPLE.COM");
+  assert.ok(await fixture.getByRole("alert").isVisible());
+  await leoRole.focus();
+  await leoRole.selectOption("Admin");
+  assert.ok(
+    await leoRole.evaluate((el) => el.parentElement === document.activeElement),
+  );
+  assert.equal(await fixture.getByRole("alert").count(), 0);
+  await page.evaluate(() => window.roleSaves[2].resolve());
+  await page.waitForFunction(
+    () =>
+      !document.querySelector(
+        '#regression-fixture select[aria-label="Role for Leo"]',
+      ).disabled,
+  );
+  assert.equal(await leoRole.inputValue(), "Admin");
+  assert.ok(await leoRole.evaluate((el) => el === document.activeElement));
+  const clearMembers = fixture.getByRole("button", {
+    name: "Clear search team members",
+    exact: true,
+  });
+  await clearMembers.focus();
+  await clearMembers.press("Enter");
+  assert.equal(await fixture.getByRole("listitem").count(), 3);
+  assert.ok(await memberSearch.evaluate((el) => el === document.activeElement));
+  await mayaRole.focus();
+  await mayaRole.selectOption("Admin");
+  await page.keyboard.press("Tab");
+  assert.ok(await leoRole.evaluate((el) => el === document.activeElement));
+  await page.evaluate(() => window.roleSaves[3].resolve());
+  await page.waitForFunction(
+    () =>
+      !document.querySelector(
+        '#regression-fixture select[aria-label="Role for Maya"]',
+      ).disabled,
+  );
+  assert.ok(await leoRole.evaluate((el) => el === document.activeElement));
+  checks += 4;
+  await page.setViewportSize({ width: 1280, height: 720 });
   await page.evaluate(() =>
     window.fixture.mount("invoice-list", "InvoiceList", { invoices: [] }),
   );

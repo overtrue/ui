@@ -547,16 +547,24 @@ try {
     const preview = page.locator(".detail-preview");
     assert.equal(await preview.getByLabel("Role for Chris An").count(), 0);
     await preview.getByLabel("Role for Leo Nakamura").selectOption("Admin");
+    await preview
+      .getByRole("status")
+      .filter({ hasText: "Role updated in this demo." })
+      .waitFor();
     assert.equal(
       await preview.getByLabel("Role for Leo Nakamura").inputValue(),
       "Admin",
     );
-    await preview.getByLabel("Search team members").fill("no-match");
+    await preview
+      .getByRole("searchbox", { name: "Search team members", exact: true })
+      .fill("no-match");
     assert.equal(await preview.getByRole("listitem").count(), 0);
     assert.ok(
       await preview.getByText("No members match your search.").isVisible(),
     );
-    await preview.getByLabel("Search team members").fill("LEO@EXAMPLE.COM");
+    await preview
+      .getByRole("searchbox", { name: "Search team members", exact: true })
+      .fill("LEO@EXAMPLE.COM");
     assert.equal(await preview.getByRole("listitem").count(), 1);
     assert.equal(
       await preview.getByLabel("Role for Leo Nakamura").inputValue(),

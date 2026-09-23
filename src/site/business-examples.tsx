@@ -12,6 +12,7 @@ import { TeamAccess, type AccessMember } from "@/registry/overtrue/team-access";
 import { NotificationPreferences } from "@/registry/overtrue/notification-preferences";
 import { InvoiceList } from "@/registry/overtrue/invoice-list";
 import type { ItemName } from "./catalog";
+import { siteOwner } from "./demo-data";
 
 export function BusinessExample({ name }: { name: ItemName }) {
   const [integrations, setIntegrations] = useState<Integration[]>([
@@ -42,6 +43,7 @@ export function BusinessExample({ name }: { name: ItemName }) {
     {
       id: "chris",
       name: "Chris An",
+      image: siteOwner.image,
       email: "chris@example.com",
       role: "Owner",
     },
@@ -83,7 +85,9 @@ export function BusinessExample({ name }: { name: ItemName }) {
         <div className="w-full">
           <TeamAccess
             members={members}
-            onRoleChange={(id, role) => {
+            onRoleChange={async (id, role) => {
+              setStatus("");
+              await new Promise((resolve) => setTimeout(resolve, 600));
               setMembers((current) =>
                 current.map((member) =>
                   member.id === id ? { ...member, role } : member,
@@ -96,7 +100,8 @@ export function BusinessExample({ name }: { name: ItemName }) {
             role="status"
             className="m-0 mt-3 min-h-5 text-xs text-muted-foreground"
           >
-            {status}
+            {status ||
+              "Interactive demo. Changes are saved locally in this preview."}
           </p>
         </div>
       );
