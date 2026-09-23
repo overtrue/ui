@@ -7,6 +7,8 @@ import {
   IconSearch,
   IconDeviceDesktop,
   IconDeviceMobile,
+  IconArrowDown,
+  IconCode,
 } from "@tabler/icons-react";
 import cards from "../blocks/catalog.json";
 import { Command, CopyButton, HighlightedCode } from "./code";
@@ -113,7 +115,7 @@ export function CardCollection() {
     Math.min(totalPages, Math.trunc(Number(params.get("page"))) || 1),
   );
   const update = (key: string, value: string) => {
-    const next = new URLSearchParams(params);
+    const next = new URLSearchParams(window.location.search);
     if (value) next.set(key, value);
     else next.delete(key);
     if (key !== "page") next.delete("page");
@@ -194,7 +196,7 @@ export function CardCollection() {
           <button
             className="site-button"
             onClick={() => {
-              const next = new URLSearchParams(params);
+              const next = new URLSearchParams(window.location.search);
               for (const key of ["q", "category", "page"]) next.delete(key);
               setParams(next, { replace: true });
             }}
@@ -234,16 +236,22 @@ export function CardBlockPage() {
   const card = cards.find((card) => card.id === id);
   const [view, setView] = useState("Preview"),
     [mobile, setMobile] = useState(false),
-    [source, setSource] = useState("");
+    [source, setSource] = useState(""),
+    [sourceError, setSourceError] = useState(false);
   useEffect(() => {
     let active = true;
     setSource("");
+    setSourceError(false);
     setView("Preview");
     const load = sources.get(`../blocks/registry/${id}.tsx`);
     if (load)
-      load().then((value) => {
-        if (active) setSource(value);
-      });
+      load()
+        .then((value) => {
+          if (active) setSource(value);
+        })
+        .catch(() => {
+          if (active) setSourceError(true);
+        });
     return () => {
       active = false;
     };
@@ -270,48 +278,80 @@ export function CardBlockPage() {
         </p>
       </div>
       <div className="workspace-toolbar">
-        <div className="filter-tabs" aria-label="Block view">
+        <div className="filter-tabs" role="group" aria-label="Block view">
           {["Preview", "Source"].map((value) => (
             <button
               key={value}
               aria-pressed={view === value}
               onClick={() => setView(value)}
             >
+              {value === "Source" && <IconCode size={13} aria-hidden="true" />}
               {value}
             </button>
           ))}
         </div>
-        {view === "Preview" ? (
-          <div className="filter-tabs" aria-label="Preview width">
-            <button
-              aria-label="Desktop preview"
-              aria-pressed={!mobile}
-              onClick={() => setMobile(false)}
+        <div className="preview-actions">
+          {view === "Preview" && (
+            <div
+              className="filter-tabs"
+              role="group"
+              aria-label="Preview width"
             >
-              <IconDeviceDesktop size={17} />
-            </button>
-            <button
-              aria-label="Mobile preview"
-              aria-pressed={mobile}
-              onClick={() => setMobile(true)}
-            >
-              <IconDeviceMobile size={17} />
-            </button>
-          </div>
-        ) : (
-          <CopyButton text={source} label="Copy block source" />
-        )}
+              <button
+                aria-label="Desktop preview"
+                aria-pressed={!mobile}
+                onClick={() => setMobile(false)}
+              >
+                <IconDeviceDesktop size={17} />
+              </button>
+              <button
+                aria-label="Mobile preview"
+                aria-pressed={mobile}
+                onClick={() => setMobile(true)}
+              >
+                <IconDeviceMobile size={17} />
+              </button>
+            </div>
+          )}
+          <a className="text-link" href="#installation">
+            Install <IconArrowDown size={13} aria-hidden="true" />
+          </a>
+        </div>
       </div>
       {view === "Preview" ? (
         <CardPreview id={card.id} title={card.title} expanded mobile={mobile} />
       ) : (
         <div className="source-view">
-          <HighlightedCode text={source || "Loading source…"} language="tsx" />
+          <div className="code-label">
+            <span className="source-filename" title={`${card.id}.tsx`}>
+              <IconCode size={14} aria-hidden="true" />
+              <span>{card.id}.tsx</span>
+            </span>
+            {source && <CopyButton text={source} label="Copy block source" />}
+          </div>
+          {source ? (
+            <HighlightedCode text={source} language="tsx" />
+          ) : sourceError ? (
+            <div className="source-state">
+              <p role="alert">Source could not be loaded.</p>
+              <p>Check your connection and reload this page to try again.</p>
+              <button
+                className="site-button"
+                onClick={() => window.location.reload()}
+              >
+                Reload page
+              </button>
+            </div>
+          ) : (
+            <div className="source-state" role="status">
+              Loading source…
+            </div>
+          )}
         </div>
       )}
       <div className="card-install-grid">
         <section>
-          <h2>Make it yours.</h2>
+          <h2 id="installation">Make it yours.</h2>
           <p>
             Install the card and its shared styling and interaction primitives.
           </p>

@@ -313,6 +313,106 @@ try {
     await page.locator(".source-view pre").textContent(),
     readFileSync(`src/blocks/registry/${cards[0].id}.tsx`, "utf8"),
   );
+  // Installation is reachable above long previews, in either view.
+  for (const width of [1440, 320]) {
+    await page.setViewportSize({ width, height: 1000 });
+    for (const route of [
+      "/components/section-card",
+      "/blocks/team-access",
+      `/blocks/${cards[0].id}`,
+    ]) {
+      for (const view of ["Preview", "Source"]) {
+        await page.goto(origin + route);
+        await page.getByRole("button", { name: view, exact: true }).click();
+        assert.ok(
+          !(await page.evaluate(
+            () => document.documentElement.scrollWidth > innerWidth + 1,
+          )),
+          `${route}: ${view} toolbar overflow at ${width}px`,
+        );
+        await page.getByRole("link", { name: "Install", exact: true }).click();
+        await page.waitForFunction(() => {
+          const top = document
+            .getElementById("installation")
+            .getBoundingClientRect().top;
+          return top >= 64 && top < 180;
+        });
+        assert.equal(new URL(page.url()).hash, "#installation");
+        assert.ok(
+          await page
+            .getByRole("link", { name: "Registry JSON", exact: true })
+            .count(),
+        );
+      }
+    }
+  }
+  // A failed source chunk has a recovery path and never offers to copy nothing.
+  const sourceContext = await browser.newContext();
+  const sourcePage = await sourceContext.newPage();
+  const sourceErrors = [];
+  sourcePage.on("pageerror", (error) => sourceErrors.push(error.message));
+  const cardId = cards[0].id;
+  let releaseSource;
+  const sourceGate = new Promise((resolve) => {
+    releaseSource = resolve;
+  });
+  await sourcePage.route(`**/*${cardId}*`, async (route) => {
+    if (
+      route.request().resourceType() === "script" &&
+      route.request().frame() === sourcePage.mainFrame()
+    ) {
+      await sourceGate;
+      await route.abort("failed");
+    } else await route.continue();
+  });
+  try {
+    await sourcePage.goto(origin + `/blocks/${cardId}`, {
+      waitUntil: "domcontentloaded",
+    });
+    await sourcePage
+      .getByRole("button", { name: "Source", exact: true })
+      .click();
+    await sourcePage
+      .getByRole("status")
+      .filter({ hasText: "Loading source…" })
+      .waitFor();
+    assert.equal(
+      await sourcePage
+        .getByRole("button", { name: "Copy block source" })
+        .count(),
+      0,
+    );
+    releaseSource();
+    await sourcePage
+      .getByRole("alert")
+      .filter({ hasText: "Source could not be loaded." })
+      .waitFor();
+    assert.equal(
+      await sourcePage
+        .getByRole("button", { name: "Copy block source" })
+        .count(),
+      0,
+    );
+    await sourcePage.unroute(`**/*${cardId}*`);
+    await sourcePage.getByRole("button", { name: "Reload page" }).click();
+    await sourcePage
+      .getByRole("button", { name: "Source", exact: true })
+      .click();
+    await sourcePage
+      .getByRole("button", { name: "Copy block source" })
+      .waitFor();
+    assert.equal(
+      await sourcePage.locator(".source-view pre").textContent(),
+      readFileSync(`src/blocks/registry/${cardId}.tsx`, "utf8"),
+    );
+    assert.deepEqual(sourceErrors, []);
+  } finally {
+    releaseSource();
+    await sourceContext.close();
+  }
+  console.log(
+    "Verified installation shortcuts and source loading, failure, and reload recovery",
+  );
   // Business blocks keep real interaction state in both responsive layouts.
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 1000 });

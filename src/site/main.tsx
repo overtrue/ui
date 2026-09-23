@@ -15,6 +15,7 @@ import {
 import {
   IconArrowUpRight as ArrowUpRight,
   IconArrowRight as ArrowRight,
+  IconArrowDown as ArrowDown,
   IconMenu2 as Menu,
   IconX as X,
   IconMoon as Moon,
@@ -511,7 +512,8 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
     key: "blockQuery" | "blockCategory",
     value: string,
   ) => {
-    const next = new URLSearchParams(params);
+    // History updates before React renders; preserve changes from the other collection.
+    const next = new URLSearchParams(window.location.search);
     if (value && !(key === "blockCategory" && value === "All"))
       next.set(key, value);
     else next.delete(key);
@@ -620,7 +622,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
             className="site-button"
             onClick={() => {
               if (blocks) {
-                const next = new URLSearchParams(params);
+                const next = new URLSearchParams(window.location.search);
                 next.delete("blockQuery");
                 next.delete("blockCategory");
                 setParams(next, { replace: true });
@@ -737,6 +739,7 @@ function ComponentPage() {
         <div className="workspace-toolbar">
           <div
             className="filter-tabs"
+            role="group"
             aria-label={`${isBlock ? "Block" : "Component"} view`}
           >
             {["Preview", "Source"].map((value) => (
@@ -750,9 +753,9 @@ function ComponentPage() {
               </button>
             ))}
           </div>
-          <a className="text-link" href={`/r/${item.name}.json`}>
-            Registry JSON
-            <ArrowUpRight size={13} />
+          <a className="text-link" href="#installation">
+            Install
+            <ArrowDown size={13} aria-hidden="true" />
           </a>
         </div>
         {tab === "Preview" ? (
@@ -785,7 +788,7 @@ function ComponentPage() {
             <HighlightedCode text={source} language="tsx" />
           </div>
         )}
-        <h2>Installation</h2>
+        <h2 id="installation">Installation</h2>
         <p>
           Requires an initialized shadcn/ui project with React and Tailwind CSS
           v4.
@@ -795,6 +798,8 @@ function ComponentPage() {
           The CLI adds the source to <code>components/overtrue/</code> and
           installs its dependencies.{" "}
           <Link to="/docs">New to overtrue/ui? Start here.</Link>
+          {" · "}
+          <a href={`/r/${item.name}.json`}>Registry JSON</a>
         </p>
         <h2>Usage</h2>
         <p>
