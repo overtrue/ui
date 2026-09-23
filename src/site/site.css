@@ -2216,6 +2216,48 @@
 .complete-block-heading p {
   color: var(--muted-foreground);
 }
+.collection-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.collection-shortcuts a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.collection-shortcuts a:hover {
+  background: var(--site-subtle);
+  border-color: var(--input);
+}
+.collection-shortcuts span {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.collection-shortcuts svg {
+  color: var(--muted-foreground);
+}
+.block-catalog-toolbar {
+  margin: 24px 0 16px;
+}
+.block-result-count {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.block-result-count + .block-grid {
+  margin-top: 20px;
+}
 
 /* Component API tables stay readable within the mobile documentation column. */
 .api-table-scroll {

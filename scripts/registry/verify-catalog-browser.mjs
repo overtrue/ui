@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { catalog, catalogPath } from "../../src/site/catalog.ts";
+import {
+  blockCollections,
+  catalog,
+  catalogPath,
+} from "../../src/site/catalog.ts";
 import { usageSource } from "../../src/site/usage.ts";
 
 const require = createRequire(import.meta.url);
@@ -15,6 +19,14 @@ mkdirSync(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: "chrome" });
 const results = [];
 const errors = [];
+assert.deepEqual(
+  blockCollections.flatMap((group) => [...group.names]).sort(),
+  catalog
+    .filter((item) => item.category === "Blocks")
+    .map((item) => item.name)
+    .sort(),
+  "Each composed block belongs to exactly one business category",
+);
 try {
   const page = await browser.newPage();
   page.on("pageerror", (error) => errors.push(error.message));
@@ -110,6 +122,120 @@ try {
   }
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ path: `${output}/blocks.png`, fullPage: true });
+  // Each collection owns its URL filters; browsing details must retain them.
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto(origin + "/blocks");
+    const blockSearch = page.getByLabel("Search composed blocks");
+    const blockTiles = page.locator(".block-grid .tile-caption");
+    const filters = page.locator('[aria-label="Filter composed blocks"]');
+    const expectBlockCount = async (count) => {
+      await page.waitForFunction(
+        (expected) =>
+          document.querySelectorAll(".block-grid .tile-caption").length ===
+          expected,
+        count,
+      );
+      assert.equal(await blockTiles.count(), count);
+    };
+    for (const group of blockCollections) {
+      await filters
+        .getByRole("button", { name: group.label, exact: true })
+        .click();
+      await filters
+        .getByRole("button", { name: group.label, exact: true, pressed: true })
+        .waitFor();
+      await expectBlockCount(group.names.length);
+    }
+    await filters.getByRole("button", { name: "Billing", exact: true }).click();
+    await expectBlockCount(2);
+    await blockSearch.fill("  INVOICE  ");
+    await expectBlockCount(1);
+    await page.reload();
+    assert.equal(await blockSearch.inputValue(), "  INVOICE  ");
+    assert.equal(await blockTiles.count(), 1);
+    await blockTiles.first().click();
+    await page.waitForURL(origin + "/blocks/invoice-list");
+    await page.goBack();
+    await blockSearch.waitFor();
+    assert.equal(await blockTiles.count(), 1);
+    assert.equal(
+      await filters
+        .getByRole("button", { name: "Billing", exact: true })
+        .getAttribute("aria-pressed"),
+      "true",
+    );
+
+    await page.getByLabel("Search card blocks").fill("not-a-real-card");
+    await page
+      .locator(".card-collection")
+      .getByRole("button", { name: "Clear filters" })
+      .click();
+    assert.equal(await blockSearch.inputValue(), "  INVOICE  ");
+    assert.equal(
+      new URL(page.url()).searchParams.get("blockCategory"),
+      "Billing",
+    );
+    await page.getByLabel("Search card blocks").fill("chart");
+    await blockSearch.fill("not-a-real-block");
+    const empty = page.locator(".catalog-page > .search-empty");
+    await empty.getByRole("heading", { name: "No matching blocks." }).waitFor();
+    assert.ok(
+      await empty.evaluate(
+        (el) =>
+          !!(
+            el.compareDocumentPosition(
+              document.querySelector(".card-collection"),
+            ) & Node.DOCUMENT_POSITION_FOLLOWING
+          ),
+      ),
+    );
+    await empty.getByRole("button", { name: "Clear filters" }).click();
+    assert.equal(
+      await page.getByLabel("Search card blocks").inputValue(),
+      "chart",
+    );
+    await expectBlockCount(
+      catalog.filter((item) => item.category === "Blocks").length,
+    );
+    await blockSearch.fill("All");
+    await page.waitForURL(
+      (url) => url.searchParams.get("blockQuery") === "All",
+    );
+    assert.equal(await blockSearch.inputValue(), "All");
+    assert.equal(new URL(page.url()).searchParams.get("blockQuery"), "All");
+
+    await page.goto(origin + "/blocks?blockCategory=unknown&category=unknown");
+    assert.equal(
+      await filters
+        .getByRole("button", { name: "All blocks", exact: true })
+        .getAttribute("aria-pressed"),
+      "true",
+    );
+    assert.equal(
+      await page.getByLabel("Card category").inputValue(),
+      "All cards",
+    );
+    await page
+      .getByRole("navigation", { name: "Block collections" })
+      .getByRole("link", { name: /Card patterns/ })
+      .click();
+    await page.waitForFunction(() => {
+      const top = document
+        .querySelector("#card-collection-title")
+        .getBoundingClientRect().top;
+      return top >= 64 && top < 160;
+    });
+    assert.ok(
+      !(await page.evaluate(
+        () => document.documentElement.scrollWidth > innerWidth + 1,
+      )),
+      `Block filters overflow at ${width}px`,
+    );
+  }
+  console.log(
+    "Verified block categories, shared filter URLs, history, empty states, and collection anchors at desktop and mobile widths",
+  );
   for (const item of catalog.filter((item) => item.category === "Blocks")) {
     await page.goto(origin + `/components/${item.name}`);
     await page.waitForURL(origin + catalogPath(item));

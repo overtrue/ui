@@ -95,14 +95,17 @@ function CardPreview({
 }
 export function CardCollection() {
   const [params, setParams] = useSearchParams();
-  const query = params.get("q") ?? "",
-    category = params.get("category") ?? "All cards";
+  const query = params.get("q") ?? "";
+  const requestedCategory = params.get("category") ?? "All cards";
+  const category = categories.includes(requestedCategory)
+    ? requestedCategory
+    : "All cards";
   const matches = cards.filter(
     (card) =>
       (category === "All cards" || category === card.category) &&
       `${card.title} ${card.category} ${card.pages.map((p) => p.title).join(" ")}`
         .toLowerCase()
-        .includes(query.toLowerCase()),
+        .includes(query.trim().toLowerCase()),
   );
   const totalPages = Math.max(1, Math.ceil(matches.length / pageSize));
   const current = Math.max(
@@ -188,7 +191,14 @@ export function CardCollection() {
         <div className="search-empty">
           <h3>No matching cards.</h3>
           <p>Try another term or category.</p>
-          <button className="site-button" onClick={() => setParams({})}>
+          <button
+            className="site-button"
+            onClick={() => {
+              const next = new URLSearchParams(params);
+              for (const key of ["q", "category", "page"]) next.delete(key);
+              setParams(next, { replace: true });
+            }}
+          >
             Clear filters
           </button>
         </div>

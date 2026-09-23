@@ -10,6 +10,7 @@ import {
   useLocation,
   useNavigate,
   useParams,
+  useSearchParams,
 } from "react-router-dom";
 import {
   IconArrowUpRight as ArrowUpRight,
@@ -32,6 +33,7 @@ import {
   catalogPath,
   componentCount,
   blockCount,
+  blockCollections,
   cardCount,
   type ItemName,
 } from "./catalog";
@@ -497,23 +499,43 @@ function ComponentTile({ name }: { name: ItemName }) {
   );
 }
 function Catalog({ blocks = false }: { blocks?: boolean }) {
-  const [query, setQuery] = useState(""),
-    [category, setCategory] = useState("All");
-  const categories = [
-    "All",
-    "Data display",
-    "Layout",
-    "Feedback",
-    "Navigation",
-    "Forms",
-  ];
+  const [componentQuery, setComponentQuery] = useState(""),
+    [componentCategory, setComponentCategory] = useState("All");
+  const [params, setParams] = useSearchParams();
+  const collection = blockCollections.find(
+    (group) => group.label === params.get("blockCategory"),
+  );
+  const query = blocks ? (params.get("blockQuery") ?? "") : componentQuery;
+  const category = blocks ? (collection?.label ?? "All") : componentCategory;
+  const updateBlockFilter = (
+    key: "blockQuery" | "blockCategory",
+    value: string,
+  ) => {
+    const next = new URLSearchParams(params);
+    if (value && !(key === "blockCategory" && value === "All"))
+      next.set(key, value);
+    else next.delete(key);
+    setParams(next, { replace: true });
+  };
+  const setQuery = (value: string) =>
+    blocks ? updateBlockFilter("blockQuery", value) : setComponentQuery(value);
+  const setCategory = (value: string) =>
+    blocks
+      ? updateBlockFilter("blockCategory", value)
+      : setComponentCategory(value);
+  const categories = blocks
+    ? ["All", ...blockCollections.map((group) => group.label)]
+    : ["All", "Data display", "Layout", "Feedback", "Navigation", "Forms"];
   const items = catalog.filter(
     (item) =>
       (blocks ? item.category === "Blocks" : item.category !== "Blocks") &&
-      (category === "All" || item.category === category) &&
+      (category === "All" ||
+        (blocks
+          ? collection?.names.includes(item.name)
+          : item.category === category)) &&
       `${item.title} ${item.description}`
         .toLowerCase()
-        .includes(query.toLowerCase()),
+        .includes(query.trim().toLowerCase()),
   );
   return (
     <main className="section catalog-page">
@@ -530,61 +552,89 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
             : "Practical, composable pieces for your next admin interface. Preview it. Install it. Make it yours."}
         </p>
       </div>
-      {!blocks && (
-        <div className="catalog-toolbar">
-          <div className="filter-tabs" aria-label="Filter components">
-            {categories.map((value) => (
-              <button
-                key={value}
-                aria-pressed={value === category}
-                onClick={() => setCategory(value)}
-              >
-                {value}
-              </button>
-            ))}
-          </div>
-          <label className="search-box">
-            <Search size={16} />
-            <input
-              aria-label="Search components"
-              placeholder="Search components…"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-            />
-          </label>
-        </div>
-      )}
       {blocks && (
-        <div className="complete-block-heading">
-          <h2>Composed blocks</h2>
-          <p>
-            Forms, business cards, and complete views. Adapt the source to your
-            workflow.
-          </p>
+        <>
+          <nav className="collection-shortcuts" aria-label="Block collections">
+            <a href="#composed-blocks">
+              Composed blocks <span>{blockCount}</span>
+              <ArrowRight size={14} aria-hidden="true" />
+            </a>
+            <a href="#card-collection-title">
+              Card patterns <span>{cardCount}</span>
+              <ArrowRight size={14} aria-hidden="true" />
+            </a>
+          </nav>
+          <div className="complete-block-heading">
+            <h2 id="composed-blocks">Composed blocks</h2>
+            <p>Practical starting points for the work inside your product.</p>
+          </div>
+        </>
+      )}
+      <div
+        className={
+          blocks ? "catalog-toolbar block-catalog-toolbar" : "catalog-toolbar"
+        }
+      >
+        <div
+          className="filter-tabs"
+          role="group"
+          aria-label={blocks ? "Filter composed blocks" : "Filter components"}
+        >
+          {categories.map((value) => (
+            <button
+              key={value}
+              aria-pressed={value === category}
+              onClick={() => setCategory(value)}
+            >
+              {value === "All" && blocks ? "All blocks" : value}
+            </button>
+          ))}
         </div>
+        <label className="search-box">
+          <Search size={16} aria-hidden="true" />
+          <input
+            aria-label={blocks ? "Search composed blocks" : "Search components"}
+            placeholder={blocks ? "Find a block…" : "Search components…"}
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </label>
+      </div>
+      {blocks && (
+        <p className="block-result-count" role="status">
+          {items.length} of {blockCount} blocks
+          {category !== "All" ? ` · ${category}` : ""}
+        </p>
       )}
       <div className={blocks ? "block-grid" : "component-grid"}>
         {items.map((item) => (
           <ComponentTile key={item.name} name={item.name} />
         ))}
       </div>
-      {blocks && <CardCollection />}
       {!items.length && (
         <div className="search-empty">
           <Search size={24} />
-          <h2>No components found.</h2>
+          <h2>{blocks ? "No matching blocks." : "No components found."}</h2>
           <p>Try a different term or category.</p>
           <button
             className="site-button"
             onClick={() => {
-              setQuery("");
-              setCategory("All");
+              if (blocks) {
+                const next = new URLSearchParams(params);
+                next.delete("blockQuery");
+                next.delete("blockCategory");
+                setParams(next, { replace: true });
+              } else {
+                setQuery("");
+                setCategory("All");
+              }
             }}
           >
             Clear filters
           </button>
         </div>
       )}
+      {blocks && <CardCollection />}
     </main>
   );
 }
@@ -973,7 +1023,9 @@ function Docs() {
 function Examples() {
   const [query, setQuery] = useState("");
   const pages = workspacePages.filter((page) =>
-    `${page.title} ${page.path}`.toLowerCase().includes(query.toLowerCase()),
+    `${page.title} ${page.path}`
+      .toLowerCase()
+      .includes(query.trim().toLowerCase()),
   );
   return (
     <main className="section examples-page">

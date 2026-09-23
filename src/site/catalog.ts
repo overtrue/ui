@@ -662,3 +662,33 @@ export const componentCount = catalog.filter(
 export const blockCount = catalog.filter(
   (item) => item.category === "Blocks",
 ).length;
+
+/** Business regions, distinct from the primitive component categories. */
+export const blockCollections: readonly {
+  label: string;
+  names: readonly ItemName[];
+}[] = [
+  {
+    label: "Workspace",
+    names: [
+      "team-access",
+      "notification-preferences",
+      "settings-panel",
+      "member-card",
+    ],
+  },
+  { label: "Billing", names: ["invoice-list", "pricing-card"] },
+  {
+    label: "Operations",
+    names: ["task-list", "activity-feed", "storage-meter"],
+  },
+  {
+    label: "Overviews",
+    names: [
+      "dashboard",
+      "analytics-overview",
+      "project-portfolio",
+      "service-status",
+    ],
+  },
+];
