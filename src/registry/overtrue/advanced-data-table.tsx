@@ -971,6 +971,7 @@ function DataTableContent<TData extends RowData>({
           ))}
         </TableHeader>
         <TableBody
+          inert={pending || undefined}
           className={cn(
             pending && "pointer-events-none opacity-50",
             "transition-opacity",
@@ -987,11 +988,38 @@ function DataTableContent<TData extends RowData>({
               const element = (
                 <TableRow
                   data-state={row.getIsSelected() ? "selected" : undefined}
-                  onClick={onRowClick ? () => onRowClick(row) : undefined}
+                  tabIndex={onRowClick ? 0 : undefined}
+                  onClick={
+                    onRowClick
+                      ? (event) => {
+                          // Cell controls own their actions; they should not
+                          // also activate the row underneath them.
+                          if (
+                            (event.target as Element).closest(
+                              'button, a, input, select, textarea, label, summary, [role="button"], [role="checkbox"], [role="switch"], [role="link"], [role="combobox"], [contenteditable]:not([contenteditable="false"])',
+                            )
+                          )
+                            return;
+                          onRowClick(row);
+                        }
+                      : undefined
+                  }
+                  onKeyDown={
+                    onRowClick
+                      ? (event) => {
+                          if (event.target !== event.currentTarget) return;
+                          if (event.key !== "Enter" && event.key !== " ")
+                            return;
+                          event.preventDefault();
+                          if (!event.repeat) onRowClick(row);
+                        }
+                      : undefined
+                  }
                   {...extra}
                   className={cn(
                     rowClasses,
-                    onRowClick && "cursor-pointer",
+                    onRowClick &&
+                      "cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
                     rowClassName?.(row),
                     extra?.className,
                   )}

@@ -116,16 +116,23 @@ export default function DataTableLoadingDemo() {
   const [data, setData] = React.useState(byPeriod.month);
   const [loading, setLoading] = React.useState(false);
   const [pending, setPending] = React.useState(false);
+  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+
+  React.useEffect(() => () => clearTimeout(timer.current), []);
 
   // Stand-in for a fetch. A first load has no rows to show, so it swaps in the
   // skeleton; a filter change already has rows, so it dims them instead.
   const load = (next: Period, mode: "loading" | "pending") => {
-    const setBusy = mode === "loading" ? setLoading : setPending;
+    clearTimeout(timer.current);
     setPeriod(next);
-    setBusy(true);
-    window.setTimeout(() => {
+    setLoading(mode === "loading");
+    setPending(mode === "pending");
+    timer.current = setTimeout(() => {
       setData(byPeriod[next]);
-      setBusy(false);
+      setLoading(false);
+      setPending(false);
     }, 900);
   };
 
@@ -147,13 +154,21 @@ export default function DataTableLoadingDemo() {
             size="sm"
           />
           <Button
+            type="button"
             variant="outline"
             size="sm"
-            className="h-8"
+            className="h-8 shadow-none"
+            disabled={loading || pending}
             onClick={() => load(period, "loading")}
           >
-            <RefreshCw />
-            Reload
+            <RefreshCw
+              className={
+                loading || pending
+                  ? "animate-spin motion-reduce:animate-none"
+                  : undefined
+              }
+            />
+            {loading || pending ? "Refreshing…" : "Reload"}
           </Button>
         </>
       }

@@ -380,7 +380,7 @@ export const dashboardCatalog = [
         name: "data-table-row-actions-demo",
         title: "Integration access",
         description:
-          "Put scoped access actions beside each integration record.",
+          "Copy a demo key ID, edit its scope, or confirm revoking access from either row menu.",
       },
       {
         name: "data-table-sticky-demo",
@@ -445,7 +445,7 @@ export const dashboardCatalog = [
       [
         "pending?",
         "boolean",
-        "Keep the rows but dim them, e.g. while a filter change is in flight.",
+        "Dim the existing rows and disable their pointer and keyboard interactions while refreshing.",
       ],
       ["skeletonRows?", "number", ""],
       ["stickyHeader?", "boolean", ""],
@@ -464,7 +464,11 @@ export const dashboardCatalog = [
         "DataTableDensity",
         "compact, default, or relaxed header and cell spacing.",
       ],
-      ["onRowClick?", "(row: DataTableRow<TData>) => void", ""],
+      [
+        "onRowClick?",
+        "(row: DataTableRow<TData>) => void",
+        "Activate a row by click, Enter, or Space. Nested controls keep their own actions.",
+      ],
       ["rowClassName?", "(row: DataTableRow<TData>) => string | undefined", ""],
       [
         "rowProps?",

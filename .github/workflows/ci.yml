@@ -109,7 +109,7 @@ jobs:
         run: |
           case "$SUITE" in
             site) node scripts/site/verify.mjs && pnpm home:check ;;
-            components) pnpm site:check && pnpm catalog:check && node scripts/registry/verify-table-browser.mjs ;;
+            components) pnpm site:check && pnpm catalog:check && node scripts/registry/verify-table-browser.mjs && node scripts/registry/verify-table-actions.mjs ;;
             compositions) node scripts/registry/verify-compositions.mjs ;;
             workspace-desktop)
               node scripts/examples/verify-workspace.mjs

@@ -728,6 +728,77 @@ try {
   }
   assert.ok(rowHeights[0] < rowHeights[1] && rowHeights[1] < rowHeights[2]);
   checks++;
+  // Row activation must not swallow cell controls or remain interactive while pending.
+  await page.evaluate(async () => {
+    const { DataTable, createDataTableColumnHelper } =
+      await import("/src/registry/overtrue/advanced-data-table.tsx");
+    const { React, render } = window.fixture;
+    const helper = createDataTableColumnHelper();
+    window.rowActivations = 0;
+    window.cellActivations = 0;
+    const columns = helper.columns([
+      helper.accessor("name", { header: "Name" }),
+      helper.display({
+        id: "action",
+        header: "Action",
+        cell: () =>
+          React.createElement(
+            "button",
+            { type: "button", onClick: () => window.cellActivations++ },
+            React.createElement("span", null, "Open cell"),
+          ),
+      }),
+    ]);
+    function PendingTable() {
+      const [pending, setPending] = React.useState(false);
+      return React.createElement(
+        "div",
+        null,
+        React.createElement(
+          "button",
+          { type: "button", onClick: () => setPending(!pending) },
+          "Toggle refresh",
+        ),
+        React.createElement(DataTable, {
+          columns,
+          data: [{ name: "Birch" }],
+          pending,
+          onRowClick: () => window.rowActivations++,
+          showViewOptions: false,
+        }),
+        React.createElement("button", { type: "button" }, "After table"),
+      );
+    }
+    await render(React.createElement(PendingTable));
+  });
+  const interactiveRow = fixture.locator("tbody tr");
+  await interactiveRow.locator("td").first().click();
+  await interactiveRow.focus();
+  await interactiveRow.press("Enter");
+  await interactiveRow.press("Space");
+  assert.equal(await page.evaluate(() => window.rowActivations), 3);
+  const cellAction = fixture.getByRole("button", { name: "Open cell" });
+  await cellAction.locator("span").click();
+  await cellAction.focus();
+  await cellAction.press("Enter");
+  await cellAction.press("Space");
+  assert.equal(await page.evaluate(() => window.cellActivations), 3);
+  assert.equal(await page.evaluate(() => window.rowActivations), 3);
+  await fixture.getByRole("button", { name: "Toggle refresh" }).click();
+  assert.ok(await fixture.locator("tbody").evaluate((el) => el.inert));
+  for (let n = 0; n < 4; n++) {
+    await page.keyboard.press("Tab");
+    assert.equal(
+      await fixture
+        .locator("tbody")
+        .evaluate((el) => el.contains(document.activeElement)),
+      false,
+    );
+  }
+  await fixture.getByRole("button", { name: "Toggle refresh" }).click();
+  await cellAction.click();
+  assert.equal(await page.evaluate(() => window.cellActivations), 4);
+  checks += 2;
   await page.goto(origin + "/workspace/#/stars-rating");
   const rating = page.getByRole("radiogroup", { name: "Rating" }).first();
   await rating.waitFor();
