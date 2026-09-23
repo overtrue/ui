@@ -40,59 +40,60 @@ export default function Page() {
                 Review preferences
               </WorkspaceAction>
             </div>
-          </div>
-          <WorkspaceOffcanvas
-            className={
-              "pn-offcanvas pn-offcanvas-bottom pn-show pn-h-auto workspace-cookie-banner"
-            }
-            role={"dialog"}
-            id={"offcanvasBottom"}
-            aria-modal={"true"}
-          >
-            {" "}
-            <div className={"pn-offcanvas-body"}>
+            <WorkspaceOffcanvas
+              title="Privacy preferences"
+              className={
+                "pn-offcanvas pn-offcanvas-bottom pn-show pn-h-auto workspace-cookie-banner"
+              }
+              role={"dialog"}
+              id={"offcanvasBottom"}
+              aria-modal={"true"}
+            >
               {" "}
-              <div className={"pn-container"}>
+              <div className={"pn-offcanvas-body"}>
                 {" "}
-                <div className={"pn-row pn-align-items-center"}>
+                <div className={"pn-container"}>
                   {" "}
-                  <div className={"pn-col"}>
+                  <div className={"pn-row pn-align-items-center"}>
                     {" "}
-                    <strong>{"Your privacy preferences"}</strong>
-                    {
-                      " Essential cookies keep the workspace running. Optional cookies help us understand how it is used. "
-                    }
-                    <WorkspaceLink
-                      href={"/#/terms-of-service"}
-                      target={"_blank"}
-                    >
-                      {"Learn more"}
-                    </WorkspaceLink>{" "}
-                  </div>{" "}
-                  <div className={"pn-col-auto"}>
-                    {" "}
-                    <WorkspaceAction
-                      type={"button"}
-                      className={"pn-btn"}
-                      action={"dismiss"}
-                    >
-                      {"Essential Cookies Only"}
-                    </WorkspaceAction>{" "}
-                  </div>{" "}
-                  <div className={"pn-col-auto"}>
-                    {" "}
-                    <WorkspaceAction
-                      type={"button"}
-                      className={"pn-btn pn-btn-primary"}
-                      action={"dismiss"}
-                    >
-                      {"Allow All Cookies"}
-                    </WorkspaceAction>{" "}
+                    <div className={"pn-col"}>
+                      {" "}
+                      <strong>{"Your privacy preferences"}</strong>
+                      {
+                        " Essential cookies keep the workspace running. Optional cookies help us understand how it is used. "
+                      }
+                      <WorkspaceLink
+                        href={"/#/terms-of-service"}
+                        target={"_blank"}
+                      >
+                        {"Learn more"}
+                      </WorkspaceLink>{" "}
+                    </div>{" "}
+                    <div className={"pn-col-auto"}>
+                      {" "}
+                      <WorkspaceAction
+                        type={"button"}
+                        className={"pn-btn"}
+                        action={"dismiss"}
+                      >
+                        {"Essential Cookies Only"}
+                      </WorkspaceAction>{" "}
+                    </div>{" "}
+                    <div className={"pn-col-auto"}>
+                      {" "}
+                      <WorkspaceAction
+                        type={"button"}
+                        className={"pn-btn pn-btn-primary"}
+                        action={"dismiss"}
+                      >
+                        {"Allow All Cookies"}
+                      </WorkspaceAction>{" "}
+                    </div>{" "}
                   </div>{" "}
                 </div>{" "}
               </div>{" "}
-            </div>{" "}
-          </WorkspaceOffcanvas>{" "}
+            </WorkspaceOffcanvas>{" "}
+          </div>
         </div>{" "}
       </div>{" "}
     </div>

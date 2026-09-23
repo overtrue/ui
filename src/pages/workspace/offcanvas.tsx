@@ -15,6 +15,7 @@ import {
 import { DetailList } from "@/registry/overtrue/detail-list";
 import {
   WorkspaceAction,
+  WorkspaceInput,
   WorkspaceOffcanvas,
 } from "@/components/overtrue/workspace/primitives";
 const panels = [
@@ -45,6 +46,7 @@ const panels = [
 ] as const;
 export default function Page() {
   const [query, setQuery] = useState("");
+  const [preferences, setPreferences] = useState([false, false, true]);
   const navigate = useNavigate();
   return (
     <Scene
@@ -77,7 +79,8 @@ export default function Page() {
               Open {side} panel
             </WorkspaceAction>
             <WorkspaceOffcanvas
-              className={`pn-offcanvas pn-offcanvas-${side}`}
+              title={title}
+              className={`pn-offcanvas pn-offcanvas-${side} showcase-panel`}
               id={`panel-${side}`}
             >
               <div className="pn-offcanvas-header">
@@ -140,14 +143,16 @@ export default function Page() {
                   >
                     <label>
                       Search the handbook
-                      <input
+                      <WorkspaceInput
+                        type="search"
+                        className="pn-form-control"
                         name="q"
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
                         placeholder="Project handover, files, reviews…"
                       />
                     </label>
-                    <button type="submit" className="scene-button">
+                    <button type="submit" className="scene-button is-primary">
                       Search handbook
                     </button>
                   </form>
@@ -160,19 +165,32 @@ export default function Page() {
                     ].map((label, i) => (
                       <label className="scene-toggle-row" key={label}>
                         <span>{label}</span>
-                        <input type="checkbox" defaultChecked={i === 2} />
+                        <input
+                          type="checkbox"
+                          checked={preferences[i]}
+                          onChange={(event) => {
+                            const checked = event.target.checked;
+                            setPreferences((current) =>
+                              current.map((value, index) =>
+                                index === i ? checked : value,
+                              ),
+                            );
+                          }}
+                        />
                       </label>
                     ))}
                   </div>
                 )}
-                <div className="pn-mt-4">
-                  <WorkspaceAction
-                    className="scene-button is-primary"
-                    action="dismiss"
-                  >
-                    Done
-                  </WorkspaceAction>
-                </div>
+                {side !== "top" && (
+                  <div className="pn-mt-4">
+                    <WorkspaceAction
+                      className="scene-button is-primary"
+                      action="dismiss"
+                    >
+                      Done
+                    </WorkspaceAction>
+                  </div>
+                )}
               </div>
             </WorkspaceOffcanvas>
           </SceneCard>

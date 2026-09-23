@@ -51,7 +51,7 @@ The workspace gallery is available for exploration, but its 119 pages are not ad
 ## References
 
 - [shadcn Registry](https://ui.shadcn.com/docs/registry) and [getting started](https://ui.shadcn.com/docs/registry/getting-started): static JSON, file targets, dependencies, and the official build command.
-- [shadcn Directory](https://ui.shadcn.com/docs/directory): community registry discovery. overtrue/ui has not been submitted.
+- [shadcn Directory](https://ui.shadcn.com/docs/directory): community registry discovery. Our [directory submission](https://github.com/shadcn-ui/ui/pull/11987) is awaiting upstream review.
 - [Kibo UI](https://www.kibo-ui.com/): usable component previews and clear installation paths.
 - [Basecn](https://basecn.dev/): restrained catalogue and documentation presentation.
 - [overtrue/ui](/docs): existing product typography, compact density, blue-gray palette, and icons.

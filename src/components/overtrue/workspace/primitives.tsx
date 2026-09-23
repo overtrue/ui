@@ -358,8 +358,9 @@ export function WorkspaceTabPanel({
   )
 }
 
-export function WorkspaceModal({ id = "", className, children }: Props) {
+export function WorkspaceModal({ id = "", title, className, children }: Props) {
   const { state, setState } = React.useContext(SurfaceContext)
+  const returnFocus = React.useRef<HTMLElement | null>(null)
   return (
     <DialogPrimitive.Root
       open={state.open === id}
@@ -374,21 +375,23 @@ export function WorkspaceModal({ id = "", className, children }: Props) {
             aria-describedby={undefined}
             className={cn(className, "pn-show workspace-modal")}
             id={id}
+            onOpenAutoFocus={() => {
+              returnFocus.current = document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null
+            }}
             onPointerDown={(event) => {
               if (event.target === event.currentTarget)
                 setState((s) => ({ ...s, open: null }))
             }}
             onCloseAutoFocus={(event) => {
               event.preventDefault()
-              document
-                .querySelector<HTMLButtonElement>(
-                  `[data-workspace-target="${CSS.escape(id)}"]`,
-                )
-                ?.focus()
+              if (returnFocus.current?.isConnected)
+                returnFocus.current.focus({ preventScroll: true })
             }}
           >
             <DialogPrimitive.Title className="sr-only">
-              {id.replace(/^modal-/, "").replaceAll("-", " ")} dialog
+              {title || `${id.replace(/^modal-/, "").replaceAll("-", " ")} dialog`}
             </DialogPrimitive.Title>
             {children}
           </DialogPrimitive.Content>
@@ -399,11 +402,13 @@ export function WorkspaceModal({ id = "", className, children }: Props) {
 }
 export function WorkspaceOffcanvas({
   id = "",
+  title,
   className,
   children,
   ...props
 }: Props) {
   const { state, setState } = React.useContext(SurfaceContext)
+  const returnFocus = React.useRef<HTMLElement | null>(null)
   const [initiallyOpen, setInitiallyOpen] = React.useState(
     Boolean(className?.split(" ").includes("pn-show")),
   )
@@ -427,9 +432,19 @@ export function WorkspaceOffcanvas({
             aria-describedby={undefined}
             id={id}
             className={cn(className, "pn-show workspace-offcanvas")}
+            onOpenAutoFocus={() => {
+              returnFocus.current = document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null
+            }}
+            onCloseAutoFocus={(event) => {
+              event.preventDefault()
+              if (returnFocus.current?.isConnected)
+                returnFocus.current.focus({ preventScroll: true })
+            }}
           >
             <DialogPrimitive.Title className="sr-only">
-              Panel
+              {title || "Panel"}
             </DialogPrimitive.Title>
             <DismissContext.Provider value={close}>
               {children}

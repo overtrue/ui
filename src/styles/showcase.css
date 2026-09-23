@@ -493,6 +493,26 @@
 .scene-password-field input {
   width: 100%;
 }
+.overtrue-workspace .showcase-panel.pn-offcanvas-top,
+.overtrue-workspace .showcase-panel.pn-offcanvas-bottom {
+  height: auto;
+  max-height: 80dvh;
+}
+.overtrue-workspace .showcase-panel.pn-offcanvas-top {
+  bottom: auto;
+}
+.showcase-panel:is(.pn-offcanvas-top, .pn-offcanvas-bottom)
+  > :is(.pn-offcanvas-header, .pn-offcanvas-body) {
+  width: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+.showcase-panel .pn-offcanvas-body {
+  min-height: 0;
+}
+.showcase-panel .scene-form > .scene-button {
+  align-self: flex-start;
+}
 .showcase-panel-preview {
   height: 150px;
   position: relative;

@@ -3917,6 +3917,7 @@ export default function Page() {
                     </WorkspaceAction>{" "}
                   </div>{" "}
                   <WorkspaceModal
+                    title="Project access"
                     className={"pn-modal pn-modal-blur pn-fade"}
                     id={"modal-demo"}
                     tabIndex={-1}
@@ -3934,7 +3935,7 @@ export default function Page() {
                         <div className={"pn-modal-header"}>
                           {" "}
                           <h5 className={"pn-modal-title"}>
-                            {"Modal Title"}
+                            {"Project access"}
                           </h5>{" "}
                           <WorkspaceAction
                             type={"button"}
@@ -3947,7 +3948,7 @@ export default function Page() {
                           {" "}
                           <p>
                             {
-                              "Share this project with your team. Choose the right access level before preparing the invitation."
+                              "Manage collaborators and access levels from your workspace settings."
                             }
                           </p>{" "}
                         </div>{" "}
@@ -3961,16 +3962,17 @@ export default function Page() {
                             {"Cancel"}
                           </WorkspaceAction>{" "}
                           <WorkspaceButton
-                            type={"button"}
                             className={"pn-btn pn-btn-primary"}
+                            href="/#/settings"
                           >
-                            {"Save changes"}
+                            {"Open settings"}
                           </WorkspaceButton>{" "}
                         </div>{" "}
                       </div>{" "}
                     </div>{" "}
                   </WorkspaceModal>{" "}
                   <WorkspaceModal
+                    title="Changes saved"
                     className={"pn-modal pn-modal-blur pn-fade"}
                     id={"modal-success"}
                     tabIndex={-1}
@@ -4001,7 +4003,9 @@ export default function Page() {
                             strokeLinejoin={"round"}
                             aria-hidden={"true"}
                             focusable={"false"}
-                            className={"pn-icon pn-mb-2 pn-text-success pn-icon-lg"}
+                            className={
+                              "pn-icon pn-mb-2 pn-text-success pn-icon-lg"
+                            }
                           >
                             {" "}
                             <path
@@ -4009,9 +4013,9 @@ export default function Page() {
                             ></path>{" "}
                             <path d={"M9 12l2 2l4 -4"}></path>{" "}
                           </svg>{" "}
-                          <h3>{"Success!"}</h3>{" "}
+                          <h3>{"Changes saved"}</h3>{" "}
                           <div className={"pn-text-secondary"}>
-                            {"Your action was completed successfully."}
+                            {"Your workspace preferences are up to date."}
                           </div>{" "}
                         </div>{" "}
                         <div className={"pn-modal-footer"}>

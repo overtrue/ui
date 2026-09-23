@@ -119,7 +119,7 @@ jobs:
               node scripts/examples/verify-workspace.mjs --mobile
               node scripts/examples/verify-polish.mjs --dark --mobile
               ;;
-            workspace-interactions) node scripts/examples/verify-interactions.mjs ;;
+            workspace-interactions) node scripts/examples/verify-interactions.mjs && SCREENSHOT_DIR=output/playwright/dialogs node scripts/examples/verify-dialogs.mjs ;;
             visual-regressions) node scripts/examples/verify-polish-interactions.mjs ;;
             *) echo "Unknown suite: $SUITE"; exit 1 ;;
           esac
