@@ -330,6 +330,8 @@ export function WorkspaceColorpicker({
       Coloris({ el: ".workspace-color-field input" });
       Coloris.setInstance(selector, {
         selectInput: false,
+        closeButton: true,
+        closeLabel: "Done",
         alpha: config.alpha ?? true,
         format: (config.format || "hex") as "hex",
         themeMode: document.documentElement.classList.contains("dark") ? "dark" : "light",

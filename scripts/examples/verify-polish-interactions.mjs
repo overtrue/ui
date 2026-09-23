@@ -47,6 +47,23 @@ try {
     }), 'color swatch does not cover the HEX value');
     await page.getByLabel('Blue color value').fill('#ff8800');
     check((await page.locator('.showcase-color-sample').evaluate(el => getComputedStyle(el).backgroundColor)) === 'rgb(255, 136, 0)', 'color input updates its preview');
+    await page.setViewportSize({ width: 320, height: 568 });
+    await page.getByLabel('Blue color value').click();
+    const picker = page.locator('#clr-picker.clr-open');
+    await picker.waitFor();
+    check(await picker.evaluate(el => {
+      const rect = el.getBoundingClientRect();
+      const card = document.querySelector('.scene-card');
+      return rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight &&
+        getComputedStyle(el).backgroundColor === getComputedStyle(card).backgroundColor;
+    }), 'color popup fits mobile and matches the card surface');
+    check(await picker.locator('.clr-swatches button').first().evaluate(el => el.getBoundingClientRect().height >= 28), 'color swatches have comfortable targets');
+    await picker.locator('.clr-swatches button').last().click();
+    check((await page.locator('.showcase-color-sample').evaluate(el => getComputedStyle(el).backgroundColor)) === 'rgb(23, 162, 184)', 'popup swatch updates the live preview');
+    await picker.getByRole('button', { name: 'Close color picker', exact: true }).click();
+    await picker.waitFor({ state: 'hidden' });
+    check(await page.getByLabel('Blue color value').evaluate(el => el === document.activeElement), 'closing the color popup restores input focus');
+    await page.setViewportSize({ width: 390, height: 844 });
 
     await go('fullcalendar');
     const agenda = page.getByRole('region', { name: 'Events this month' });

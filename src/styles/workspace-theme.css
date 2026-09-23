@@ -574,6 +574,69 @@
   height: 24px;
   border-radius: calc(var(--radius, 0.5rem) * 0.5);
 }
+/* Coloris mounts its shared popup on body, outside the workspace root. */
+#clr-picker {
+  width: min(264px, calc(100vw - 24px));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  font-family: var(--font-sans);
+  box-shadow: 0 8px 24px hsl(0 0% 0% / 0.12);
+}
+#clr-picker .clr-gradient {
+  height: 140px;
+  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+}
+#clr-picker input.clr-color {
+  height: 36px;
+  border-color: hsl(var(--input));
+  border-radius: calc(var(--radius) * 0.75);
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+}
+#clr-picker .clr-preview {
+  height: 36px;
+  border-radius: calc(var(--radius) * 0.75);
+}
+#clr-picker .clr-preview :is(button, span),
+#clr-picker .clr-preview::before,
+#clr-picker .clr-preview::after {
+  border-radius: inherit;
+}
+#clr-picker .clr-swatches div {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+#clr-picker .clr-swatches button {
+  width: 100%;
+  height: 30px;
+  margin: 0;
+  border-radius: calc(var(--radius) * 0.5);
+}
+#clr-picker .clr-close {
+  height: 32px;
+  margin-block-end: 16px;
+  padding-inline: 14px;
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) * 0.75);
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  font-size: 13px;
+  font-weight: 500;
+}
+#clr-picker :is(input.clr-color:focus, button:focus-visible) {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+@media (max-height: 640px) {
+  #clr-picker .clr-gradient {
+    height: 80px;
+  }
+}
 .overtrue-workspace .workspace-rating {
   display: inline-flex;
   gap: 2px;
