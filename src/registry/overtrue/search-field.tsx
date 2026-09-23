@@ -1,6 +1,6 @@
 "use client";
-import { useId, type ComponentProps } from "react";
-import { IconSearch } from "@tabler/icons-react";
+import { useId, useImperativeHandle, useRef, type ComponentProps } from "react";
+import { IconSearch, IconX } from "@tabler/icons-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +19,7 @@ export function SearchField({
   value,
   onValueChange,
   id,
+  ref,
   containerClassName,
   className,
   placeholder = "Search…",
@@ -26,6 +27,8 @@ export function SearchField({
 }: SearchFieldProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
+  const inputRef = useRef<HTMLInputElement>(null);
+  useImperativeHandle(ref, () => inputRef.current!, []);
   return (
     <div
       data-slot="search-field"
@@ -40,16 +43,31 @@ export function SearchField({
       />
       <Input
         {...props}
+        ref={inputRef}
         id={inputId}
         type="search"
         value={value}
         onChange={(event) => onValueChange(event.target.value)}
         placeholder={placeholder}
         className={cn(
-          "h-9 w-full border-input bg-background ps-9 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring",
+          "h-9 w-full border-input bg-background ps-9 pe-9 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-search-cancel-button]:appearance-none",
           className,
         )}
       />
+      {value && !props.readOnly && (
+        <button
+          type="button"
+          aria-label={`Clear ${label.toLowerCase()}`}
+          disabled={props.disabled}
+          className="absolute end-1 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+          onClick={() => {
+            onValueChange("");
+            inputRef.current?.focus();
+          }}
+        >
+          <IconX aria-hidden="true" className="size-3.5" />
+        </button>
+      )}
     </div>
   );
 }

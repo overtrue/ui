@@ -12,27 +12,54 @@ const run = async (code) => {
 };
 await mkdir("output/playwright/overtrue", { recursive: true });
 await cli("open", origin);
-const routes = sitePages.map(page => page.path);
+const routes = sitePages.map((page) => page.path);
 const results = [];
 try {
   for (const width of [1440, 390]) {
-    results.push(
-      ...(await run(`async page => {
+    // Isolate batches so hundreds of full navigations and iframe documents do
+    // not accumulate in one renderer. Every route still runs at both widths.
+    for (let offset = 0; offset < routes.length; offset += 50) {
+      if (offset > 0 || width === 390) {
+        await cli("close");
+        await cli("open", origin);
+      }
+      const batch = routes.slice(offset, offset + 50);
+      results.push(
+        ...(await run(`async page => {
       await page.setViewportSize({ width: ${width}, height: 1000 });
       const errors = []; const onError = error => errors.push(error.message); page.on('pageerror', onError);
+      const diagnostics = [];
+      const onRequestFailed = request => diagnostics.push(request.url() + ': ' + request.failure()?.errorText);
+      const onConsole = message => { if (message.type() === 'error') diagnostics.push(message.text() + ': ' + message.location().url); };
+      page.on('requestfailed', onRequestFailed);
+      page.on('console', onConsole);
       const results = [];
-      for (const route of ${JSON.stringify(routes)}) {
+      for (const route of ${JSON.stringify(batch)}) {
         const start = errors.length;
-        const response = await page.goto(${JSON.stringify(origin)} + route);
-        await page.locator('.site-footer').waitFor();
-        await page.waitForFunction(() => !document.querySelector('.detail-preview')?.textContent.includes('Loading example'));
+        let response;
+        try {
+          response = await page.goto(${JSON.stringify(origin)} + route);
+          await page.locator('.site-footer').waitFor();
+          await page.waitForFunction(() => !document.querySelector('.detail-preview')?.textContent.includes('Loading example'));
+          const cardFrame = page.locator('.card-live-preview.is-expanded iframe');
+          if (await cardFrame.count()) {
+            await cardFrame.scrollIntoViewIfNeeded();
+            await cardFrame.contentFrame().locator('.overtrue-block').waitFor();
+          }
+        } catch (error) {
+          throw new Error(route + ' at ${width}px: ' + error.message + '; runtime errors: ' + JSON.stringify(errors.slice(start)) + '; failed requests: ' + JSON.stringify(diagnostics.slice(-5)));
+        }
         const state = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth + 1, brokenImages: [...document.images].filter(image => image.complete && !image.naturalWidth).length }));
         results.push({ route, width: ${width}, status: response.status(), ...state, errors: errors.slice(start) });
         if (['/', '/components', '/docs', '/blocks/dashboard'].includes(route)) await page.screenshot({ path: 'output/playwright/overtrue/' + ${width} + '-' + (route.slice(1).replaceAll('/', '-') || 'home') + '.png', fullPage: true });
       }
-      page.off('pageerror', onError); return results;
+      page.off('pageerror', onError); page.off('requestfailed', onRequestFailed); page.off('console', onConsole); return results;
     }`)),
-    );
+      );
+      console.log(
+        `Checked ${Math.min(offset + 50, routes.length)}/${routes.length} routes at ${width}px`,
+      );
+    }
     console.log(`Checked ${routes.length} routes at ${width}px`);
   }
   await writeFile(

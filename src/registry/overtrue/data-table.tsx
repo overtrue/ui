@@ -3,6 +3,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import {
   IconArrowDown as ArrowDown,
   IconArrowUp as ArrowUp,
+  IconArrowsSort as ArrowsSort,
   IconChevronLeft as ChevronLeft,
   IconChevronRight as ChevronRight,
 } from "@tabler/icons-react";
@@ -86,7 +87,7 @@ export function DataTable<T>({
         />
       </div>
       <div className="overflow-x-auto">
-        <Table>
+        <Table className="whitespace-nowrap">
           <TableHeader>
             <TableRow>
               {columns.map((column) => (
@@ -99,7 +100,7 @@ export function DataTable<T>({
                         : "descending"
                       : undefined
                   }
-                  className="h-10 px-4 text-xs font-medium"
+                  className="h-10 bg-muted/30 px-4 text-xs font-medium"
                 >
                   {column.sortable ? (
                     <button
@@ -114,15 +115,21 @@ export function DataTable<T>({
                         });
                         setPage(0);
                       }}
-                      className="flex items-center gap-1 py-2"
+                      className="-ms-2 flex items-center gap-1.5 rounded-md px-2 py-2 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       {column.label}
-                      {sort?.key === column.key &&
-                        (sort.direction === 1 ? (
-                          <ArrowUp className="size-3" />
+                      {sort?.key === column.key ? (
+                        sort.direction === 1 ? (
+                          <ArrowUp aria-hidden="true" className="size-3" />
                         ) : (
-                          <ArrowDown className="size-3" />
-                        ))}
+                          <ArrowDown aria-hidden="true" className="size-3" />
+                        )
+                      ) : (
+                        <ArrowsSort
+                          aria-hidden="true"
+                          className="size-3 text-muted-foreground"
+                        />
+                      )}
                     </button>
                   ) : (
                     column.label
@@ -143,20 +150,36 @@ export function DataTable<T>({
                   ))}
                 </TableRow>
               ))}
-            {!filtered.length && (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="p-10 text-center text-muted-foreground"
-                >
-                  No matching records.
-                </TableCell>
-              </TableRow>
-            )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between gap-3 border-t px-4 py-3">
+      {!filtered.length && (
+        <div role="status" className="px-4 py-10 text-center">
+          <p className="m-0 text-sm font-medium">
+            {query.trim() ? "No matching records." : "No records yet."}
+          </p>
+          <p className="m-0 mt-1 text-xs leading-5 text-muted-foreground">
+            {query.trim()
+              ? "Try another search or clear it to see all records."
+              : "Records will appear here when they are available."}
+          </p>
+          {query.trim() && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="mt-4 shadow-none"
+              onClick={() => {
+                setQuery("");
+                setPage(0);
+              }}
+            >
+              Clear search
+            </Button>
+          )}
+        </div>
+      )}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
         <p className="text-xs text-muted-foreground" aria-live="polite">
           {filtered.length
             ? `${safePage * size + 1}–${Math.min((safePage + 1) * size, filtered.length)}`
@@ -168,7 +191,7 @@ export function DataTable<T>({
             type="button"
             variant="outline"
             size="icon"
-            className="size-7 border-border bg-card text-foreground hover:bg-muted"
+            className="size-8 border-border bg-card text-foreground shadow-none hover:bg-muted"
             aria-label="Previous page"
             disabled={!safePage}
             onClick={() => setPage(safePage - 1)}
@@ -179,7 +202,7 @@ export function DataTable<T>({
             type="button"
             variant="outline"
             size="icon"
-            className="size-7 border-border bg-card text-foreground hover:bg-muted"
+            className="size-8 border-border bg-card text-foreground shadow-none hover:bg-muted"
             aria-label="Next page"
             disabled={safePage >= lastPage}
             onClick={() => setPage(safePage + 1)}

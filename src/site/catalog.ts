@@ -454,13 +454,13 @@ const items = [
     title: "Search field",
     category: "Forms",
     description:
-      "An accessible, controlled search input with a leading search icon.",
+      "An accessible, controlled search input with a search icon and keyboard-friendly clear action.",
     dependencies: ["input"],
     exampleImports: 'import { useState } from "react"',
     usage:
       'function ProjectSearch() {\n  const [query, setQuery] = useState("")\n  return <SearchField label="Search projects" value={query} onValueChange={setQuery} placeholder="Find a project…" />\n}',
     notes:
-      "label is a persistent accessible name; placeholder is only a hint. The caller filters results and owns any debounce or remote request. Native input attributes such as disabled, autoComplete, and aria-describedby are forwarded.",
+      "label is a persistent accessible name; placeholder is only a hint. Clearing returns focus to the input. Disabled and read-only fields cannot be cleared. The caller filters results and owns any debounce or remote request. Native input attributes and refs are forwarded.",
     api: [
       ["label", "string", "Required accessible name."],
       [

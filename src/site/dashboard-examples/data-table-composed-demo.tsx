@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -168,9 +167,6 @@ export default function DataTableComposedDemo() {
           {" "}
           Follow up on the details holding a project back.{" "}
         </CardDescription>
-        <CardAction>
-          <DataTableViewOptions table={table} />
-        </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         <DataTableToolbar>
@@ -179,13 +175,14 @@ export default function DataTableComposedDemo() {
             column="subject"
             placeholder="Search client requests…"
           />
-          <div className="ml-auto flex items-center gap-1">
+          <div className="flex flex-wrap items-center gap-1">
             {statuses.map((value) => (
               <Button
                 key={value}
                 variant={active === value ? "secondary" : "ghost"}
                 size="sm"
                 className="h-8 capitalize"
+                aria-pressed={active === value}
                 onClick={() =>
                   status?.setFilterValue(active === value ? "" : value)
                 }
@@ -194,6 +191,7 @@ export default function DataTableComposedDemo() {
               </Button>
             ))}
           </div>
+          <DataTableViewOptions table={table} className="ml-auto" />
         </DataTableToolbar>
         <DataTableContent
           table={table}

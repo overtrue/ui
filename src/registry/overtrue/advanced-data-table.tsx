@@ -91,6 +91,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { SearchField } from "./search-field";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -159,10 +160,9 @@ function createDataTableColumnHelper<TData extends RowData>() {
 type DataTableDensity = "compact" | "default" | "relaxed";
 
 const densityClasses: Record<DataTableDensity, string> = {
-  compact:
-    "[&_[data-slot=table-head]]:h-8 [&_[data-slot=table-cell]]:py-1 [&_[data-slot=table-cell]]:text-[0.8125rem]",
+  compact: "[&_th]:h-8 [&_td]:py-1 [&_td]:text-[0.8125rem]",
   default: "",
-  relaxed: "[&_[data-slot=table-head]]:h-12 [&_[data-slot=table-cell]]:py-3.5",
+  relaxed: "[&_th]:h-12 [&_td]:py-3.5",
 };
 
 /* -------------------------------------------------------------------------- */
@@ -279,6 +279,8 @@ export interface DataTableProps<TData extends RowData>
   /** Column id to filter with the search input. Omit to hide the input. */
   searchKey?: string;
   searchPlaceholder?: string;
+  /** Accessible name for the search field. Defaults to the column label. */
+  searchLabel?: string;
   /** Extra toolbar content, rendered between the search input and view options. */
   toolbar?: React.ReactNode;
   showViewOptions?: boolean;
@@ -326,11 +328,12 @@ function DataTable<TData extends RowData>({
   onRowSelectionChange,
   searchKey,
   searchPlaceholder = "Filter...",
+  searchLabel,
   toolbar,
   showViewOptions = true,
   showPagination = true,
   pageSizeOptions,
-  emptyMessage = "No results.",
+  emptyMessage,
   loading = false,
   pending = false,
   skeletonRows,
@@ -364,7 +367,7 @@ function DataTable<TData extends RowData>({
   return (
     <div
       data-slot="data-table"
-      className={cn("flex flex-col gap-4", className)}
+      className={cn("flex min-w-0 flex-col gap-4", className)}
       {...props}
     >
       {hasToolbar ? (
@@ -374,6 +377,7 @@ function DataTable<TData extends RowData>({
               table={table}
               column={searchKey}
               placeholder={searchPlaceholder}
+              label={searchLabel}
               disabled={loading}
             />
           ) : null}
@@ -440,12 +444,23 @@ interface DataTableSearchProps<TData extends RowData> extends Omit<
   table: DataTableInstance<TData>;
   /** Column id to filter. */
   column: string;
+  label?: string;
+}
+
+function columnLabel<TData extends RowData>(column: DataTableColumn<TData>) {
+  if (typeof column.columnDef.header === "string")
+    return column.columnDef.header;
+  const label = column.id
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/[_-]+/g, " ");
+  return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
 /** An input bound to one column's filter. */
 function DataTableSearch<TData extends RowData>({
   table,
   column,
+  label,
   className,
   ...props
 }: DataTableSearchProps<TData>) {
@@ -453,11 +468,13 @@ function DataTableSearch<TData extends RowData>({
   if (!target) return null;
 
   return (
-    <Input
+    <SearchField
       data-slot="data-table-search"
+      label={label ?? `Search ${columnLabel(target).toLowerCase()}`}
       value={(target.getFilterValue() as string) ?? ""}
-      onChange={(event) => target.setFilterValue(event.target.value)}
-      className={cn("h-8 max-w-sm", className)}
+      onValueChange={(value) => target.setFilterValue(value)}
+      containerClassName="min-w-0 max-w-sm flex-1 basis-48"
+      className={cn("h-8", className)}
       {...props}
     />
   );
@@ -484,9 +501,10 @@ function DataTableViewOptions<TData extends RowData>({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
+          type="button"
           variant="outline"
           size="sm"
-          className={cn("h-8", className)}
+          className={cn("h-8 shrink-0 shadow-none", className)}
           {...props}
         >
           <Settings2 />
@@ -499,11 +517,10 @@ function DataTableViewOptions<TData extends RowData>({
         {columns.map((column) => (
           <DropdownMenuCheckboxItem
             key={column.id}
-            className="capitalize"
             checked={column.getIsVisible()}
             onCheckedChange={(value) => column.toggleVisibility(!!value)}
           >
-            {column.id}
+            {columnLabel(column)}
           </DropdownMenuCheckboxItem>
         ))}
         {reorderable ? (
@@ -557,6 +574,7 @@ function DataTableColumnHeader<TData extends RowData, TValue>({
       {...props}
     >
       <Button
+        type="button"
         variant="ghost"
         size="sm"
         className="data-[sorted=true]:text-foreground -ml-2 h-8 gap-1.5 px-2"
@@ -648,6 +666,7 @@ function DataTableSelectionBar<TData extends RowData>({
       <div className="ml-auto flex items-center gap-2">
         {children}
         <Button
+          type="button"
           variant="ghost"
           size="sm"
           className="h-8"
@@ -797,7 +816,7 @@ function DataTableContent<TData extends RowData>({
   maxHeight,
   reorderable = false,
   density = "default",
-  emptyMessage = "No results.",
+  emptyMessage,
   onRowClick,
   rowClassName,
   rowProps,
@@ -854,14 +873,14 @@ function DataTableContent<TData extends RowData>({
   // the cells so pinned and unpinned columns stay in step. They have to stay
   // opaque too: a translucent hover on a pinned cell lets the columns passing
   // underneath show through, so the row hover is `bg-muted/50` pre-mixed over
-  // the background rather than blended with whatever is behind the cell.
+  // the card surface rather than blended with whatever is behind the cell.
   const rowClasses = cn(
     "group/row",
     hasPinned && "hover:bg-transparent data-[state=selected]:bg-transparent",
   );
   const cellClasses = cn(
     hasPinned && [
-      "group-hover/row:bg-[color-mix(in_oklab,var(--color-muted)_50%,var(--color-background))]",
+      "group-hover/row:bg-[color-mix(in_oklab,var(--color-muted)_50%,var(--color-card))]",
       "group-data-[state=selected]/row:bg-muted",
     ],
   );
@@ -871,7 +890,7 @@ function DataTableContent<TData extends RowData>({
       data-slot="data-table-content"
       aria-busy={loading || pending || undefined}
       className={cn(
-        "relative overflow-hidden rounded-md border",
+        "relative min-w-0 overflow-hidden rounded-md border bg-card text-card-foreground",
         "[&>[data-slot=table-container]]:[scrollbar-width:thin] [&>[data-slot=table-container]]:[scrollbar-color:color-mix(in_oklab,var(--color-foreground)_20%,transparent)_transparent]",
         maxHeight !== undefined &&
           "[&>[data-slot=table-container]]:max-h-[var(--data-table-max-height)]",
@@ -895,7 +914,7 @@ function DataTableContent<TData extends RowData>({
           className="bg-primary/60 absolute inset-x-0 top-0 z-40 h-0.5 animate-pulse"
         />
       ) : null}
-      <Table>
+      <Table className="whitespace-nowrap">
         <TableHeader className={cn(stickyHeader && "[&_tr]:border-b-0")}>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow
@@ -911,12 +930,21 @@ function DataTableContent<TData extends RowData>({
                   <TableHead
                     key={header.id}
                     colSpan={header.colSpan}
+                    aria-sort={
+                      header.isPlaceholder
+                        ? undefined
+                        : column.getIsSorted() === "asc"
+                          ? "ascending"
+                          : column.getIsSorted() === "desc"
+                            ? "descending"
+                            : undefined
+                    }
                     data-pinned={pinned || undefined}
                     data-dragging={dragging === column.id || undefined}
                     data-drop-target={dropTarget === column.id || undefined}
                     {...(draggable ? dragProps(column.id) : null)}
                     className={cn(
-                      (stickyHeader || pinned) && "bg-background",
+                      "bg-[color-mix(in_oklab,var(--color-muted)_30%,var(--color-card))]",
                       stickyHeader && "sticky top-0 z-20",
                       pinned && "sticky z-20 overflow-hidden",
                       pinned && stickyHeader && "z-30",
@@ -978,7 +1006,7 @@ function DataTableContent<TData extends RowData>({
                         data-pinned={pinned || undefined}
                         className={cn(
                           cellClasses,
-                          pinned && "bg-background sticky z-20 overflow-hidden",
+                          pinned && "bg-card sticky z-20 overflow-hidden",
                         )}
                         style={getPinnedStyle(column)}
                       >
@@ -995,18 +1023,41 @@ function DataTableContent<TData extends RowData>({
                 </React.Fragment>
               );
             })
-          ) : (
-            <TableRow className="hover:bg-transparent">
-              <TableCell
-                colSpan={visibleColumns.length}
-                className="text-muted-foreground h-24 text-center"
-              >
-                {emptyMessage}
-              </TableCell>
-            </TableRow>
-          )}
+          ) : null}
         </TableBody>
       </Table>
+      {!loading && !rows.length && (
+        <div role="status" className="px-4 py-10 text-center">
+          {emptyMessage ?? (
+            <>
+              <p className="m-0 text-sm font-medium">
+                {table.state.columnFilters.length
+                  ? "No matching records."
+                  : "No records yet."}
+              </p>
+              <p className="m-0 mt-1 text-xs leading-5 text-muted-foreground">
+                {table.state.columnFilters.length
+                  ? "Try changing or clearing your filters."
+                  : "Records will appear here when they are available."}
+              </p>
+              {table.state.columnFilters.length > 0 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="mt-4 shadow-none"
+                  onClick={() => {
+                    table.resetColumnFilters();
+                    table.setPageIndex(0);
+                  }}
+                >
+                  Clear filters
+                </Button>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -1132,19 +1183,27 @@ function DataTablePagination<TData extends RowData>({
     <div
       data-slot="data-table-pagination"
       className={cn(
-        "flex flex-wrap items-center justify-between gap-4",
+        "@container/table-pagination flex min-w-0 flex-wrap items-center justify-between gap-3",
         className,
       )}
       {...props}
     >
-      <div className="flex items-center gap-3">
-        <p className="text-muted-foreground text-sm tabular-nums">
-          {from}–{to} of {total}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <p
+          className="m-0 whitespace-nowrap text-muted-foreground text-xs tabular-nums"
+          aria-live="polite"
+        >
+          {total ? `${from}–${to} of ${total}` : "0 records"}
         </p>
         {pageSizeOptions?.length ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 tabular-nums">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-8 tabular-nums"
+              >
                 {pageSize} per page
               </Button>
             </DropdownMenuTrigger>
@@ -1163,11 +1222,12 @@ function DataTablePagination<TData extends RowData>({
           </DropdownMenu>
         ) : null}
       </div>
-      <div className="flex items-center gap-1">
+      <div className="ml-auto flex items-center gap-1">
         <Button
+          type="button"
           variant="outline"
           size="icon"
-          className="size-8"
+          className="hidden size-8 shadow-none @min-[20rem]/table-pagination:inline-flex"
           onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
           aria-label="First page"
@@ -1175,22 +1235,24 @@ function DataTablePagination<TData extends RowData>({
           <ChevronsLeft />
         </Button>
         <Button
+          type="button"
           variant="outline"
           size="icon"
-          className="size-8"
+          className="size-8 shrink-0 shadow-none"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
           aria-label="Previous page"
         >
           <ChevronLeft />
         </Button>
-        <span className="text-muted-foreground px-2 text-sm tabular-nums">
+        <span className="whitespace-nowrap text-muted-foreground px-2 text-xs tabular-nums">
           Page {pageIndex + 1} of {Math.max(table.getPageCount(), 1)}
         </span>
         <Button
+          type="button"
           variant="outline"
           size="icon"
-          className="size-8"
+          className="size-8 shrink-0 shadow-none"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
           aria-label="Next page"
@@ -1198,9 +1260,10 @@ function DataTablePagination<TData extends RowData>({
           <ChevronRight />
         </Button>
         <Button
+          type="button"
           variant="outline"
           size="icon"
-          className="size-8"
+          className="hidden size-8 shadow-none @min-[20rem]/table-pagination:inline-flex"
           onClick={() => table.lastPage()}
           disabled={!table.getCanNextPage()}
           aria-label="Last page"

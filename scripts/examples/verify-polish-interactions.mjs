@@ -69,9 +69,14 @@ try {
     await page.getByLabel('Browse components', { exact: true }).selectOption('metric-chart');
     check(page.url().endsWith('/components/metric-chart'), 'mobile component picker navigates');
     await page.goto(${JSON.stringify(origin)} + '/docs');
-    await page.getByText('On this page', { exact: true }).click();
-    await page.getByRole('navigation', { name: 'Documentation sections' }).getByRole('link', { name: 'Theming', exact: true }).click();
+    const mobileDocs = page.locator('.docs-mobile-contents');
+    await mobileDocs.locator('summary').click();
+    check(await mobileDocs.getByText('Getting started', { exact: true }).isVisible() && await mobileDocs.getByText('Handbook', { exact: true }).isVisible(), 'mobile documentation retains both navigation groups');
+    await mobileDocs.getByRole('navigation', { name: 'Documentation', exact: true }).getByRole('link', { name: 'Theming', exact: true }).click();
+    await page.waitForURL('**/docs#theming');
     check(page.url().endsWith('#theming'), 'mobile documentation table of contents');
+    await page.locator('.docs-mobile-contents:not([open])').waitFor();
+    passed.push('mobile documentation closes after navigation');
     return passed;
   }`);
   const result = stdout.match(/### Result\n([\s\S]*?)\n### Ran/);

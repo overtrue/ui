@@ -516,6 +516,218 @@ try {
       .isEnabled(),
   );
   checks++;
+  // Shared search controls retain the consumer ref and keyboard focus on clear.
+  await page.evaluate(async () => {
+    const { SearchField } =
+      await import("/src/registry/overtrue/search-field.tsx");
+    const { React, render } = window.fixture;
+    window.searchRef = React.createRef();
+    function ControlledSearch() {
+      const [value, setValue] = React.useState("Existing query");
+      return React.createElement(SearchField, {
+        label: "Search entries",
+        value,
+        onValueChange: setValue,
+        ref: window.searchRef,
+      });
+    }
+    await render(React.createElement(ControlledSearch));
+  });
+  assert.ok(
+    await page.evaluate(
+      () => window.searchRef.current instanceof HTMLInputElement,
+    ),
+  );
+  const searchClear = fixture.getByRole("button", {
+    name: "Clear search entries",
+  });
+  await searchClear.focus();
+  await searchClear.press("Enter");
+  assert.equal(
+    await fixture
+      .getByRole("searchbox", { name: "Search entries" })
+      .inputValue(),
+    "",
+  );
+  assert.ok(
+    await page.evaluate(
+      () => document.activeElement === window.searchRef.current,
+    ),
+  );
+  for (const mode of ["disabled", "readOnly"]) {
+    await page.evaluate(
+      (mode) =>
+        window.fixture.mount("search-field", "SearchField", {
+          label: "Search entries",
+          value: "Locked query",
+          onValueChange: () => {
+            throw new Error("Locked field changed");
+          },
+          [mode]: true,
+        }),
+      mode,
+    );
+    const clear = fixture.getByRole("button", { name: "Clear search entries" });
+    if (mode === "disabled") assert.ok(await clear.isDisabled());
+    else assert.equal(await clear.count(), 0);
+  }
+  checks++;
+
+  await page.evaluate(() =>
+    window.fixture.mount("data-table", "DataTable", {
+      rows: [],
+      columns: [
+        {
+          key: "name",
+          label: "Name",
+          value: (row) => row.name,
+          sortable: true,
+        },
+      ],
+      getRowId: (row) => row.id,
+    }),
+  );
+  assert.ok(
+    await fixture.getByText("No records yet.", { exact: true }).isVisible(),
+  );
+  assert.equal(
+    await fixture
+      .getByRole("button", { name: "Clear search", exact: true })
+      .count(),
+    0,
+  );
+  checks++;
+
+  await page.evaluate(async () => {
+    const { DataTable, DataTableColumnHeader, createDataTableColumnHelper } =
+      await import("/src/registry/overtrue/advanced-data-table.tsx");
+    const { React, render } = window.fixture;
+    const helper = createDataTableColumnHelper();
+    const columns = helper.columns([
+      helper.accessor("workspaceName", {
+        header: ({ column }) =>
+          React.createElement(DataTableColumnHeader, {
+            column,
+            title: "Workspace name",
+          }),
+      }),
+      helper.accessor("owner", { header: "Account owner" }),
+    ]);
+    window.formSubmissions = 0;
+    window.mountTestTable = async (data, extra = {}) =>
+      render(
+        React.createElement(
+          "form",
+          {
+            style: { width: 180 },
+            onSubmit: (event) => {
+              event.preventDefault();
+              window.formSubmissions++;
+            },
+          },
+          React.createElement(DataTable, {
+            columns,
+            data,
+            pageSize: 1,
+            pageSizeOptions: [1, 5],
+            searchKey: "workspaceName",
+            searchLabel: "Find a workspace",
+            ...extra,
+          }),
+        ),
+      );
+    await window.mountTestTable([
+      { workspaceName: "Cedar", owner: "Maya" },
+      { workspaceName: "Birch", owner: "Leo" },
+    ]);
+  });
+  const tableSearch = fixture.getByRole("searchbox", {
+    name: "Find a workspace",
+  });
+  await fixture
+    .getByRole("button", { name: "Workspace name", exact: true })
+    .click();
+  assert.equal(
+    await fixture
+      .getByRole("columnheader", { name: "Workspace name", exact: true })
+      .getAttribute("aria-sort"),
+    "ascending",
+  );
+  await fixture.getByText("Birch", { exact: true }).waitFor();
+  await fixture.getByRole("button", { name: "Next page", exact: true }).click();
+  await fixture.getByText("Cedar", { exact: true }).waitFor();
+  await tableSearch.fill("missing");
+  await fixture.getByRole("button", { name: "Clear filters" }).click();
+  await fixture.getByText("Birch", { exact: true }).waitFor();
+  await fixture.getByRole("button", { name: "View", exact: true }).click();
+  assert.ok(
+    await page
+      .getByRole("menuitemcheckbox", { name: "Workspace Name", exact: true })
+      .isVisible(),
+  );
+  await page
+    .getByRole("menuitemcheckbox", { name: "Account owner", exact: true })
+    .click();
+  await fixture.getByRole("button", { name: "1 per page" }).click();
+  await page.getByRole("menuitemcheckbox", { name: "5 per page" }).click();
+  assert.equal(await fixture.locator("tbody tr").count(), 2);
+  assert.equal(await page.evaluate(() => window.formSubmissions), 0);
+  assert.ok(
+    await fixture
+      .locator('[data-slot="data-table-pagination"]')
+      .evaluate((el) => el.scrollWidth <= el.clientWidth),
+  );
+  assert.equal(
+    await fixture.getByRole("button", { name: "First page" }).isVisible(),
+    false,
+  );
+  checks++;
+  await page.evaluate(() => window.mountTestTable([]));
+  await fixture.getByText("No records yet.", { exact: true }).waitFor();
+  assert.ok(await fixture.getByText("0 records", { exact: true }).isVisible());
+  await page.evaluate(() =>
+    window.mountTestTable([], { emptyMessage: "Nothing has arrived yet." }),
+  );
+  await fixture
+    .getByText("Nothing has arrived yet.", { exact: true })
+    .waitFor();
+  assert.equal(await fixture.getByText("No records yet.").count(), 0);
+  checks++;
+  const rowHeights = [];
+  for (const [density, padding, headerHeight] of [
+    ["compact", "4px", 32],
+    ["default", "10px", 40],
+    ["relaxed", "14px", 48],
+  ]) {
+    await page.evaluate(
+      (density) =>
+        window.mountTestTable([{ workspaceName: "Birch", owner: "Maya" }], {
+          density,
+        }),
+      density,
+    );
+    assert.equal(
+      await fixture
+        .locator("tbody td")
+        .first()
+        .evaluate((el) => getComputedStyle(el).paddingTop),
+      padding,
+    );
+    const renderedHeaderHeight = await fixture
+      .locator("thead th")
+      .first()
+      .evaluate((el) => el.getBoundingClientRect().height);
+    // Collapsed table borders can contribute half a CSS pixel at each edge.
+    assert.ok(Math.abs(renderedHeaderHeight - headerHeight) <= 1);
+    rowHeights.push(
+      await fixture
+        .locator("tbody tr")
+        .first()
+        .evaluate((el) => el.getBoundingClientRect().height),
+    );
+  }
+  assert.ok(rowHeights[0] < rowHeights[1] && rowHeights[1] < rowHeights[2]);
+  checks++;
   await page.goto(origin + "/workspace/#/stars-rating");
   const rating = page.getByRole("radiogroup", { name: "Rating" }).first();
   await rating.waitFor();

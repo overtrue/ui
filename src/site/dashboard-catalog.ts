@@ -355,7 +355,7 @@ export const dashboardCatalog = [
     usage:
       'function TrafficTable() {\n  const rows = [{ path: "/", views: 48210 }, { path: "/pricing", views: 21480 }]\n  const helper = createDataTableColumnHelper<(typeof rows)[number]>()\n  const columns = helper.columns([\n    helper.accessor("path", {\n      header: ({ column }) => <DataTableColumnHeader column={column} title="Page" />,\n    }),\n    helper.accessor("views", {\n      header: ({ column }) => <DataTableColumnHeader column={column} title="Views" align="right" />,\n      cell: ({ row }) => <div className="text-right">{row.original.views}</div>,\n    }),\n  ])\n  return <DataTable columns={columns} data={rows} searchKey="path" />\n}',
     notes:
-      "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow. This component has a separate API from the existing data-table component. ",
+      "Uses your application theme and a separate API from the compact data-table component. Search has an accessible label and clear action; searchLabel overrides the default column name. Empty filtered views offer Clear filters unless you supply emptyMessage. Pagination adapts to the container width. Replace sample data and connect callbacks to your workflow.",
     previewWidth: 800,
     examples: [
       {
@@ -420,6 +420,11 @@ export const dashboardCatalog = [
       ],
       ["searchPlaceholder?", "string", ""],
       [
+        "searchLabel?",
+        "string",
+        "Accessible search name; defaults to the column label.",
+      ],
+      [
         "toolbar?",
         "React.ReactNode",
         "Extra toolbar content, rendered between the search input and view options.",
@@ -427,7 +432,11 @@ export const dashboardCatalog = [
       ["showViewOptions?", "boolean", ""],
       ["showPagination?", "boolean", ""],
       ["pageSizeOptions?", "number[]", ""],
-      ["emptyMessage?", "React.ReactNode", ""],
+      [
+        "emptyMessage?",
+        "React.ReactNode",
+        "Replace the default empty state, including its filter recovery action.",
+      ],
       [
         "loading?",
         "boolean",
@@ -450,7 +459,11 @@ export const dashboardCatalog = [
         "boolean | string[]",
         "Let columns be dragged into a new order. Pass ids to limit which ones.",
       ],
-      ["density?", "DataTableDensity", ""],
+      [
+        "density?",
+        "DataTableDensity",
+        "compact, default, or relaxed header and cell spacing.",
+      ],
       ["onRowClick?", "(row: DataTableRow<TData>) => void", ""],
       ["rowClassName?", "(row: DataTableRow<TData>) => string | undefined", ""],
       [
