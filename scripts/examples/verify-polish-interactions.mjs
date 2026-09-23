@@ -65,6 +65,33 @@ try {
     check(await page.getByLabel('Blue color value').evaluate(el => el === document.activeElement), 'closing the color popup restores input focus');
     await page.setViewportSize({ width: 390, height: 844 });
 
+    await go('form-elements');
+    await page.getByRole('button', { name: 'Dates & files', exact: true }).click();
+    const datepicker = page.locator('.workspace-datepicker');
+    await datepicker.getByRole('button', { name: 'Next month', exact: true }).click();
+    check(await datepicker.getByRole('gridcell', { selected: true }).count() === 0, 'browsing a month does not change the selected date');
+    check((await datepicker.getByRole('status').innerText()).includes('Sep 20, 2026'), 'date selection includes the month and year');
+    await datepicker.getByRole('button', { name: 'Previous month', exact: true }).click();
+    check((await datepicker.getByRole('gridcell', { selected: true }).innerText()) === '20', 'returning to the selected month restores its highlight');
+    check(await datepicker.locator('tbody button[tabindex="0"]').count() === 1, 'calendar has one date in the tab order');
+    await datepicker.getByRole('button', { name: 'Wednesday, September 30, 2026', exact: true }).focus();
+    await page.keyboard.press('ArrowRight');
+    check(await page.evaluate(() => document.activeElement.getAttribute('aria-label')) === 'Thursday, October 1, 2026', 'calendar arrows cross month boundaries');
+    await page.keyboard.press('Enter');
+    check((await datepicker.getByRole('status').innerText()).includes('Oct 1, 2026'), 'keyboard selection updates the date feedback');
+    await page.keyboard.press('PageDown');
+    await page.keyboard.press('PageDown');
+    await page.keyboard.press('PageDown');
+    await datepicker.getByRole('button', { name: 'Sunday, January 31, 2027', exact: true }).focus();
+    await page.keyboard.press('PageDown');
+    check(await page.evaluate(() => document.activeElement.getAttribute('aria-label')) === 'Sunday, February 28, 2027', 'short months clamp keyboard focus to the last day');
+    await page.keyboard.press('Shift+PageDown');
+    await page.keyboard.press('ArrowRight');
+    check(await page.evaluate(() => document.activeElement.getAttribute('aria-label')) === 'Tuesday, February 29, 2028', 'leap day is reachable by keyboard');
+    await page.setViewportSize({ width: 320, height: 568 });
+    check(await datepicker.evaluate(el => el.scrollWidth <= el.clientWidth && el.getBoundingClientRect().right <= innerWidth), 'inline datepicker fits a narrow form');
+    await page.setViewportSize({ width: 390, height: 844 });
+
     await go('fullcalendar');
     const agenda = page.getByRole('region', { name: 'Events this month' });
     check(await agenda.getByRole('button').count() === 7, 'mobile calendar shows complete event titles');

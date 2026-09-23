@@ -170,58 +170,172 @@ export function WorkspaceCalendar(props: PluginProps) {
   );
 }
 export function WorkspaceDatepicker(props: PluginProps) {
-  const [month, setMonth] = React.useState(new Date(2026, 8, 1));
-  const [selected, setSelected] = React.useState(20);
-  const offset =
-    (new Date(month.getFullYear(), month.getMonth(), 1).getDay() + 6) % 7;
-  const days = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+  const [selected, setSelected] = React.useState(new Date(2026, 8, 20));
+  const [focused, setFocused] = React.useState(selected);
+  const grid = React.useRef<HTMLTableElement>(null);
+  const restoreFocus = React.useRef(false);
+  const headingId = React.useId();
+  const year = focused.getFullYear();
+  const month = focused.getMonth();
+  const monthLabel = focused.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+  const offset = (new Date(year, month, 1).getDay() + 6) % 7;
+  const days = new Date(year, month + 1, 0).getDate();
+  const weekdays = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const selectedInMonth =
+    selected.getFullYear() === year && selected.getMonth() === month;
+  const moveMonth = (delta: number) =>
+    new Date(
+      year,
+      month + delta,
+      Math.min(
+        focused.getDate(),
+        new Date(year, month + delta + 1, 0).getDate(),
+      ),
+    );
+
+  React.useEffect(() => {
+    if (restoreFocus.current) {
+      grid.current?.querySelector<HTMLButtonElement>('[tabindex="0"]')?.focus();
+      restoreFocus.current = false;
+    }
+  }, [focused]);
+
+  function onKeyDown(
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    date: Date,
+  ) {
+    let next: Date;
+    const weekday = (date.getDay() + 6) % 7;
+    switch (event.key) {
+      case "ArrowLeft":
+        next = new Date(year, month, date.getDate() - 1);
+        break;
+      case "ArrowRight":
+        next = new Date(year, month, date.getDate() + 1);
+        break;
+      case "ArrowUp":
+        next = new Date(year, month, date.getDate() - 7);
+        break;
+      case "ArrowDown":
+        next = new Date(year, month, date.getDate() + 7);
+        break;
+      case "Home":
+        next = new Date(year, month, date.getDate() - weekday);
+        break;
+      case "End":
+        next = new Date(year, month, date.getDate() + 6 - weekday);
+        break;
+      case "PageUp":
+        next = moveMonth(event.shiftKey ? -12 : -1);
+        break;
+      case "PageDown":
+        next = moveMonth(event.shiftKey ? 12 : 1);
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+    restoreFocus.current = true;
+    setFocused(next);
+  }
+
   return (
     <div {...props} className={cn(props.className, "workspace-datepicker")}>
       <div className="workspace-datepicker-heading">
         <Button
+          type="button"
           variant="workspace"
           aria-label="Previous month"
-          onClick={() =>
-            setMonth((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))
-          }
+          onClick={() => setFocused(moveMonth(-1))}
         >
           <IconChevronLeft size={16} />
         </Button>
-        <strong>
-          {month.toLocaleDateString("en-US", {
-            month: "long",
-            year: "numeric",
-          })}
+        <strong id={headingId} aria-live="polite" aria-atomic="true">
+          {monthLabel}
         </strong>
         <Button
+          type="button"
           variant="workspace"
           aria-label="Next month"
-          onClick={() =>
-            setMonth((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))
-          }
+          onClick={() => setFocused(moveMonth(1))}
         >
           <IconChevronRight size={16} />
         </Button>
       </div>
-      <div className="workspace-datepicker-grid">
-        {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
-          <span key={day}>{day}</span>
-        ))}
-        {Array.from({ length: offset }, (_, i) => (
-          <span key={`empty-${i}`} />
-        ))}
-        {Array.from({ length: days }, (_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-pressed={selected === i + 1}
-            className={selected === i + 1 ? "is-selected" : ""}
-            onClick={() => setSelected(i + 1)}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+      <table
+        ref={grid}
+        role="grid"
+        aria-labelledby={headingId}
+        className="workspace-datepicker-grid"
+      >
+        <thead>
+          <tr>
+            {weekdays.map((day) => (
+              <th key={day} scope="col" abbr={day}>
+                {day.slice(0, 2)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: Math.ceil((offset + days) / 7) }, (_, week) => (
+            <tr key={week}>
+              {weekdays.map((_, weekday) => {
+                const day = week * 7 + weekday - offset + 1;
+                if (day < 1 || day > days) return <td key={weekday} />;
+                const date = new Date(year, month, day);
+                const isSelected =
+                  selectedInMonth && selected.getDate() === day;
+                return (
+                  <td key={weekday} aria-selected={isSelected || undefined}>
+                    <button
+                      type="button"
+                      aria-label={date.toLocaleDateString("en-US", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                      tabIndex={focused.getDate() === day ? 0 : -1}
+                      className={isSelected ? "is-selected" : undefined}
+                      onFocus={() => {
+                        if (focused.getTime() !== date.getTime())
+                          setFocused(date);
+                      }}
+                      onKeyDown={(event) => onKeyDown(event, date)}
+                      onClick={() => {
+                        setSelected(date);
+                        setFocused(date);
+                      }}
+                    >
+                      {day}
+                    </button>
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="workspace-datepicker-selection" role="status">
+        Selected:{" "}
+        {selected.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })}
+      </p>
     </div>
   );
 }

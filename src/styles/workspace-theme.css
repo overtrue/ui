@@ -731,7 +731,7 @@
   border: 0;
 }
 .overtrue-workspace .workspace-datepicker {
-  width: 280px;
+  width: min(100%, 280px);
   border: 1px solid var(--pn-border-color);
   padding: 12px;
   border-radius: var(--pn-border-radius);
@@ -744,28 +744,52 @@
   margin-bottom: 12px;
 }
 .overtrue-workspace .workspace-datepicker-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 2px;
   text-align: center;
-  gap: 2px;
 }
-.overtrue-workspace .workspace-datepicker-grid > * {
-  padding: 6px;
+.overtrue-workspace .workspace-datepicker-grid :is(th, td) {
+  padding: 0;
 }
-.overtrue-workspace .workspace-datepicker-grid > span {
+.overtrue-workspace .workspace-datepicker-grid th {
+  height: 32px;
   font-size: 12px;
+  font-weight: 400;
   color: var(--pn-secondary);
 }
+.overtrue-workspace .workspace-datepicker-heading button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: calc(var(--radius) * 0.5);
+  cursor: pointer;
+}
 .overtrue-workspace .workspace-datepicker-grid button {
+  width: 100%;
+  height: 32px;
+  padding: 0;
+  font-variant-numeric: tabular-nums;
   border-radius: calc(var(--radius, 0.5rem) * 0.5);
   cursor: pointer;
 }
+.overtrue-workspace .workspace-datepicker-heading button:hover,
 .overtrue-workspace .workspace-datepicker-grid button:hover {
   background: var(--pn-bg-surface-secondary);
 }
 .overtrue-workspace .workspace-datepicker-grid button.is-selected {
   background: var(--pn-primary);
   color: white;
+}
+.overtrue-workspace .workspace-datepicker-selection {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--pn-border-color);
+  color: var(--pn-secondary);
+  font-size: 12px;
 }
 .overtrue-workspace .fc {
   --fc-border-color: var(--pn-border-color);
