@@ -7,22 +7,17 @@ import {
   type ComponentType,
 } from "react";
 import { createRoot } from "react-dom/client";
-import { BlockFrame } from "./frame";
 import catalog from "./catalog.json";
 import "../index.css";
-import "../styles/workspace-base.css";
-import "../styles/workspace-theme.css";
-import "../styles/scenes.css";
-import "../styles/showcase.css";
 import "./preview.css";
 
 const modules = import.meta.glob<{ default: ComponentType }>(
-  "./generated/*.tsx",
+  "./registry/*.tsx",
 );
 const params = new URLSearchParams(location.search);
 const id = params.get("id") ?? "";
 const item = catalog.find((card) => card.id === id);
-const Card = item ? lazy(modules[`./generated/${id}.tsx`]) : null;
+const Card = item ? lazy(modules[`./registry/${id}.tsx`]) : null;
 class PreviewBoundary extends Component<
   { children: ReactNode },
   { error: string }
@@ -61,9 +56,7 @@ function Preview() {
     <PreviewBoundary>
       <Suspense fallback={<p role="status">Loading card…</p>}>
         {Card ? (
-          <BlockFrame>
-            <Card />
-          </BlockFrame>
+          <Card />
         ) : (
           <p role="alert">Card not found.</p>
         )}

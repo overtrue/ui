@@ -619,7 +619,7 @@
 }
 #clr-picker .clr-close {
   height: 32px;
-  margin-block-end: 16px;
+  margin: 0 20px 16px auto;
   padding-inline: 14px;
   border: 1px solid hsl(var(--border));
   border-radius: calc(var(--radius) * 0.75);

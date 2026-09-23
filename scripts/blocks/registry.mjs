@@ -178,6 +178,14 @@ export function prepareCardRegistry(origin) {
         rule.selectors = rule.selectors.map((selector) => {
           if (selector === ":root") return ".overtrue-block";
           if (selector === ".dark") return ".dark .overtrue-block";
+          // BlockFrame itself is a scene; descendant-only scoping misses it.
+          if (/^(?:\.overtrue-workspace\s+)?\.scene(?=[\s.:#\[]|$)/.test(selector))
+            return selector.replace(
+              /^(?:\.overtrue-workspace\s+)?\.scene/,
+              selector.startsWith(".overtrue-workspace")
+                ? ":is(.overtrue-block.scene, .overtrue-block .scene)"
+                : ":is(:where(.overtrue-block).scene, :where(.overtrue-block) .scene)",
+            );
           if (selector.includes(".overtrue-workspace"))
             return selector.replaceAll(
               ".overtrue-workspace",

@@ -65,6 +65,25 @@ try {
     check(await page.getByLabel('Blue color value').evaluate(el => el === document.activeElement), 'closing the color popup restores input focus');
     await page.setViewportSize({ width: 390, height: 844 });
 
+    await page.goto(${JSON.stringify(origin)} + '/card-preview.html?id=colorpicker-workspace-palette-1&theme=dark');
+    const installedColor = page.getByLabel('Blue color value', { exact: true });
+    await page.locator('.clr-field').first().waitFor();
+    check(await installedColor.evaluate(el => {
+      const swatch = el.parentElement.querySelector('button');
+      return parseFloat(getComputedStyle(el).borderTopWidth) >= 1 &&
+        el.getBoundingClientRect().left + parseFloat(getComputedStyle(el).paddingLeft) >= swatch.getBoundingClientRect().right + 4;
+    }), 'installed color field retains its border and swatch spacing');
+    await installedColor.click();
+    const installedPicker = page.locator('#clr-picker.clr-open');
+    await installedPicker.waitFor();
+    check(await installedPicker.evaluate(el => {
+      const rect = el.getBoundingClientRect();
+      return rect.width >= 260 && rect.top >= 0 && rect.bottom <= innerHeight &&
+        getComputedStyle(el).backgroundColor === getComputedStyle(document.querySelector('.scene-card')).backgroundColor;
+    }), 'installed popup keeps scoped styling and document positioning');
+    await installedPicker.getByRole('button', { name: 'Close color picker', exact: true }).click();
+    check(await installedColor.evaluate(el => el === document.activeElement), 'installed popup returns focus to its input');
+
     await go('form-elements');
     await page.getByRole('button', { name: 'Dates & files', exact: true }).click();
     const datepicker = page.locator('.workspace-datepicker');

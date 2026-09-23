@@ -6,7 +6,7 @@ The Blocks library includes 368 card patterns extracted from the workspace examp
 
 - `src/blocks/catalog.json` records each card's category, source file and line, and example routes.
 - `scripts/blocks/prepare.mjs` extracts actual card JSX, local state, handlers, referenced declarations, imports, and enclosing form behavior. TypeScript removes unused declarations; Prettier formats the result.
-- `src/blocks/generated/` contains the extracted components used by isolated previews. Change the original example to update a card, then run `pnpm blocks:prepare`.
+- `src/blocks/generated/` contains the intermediate extracted components. Change the original example to update a card, then run `pnpm registry:build` to refresh the installable source and previews.
 - `scripts/blocks/registry.mjs` packages the same components with relative imports and a shared foundation. Generated installable source lives in `src/blocks/registry/`.
 - `pnpm registry:build` regenerates both layers before invoking the official shadcn registry builder.
 
@@ -39,5 +39,7 @@ Every detail route gets its own initial HTML metadata and sitemap entry. Vercel 
 ## Verification
 
 Run `pnpm build`, `node scripts/registry/verify.mjs`, and `node scripts/examples/verify-content.mjs`. Registry checks include the shared dependency graph, generated source freshness, unique file targets, required package dependencies, and icon consistency.
+
+Card previews load the exported modules from `src/blocks/registry/`, including their shared foundation and scoped CSS. They do not import the workspace styles separately, so missing installation styles are visible in the gallery too.
 
 Browser validation must cover the card previews themselves, filters and pagination, source display, preview widths and themes, and representative interactions. Validate installation in a fresh consumer project as well; workspace rendering alone does not prove portability.

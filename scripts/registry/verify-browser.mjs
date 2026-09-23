@@ -37,6 +37,7 @@ try {
       for (const route of ${JSON.stringify(batch)}) {
         const start = errors.length;
         let response;
+        let cardState = { cardOverflow: false, cardBrokenImages: 0 };
         try {
           response = await page.goto(${JSON.stringify(origin)} + route);
           await page.locator('.site-footer').waitFor();
@@ -44,13 +45,28 @@ try {
           const cardFrame = page.locator('.card-live-preview.is-expanded iframe');
           if (await cardFrame.count()) {
             await cardFrame.scrollIntoViewIfNeeded();
-            await cardFrame.contentFrame().locator('.overtrue-block').waitFor();
+            const block = cardFrame.contentFrame().locator('.overtrue-block').first();
+            await block.waitFor();
+            cardState = await block.evaluate(async el => {
+              const doc = el.ownerDocument;
+              await doc.fonts.ready;
+              const images = [...doc.images];
+              images.forEach(image => { image.loading = 'eager'; });
+              await Promise.race([
+                Promise.all(images.map(image => image.decode().catch(() => {}))),
+                new Promise(resolve => setTimeout(resolve, 2000)),
+              ]);
+              return {
+                cardOverflow: doc.documentElement.scrollWidth > doc.defaultView.innerWidth + 1,
+                cardBrokenImages: images.filter(image => image.complete && !image.naturalWidth).length,
+              };
+            });
           }
         } catch (error) {
           throw new Error(route + ' at ${width}px: ' + error.message + '; runtime errors: ' + JSON.stringify(errors.slice(start)) + '; failed requests: ' + JSON.stringify(diagnostics.slice(-5)));
         }
         const state = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth + 1, brokenImages: [...document.images].filter(image => image.complete && !image.naturalWidth).length }));
-        results.push({ route, width: ${width}, status: response.status(), ...state, errors: errors.slice(start) });
+        results.push({ route, width: ${width}, status: response.status(), ...state, ...cardState, errors: errors.slice(start) });
         if (['/', '/components', '/docs', '/blocks/dashboard'].includes(route)) await page.screenshot({ path: 'output/playwright/overtrue/' + ${width} + '-' + (route.slice(1).replaceAll('/', '-') || 'home') + '.png', fullPage: true });
       }
       page.off('pageerror', onError); page.off('requestfailed', onRequestFailed); page.off('console', onConsole); return results;
@@ -166,6 +182,8 @@ try {
     (result) =>
       result.overflow ||
       result.brokenImages ||
+      result.cardOverflow ||
+      result.cardBrokenImages ||
       result.errors.length ||
       result.status !== 200,
   );

@@ -428,6 +428,16 @@ export function WorkspaceColorpicker({
       if (disposed || !host.current || !id) return;
       if (!colorisInitialized) {
         Coloris.init();
+        // Keep the body-level popup inside the same theme boundary as dialogs.
+        const picker = document.getElementById("clr-picker");
+        if (picker) {
+          const portal = document.createElement("div");
+          portal.className = "overtrue-workspace workspace-portal";
+          // Coloris positions against the document, not this theme wrapper.
+          portal.style.position = "static";
+          picker.before(portal);
+          portal.append(picker);
+        }
         colorisInitialized = true;
       }
       const selector = `#${CSS.escape(id)}`;
