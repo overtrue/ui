@@ -47,7 +47,11 @@ try {
   const page = await browser.newPage();
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => {
-    if (message.type() === "error") errors.push(message.text());
+    if (message.type() === "error") {
+      errors.push(
+        `${message.text()} (${message.location().url || page.url()})`,
+      );
+    }
   });
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 1000 });
@@ -586,6 +590,34 @@ try {
     );
     await preview.getByRole("button", { name: "All", exact: true }).click();
     assert.equal(await preview.getByRole("listitem").count(), 3);
+  }
+  for (const width of [1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto(origin + "/blocks/integration-list");
+    const preview = page.locator(".detail-preview");
+    assert.equal(await preview.getByRole("listitem").count(), 3);
+    await preview.getByText("1 connected", { exact: true }).waitFor();
+    const connect = preview.getByRole("button", {
+      name: "Connect Slack",
+      exact: true,
+    });
+    await connect.focus();
+    await connect.press("Enter");
+    await preview.getByText("2 connected", { exact: true }).waitFor();
+    await preview
+      .getByRole("button", { name: "Disconnect Slack", exact: true })
+      .click();
+    await preview.getByText("1 connected", { exact: true }).waitFor();
+    assert.ok(
+      await preview
+        .getByText("Interactive demo. No external accounts are connected.")
+        .isVisible(),
+    );
+    assert.ok(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    );
   }
   // Unknown routes must never invoke a loader inherited from Object.prototype.
   await page.addInitScript(() => {

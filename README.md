@@ -11,7 +11,7 @@ Install the pieces you need through the shadcn CLI. The source goes into your ap
 ## What's included
 
 - **52 components:** metrics, charts, tables, navigation, form controls, and other building blocks for everyday admin work. Each has live examples, source, usage, and installation instructions.
-- **13 composed blocks:** team access, notification preferences, invoices, workspace settings, pricing, members, tasks, activity, storage, dashboard, analytics overview, project portfolio, and service status.
+- **14 composed blocks:** team access, notification preferences, integrations, invoices, workspace settings, pricing, members, tasks, activity, storage, dashboard, analytics overview, project portfolio, and service status.
 - **368 example card patterns:** extracted from the same source used by the workspace pages, including their sample data and local interactions.
 - **119 workspace examples:** projects, people, billing, inboxes, settings, authentication, layouts, and component demonstrations.
 - **Light and dark themes:** semantic colors, responsive layouts, and Tabler Icons throughout. The workspace also includes controls for accent, typography, radius, and navigation.

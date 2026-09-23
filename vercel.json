@@ -148,6 +148,11 @@
       "source": "/components/invoice-list",
       "destination": "/blocks/invoice-list",
       "permanent": true
+    },
+    {
+      "source": "/components/integration-list",
+      "destination": "/blocks/integration-list",
+      "permanent": true
     }
   ]
 }

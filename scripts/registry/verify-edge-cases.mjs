@@ -378,6 +378,144 @@ try {
     "/invoices/receipt.pdf",
   );
   checks++;
+  await page.evaluate(() =>
+    window.fixture.mount("integration-list", "IntegrationList", {
+      integrations: [],
+    }),
+  );
+  assert.ok(
+    await fixture.getByText("No integrations available yet.").isVisible(),
+  );
+  await page.evaluate(() =>
+    window.fixture.mount("integration-list", "IntegrationList", {
+      integrations: [
+        {
+          id: "github",
+          name: "GitHub",
+          description: "Repository activity",
+          connected: true,
+          account: "example/repo",
+        },
+      ],
+    }),
+  );
+  assert.equal(await fixture.getByRole("button").count(), 0);
+  assert.ok(await fixture.getByText("example/repo").isVisible());
+  checks++;
+
+  // A completed callback cannot invent a connection when the controlled data has not changed.
+  await page.evaluate(() =>
+    window.fixture.mount("integration-list", "IntegrationList", {
+      integrations: [
+        {
+          id: "slack",
+          name: "Slack",
+          description: "Team updates",
+          connected: false,
+        },
+      ],
+      onConnectionChange: async () => {},
+    }),
+  );
+  await fixture
+    .getByRole("button", { name: "Connect Slack", exact: true })
+    .click();
+  await fixture
+    .getByRole("button", { name: "Connect Slack", exact: true })
+    .waitFor();
+  assert.ok(
+    await fixture.getByText("Not connected", { exact: true }).isVisible(),
+  );
+  checks++;
+
+  await page.evaluate(async () => {
+    const { IntegrationList } =
+      await import("/src/registry/overtrue/integration-list.tsx");
+    const { React, render } = window.fixture;
+    window.connectionCalls = [];
+    function ControlledConnections() {
+      const [integrations, setIntegrations] = React.useState([
+        {
+          id: "github",
+          name: "GitHub",
+          description: "Repository activity",
+          connected: true,
+          account: "example/repo",
+        },
+        {
+          id: "slack",
+          name: "Slack",
+          description: "Team updates",
+          connected: false,
+        },
+      ]);
+      return React.createElement(IntegrationList, {
+        integrations,
+        onConnectionChange: async (id, connected) => {
+          window.connectionCalls.push({ id, connected });
+          await new Promise((resolve, reject) => {
+            window.finishConnection = resolve;
+            window.failConnection = reject;
+          });
+          setIntegrations((current) =>
+            current.map((item) =>
+              item.id === id ? { ...item, connected } : item,
+            ),
+          );
+        },
+      });
+    }
+    await render(React.createElement(ControlledConnections));
+  });
+  const disconnect = fixture.getByRole("button", {
+    name: "Disconnect GitHub",
+    exact: true,
+  });
+  await disconnect.click();
+  assert.ok(await disconnect.isDisabled());
+  await disconnect.evaluate((button) => button.click());
+  assert.deepEqual(await page.evaluate(() => window.connectionCalls), [
+    { id: "github", connected: false },
+  ]);
+  assert.ok(
+    await fixture
+      .getByRole("button", { name: "Connect Slack", exact: true })
+      .isEnabled(),
+  );
+  assert.ok(
+    await fixture.getByText("1 connected", { exact: true }).isVisible(),
+  );
+  await page.evaluate(() => window.failConnection(new Error("offline")));
+  await fixture.getByRole("alert").waitFor();
+  assert.ok(await fixture.getByText("example/repo").isVisible());
+  await disconnect.click();
+  assert.equal(await fixture.getByRole("alert").count(), 0);
+  await page.evaluate(() => window.finishConnection());
+  await fixture.getByText("0 connected", { exact: true }).waitFor();
+  assert.equal(await fixture.getByText("example/repo").count(), 0);
+  assert.ok(
+    await fixture
+      .getByRole("button", { name: "Connect GitHub", exact: true })
+      .isEnabled(),
+  );
+  checks++;
+
+  await fixture
+    .getByRole("button", { name: "Connect Slack", exact: true })
+    .click();
+  await page.evaluate(() => window.finishConnection());
+  await fixture.getByText("1 connected", { exact: true }).waitFor();
+  assert.deepEqual(await page.evaluate(() => window.connectionCalls), [
+    { id: "github", connected: false },
+    { id: "github", connected: false },
+    { id: "slack", connected: true },
+  ]);
+  assert.ok(
+    await fixture
+      .getByRole("button", { name: "Disconnect Slack", exact: true })
+      .isEnabled(),
+  );
+  checks++;
   await page.goto(origin + "/workspace/#/stars-rating");
   const rating = page.getByRole("radiogroup", { name: "Rating" }).first();
   await rating.waitFor();

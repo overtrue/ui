@@ -243,6 +243,7 @@ export function Example({
     case "team-access":
     case "notification-preferences":
     case "invoice-list":
+    case "integration-list":
       return <BusinessExample name={name} />;
     case "settings-panel":
       return <SettingsPanel />;

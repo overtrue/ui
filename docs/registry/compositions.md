@@ -51,6 +51,8 @@ Wrap `MediaCardContent` and `MediaCardFooter` in `MediaCardBody`. Stacked cards 
 
 ## Blocks
 
+**IntegrationList** takes a controlled `integrations` list and optional async `onConnectionChange(id, connected)`. Each service has a stable ID, name, description, connection state, optional icon, and optional account label. The caller completes authorization or disconnection before updating the list. Rows show pending state independently and preserve the current connection on failure so the same action can be retried. Without a callback, the list is read-only. The preview uses local state and never connects external accounts. Install with `/r/integration-list.json`.
+
 **ProjectPortfolio** takes `projects`, optional `description`, and optional toolbar `actions`. Each project supplies an image with alt text, status label and variant, progress, owner, and destination. The block owns local text search and its empty states. It trims search input and announces result counts. A workspace can use hash URLs; a different app can pass its own routes. It does not own project persistence.
 
 **ServiceStatus** takes `services`, a title, description, and optional `actions` and `children`. Each service supplies its current status and history. The parent owns period selection, requests, and loading; the block does not introduce a second source of state. The `children` slot can contain incident notes or attribution. Empty lists are explicitly rendered.

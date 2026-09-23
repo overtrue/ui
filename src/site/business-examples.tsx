@@ -1,10 +1,43 @@
 import { useState } from "react";
+import {
+  IconBrandGithub,
+  IconBrandSlack,
+  IconBrandNotion,
+} from "@tabler/icons-react";
+import {
+  IntegrationList,
+  type Integration,
+} from "@/registry/overtrue/integration-list";
 import { TeamAccess, type AccessMember } from "@/registry/overtrue/team-access";
 import { NotificationPreferences } from "@/registry/overtrue/notification-preferences";
 import { InvoiceList } from "@/registry/overtrue/invoice-list";
 import type { ItemName } from "./catalog";
 
 export function BusinessExample({ name }: { name: ItemName }) {
+  const [integrations, setIntegrations] = useState<Integration[]>([
+    {
+      id: "github",
+      name: "GitHub",
+      description: "Bring pull requests and commits into your projects.",
+      icon: <IconBrandGithub />,
+      connected: true,
+      account: "overtrue/ui",
+    },
+    {
+      id: "slack",
+      name: "Slack",
+      description: "Send project updates to your team’s channels.",
+      icon: <IconBrandSlack />,
+      connected: false,
+    },
+    {
+      id: "notion",
+      name: "Notion",
+      description: "Keep project notes close to the work they support.",
+      icon: <IconBrandNotion />,
+      connected: false,
+    },
+  ]);
   const [members, setMembers] = useState<AccessMember[]>([
     {
       id: "chris",
@@ -27,6 +60,24 @@ export function BusinessExample({ name }: { name: ItemName }) {
   ]);
   const [status, setStatus] = useState("");
   switch (name) {
+    case "integration-list":
+      return (
+        <div className="w-full">
+          <IntegrationList
+            integrations={integrations}
+            onConnectionChange={(id, connected) => {
+              setIntegrations((current) =>
+                current.map((item) =>
+                  item.id === id ? { ...item, connected } : item,
+                ),
+              );
+            }}
+          />
+          <p className="m-0 mt-3 text-xs leading-5 text-muted-foreground">
+            Interactive demo. No external accounts are connected.
+          </p>
+        </div>
+      );
     case "team-access":
       return (
         <div className="w-full">

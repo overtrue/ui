@@ -6,7 +6,7 @@ The installable toolkit is in `src/registry/overtrue/`. These components use Tai
 
 The website imports exactly the same component files it distributes. Source tabs read these files through Vite's raw import support. The workspace gallery remains a separate HTML entry at `/workspace/`, with its own CSS bundle and HashRouter. Its shared link adapter rewrites workspace links to preserve that entry point.
 
-The core catalogue contains 52 components and 13 composed blocks: team access, notification preferences, invoices, settings, pricing, members, tasks, activity, storage, dashboard, project portfolio, service status, and analytics overview. Reusable pieces include feature cards, media cards, detail lists, resource progress, uptime history, metric groups, sparklines, ranked lists, and conversion funnels. The optional theme is a `registry:theme` item. See [Composition guide](compositions.md) and [Reusable admin components](components.md) for APIs and adoption.
+The core catalogue contains 52 components and 14 composed blocks: team access, notification preferences, integrations, invoices, settings, pricing, members, tasks, activity, storage, dashboard, project portfolio, service status, and analytics overview. Reusable pieces include feature cards, media cards, detail lists, resource progress, uptime history, metric groups, sparklines, ranked lists, and conversion funnels. The optional theme is a `registry:theme` item. See [Composition guide](compositions.md) and [Reusable admin components](components.md) for APIs and adoption.
 
 The example card catalogue is separate from the core components. Its shared foundation installs scoped styles, local UI primitives, and interaction dependencies under `components/overtrue/blocks/runtime/`. It does not replace the consumer’s UI components or require the full workspace application. See [Card blocks](cards.md) for the extraction and installation boundary.
 
@@ -25,7 +25,7 @@ Each component installs under `components/overtrue/`. Core UI dependencies are d
 - `/`: interactive dashboard hero, component previews, and installation entry points.
 - `/components`: searchable, filterable catalogue.
 - `/components/:name`: live preview, actual source, installation, and usage.
-- `/blocks`: 13 composed blocks, followed by a searchable library of 368 example card patterns.
+- `/blocks`: 14 composed blocks, followed by a searchable library of 368 example card patterns.
 - `/blocks/:id`: composed block or example card, with live preview, source, and installation instructions. Example cards also link to their original workspace pages.
 - `/card-preview.html?id=...`: isolated interactive card renderer.
 - `/docs`: setup, namespace configuration, theme, compatibility boundary, and attribution.

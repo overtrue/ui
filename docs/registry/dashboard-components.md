@@ -54,7 +54,7 @@ Install, for example: `npx shadcn@latest add https://ui.overtrue.xyz/r/activity-
 
 ## Verification
 
-- Full project build and TypeScript check pass; all 435 registry entries pass dependency and source verification.
+- Full project build and TypeScript check pass; all 436 registry entries pass dependency and source verification.
 - Installed all 27 entries through the shadcn CLI into an independent initialized React/shadcn project. The installed sources compile, including the Recharts alias and TanStack Table dependencies.
 - Rendered all 27 detail pages and all 61 documented variants at 1440px and 390px, in light and dark modes. No page errors or document overflow. Tables and heatmaps scroll internally when needed.
 - Rechecked changed components after mobile polish: command menu descriptions, heatmap labels, period indicators, segmented-meter tick collisions and bounded table scrolling.

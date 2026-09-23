@@ -5,6 +5,47 @@ export const cardCount = cards.length;
 const items = [
   ...dashboardCatalog,
   {
+    name: "integration-list",
+    title: "Integration list",
+    category: "Blocks",
+    previewWidth: 600,
+    previewHeight: 480,
+    description:
+      "Workspace connections with account details, async actions, and failure feedback that keeps retry within reach.",
+    dependencies: ["card", "button"],
+    imports: "IntegrationList, type Integration",
+    exampleImports:
+      'import { useState } from "react"\nimport { IconBrandGithub, IconBrandSlack, IconBrandNotion } from "@tabler/icons-react"',
+    usage: `function Example() {
+  const [integrations, setIntegrations] = useState<Integration[]>([
+    { id: "github", name: "GitHub", description: "Bring pull requests and commits into your projects.", icon: <IconBrandGithub />, connected: true, account: "overtrue/ui" },
+    { id: "slack", name: "Slack", description: "Send project updates to your team’s channels.", icon: <IconBrandSlack />, connected: false },
+    { id: "notion", name: "Notion", description: "Keep project notes close to the work they support.", icon: <IconBrandNotion />, connected: false },
+  ])
+  return <div>
+    <IntegrationList integrations={integrations} onConnectionChange={(id, connected) => {
+      setIntegrations(current => current.map(item => item.id === id ? { ...item, connected } : item))
+    }} />
+    <p className="mt-3 text-xs text-muted-foreground">Interactive demo. No external accounts are connected.</p>
+  </div>
+}`,
+    notes:
+      "A controlled workspace settings block. The example only changes local state. In your application, complete authorization or disconnection in onConnectionChange, update integrations after success, and reject on failure. Each row handles its own pending and retry feedback; other rows remain usable. Without a callback, connections are read-only. Use stable service IDs and remount with a key when switching workspaces. No credentials or OAuth flow are provided by this block.",
+    api: [
+      [
+        "integrations",
+        "readonly Integration[]",
+        "Stable ID, name, description, connected state, and optional icon and account label.",
+      ],
+      [
+        "onConnectionChange",
+        "(id, connected) => void | Promise<void>",
+        "Request a new connection state. The caller owns authorization, persistence, and data updates.",
+      ],
+      ["className", "string", "Additional classes for the outer section card."],
+    ],
+  },
+  {
     name: "team-access",
     title: "Team access",
     category: "Blocks",
@@ -593,6 +634,7 @@ const displayOrder: readonly string[] = [
   "command-palette",
   "team-access",
   "notification-preferences",
+  "integration-list",
   "invoice-list",
   "settings-panel",
   "member-card",
@@ -673,6 +715,7 @@ export const blockCollections: readonly {
     names: [
       "team-access",
       "notification-preferences",
+      "integration-list",
       "settings-panel",
       "member-card",
     ],
