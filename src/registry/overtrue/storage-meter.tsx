@@ -22,7 +22,7 @@ export function StorageMeter({
   const used = safeSegments.reduce((sum, segment) => sum + segment.value, 0);
   const denominator = Math.max(safeCapacity, used, 1);
   return (
-    <Card className="gap-0 rounded-lg border bg-card py-0 shadow-sm">
+    <Card className="gap-0 rounded-lg border bg-card py-0 shadow-none">
       <CardHeader className="px-5 pt-5 pb-0">
         <CardTitle className="text-sm font-semibold">
           Storage overview

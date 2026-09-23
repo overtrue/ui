@@ -20,7 +20,7 @@ export function ActivityFeed({
     <Card
       data-slot="activity-feed"
       className={cn(
-        "gap-0 rounded-lg border bg-card py-0 shadow-sm",
+        "gap-0 rounded-lg border bg-card py-0 shadow-none",
         className,
       )}
     >

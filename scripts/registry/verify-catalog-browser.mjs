@@ -19,6 +19,22 @@ mkdirSync(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: "chrome" });
 const results = [];
 const errors = [];
+const flatCards = new Set([
+  "stat-card",
+  "settings-panel",
+  "feature-card",
+  "dashboard",
+  "analytics-overview",
+  "pricing-card",
+  "metric-chart",
+  "service-status",
+  "activity-feed",
+  "data-table",
+  "section-card",
+  "media-card",
+  "storage-meter",
+  "command-palette",
+]);
 assert.deepEqual(
   blockCollections.flatMap((group) => [...group.names]).sort(),
   catalog
@@ -75,6 +91,22 @@ try {
         )),
         `${item.name}: overflow at ${width}`,
       );
+      if (flatCards.has(item.name)) {
+        const shadows = await page
+          .locator(
+            ".detail-preview .card, .detail-preview [data-slot=command-palette], .detail-data-table > section, .detail-preview [data-slot=dashboard]",
+          )
+          .evaluateAll((cards) =>
+            cards.map((card) => getComputedStyle(card).boxShadow),
+          );
+        assert.ok(shadows.length, `${item.name}: missing card surface`);
+        assert.ok(
+          shadows.every(
+            (shadow) => !/(?:^|\s)-?[1-9]\d*(?:\.\d+)?px/.test(shadow),
+          ),
+          `${item.name}: unexpected card elevation ${shadows}`,
+        );
+      }
       if (width === 1440) {
         await page.getByRole("button", { name: "Source", exact: true }).click();
         assert.equal(

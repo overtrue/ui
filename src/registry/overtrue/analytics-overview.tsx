@@ -274,7 +274,7 @@ export function AnalyticsOverview({
         height={250}
       />
       <div className="grid gap-4 @min-[42rem]:grid-cols-2">
-        <Card className="min-w-0 gap-0 rounded-lg bg-card py-0 shadow-sm">
+        <Card className="min-w-0 gap-0 rounded-lg bg-card py-0 shadow-none">
           <CardHeader className="flex flex-col items-start gap-1 border-b px-5 py-4 [.border-b]:pb-4">
             <CardTitle className="text-sm font-semibold">
               Acquisition sources
@@ -295,7 +295,7 @@ export function AnalyticsOverview({
             </p>
           </CardContent>
         </Card>
-        <Card className="min-w-0 gap-0 rounded-lg bg-card py-0 shadow-sm">
+        <Card className="min-w-0 gap-0 rounded-lg bg-card py-0 shadow-none">
           <CardHeader className="flex flex-col items-start gap-1 border-b px-5 py-4 [.border-b]:pb-4">
             <CardTitle className="text-sm font-semibold">
               From visit to subscription

@@ -83,6 +83,20 @@ try {
     "run-code",
     `async page => {
     const checks = [], links = new Set();
+    const browserErrors = [];
+    page.on('pageerror', error => browserErrors.push(error.message));
+    page.on('console', message => {
+      if (message.type() === 'error') browserErrors.push(message.text() + ' ' + message.location().url);
+    });
+    const visit = async route => {
+      const start = browserErrors.length;
+      try {
+        await page.goto(${JSON.stringify(origin)} + route);
+        await page.locator('.site-footer').waitFor();
+      } catch (error) {
+        throw new Error(route + ': ' + error.message + ' Browser errors: ' + JSON.stringify(browserErrors.slice(start)));
+      }
+    };
     const check = (yes, name) => { if (!yes) throw Error(name); checks.push(name); };
     await page.setViewportSize({width:1440,height:1000});
     await page.goto(${JSON.stringify(origin)});
@@ -140,14 +154,12 @@ try {
     for (const width of [320,768]) {
       await page.setViewportSize({width,height:900});
       for (const route of ['/', '/docs/design', '/docs/composition', '/docs/accessibility', '/docs/troubleshooting']) {
-        await page.goto(${JSON.stringify(origin)} + route);
-        await page.locator('.site-footer').waitFor();
+        await visit(route);
         check(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth + 1), width + 'px layout: ' + route);
       }
     }
     for (const route of ${JSON.stringify(sitePages.map((page) => page.path))}) {
-      await page.goto(${JSON.stringify(origin)} + route);
-      await page.locator('.site-footer').waitFor();
+      await visit(route);
       for (const href of await page.locator('a[href]').evaluateAll(els=>els.map(el=>el.href))) links.add(href);
     }
     return {checks, links:[...links]};

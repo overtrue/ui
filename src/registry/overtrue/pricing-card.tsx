@@ -20,7 +20,7 @@ export function PricingCard({
   return (
     <Card
       className={cn(
-        "relative gap-0 rounded-lg border bg-card py-0 shadow-sm",
+        "relative gap-0 rounded-lg border bg-card py-0 shadow-none",
         highlighted && "border-primary",
       )}
     >

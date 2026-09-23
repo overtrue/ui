@@ -11,7 +11,7 @@ export function MediaCard({
     <Card
       data-slot="media-card"
       className={cn(
-        "group/media min-w-0 gap-0 overflow-hidden rounded-lg border bg-card py-0 text-card-foreground shadow-sm",
+        "group/media min-w-0 gap-0 overflow-hidden rounded-lg border bg-card py-0 text-card-foreground shadow-none",
         layout === "split" ? "grid md:grid-cols-2" : "flex flex-col",
         className,
       )}

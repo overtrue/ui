@@ -53,7 +53,7 @@ export function MetricChart({
   return (
     <Card
       data-slot="metric-chart"
-      className="min-w-0 gap-0 rounded-lg border border-border bg-card py-0 shadow-sm"
+      className="min-w-0 gap-0 rounded-lg border border-border bg-card py-0 shadow-none"
     >
       <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4 [.border-b]:pb-4">
         <div className="min-w-0">

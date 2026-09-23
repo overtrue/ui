@@ -274,6 +274,65 @@ try {
   );
   checks++;
 
+  // Settings saves lock their draft, reject invalid email, and retain edits on failure.
+  await page.evaluate(() => {
+    window.settingsSaves = [];
+    return window.fixture.mount("settings-panel", "SettingsPanel", {
+      initialName: "Test workspace",
+      initialEmail: "team@example.com",
+      onSave: (values) =>
+        new Promise((resolve, reject) => {
+          window.settingsSaves.push({ values, resolve, reject });
+        }),
+    });
+  });
+  const workspaceName = fixture.getByRole("textbox", {
+    name: "Workspace name",
+  });
+  const contactEmail = fixture.getByRole("textbox", { name: "Contact email" });
+  const saveSettings = fixture.getByRole("button", { name: "Save changes" });
+  assert.ok(await saveSettings.isDisabled());
+  await workspaceName.fill("Draft workspace");
+  assert.ok(await saveSettings.isEnabled());
+  await workspaceName.fill("Test workspace");
+  assert.ok(await saveSettings.isDisabled());
+  await workspaceName.fill("Draft workspace");
+  await contactEmail.fill("invalid-email");
+  await saveSettings.click();
+  assert.equal(await page.evaluate(() => window.settingsSaves.length), 0);
+  await contactEmail.fill("draft@example.com");
+  await saveSettings.click();
+  assert.ok(await workspaceName.isDisabled());
+  assert.ok(await contactEmail.isDisabled());
+  assert.ok(
+    await fixture.getByRole("button", { name: "Saving…" }).isDisabled(),
+  );
+  await fixture.locator("form").evaluate((form) => form.requestSubmit());
+  assert.equal(await page.evaluate(() => window.settingsSaves.length), 1);
+  assert.deepEqual(await page.evaluate(() => window.settingsSaves[0].values), {
+    name: "Draft workspace",
+    email: "draft@example.com",
+  });
+  await page.evaluate(() =>
+    window.settingsSaves[0].reject(new Error("Unavailable")),
+  );
+  await fixture.getByRole("alert").waitFor();
+  assert.equal(await workspaceName.inputValue(), "Draft workspace");
+  assert.equal(await contactEmail.inputValue(), "draft@example.com");
+  assert.ok(await workspaceName.isEnabled());
+  await saveSettings.click();
+  await page.evaluate(() => window.settingsSaves[1].resolve());
+  await fixture
+    .getByRole("status")
+    .filter({ hasText: "Changes saved." })
+    .waitFor();
+  assert.ok(await saveSettings.isDisabled());
+  await workspaceName.fill("Another draft");
+  assert.ok(await saveSettings.isEnabled());
+  await workspaceName.fill("Draft workspace");
+  assert.ok(await saveSettings.isDisabled());
+  checks++;
+
   await page.evaluate(() =>
     window.fixture.mount("team-access", "TeamAccess", { members: [] }),
   );

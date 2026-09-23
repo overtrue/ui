@@ -49,7 +49,7 @@ export function ServiceStatus({
     <Card
       data-slot="service-status"
       className={cn(
-        "min-w-0 gap-0 rounded-lg border bg-card py-0 text-card-foreground shadow-sm",
+        "min-w-0 gap-0 rounded-lg border bg-card py-0 text-card-foreground shadow-none",
         className,
       )}
     >

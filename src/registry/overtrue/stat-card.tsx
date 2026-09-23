@@ -52,7 +52,7 @@ export function StatCard({
       data-trend={trend}
       data-tone={tone}
       className={cn(
-        "min-w-0 gap-0 rounded-lg border bg-card py-0 shadow-sm",
+        "min-w-0 gap-0 rounded-lg border bg-card py-0 shadow-none",
         className,
       )}
     >

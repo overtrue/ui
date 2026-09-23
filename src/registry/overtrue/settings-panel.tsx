@@ -2,7 +2,8 @@
 import { useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SectionCard } from "./section-card";
+import { cn } from "@/lib/utils";
 export function SettingsPanel({
   initialName = "Acme Studio",
   initialEmail = "team@acme.example",
@@ -17,34 +18,41 @@ export function SettingsPanel({
     [email, setEmail] = useState(initialEmail);
   const [status, setStatus] = useState(""),
     [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState({
+    name: initialName,
+    email: initialEmail,
+  });
+  const [failed, setFailed] = useState(false);
+  const dirty = name !== saved.name || email !== saved.email;
   return (
-    <Card className="gap-0 rounded-lg border bg-card py-0 shadow-sm">
-      <CardHeader className="border-b px-5 py-4 [.border-b]:pb-4">
-        <CardTitle className="text-sm font-semibold">
-          Workspace settings
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-5">
-        <form
-          className="space-y-4"
-          onSubmit={async (event) => {
-            event.preventDefault();
-            setSaving(true);
-            setStatus("");
-            try {
-              await onSave?.({ name, email });
-              setStatus(
-                onSave
-                  ? "Changes saved."
-                  : "Demo saved locally in this preview.",
-              );
-            } catch {
-              setStatus("Could not save changes. Please try again.");
-            } finally {
-              setSaving(false);
-            }
-          }}
-        >
+    <SectionCard
+      title="Workspace settings"
+      description="Manage your workspace name and contact details."
+      contentClassName="p-0"
+    >
+      <form
+        onSubmit={async (event) => {
+          event.preventDefault();
+          if (saving || !dirty) return;
+          const values = { name, email };
+          setSaving(true);
+          setStatus("");
+          setFailed(false);
+          try {
+            await onSave?.(values);
+            setSaved(values);
+            setStatus(
+              onSave ? "Changes saved." : "Demo saved locally in this preview.",
+            );
+          } catch {
+            setFailed(true);
+            setStatus("Could not save changes. Please try again.");
+          } finally {
+            setSaving(false);
+          }
+        }}
+      >
+        <fieldset disabled={saving} className="min-w-0 space-y-4 p-5">
           <div className="grid gap-2">
             <label htmlFor={`${id}-name`} className="text-sm font-medium">
               Workspace name
@@ -52,10 +60,13 @@ export function SettingsPanel({
             <Input
               id={`${id}-name`}
               required
+              name="workspace-name"
+              autoComplete="organization"
               value={name}
               onChange={(event) => {
                 setName(event.target.value);
                 setStatus("");
+                setFailed(false);
               }}
             />
           </div>
@@ -67,27 +78,38 @@ export function SettingsPanel({
               id={`${id}-email`}
               required
               type="email"
+              name="contact-email"
+              autoComplete="email"
               value={email}
               onChange={(event) => {
                 setEmail(event.target.value);
                 setStatus("");
+                setFailed(false);
               }}
             />
           </div>
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button
-              type="submit"
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-              disabled={saving}
-            >
-              {saving ? "Saving…" : "Save changes"}
-            </Button>
-            <span role="status" className="text-xs text-muted-foreground">
-              {status}
-            </span>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+        </fieldset>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4">
+          <p
+            role={failed ? "alert" : "status"}
+            className={cn(
+              "m-0 min-w-0 grow basis-48 text-xs leading-5 text-muted-foreground",
+              failed && "text-destructive",
+            )}
+          >
+            {status ||
+              (dirty ? "You have unsaved changes." : "You’re all up to date.")}
+          </p>
+          <Button
+            type="submit"
+            size="sm"
+            className="ml-auto shrink-0 bg-primary text-primary-foreground shadow-none hover:bg-primary/90"
+            disabled={saving || !dirty}
+          >
+            {saving ? "Saving…" : "Save changes"}
+          </Button>
+        </div>
+      </form>
+    </SectionCard>
   );
 }

@@ -69,7 +69,7 @@ export function DataTable<T>({
   const safePage = Math.min(page, lastPage);
   return (
     <section
-      className="min-w-0 overflow-hidden rounded-lg border bg-card shadow-sm"
+      className="min-w-0 overflow-hidden rounded-lg border bg-card shadow-none"
       aria-label={title}
     >
       <div className="flex flex-wrap items-center justify-between gap-3 border-b p-4">

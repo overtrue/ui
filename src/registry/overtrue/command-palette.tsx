@@ -257,7 +257,7 @@ function CommandPalette({
     return (
       <Command
         data-slot="command-palette"
-        className={cn("h-auto rounded-xl border shadow-sm", className)}
+        className={cn("h-auto rounded-xl border shadow-none", className)}
       >
         {content}
       </Command>

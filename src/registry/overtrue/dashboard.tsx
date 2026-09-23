@@ -150,7 +150,7 @@ export function Dashboard({
   return (
     <div
       data-slot="dashboard"
-      className="@container/dashboard overflow-hidden rounded-xl border border-border bg-muted/30 text-foreground shadow-sm [&_[data-slot=metric-chart]]:shadow-none"
+      className="@container/dashboard overflow-hidden rounded-xl border border-border bg-muted/30 text-foreground shadow-none"
     >
       <div className="flex items-center justify-between gap-4 border-b bg-card px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">

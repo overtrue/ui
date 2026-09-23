@@ -26,8 +26,9 @@ const content = {
       <p>
         Use the page background to separate sections, a card surface to group
         related information, and a border only where it explains a boundary.
-        Reserve the accent color for the current selection, a primary action, or
-        one important data series.
+        Keep cards flat; reserve shadows for menus, dialogs, and other surfaces
+        that float above the page. Reserve the accent color for the current
+        selection, a primary action, or one important data series.
       </p>
       <div className="principle-specimen" aria-label="Example metric hierarchy">
         <span>Monthly recurring revenue</span>

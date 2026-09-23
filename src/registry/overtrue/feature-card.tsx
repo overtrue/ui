@@ -11,7 +11,7 @@ export function FeatureCard({
     <Card
       data-slot="feature-card"
       className={cn(
-        "relative isolate flex min-w-0 flex-col gap-0 overflow-hidden rounded-lg border bg-card py-0 text-card-foreground shadow-sm",
+        "relative isolate flex min-w-0 flex-col gap-0 overflow-hidden rounded-lg border bg-card py-0 text-card-foreground shadow-none",
         className,
       )}
       {...props}

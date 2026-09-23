@@ -117,7 +117,7 @@ export function NotificationPreferences({
           <p
             role={failed ? "alert" : "status"}
             className={cn(
-              "m-0 flex-1 text-xs leading-5 text-muted-foreground",
+              "m-0 min-w-0 grow basis-48 text-xs leading-5 text-muted-foreground",
               failed && "text-destructive",
             )}
           >
@@ -127,7 +127,7 @@ export function NotificationPreferences({
           <Button
             type="submit"
             size="sm"
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
+            className="ml-auto shrink-0 bg-primary text-primary-foreground shadow-none hover:bg-primary/90"
             disabled={saving || !dirty}
           >
             {saving ? "Saving…" : "Save preferences"}

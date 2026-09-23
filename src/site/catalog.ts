@@ -205,7 +205,7 @@ const items = [
       "A workspace settings block with name and contact email fields, validation, and save feedback.",
     dependencies: ["card", "input", "button"],
     notes:
-      "This block is a workspace form, not a general form component. Edit the installed fields and validation for your product. initialName and initialEmail seed the form on mount; use a key when switching workspaces. Pass an async onSave callback to persist changes. Without it, saving only updates the local demo. Errors preserve the entered values for retry.",
+      "This block is a workspace form, not a general form component. Edit the installed fields and validation for your product. initialName and initialEmail seed the form on mount; use a key when switching workspaces. Pass an async onSave callback to persist changes. Without it, saving only updates the local demo. Saving requires changes and locks the fields until the request finishes. Errors preserve the entered values for retry.",
     usage:
       '<SettingsPanel initialName="Acme Studio" initialEmail="team@acme.example" />',
   },

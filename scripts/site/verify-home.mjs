@@ -185,6 +185,12 @@ try {
     await hero.getByLabel("Workspace name").inputValue(),
     "overtrue",
   );
+  assert.ok(
+    await hero
+      .getByRole("button", { name: "Save changes", exact: true })
+      .isDisabled(),
+  );
+  await hero.getByLabel("Workspace name").fill("overtrue studio");
   await hero.getByRole("button", { name: "Save changes", exact: true }).click();
   await hero
     .getByText("Demo saved locally in this preview.", { exact: true })
