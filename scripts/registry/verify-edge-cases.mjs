@@ -945,6 +945,55 @@ try {
   await cellAction.click();
   assert.equal(await page.evaluate(() => window.cellActivations), 4);
   checks += 2;
+  // Compact cards need stacked details even inside a wide desktop viewport.
+  await page.evaluate(async () => {
+    await window.fixture.mount("detail-list", "DetailList", {
+      style: { width: 208 },
+      items: [
+        { id: "profile", label: "Profile", value: "github.com/overtrue" },
+        {
+          id: "long",
+          label: "Workspace".repeat(12),
+          value: "example".repeat(30),
+        },
+      ],
+    });
+  });
+  const detailList = fixture.locator("dl");
+  const firstDetail = detailList.locator(":scope > div").first();
+  assert.ok(
+    await firstDetail.evaluate((el) => {
+      const label = el.querySelector("dt").getBoundingClientRect();
+      const value = el.querySelector("dd").getBoundingClientRect();
+      return value.top >= label.bottom && Math.abs(value.left - label.left) < 1;
+    }),
+  );
+  assert.ok(
+    await firstDetail
+      .locator("dd")
+      .evaluate(
+        (el) =>
+          el.clientHeight < parseFloat(getComputedStyle(el).lineHeight) * 1.5,
+      ),
+  );
+  assert.ok(
+    await detailList.evaluate((el) => el.scrollWidth <= el.clientWidth),
+  );
+  checks++;
+  await detailList.evaluate((el) => {
+    el.style.width = "420px";
+  });
+  assert.ok(
+    await firstDetail.evaluate((el) => {
+      const label = el.querySelector("dt").getBoundingClientRect();
+      const value = el.querySelector("dd").getBoundingClientRect();
+      return Math.abs(value.top - label.top) < 1 && value.left > label.right;
+    }),
+  );
+  assert.ok(
+    await detailList.evaluate((el) => el.scrollWidth <= el.clientWidth),
+  );
+  checks++;
   await page.goto(origin + "/workspace/#/stars-rating");
   const rating = page.getByRole("radiogroup", { name: "Rating" }).first();
   await rating.waitFor();
