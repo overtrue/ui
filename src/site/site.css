@@ -965,6 +965,12 @@
 .source-view {
   margin: 0;
 }
+.source-view > .note {
+  margin: 0;
+  padding: 12px 14px;
+  color: var(--muted-foreground);
+  border-bottom: 1px solid var(--border);
+}
 .source-view pre {
   max-height: 540px;
   overflow: auto;
