@@ -4,6 +4,20 @@ import path from "node:path";
 import { catalog, catalogPath } from "../../src/site/catalog.ts";
 const index = JSON.parse(readFileSync("public/r/registry.json", "utf8"));
 const cards = JSON.parse(readFileSync("src/blocks/catalog.json", "utf8"));
+const cardTitles = JSON.parse(
+  readFileSync("scripts/blocks/titles.json", "utf8"),
+);
+for (const [id, title] of Object.entries(cardTitles)) {
+  const card = cards.find((card) => card.id === id);
+  assert.equal(card?.title, title, `${id}: stale display title`);
+  assert.ok(card.keywords.length, `${id}: keep the original name searchable`);
+  const item = JSON.parse(readFileSync(`public/r/card-${id}.json`, "utf8"));
+  assert.equal(
+    item.title,
+    title,
+    `${id}: registry title differs from the catalog`,
+  );
+}
 assert.equal(index.items.length, catalog.length + cards.length + 2);
 const foundation = JSON.parse(
   readFileSync("public/r/overtrue-card-foundation.json", "utf8"),

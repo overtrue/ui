@@ -454,7 +454,22 @@ const names = {
   toasts: "Toast notifications",
   uptime: "Service availability",
 };
+// Display copy is independent of IDs so existing registry installs keep working.
+const titles = JSON.parse(
+  fs.readFileSync("scripts/blocks/titles.json", "utf8"),
+);
+for (const id of Object.keys(titles)) {
+  if (!catalog.some((card) => card.id === id))
+    throw new Error(`Unknown card in titles.json: ${id}`);
+}
 for (const card of catalog) {
+  card.keywords = titles[card.id] ? [card.title] : [];
+  if (titles[card.id]) {
+    card.title = titles[card.id];
+    if (card.id.startsWith("social-icons-social-icons-"))
+      card.category = "Charts & metrics";
+    continue;
+  }
   if (/ \d+$/.test(card.title)) {
     const prefix = card.id.slice(0, card.id.indexOf("-" + slug(card.title)));
     if (names[prefix]) card.title = names[prefix];

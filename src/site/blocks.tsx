@@ -88,7 +88,7 @@ function CardPreview({
       {expanded ? (
         preview
       ) : (
-        <FitPreview width={previewWidth} height={320}>
+        <FitPreview width={previewWidth} height={320} fit="crop-tall">
           {preview}
         </FitPreview>
       )}
@@ -105,7 +105,7 @@ export function CardCollection() {
   const matches = cards.filter(
     (card) =>
       (category === "All cards" || category === card.category) &&
-      `${card.title} ${card.category} ${card.pages.map((p) => p.title).join(" ")}`
+      `${card.title} ${card.keywords.join(" ")} ${card.category} ${card.pages.map((p) => p.title).join(" ")}`
         .toLowerCase()
         .includes(query.trim().toLowerCase()),
   );
@@ -171,20 +171,24 @@ export function CardCollection() {
           .slice((current - 1) * pageSize, current * pageSize)
           .map((card) => (
             <article className="card-library-tile" key={card.id}>
-              <CardPreview
-                id={card.id}
-                title={card.title}
-                previewWidth={card.previewWidth}
-              />
-              <Link className="tile-caption" to={`/blocks/${card.id}`}>
-                <span>
-                  {card.title}
-                  <small>
-                    {card.category}
-                    {card.collection ? " · Collection" : ""}
-                  </small>
-                </span>
-                <IconArrowUpRight size={16} />
+              <Link className="card-library-link" to={`/blocks/${card.id}`}>
+                <div inert aria-hidden="true">
+                  <CardPreview
+                    id={card.id}
+                    title={card.title}
+                    previewWidth={card.previewWidth}
+                  />
+                </div>
+                <div className="tile-caption">
+                  <span>
+                    {card.title}
+                    <small>
+                      {card.category}
+                      {card.collection ? " · Collection" : ""}
+                    </small>
+                  </span>
+                  <IconArrowUpRight size={16} aria-hidden="true" />
+                </div>
               </Link>
             </article>
           ))}

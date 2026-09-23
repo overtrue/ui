@@ -2128,6 +2128,17 @@
   min-width: 0;
   overflow-wrap: anywhere;
 }
+.card-library-link {
+  display: block;
+}
+.card-library-link:hover .tile-caption,
+.card-library-link:focus-visible .tile-caption {
+  color: var(--primary);
+  background: var(--site-subtle);
+}
+.card-library-link:focus-visible {
+  outline-offset: -3px;
+}
 .card-live-preview {
   min-width: 0;
   background: var(--site-subtle);
@@ -2339,7 +2350,7 @@
   overflow-wrap: anywhere;
 }
 
-/* Thumbnails fit their complete live content; detail previews remain full size. */
+/* Thumbnails retain their layout width; card collections crop tall previews. */
 .fit-preview {
   position: relative;
   display: grid;

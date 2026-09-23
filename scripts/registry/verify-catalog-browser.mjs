@@ -236,6 +236,97 @@ try {
   console.log(
     "Verified block categories, shared filter URLs, history, empty states, and collection anchors at desktop and mobile widths",
   );
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto(
+      origin + "/blocks?q=Form%20elements%202#card-collection-title",
+    );
+    const cardLink = page.getByRole("link", {
+      name: "Select and multi-select inputs Forms & settings",
+      exact: true,
+    });
+    await cardLink.scrollIntoViewIfNeeded();
+    await cardLink
+      .locator("iframe")
+      .contentFrame()
+      .locator(".overtrue-block")
+      .waitFor();
+    await page.waitForFunction(() => {
+      const preview = document.querySelector(
+        ".card-library-link .fit-preview-content",
+      );
+      return preview && preview.offsetHeight > 1000;
+    });
+    const scale = await cardLink
+      .locator(".fit-preview-content")
+      .evaluate(
+        (element) => new DOMMatrix(getComputedStyle(element).transform).a,
+      );
+    assert.ok(
+      scale > (width === 1440 ? 0.8 : 0.4),
+      `Long card content is illegible at ${width}px`,
+    );
+    assert.equal(
+      await cardLink.locator("[inert][aria-hidden=true]").count(),
+      1,
+    );
+    await cardLink.focus();
+    await page.keyboard.press("Enter");
+    await page.waitForURL(origin + "/blocks/form-elements-form-elements-2-2");
+    await page
+      .getByRole("heading", {
+        name: "Select and multi-select inputs",
+        exact: true,
+      })
+      .waitFor();
+    const preview = page.locator(".card-live-preview iframe").contentFrame();
+    await preview.getByText("Select multiple", { exact: true }).waitFor();
+    const select = preview.locator("select").first();
+    await select.selectOption("2");
+    assert.equal(await select.inputValue(), "2");
+
+    await page.goto(origin + "/blocks?q=AvatarStack#card-collection-title");
+    await page
+      .getByRole("link", {
+        name: "Workspace interface patterns UI patterns",
+        exact: true,
+      })
+      .waitFor();
+    await page.goto(
+      origin + "/blocks?q=Social%20referrals#card-collection-title",
+    );
+    const chartLink = page.getByRole("link", {
+      name: "Social referrals Charts & metrics",
+      exact: true,
+    });
+    await chartLink.scrollIntoViewIfNeeded();
+    await chartLink
+      .locator("iframe")
+      .contentFrame()
+      .locator(".overtrue-block")
+      .waitFor();
+    await page.waitForFunction(() => {
+      const content = document.querySelector(
+        ".card-library-link .fit-preview-content",
+      );
+      return (
+        content &&
+        content.offsetHeight > 0 &&
+        content.getBoundingClientRect().height <= 321
+      );
+    });
+    await page.goto(origin + "/blocks?q=Facebook#card-collection-title");
+    const socialCard = page.getByRole("link", {
+      name: "Facebook shares Charts & metrics",
+      exact: true,
+    });
+    await socialCard.scrollIntoViewIfNeeded();
+    await socialCard.click({ position: { x: 40, y: 40 } });
+    await page.waitForURL(origin + "/blocks/social-icons-social-icons-2-2");
+  }
+  console.log(
+    "Verified descriptive card names, legacy searches, readable thumbnails, and mouse/keyboard access to live previews",
+  );
   for (const item of catalog.filter((item) => item.category === "Blocks")) {
     await page.goto(origin + `/components/${item.name}`);
     await page.waitForURL(origin + catalogPath(item));
