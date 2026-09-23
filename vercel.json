@@ -133,6 +133,21 @@
       "source": "/components/service-status",
       "destination": "/blocks/service-status",
       "permanent": true
+    },
+    {
+      "source": "/components/team-access",
+      "destination": "/blocks/team-access",
+      "permanent": true
+    },
+    {
+      "source": "/components/notification-preferences",
+      "destination": "/blocks/notification-preferences",
+      "permanent": true
+    },
+    {
+      "source": "/components/invoice-list",
+      "destination": "/blocks/invoice-list",
+      "permanent": true
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Example card blocks
 
-The Blocks library includes 368 card patterns extracted from the workspace examples, alongside 10 composed forms, business cards, and screens. A mapped group of cards is one collection: the source keeps its demo records and interactions instead of duplicating a block for every person or project.
+The Blocks library includes 368 card patterns extracted from the workspace examples, alongside 13 composed forms, business cards, and screens. A mapped group of cards is one collection: the source keeps its demo records and interactions instead of duplicating a block for every person or project.
 
 ## Source and maintenance
 

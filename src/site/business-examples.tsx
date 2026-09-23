@@ -1,0 +1,85 @@
+import { useState } from "react";
+import { TeamAccess, type AccessMember } from "@/registry/overtrue/team-access";
+import { NotificationPreferences } from "@/registry/overtrue/notification-preferences";
+import { InvoiceList } from "@/registry/overtrue/invoice-list";
+import type { ItemName } from "./catalog";
+
+export function BusinessExample({ name }: { name: ItemName }) {
+  const [members, setMembers] = useState<AccessMember[]>([
+    {
+      id: "chris",
+      name: "Chris An",
+      email: "chris@example.com",
+      role: "Owner",
+    },
+    {
+      id: "maya",
+      name: "Maya Okafor",
+      email: "maya@example.com",
+      role: "Admin",
+    },
+    {
+      id: "leo",
+      name: "Leo Nakamura",
+      email: "leo@example.com",
+      role: "Member",
+    },
+  ]);
+  const [status, setStatus] = useState("");
+  switch (name) {
+    case "team-access":
+      return (
+        <div className="w-full">
+          <TeamAccess
+            members={members}
+            onRoleChange={(id, role) => {
+              setMembers((current) =>
+                current.map((member) =>
+                  member.id === id ? { ...member, role } : member,
+                ),
+              );
+              setStatus("Role updated in this demo.");
+            }}
+          />
+          <p
+            role="status"
+            className="m-0 mt-3 min-h-5 text-xs text-muted-foreground"
+          >
+            {status}
+          </p>
+        </div>
+      );
+    case "notification-preferences":
+      return <NotificationPreferences />;
+    case "invoice-list":
+      return (
+        <InvoiceList
+          invoices={[
+            {
+              id: "INV-2026-009",
+              description: "Studio plan",
+              date: "Sep 1, 2026",
+              amount: "$128.00",
+              status: "Open",
+            },
+            {
+              id: "INV-2026-008",
+              description: "Studio plan",
+              date: "Aug 1, 2026",
+              amount: "$128.00",
+              status: "Paid",
+            },
+            {
+              id: "INV-2026-007",
+              description: "Studio plan + usage",
+              date: "Jul 1, 2026",
+              amount: "$146.80",
+              status: "Paid",
+            },
+          ]}
+        />
+      );
+    default:
+      return null;
+  }
+}

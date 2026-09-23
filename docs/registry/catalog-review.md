@@ -1,13 +1,16 @@
 # Component and block boundaries
 
-Reviewed all 62 core catalog entries by exported API, implementation, preview imports, displayed source, and Usage. The 368 extracted workspace card patterns remain blocks; they retain their business layout and demo behavior.
+Reviewed all 65 core catalog entries by exported API, implementation, preview imports, displayed source, and Usage. The 368 extracted workspace card patterns remain blocks; they retain their business layout and demo behavior.
 
 A component owns one UI behavior or presentation contract through data, callbacks, or composition slots. A block assembles an opinionated business region. Both are React components in code. Props, a Card wrapper, source-file size, and composition of shadcn primitives do not by themselves determine the catalog category.
 
-## Composed blocks (10)
+## Composed blocks (13)
 
 | Item | Why it is a block |
 | --- | --- |
+| `team-access` | Workspace roster, search, owner role, and controlled access changes. |
+| `notification-preferences` | Fixed email channels with dirty state and async save/retry lifecycle. |
+| `invoice-list` | Billing history, status filters, document links, and empty states. |
 | `settings-panel` | Fixed workspace name/email form and save lifecycle; edit the block for other schemas. |
 | `member-card` | Assembled identity, role, profile details, badge, and member action. |
 | `task-list` | Assembled task card with due dates, comments, and completion controls. |

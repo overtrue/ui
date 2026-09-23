@@ -1,3 +1,4 @@
+import { BusinessExample } from "./business-examples";
 import { ReusableExample } from "./reusable-examples";
 import { DashboardExample } from "./dashboard-examples";
 import { dashboardCatalog } from "./dashboard-catalog";
@@ -239,6 +240,10 @@ export function Example({
           }
         />
       );
+    case "team-access":
+    case "notification-preferences":
+    case "invoice-list":
+      return <BusinessExample name={name} />;
     case "settings-panel":
       return <SettingsPanel />;
     case "dashboard":

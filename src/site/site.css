@@ -883,6 +883,12 @@
 .detail-preview > .dashboard-examples {
   max-width: none;
 }
+.detail-member-card > *,
+.detail-team-access > *,
+.detail-notification-preferences > *,
+.detail-invoice-list > * {
+  max-width: 720px;
+}
 .detail-feature-card > *,
 .detail-stat-card > *,
 .detail-metric-chart > *,

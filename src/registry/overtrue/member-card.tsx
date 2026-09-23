@@ -21,7 +21,11 @@ export function MemberCard({
   className,
 }: MemberCardProps) {
   return (
-    <SectionCard data-slot="member-card" className={cn("shadow-none", className)}>
+    <SectionCard
+      data-slot="member-card"
+      className={cn("shadow-none", className)}
+      contentClassName="flex flex-1 flex-col"
+    >
       <div className="flex items-center justify-between gap-3">
         <AvatarStack members={[member]} />
         {badge}
@@ -35,9 +39,9 @@ export function MemberCard({
         </p>
       )}
       {details.length > 0 && (
-        <DetailList className="my-5 text-xs" items={details} />
+        <DetailList className="mb-0 mt-5 text-xs" items={details} />
       )}
-      {action && <div className="mt-4">{action}</div>}
+      {action && <div className="mt-auto pt-5">{action}</div>}
     </SectionCard>
   );
 }

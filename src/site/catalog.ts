@@ -5,6 +5,91 @@ export const cardCount = cards.length;
 const items = [
   ...dashboardCatalog,
   {
+    name: "team-access",
+    title: "Team access",
+    category: "Blocks",
+    previewWidth: 600,
+    previewHeight: 420,
+    description:
+      "A searchable team roster with read-only owner roles and editable workspace access.",
+    dependencies: ["card", "input"],
+    imports: "TeamAccess, type AccessMember",
+    exampleImports: 'import { useState } from "react"',
+    usage: `function Example() {
+  const [members, setMembers] = useState<AccessMember[]>([
+    { id: "chris", name: "Chris An", email: "chris@example.com", role: "Owner" },
+    { id: "maya", name: "Maya Okafor", email: "maya@example.com", role: "Admin" },
+    { id: "leo", name: "Leo Nakamura", email: "leo@example.com", role: "Member" },
+  ])
+  return <TeamAccess members={members} onRoleChange={(id, role) => {
+    setMembers(current => current.map(member => member.id === id ? { ...member, role } : member))
+  }} />
+}`,
+    notes:
+      "A controlled workspace access block. Without onRoleChange, roles are read-only. Owner transfer is intentionally outside this flow. The example updates local state; enforce permissions and persist changes in your application before updating members. Search matches names and email addresses.",
+    api: [
+      [
+        "members",
+        "readonly AccessMember[]",
+        "Stable ID, name, email, optional image, and Owner, Admin or Member role.",
+      ],
+      [
+        "onRoleChange",
+        "(id, role) => void",
+        "Requests an Admin or Member role; the caller owns state and persistence.",
+      ],
+    ],
+  },
+  {
+    name: "notification-preferences",
+    title: "Notification preferences",
+    category: "Blocks",
+    previewWidth: 600,
+    previewHeight: 440,
+    description:
+      "An email preferences form with per-channel switches, unsaved state, and async save feedback.",
+    dependencies: ["card", "button", "switch"],
+    usage: "<NotificationPreferences />",
+    notes:
+      "This is an email settings block, not a generic form. initialValues seed the three channels on mount; use a key when switching accounts. onSave may return a promise. While saving, edits are disabled; failures preserve the draft for retry. Without onSave, changes stay in the local demo.",
+    api: [
+      [
+        "initialValues",
+        "NotificationSettings",
+        "Initial mentions, projectUpdates and weeklyDigest booleans.",
+      ],
+      [
+        "onSave",
+        "(values) => void | Promise<void>",
+        "Persist preferences; reject to show retry feedback.",
+      ],
+    ],
+  },
+  {
+    name: "invoice-list",
+    title: "Invoice list",
+    category: "Blocks",
+    previewWidth: 600,
+    previewHeight: 420,
+    description:
+      "Billing records with status filters, readable amounts, optional document links, and empty states.",
+    dependencies: ["card"],
+    usage: `<InvoiceList invoices={[
+  { id: "INV-2026-009", description: "Studio plan", date: "Sep 1, 2026", amount: "$128.00", status: "Open" },
+  { id: "INV-2026-008", description: "Studio plan", date: "Aug 1, 2026", amount: "$128.00", status: "Paid" },
+  { id: "INV-2026-007", description: "Studio plan + usage", date: "Jul 1, 2026", amount: "$146.80", status: "Paid" },
+]} />`,
+    notes:
+      "Pass dates and amounts formatted for your locale. Supply href only when a real invoice document is available; otherwise the document action is omitted. This block displays billing records and does not collect payments. Empty collections and unmatched filters have separate messages.",
+    api: [
+      [
+        "invoices",
+        "readonly Invoice[]",
+        "ID, description, date, amount, Paid/Open/Overdue status, and optional document URL.",
+      ],
+    ],
+  },
+  {
     name: "stat-card",
     title: "Stat card",
     category: "Data display",
@@ -506,6 +591,9 @@ const displayOrder: readonly string[] = [
   "filter-tabs",
   "period-tabs",
   "command-palette",
+  "team-access",
+  "notification-preferences",
+  "invoice-list",
   "settings-panel",
   "member-card",
   "avatar-stack",

@@ -187,6 +187,57 @@ try {
     await page.locator(".source-view pre").textContent(),
     readFileSync(`src/blocks/registry/${cards[0].id}.tsx`, "utf8"),
   );
+  // Business blocks keep real interaction state in both responsive layouts.
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto(origin + "/blocks/team-access");
+    const preview = page.locator(".detail-preview");
+    assert.equal(await preview.getByLabel("Role for Chris An").count(), 0);
+    await preview.getByLabel("Role for Leo Nakamura").selectOption("Admin");
+    assert.equal(
+      await preview.getByLabel("Role for Leo Nakamura").inputValue(),
+      "Admin",
+    );
+    await preview.getByLabel("Search team members").fill("no-match");
+    assert.equal(await preview.getByRole("listitem").count(), 0);
+    assert.ok(
+      await preview.getByText("No members match your search.").isVisible(),
+    );
+    await preview.getByLabel("Search team members").fill("LEO@EXAMPLE.COM");
+    assert.equal(await preview.getByRole("listitem").count(), 1);
+    assert.equal(
+      await preview.getByLabel("Role for Leo Nakamura").inputValue(),
+      "Admin",
+    );
+
+    await page.goto(origin + "/blocks/notification-preferences");
+    const save = preview.getByRole("button", { name: "Save preferences" });
+    assert.ok(await save.isDisabled());
+    const digest = preview.getByRole("switch", { name: "Weekly digest" });
+    await digest.focus();
+    await digest.press("Space");
+    assert.equal(await digest.getAttribute("aria-checked"), "true");
+    assert.ok(await save.isEnabled());
+    await digest.press("Space");
+    assert.ok(await save.isDisabled());
+    await digest.press("Space");
+    await save.click();
+    assert.ok(
+      await preview.getByText("Preferences saved in this demo.").isVisible(),
+    );
+    assert.ok(await save.isDisabled());
+
+    await page.goto(origin + "/blocks/invoice-list");
+    assert.equal(await preview.getByRole("listitem").count(), 3);
+    await preview.getByRole("button", { name: "Paid", exact: true }).click();
+    assert.equal(await preview.getByRole("listitem").count(), 2);
+    await preview.getByRole("button", { name: "Overdue", exact: true }).click();
+    assert.ok(
+      await preview.getByText("No invoices with this status.").isVisible(),
+    );
+    await preview.getByRole("button", { name: "All", exact: true }).click();
+    assert.equal(await preview.getByRole("listitem").count(), 3);
+  }
   // Unknown routes must never invoke a loader inherited from Object.prototype.
   await page.addInitScript(() => {
     Object.defineProperty(
@@ -220,13 +271,19 @@ try {
   writeFileSync(
     `${output}/results.json`,
     JSON.stringify(
-      { results, errors, labelGap: 8, legacyRedirects: 10 },
+      {
+        results,
+        errors,
+        labelGap: 8,
+        legacyRedirects: catalog.filter((item) => item.category === "Blocks")
+          .length,
+      },
       null,
       2,
     ),
   );
   console.log(
-    "Verified catalog separation, 10 legacy redirects, exact Source/Usage, source reset, and 8px field spacing with save feedback in both themes.",
+    "Verified catalog separation, block legacy redirects, exact Source/Usage, source reset, and 8px field spacing with save feedback in both themes.",
   );
 } finally {
   await browser.close();

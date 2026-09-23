@@ -234,6 +234,91 @@ try {
     assert.equal(await radios.nth(1).getAttribute("tabindex"), "0");
     checks++;
   }
+  // Notification drafts survive a rejected save and become clean after retry.
+  await page.evaluate(() =>
+    window.fixture.mount(
+      "notification-preferences",
+      "NotificationPreferences",
+      {
+        onSave: (values) =>
+          new Promise((resolve, reject) => {
+            window.preferenceSave = { values, resolve, reject };
+          }),
+      },
+    ),
+  );
+  const fixture = page.locator("#regression-fixture");
+  const digest = fixture.getByRole("switch", { name: "Weekly digest" });
+  await digest.click();
+  await fixture.getByRole("button", { name: "Save preferences" }).click();
+  assert.ok(
+    await fixture.getByRole("button", { name: "Saving…" }).isDisabled(),
+  );
+  assert.ok(await digest.isDisabled());
+  assert.equal(
+    await page.evaluate(() => window.preferenceSave.values.weeklyDigest),
+    true,
+  );
+  await page.evaluate(() =>
+    window.preferenceSave.reject(new Error("Unavailable")),
+  );
+  await fixture.getByRole("alert").waitFor();
+  assert.equal(await digest.getAttribute("aria-checked"), "true");
+  await fixture.getByRole("button", { name: "Save preferences" }).click();
+  await page.evaluate(() => window.preferenceSave.resolve());
+  await fixture.getByText("Preferences saved.", { exact: true }).waitFor();
+  assert.ok(
+    await fixture
+      .getByRole("button", { name: "Save preferences" })
+      .isDisabled(),
+  );
+  checks++;
+
+  await page.evaluate(() =>
+    window.fixture.mount("team-access", "TeamAccess", { members: [] }),
+  );
+  assert.ok(await fixture.getByText("No members yet.").isVisible());
+  await page.evaluate(() =>
+    window.fixture.mount("team-access", "TeamAccess", {
+      members: [
+        {
+          id: "one",
+          name: "Test member",
+          email: "one@example.com",
+          role: "Admin",
+        },
+      ],
+    }),
+  );
+  assert.equal(await fixture.getByRole("combobox").count(), 0);
+  checks++;
+  await page.evaluate(() =>
+    window.fixture.mount("invoice-list", "InvoiceList", { invoices: [] }),
+  );
+  assert.ok(
+    await fixture.getByText("Your invoices will appear here.").isVisible(),
+  );
+  await page.evaluate(() =>
+    window.fixture.mount("invoice-list", "InvoiceList", {
+      invoices: [
+        {
+          id: "INV-1",
+          description: "Studio",
+          date: "Sep 1, 2026",
+          amount: "€128.00",
+          status: "Paid",
+          href: "/invoices/receipt.pdf",
+        },
+      ],
+    }),
+  );
+  assert.equal(
+    await fixture
+      .getByRole("link", { name: "Download invoice INV-1" })
+      .getAttribute("href"),
+    "/invoices/receipt.pdf",
+  );
+  checks++;
   await page.goto(origin + "/workspace/#/stars-rating");
   const rating = page.getByRole("radiogroup", { name: "Rating" }).first();
   await rating.waitFor();
