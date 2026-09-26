@@ -109,7 +109,7 @@ jobs:
           SUITE: ${{ matrix.suite }}
         run: |
           case "$SUITE" in
-            site) node scripts/site/verify.mjs && pnpm home:check ;;
+            site) node scripts/site/verify.mjs && pnpm home:check && node scripts/site/verify-navigation.mjs ;;
             components) pnpm site:check && pnpm catalog:check && node scripts/registry/verify-table-browser.mjs && node scripts/registry/verify-table-actions.mjs ;;
             compositions) node scripts/registry/verify-compositions.mjs ;;
             workspace-desktop)

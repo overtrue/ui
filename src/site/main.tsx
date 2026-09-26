@@ -21,14 +21,11 @@ import {
   IconMoon as Moon,
   IconSun as Sun,
   IconSearch as Search,
-  IconTerminal2 as Terminal,
   IconStack2 as Layers,
   IconCode as Code2,
-  IconBox as Box,
   IconChevronRight as ChevronRight,
   IconBrandGithub as Github,
 } from "@tabler/icons-react";
-import { Dashboard } from "@/registry/overtrue/dashboard";
 import {
   catalog,
   catalogPath,
@@ -45,13 +42,21 @@ import { FitPreview } from "./fit-preview";
 import workspacePages from "@/data/workspace/pages.json";
 import { Command, CopyButton, HighlightedCode } from "./code";
 import { GuidePage, GuideLinks } from "./guides";
-import { DocsSidebar, DocsMobileNavigation } from "./docs-navigation";
+import {
+  DocsSidebar,
+  DocsMobileNavigation,
+  ComponentSidebar,
+} from "./docs-navigation";
+import { SiteSearch } from "./search";
 import { BrandMark } from "@/components/brand-mark";
 import { sitePages } from "./pages";
-import { siteOwner } from "./demo-data";
-import { HomeDetails } from "./home-details";
+import { HomeStory } from "./home-story";
+import { HomeHero } from "./home-hero";
 import { CardCollection, CardBlockPage } from "./blocks";
 import "./site.css";
+import "./home-hero.css";
+import "./home-story.css";
+import "./navigation-polish.css";
 
 const sources = import.meta.glob("../registry/overtrue/*.tsx", {
   query: "?raw",
@@ -157,12 +162,14 @@ function Header() {
       return;
     }
     const frame = requestAnimationFrame(() =>
-      document.getElementById(id)?.scrollIntoView(),
+      document.getElementById(id)?.scrollIntoView({ behavior: "instant" }),
     );
     return () => cancelAnimationFrame(frame);
   }, [location.pathname, location.hash]);
   return (
-    <header className="site-header">
+    <header
+      className={`site-header${location.pathname === "/" ? " site-header-home" : ""}`}
+    >
       <div className="site-header-inner">
         <Link to="/" aria-label="overtrue/ui home">
           <Logo />
@@ -180,6 +187,7 @@ function Header() {
           </NavLink>
         </nav>
         <div className="header-actions">
+          <SiteSearch />
           <a
             className="icon-button"
             href="https://github.com/overtrue/ui"
@@ -197,6 +205,7 @@ function Header() {
           </a>
           <button
             ref={toggleRef}
+            type="button"
             className="icon-button mobile-toggle"
             aria-controls="site-navigation"
             aria-label={open ? "Close navigation" : "Open navigation"}
@@ -272,95 +281,9 @@ function Footer() {
 }
 function Home() {
   return (
-    <main>
-      <section className="hero">
-        <div className="hero-grid" aria-hidden="true" />
-        <div className="hero-copy">
-          <Link className="eyebrow-link" to="/docs">
-            <span className="live-dot" />
-            The admin collection for shadcn/ui
-            <ArrowRight size={13} />
-          </Link>
-          <h1>
-            Your next dashboard.
-            <br />
-            <span>Already taking shape.</span>
-          </h1>
-          <p>
-            Components and complete blocks for dashboards, admin panels, and
-            consoles.
-          </p>
-          <div className="hero-actions">
-            <Link className="site-button primary" to="/components">
-              Explore components
-              <ArrowRight size={16} />
-            </Link>
-            <Link className="site-button" to="/docs">
-              Get started
-              <Code2 size={16} />
-            </Link>
-          </div>
-          <div className="hero-install">
-            <Terminal size={14} />
-            <code>{command("stat-card")}</code>
-            <CopyButton text={command("stat-card")} />
-          </div>
-          <div className="hero-meta">
-            <span>{componentCount} components</span>
-            <i />
-            <span>{blockCount} complete blocks</span>
-            <span>{cardCount} card patterns</span>
-            <i />
-            <span>Free & MIT licensed</span>
-          </div>
-        </div>
-        <div className="hero-product">
-          <div className="product-label">
-            <span>
-              <span className="live-dot" />
-              Interactive workspace · Sample data
-            </span>
-            <Link to="/blocks/dashboard">
-              Explore the block
-              <ArrowUpRight size={13} />
-            </Link>
-          </div>
-          <Dashboard compact workspaceName="overtrue" user={siteOwner} />
-          <div className="product-caption">
-            <span>01 / A workspace that feels like yours.</span>
-            <span>Try the navigation, filters, and export</span>
-          </div>
-        </div>
-      </section>
-      <section className="foundation strip">
-        <span>A familiar foundation.</span>
-        <div>
-          <Code2 />
-          React
-        </div>
-        <div>
-          <span className="tailwind-symbol">≈</span>Tailwind CSS
-        </div>
-        <div>
-          <span className="shadcn-symbol">//</span>shadcn/ui
-        </div>
-        <div>
-          <Layers />
-          Made for real work
-        </div>
-      </section>
-      <section className="section collection-section">
-        <div className="section-heading">
-          <div>
-            <p className="overline">SMALL PIECES. REAL POSSIBILITIES.</p>
-            <h2>The everyday, already considered.</h2>
-            <p>The components you reach for in every admin interface.</p>
-          </div>
-          <Link className="text-link" to="/components">
-            All {componentCount} components
-            <ArrowRight size={16} />
-          </Link>
-        </div>
+    <main className="homepage">
+      <HomeHero />
+      <HomeStory>
         <div
           className="home-component-grid"
           role="region"
@@ -380,83 +303,7 @@ function Home() {
             <ComponentTile key={name} name={name} />
           ))}
         </div>
-        <p className="gallery-hint">
-          Scroll to explore <ArrowRight size={13} />
-        </p>
-      </section>
-      <section className="ownership section">
-        <div>
-          <p className="overline">YOUR CODE. YOUR CALL.</p>
-          <h2>
-            A starting point.
-            <br />
-            Never a black box.
-          </h2>
-          <p>
-            Add a component straight to your project. Read it, change it, make
-            it fit. No runtime package to work around.
-          </p>
-          <Link to="/docs" className="text-link">
-            How it works
-            <ArrowRight size={16} />
-          </Link>
-        </div>
-        <div className="ownership-code">
-          <div className="code-label">
-            <span>
-              <Box size={14} />
-              components/overtrue/stat-card.tsx
-            </span>
-            <span>Yours to edit</span>
-          </div>
-          <pre>
-            <code>
-              <span className="syntax-purple">import</span> {"{ StatCard }"}{" "}
-              <span className="syntax-purple">from</span>
-              {"\n"}
-              <span className="syntax-green">
-                {" "}
-                "@/components/overtrue/stat-card"
-              </span>
-              {"\n\n"}
-              <span className="syntax-purple">
-                export default function
-              </span>{" "}
-              Overview() {"{"}
-              {"\n"} <span className="syntax-purple">return</span> ({"\n"}{" "}
-              <span className="syntax-blue">&lt;StatCard</span>
-              {"\n"} title=<span className="syntax-green">"Total revenue"</span>
-              {"\n"} value=<span className="syntax-green">"$36,800"</span>
-              {"\n"} change=<span className="syntax-green">"12.8%"</span>
-              {"\n"} trend=<span className="syntax-green">"up"</span>
-              {"\n"} <span className="syntax-blue">/&gt;</span>
-              {"\n"} ){"\n"}
-              {"}"}
-            </code>
-          </pre>
-        </div>
-      </section>
-      <HomeDetails />
-      <section className="closing section">
-        <div>
-          <p className="overline">FROM A COMPONENT TO A CONSOLE</p>
-          <h2>Build something worth opening.</h2>
-          <p>
-            Start small. Or explore {workspacePages.length} pages of
-            possibilities.
-          </p>
-        </div>
-        <div className="hero-actions">
-          <Link className="site-button primary" to="/docs">
-            Start building
-            <ArrowRight size={16} />
-          </Link>
-          <Link className="site-button" to="/examples">
-            Explore examples
-            <ArrowUpRight size={16} />
-          </Link>
-        </div>
-      </section>
+      </HomeStory>
     </main>
   );
 }
@@ -498,34 +345,29 @@ function ComponentTile({ name }: { name: ItemName }) {
   );
 }
 function Catalog({ blocks = false }: { blocks?: boolean }) {
-  const [componentQuery, setComponentQuery] = useState(""),
-    [componentCategory, setComponentCategory] = useState("All");
   const [params, setParams] = useSearchParams();
   const collection = blockCollections.find(
     (group) => group.label === params.get("blockCategory"),
   );
-  const query = blocks ? (params.get("blockQuery") ?? "") : componentQuery;
-  const category = blocks ? (collection?.label ?? "All") : componentCategory;
-  const updateBlockFilter = (
-    key: "blockQuery" | "blockCategory",
-    value: string,
-  ) => {
+  const categories = blocks
+    ? ["All", ...blockCollections.map((group) => group.label)]
+    : ["All", "Data display", "Layout", "Feedback", "Navigation", "Forms"];
+  const queryKey = blocks ? "blockQuery" : "q";
+  const categoryKey = blocks ? "blockCategory" : "category";
+  const query = params.get(queryKey) ?? "";
+  const category = blocks
+    ? (collection?.label ?? "All")
+    : (categories.find((value) => value === params.get(categoryKey)) ?? "All");
+  const updateFilter = (key: string, value: string) => {
     // History updates before React renders; preserve changes from the other collection.
     const next = new URLSearchParams(window.location.search);
-    if (value && !(key === "blockCategory" && value === "All"))
+    if (value && !(key === categoryKey && value === "All"))
       next.set(key, value);
     else next.delete(key);
     setParams(next, { replace: true });
   };
-  const setQuery = (value: string) =>
-    blocks ? updateBlockFilter("blockQuery", value) : setComponentQuery(value);
-  const setCategory = (value: string) =>
-    blocks
-      ? updateBlockFilter("blockCategory", value)
-      : setComponentCategory(value);
-  const categories = blocks
-    ? ["All", ...blockCollections.map((group) => group.label)]
-    : ["All", "Data display", "Layout", "Feedback", "Navigation", "Forms"];
+  const setQuery = (value: string) => updateFilter(queryKey, value);
+  const setCategory = (value: string) => updateFilter(categoryKey, value);
   const items = catalog.filter(
     (item) =>
       (blocks ? item.category === "Blocks" : item.category !== "Blocks") &&
@@ -600,12 +442,11 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           />
         </label>
       </div>
-      {blocks && (
-        <p className="block-result-count" role="status">
-          {items.length} of {blockCount} blocks
-          {category !== "All" ? ` · ${category}` : ""}
-        </p>
-      )}
+      <p className="block-result-count" role="status">
+        {items.length} of {blocks ? blockCount : componentCount}{" "}
+        {blocks ? "blocks" : "components"}
+        {category !== "All" ? ` · ${category}` : ""}
+      </p>
       <div className={blocks ? "block-grid" : "component-grid"}>
         {items.map((item) => (
           <ComponentTile key={item.name} name={item.name} />
@@ -619,15 +460,10 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           <button
             className="site-button"
             onClick={() => {
-              if (blocks) {
-                const next = new URLSearchParams(window.location.search);
-                next.delete("blockQuery");
-                next.delete("blockCategory");
-                setParams(next, { replace: true });
-              } else {
-                setQuery("");
-                setCategory("All");
-              }
+              const next = new URLSearchParams(window.location.search);
+              next.delete(queryKey);
+              next.delete(categoryKey);
+              setParams(next, { replace: true });
             }}
           >
             Clear filters
@@ -680,18 +516,12 @@ function ComponentPage() {
   const source = sources[`../registry/overtrue/${sourceFile}.tsx`] ?? "";
   const usage = usageSource(item);
   return (
-    <main className="docs-layout section">
-      <aside className="docs-sidebar">
-        <Link className="back-link" to={collectionPath}>
-          ← All {collection.toLowerCase()}
-        </Link>
-        <p>{collection}</p>
-        {siblings.map((entry) => (
-          <NavLink key={entry.name} to={catalogPath(entry)}>
-            {entry.title}
-          </NavLink>
-        ))}
-      </aside>
+    <main className="docs-layout section component-docs">
+      <ComponentSidebar
+        items={siblings}
+        collection={collection}
+        collectionPath={collectionPath}
+      />
       <article className="docs-content">
         <label className="component-picker">
           Browse {collection.toLowerCase()}
@@ -734,6 +564,12 @@ function ComponentPage() {
           )}
           <p>{item.description}</p>
         </div>
+        <nav className="component-sections" aria-label="On this page">
+          <a href="#component-preview">Preview</a>
+          <a href="#installation">Installation</a>
+          <a href="#usage">Usage</a>
+          {"api" in item && <a href="#props">Props</a>}
+        </nav>
         {[
           "stat-card",
           "kpi-card",
@@ -766,7 +602,7 @@ function ComponentPage() {
             )}
           </p>
         )}
-        <div className="workspace-toolbar">
+        <div className="workspace-toolbar" id="component-preview">
           <div
             className="filter-tabs"
             role="group"
@@ -831,7 +667,7 @@ function ComponentPage() {
           {" · "}
           <a href={`/r/${item.name}.json`}>Registry JSON</a>
         </p>
-        <h2>Usage</h2>
+        <h2 id="usage">Usage</h2>
         <p>
           {isBlock
             ? "A starting point for your page. Edit the installed layout, fields, and actions for your product."
@@ -840,7 +676,7 @@ function ComponentPage() {
         <Command text={usage} label="React" language="tsx" />
         {"api" in item && (
           <>
-            <h2>Props</h2>
+            <h2 id="props">Props</h2>
             <div className="api-table-scroll">
               <table className="api-table">
                 <thead>
@@ -1056,7 +892,14 @@ function Docs() {
   );
 }
 function Examples() {
-  const [query, setQuery] = useState("");
+  const [params, setParams] = useSearchParams();
+  const query = params.get("q") ?? "";
+  const setQuery = (value: string) => {
+    const next = new URLSearchParams(window.location.search);
+    if (value) next.set("q", value);
+    else next.delete("q");
+    setParams(next, { replace: true });
+  };
   const pages = workspacePages.filter((page) =>
     `${page.title} ${page.path}`
       .toLowerCase()
@@ -1100,7 +943,7 @@ function Examples() {
         </div>
       </div>
       <div className="catalog-toolbar">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground" role="status">
           {pages.length} workspace examples
         </p>
         <label className="search-box">
@@ -1127,7 +970,18 @@ function Examples() {
         ))}
       </div>
       {!pages.length && (
-        <p className="search-empty">No matching pages. Try another search.</p>
+        <div className="search-empty">
+          <Search size={24} aria-hidden="true" />
+          <h2>No matching pages.</h2>
+          <p>Try a different page name or clear your search.</p>
+          <button
+            type="button"
+            className="site-button"
+            onClick={() => setQuery("")}
+          >
+            Clear search
+          </button>
+        </div>
       )}
     </main>
   );

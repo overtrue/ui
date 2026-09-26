@@ -1465,3 +1465,23 @@ html.dark:not([data-workspace-navbar-theme="primary"]) .workspace-app-sidebar {
     transition: none;
   }
 }
+
+/* Keep the page finder within the existing header footprint. */
+.workspace-search-trigger .page-search-trigger-text,
+.workspace-search-trigger .page-search-trigger-key {
+  display: none;
+}
+.workspace-search-trigger {
+  border: 0;
+  background: transparent;
+}
+
+:root {
+  --page-search-popover: hsl(var(--popover));
+  --page-search-popover-foreground: hsl(var(--popover-foreground));
+  --page-search-foreground: hsl(var(--foreground));
+  --page-search-muted: hsl(var(--muted));
+  --page-search-muted-foreground: hsl(var(--muted-foreground));
+  --page-search-border: hsl(var(--border));
+  --page-search-ring: hsl(var(--ring));
+}

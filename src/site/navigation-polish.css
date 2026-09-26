@@ -1,0 +1,179 @@
+.site-search-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+.site-search-trigger:hover {
+  color: var(--foreground);
+  background: var(--muted);
+}
+.site-search-trigger:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.site-search-trigger .page-search-trigger-key {
+  padding: 2px 4px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 9px;
+  font-family: inherit;
+}
+.component-docs {
+  grid-template-columns: 204px minmax(0, 1fr);
+  gap: 48px;
+}
+.component-sidebar {
+  overflow: hidden;
+  gap: 0;
+}
+.component-sidebar .back-link {
+  margin-bottom: 14px;
+}
+.sidebar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  margin: 0 3px 18px;
+  min-height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--muted-foreground);
+  background: var(--site-bg);
+}
+.sidebar-search:focus-within {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 12%, transparent);
+}
+.sidebar-search svg {
+  flex-shrink: 0;
+}
+.sidebar-search input {
+  min-width: 0;
+  width: 100%;
+  outline: none;
+  background: transparent;
+  font-size: 11px;
+  color: var(--foreground);
+}
+.component-sidebar-links {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding-right: 4px;
+  padding-bottom: 16px;
+}
+.component-sidebar-links > div + div {
+  margin-top: 20px;
+}
+.component-sidebar-links h2 {
+  margin: 0 0 6px;
+  padding-inline: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 2;
+  color: var(--foreground);
+}
+.component-sidebar-links a {
+  display: block;
+  min-height: 34px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.component-sidebar-links a:hover {
+  color: var(--foreground);
+  background: var(--muted);
+}
+.component-sidebar-links a.active {
+  background: color-mix(in srgb, var(--primary) 8%, var(--site-bg));
+  color: var(--primary);
+  box-shadow: inset 2px 0 var(--primary);
+  font-weight: 500;
+}
+.sidebar-empty {
+  padding: 8px 10px;
+  line-height: 1.8;
+  color: var(--muted-foreground);
+}
+.sidebar-empty button {
+  min-height: 36px;
+  color: var(--primary);
+  cursor: pointer;
+}
+.component-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.component-sections a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  border-radius: 6px;
+}
+.component-sections a:hover {
+  background: var(--muted);
+  color: var(--foreground);
+}
+#component-preview,
+#installation,
+#usage,
+#props {
+  /* The root already reserves 100px for the floating navigation. */
+  scroll-margin-top: 12px;
+}
+.component-picker select {
+  min-height: 44px;
+}
+.block-result-count + .component-grid {
+  margin-top: 20px;
+}
+@media (max-width: 1100px) {
+  .site-search-trigger .page-search-trigger-key,
+  .site-search-trigger .page-search-trigger-text {
+    display: none;
+  }
+  .site-search-trigger {
+    width: 36px;
+    padding: 0;
+  }
+  .component-docs {
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+@media (max-width: 767px) {
+  .component-docs {
+    display: block;
+  }
+  .component-sections {
+    gap: 2px;
+    margin-block: 20px;
+  }
+  .component-sections a {
+    min-height: 44px;
+    padding-inline: 10px;
+    font-size: 11px;
+  }
+}
+@media (max-width: 480px) {
+  .site-header a[aria-label="overtrue/ui on GitHub"] {
+    display: none;
+  }
+}

@@ -56,14 +56,22 @@ export function HomeDetails() {
   return (
     <>
       <section
-        className="section assembled-section"
+        className="story-section assembled-section story-reveal"
         aria-labelledby="assembled-title"
       >
-        <div className="section-heading">
+        <div className="story-heading">
           <div>
-            <p className="overline">THE PIECES, PUT TOGETHER</p>
-            <h2 id="assembled-title">From components to a working page.</h2>
-            <p>Useful layouts, with the details already connected.</p>
+            <p className="story-kicker">
+              <span>05 /</span> THE HEAD START
+            </p>
+            <h2 className="story-title" id="assembled-title">
+              Skip the
+              <br />
+              <em>blank canvas.</em>
+            </h2>
+            <p className="assembled-intro">
+              A few pieces, already put together. Choose a starting point.
+            </p>
           </div>
           <Link className="text-link" to="/blocks">
             Browse all blocks <IconArrowRight size={16} />
@@ -137,60 +145,66 @@ export function HomeDetails() {
         </div>
       </section>
       <section
-        className="section questions-section"
+        className="story-section questions-section story-reveal"
         aria-labelledby="questions-title"
       >
         <div>
-          <p className="overline">A FEW THINGS TO KNOW</p>
-          <h2 id="questions-title">Before you start.</h2>
+          <p className="story-kicker">
+            <span>06 /</span> GOOD TO KNOW
+          </p>
+          <h2 className="story-title" id="questions-title">
+            A little
+            <br />
+            <em>clarity.</em>
+          </h2>
           <p>The practical details, in one place.</p>
           <Link className="text-link" to="/docs">
             Read the documentation <IconArrowRight size={16} />
           </Link>
         </div>
-        <dl className="questions-list">
-          <div>
-            <dt>What is included?</dt>
-            <dd>
+        <div className="questions-list">
+          <details>
+            <summary>What is included?</summary>
+            <div className="question-answer">
               {componentCount} components, {blockCount} complete blocks, and an
               optional theme. The workspace gallery adds 119 pages to explore;
               those example pages are separate from the installable registry.
-            </dd>
-          </div>
-          <div>
-            <dt>Can I use it in a commercial project?</dt>
-            <dd>
+            </div>
+          </details>
+          <details>
+            <summary>Can I use it in a commercial project?</summary>
+            <div className="question-answer">
               Yes. The code is available under the{" "}
               <a href="/LICENSE.txt">MIT license</a>. Keep the required
               copyright and license notices when redistributing it.
-            </dd>
-          </div>
-          <div>
-            <dt>Does it work with my existing shadcn project?</dt>
-            <dd>
+            </div>
+          </details>
+          <details>
+            <summary>Does it work with my existing shadcn project?</summary>
+            <div className="question-answer">
               The registry targets React, TypeScript, and Tailwind CSS v4.
               Components inherit your semantic tokens. You can keep your
               existing theme and add one component at a time.
-            </dd>
-          </div>
-          <div>
-            <dt>Is there a package to keep up to date?</dt>
-            <dd>
+            </div>
+          </details>
+          <details>
+            <summary>Is there a package to keep up to date?</summary>
+            <div className="question-answer">
               The CLI copies editable source into your project and installs its
               dependencies. Your changes stay yours. Compare new versions before
               replacing a file you have customized.
-            </dd>
-          </div>
-          <div>
-            <dt>Does it include a backend?</dt>
-            <dd>
+            </div>
+          </details>
+          <details>
+            <summary>Does it include a backend?</summary>
+            <div className="question-answer">
               No. Previews use sample data and local interactions. Bring your
               own API, authentication, and persistence. The{" "}
               <Link to="/docs/composition">composition guide</Link> explains
               where to connect them.
-            </dd>
-          </div>
-        </dl>
+            </div>
+          </details>
+        </div>
       </section>
     </>
   );
