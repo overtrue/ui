@@ -23,11 +23,9 @@ import {
   IconSearch as Search,
   IconStack2 as Layers,
   IconCode as Code2,
-  IconBox as Box,
   IconChevronRight as ChevronRight,
   IconBrandGithub as Github,
 } from "@tabler/icons-react";
-import { Dashboard } from "@/registry/overtrue/dashboard";
 import {
   catalog,
   catalogPath,
@@ -47,12 +45,12 @@ import { GuidePage, GuideLinks } from "./guides";
 import { DocsSidebar, DocsMobileNavigation } from "./docs-navigation";
 import { BrandMark } from "@/components/brand-mark";
 import { sitePages } from "./pages";
-import { siteOwner } from "./demo-data";
-import { HomeDetails } from "./home-details";
+import { HomeStory } from "./home-story";
 import { HomeHero } from "./home-hero";
 import { CardCollection, CardBlockPage } from "./blocks";
 import "./site.css";
 import "./home-hero.css";
+import "./home-story.css";
 
 const sources = import.meta.glob("../registry/overtrue/*.tsx", {
   query: "?raw",
@@ -276,60 +274,9 @@ function Footer() {
 }
 function Home() {
   return (
-    <main>
+    <main className="homepage">
       <HomeHero />
-      <section
-        className="workspace-showcase"
-        id="workspace-preview"
-        aria-label="Interactive workspace preview"
-      >
-        <div className="hero-product">
-          <div className="product-label">
-            <span>
-              <span className="live-dot" />
-              Interactive workspace · Sample data
-            </span>
-            <Link to="/blocks/dashboard">
-              Explore the block
-              <ArrowUpRight size={13} />
-            </Link>
-          </div>
-          <Dashboard compact workspaceName="overtrue" user={siteOwner} />
-          <div className="product-caption">
-            <span>01 / A workspace that feels like yours.</span>
-            <span>Try the navigation, filters, and export</span>
-          </div>
-        </div>
-      </section>
-      <section className="foundation strip">
-        <span>A familiar foundation.</span>
-        <div>
-          <Code2 />
-          React
-        </div>
-        <div>
-          <span className="tailwind-symbol">≈</span>Tailwind CSS
-        </div>
-        <div>
-          <span className="shadcn-symbol">//</span>shadcn/ui
-        </div>
-        <div>
-          <Layers />
-          Made for real work
-        </div>
-      </section>
-      <section className="section collection-section">
-        <div className="section-heading">
-          <div>
-            <p className="overline">SMALL PIECES. REAL POSSIBILITIES.</p>
-            <h2>The everyday, already considered.</h2>
-            <p>The components you reach for in every admin interface.</p>
-          </div>
-          <Link className="text-link" to="/components">
-            All {componentCount} components
-            <ArrowRight size={16} />
-          </Link>
-        </div>
+      <HomeStory>
         <div
           className="home-component-grid"
           role="region"
@@ -349,83 +296,7 @@ function Home() {
             <ComponentTile key={name} name={name} />
           ))}
         </div>
-        <p className="gallery-hint">
-          Scroll to explore <ArrowRight size={13} />
-        </p>
-      </section>
-      <section className="ownership section">
-        <div>
-          <p className="overline">YOUR CODE. YOUR CALL.</p>
-          <h2>
-            A starting point.
-            <br />
-            Never a black box.
-          </h2>
-          <p>
-            Add a component straight to your project. Read it, change it, make
-            it fit. No runtime package to work around.
-          </p>
-          <Link to="/docs" className="text-link">
-            How it works
-            <ArrowRight size={16} />
-          </Link>
-        </div>
-        <div className="ownership-code">
-          <div className="code-label">
-            <span>
-              <Box size={14} />
-              components/overtrue/stat-card.tsx
-            </span>
-            <span>Yours to edit</span>
-          </div>
-          <pre>
-            <code>
-              <span className="syntax-purple">import</span> {"{ StatCard }"}{" "}
-              <span className="syntax-purple">from</span>
-              {"\n"}
-              <span className="syntax-green">
-                {" "}
-                "@/components/overtrue/stat-card"
-              </span>
-              {"\n\n"}
-              <span className="syntax-purple">
-                export default function
-              </span>{" "}
-              Overview() {"{"}
-              {"\n"} <span className="syntax-purple">return</span> ({"\n"}{" "}
-              <span className="syntax-blue">&lt;StatCard</span>
-              {"\n"} title=<span className="syntax-green">"Total revenue"</span>
-              {"\n"} value=<span className="syntax-green">"$36,800"</span>
-              {"\n"} change=<span className="syntax-green">"12.8%"</span>
-              {"\n"} trend=<span className="syntax-green">"up"</span>
-              {"\n"} <span className="syntax-blue">/&gt;</span>
-              {"\n"} ){"\n"}
-              {"}"}
-            </code>
-          </pre>
-        </div>
-      </section>
-      <HomeDetails />
-      <section className="closing section">
-        <div>
-          <p className="overline">FROM A COMPONENT TO A CONSOLE</p>
-          <h2>Build something worth opening.</h2>
-          <p>
-            Start small. Or explore {workspacePages.length} pages of
-            possibilities.
-          </p>
-        </div>
-        <div className="hero-actions">
-          <Link className="site-button primary" to="/docs">
-            Start building
-            <ArrowRight size={16} />
-          </Link>
-          <Link className="site-button" to="/examples">
-            Explore examples
-            <ArrowUpRight size={16} />
-          </Link>
-        </div>
-      </section>
+      </HomeStory>
     </main>
   );
 }

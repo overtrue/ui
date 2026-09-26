@@ -22,6 +22,7 @@ try {
   const wall = page.locator(".component-hero");
   const hero = page.locator(".hero-product");
   const showcase = page.locator(".assembled-preview");
+  const studio = page.locator(".studio-section");
   const switches = page.getByRole("group", { name: "Featured blocks" });
   async function snapshot(locator, name) {
     for (const image of await locator.locator("img").all()) {
@@ -137,6 +138,28 @@ try {
       await wall.screenshot({
         path: `${output}/component-wall-${width}-${theme}.png`,
       });
+      await snapshot(studio, `component-studio-${width}-${theme}`);
+      assert.ok(
+        await studio.locator(".studio-app").evaluate((app) => {
+          const box = app.getBoundingClientRect();
+          return (
+            box.left >= 0 &&
+            box.right <= innerWidth &&
+            app.scrollWidth <= app.clientWidth + 1
+          );
+        }),
+        "the interactive studio fits the viewport",
+      );
+      assert.ok(
+        await studio
+          .locator("h2:not(.story-title)")
+          .evaluateAll((headings) =>
+            headings.every(
+              (heading) => parseFloat(getComputedStyle(heading).fontSize) <= 20,
+            ),
+          ),
+        "marketing typography does not change component headings",
+      );
       await checkSelect(hero.getByLabel("Report period", { exact: true }));
       assert.equal(
         await hero
@@ -299,6 +322,60 @@ try {
     "full-screen component wall, capsule navigation, reduced motion, pause/resume, seamless loop geometry, offscreen animation suspension",
   );
   await page.setViewportSize({ width: 1440, height: 1000 });
+  await studio
+    .getByRole("button", { name: "Iris accent", exact: true })
+    .click();
+  assert.equal(await studio.locator('button[aria-pressed="true"]').count(), 1);
+  assert.equal(
+    await studio
+      .getByRole("button", { name: "Iris accent", exact: true })
+      .getAttribute("aria-pressed"),
+    "true",
+  );
+  assert.equal(
+    await studio
+      .locator(".studio-workbench")
+      .evaluate((element) =>
+        getComputedStyle(element).getPropertyValue("--primary").trim(),
+      ),
+    "#7c3aed",
+  );
+  await studio
+    .getByRole("checkbox", { name: "Make the details yours", exact: true })
+    .check();
+  await studio
+    .getByRole("checkbox", { name: "Put it out into the world", exact: true })
+    .check();
+  await studio.getByText("3 of 3 complete", { exact: true }).waitFor();
+  await studio.getByText("Ready to go", { exact: true }).waitFor();
+  await studio.getByLabel("Workspace name").fill("   ");
+  assert.ok(
+    await studio.getByRole("button", { name: "Update preview" }).isDisabled(),
+  );
+  await studio.getByLabel("Workspace name").fill("  Forma studio  ");
+  await studio.getByRole("button", { name: "Update preview" }).click();
+  await studio
+    .locator(".studio-app-brand")
+    .getByText("Forma studio", { exact: true })
+    .waitFor();
+  await studio
+    .getByRole("status")
+    .getByText("Preview updated. Looking like you.", { exact: true })
+    .waitFor();
+  const question = page
+    .locator(".questions-list details")
+    .filter({ hasText: "Can I use it in a commercial project?" });
+  await question.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  assert.equal(await question.getAttribute("open"), "");
+  assert.ok(
+    await question.getByRole("link", { name: "MIT license" }).isVisible(),
+  );
+  await page.keyboard.press("Enter");
+  assert.equal(await question.getAttribute("open"), null);
+  checks.push(
+    "studio accent selection, task progress, trimmed preview name, empty-name validation, keyboard FAQ expansion",
+  );
   await hero.getByLabel("Report period").selectOption("6 months");
   await hero.getByText("$24,600", { exact: true }).waitFor();
   const download = page.waitForEvent("download");
