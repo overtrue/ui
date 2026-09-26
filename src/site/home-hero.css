@@ -357,6 +357,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .wall-column {
-    animation-play-state: paused;
+    animation: none;
   }
 }

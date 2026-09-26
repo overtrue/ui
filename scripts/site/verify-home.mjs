@@ -97,14 +97,15 @@ try {
           .isDisabled(),
       );
       assert.ok(
-        await page
-          .locator(".wall-column")
-          .evaluateAll((columns) =>
-            columns.every(
-              (column) =>
-                getComputedStyle(column).animationPlayState === "paused",
-            ),
-          ),
+        await page.locator(".wall-column").evaluateAll((columns) =>
+          columns.every((column) => {
+            const style = getComputedStyle(column);
+            return (
+              style.animationName === "none" ||
+              style.animationPlayState === "paused"
+            );
+          }),
+        ),
       );
       const layout = await page.evaluate(() => {
         const header = document.querySelector(".site-header-inner");
