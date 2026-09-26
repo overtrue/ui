@@ -1,7 +1,9 @@
 /* The workspace consumes the same shadcn theme as the component gallery. */
 .overtrue-workspace {
   --pn-primary: hsl(var(--primary));
-  --pn-primary-rgb: 6, 111, 209;
+  --pn-primary-rgb: var(--workspace-primary-rgb, 37, 99, 235);
+  --pn-primary-fg: hsl(var(--primary-foreground));
+  --pn-box-shadow: 0 4px 16px -4px rgb(0 0 0 / 0.1);
   --pn-font-sans-serif: var(--font-sans);
   --pn-font-family: var(--font-sans);
   --pn-body-font-family: var(--font-sans);
@@ -782,7 +784,7 @@
 }
 .overtrue-workspace .workspace-datepicker-grid button.is-selected {
   background: var(--pn-primary);
-  color: white;
+  color: hsl(var(--primary-foreground));
 }
 .overtrue-workspace .workspace-datepicker-selection {
   margin: 10px 0 0;
@@ -1049,13 +1051,13 @@ html[data-workspace-navbar-theme="dark"] .workspace-sidebar {
 html[data-workspace-navbar-theme="primary"] .workspace-header,
 html[data-workspace-navbar-theme="primary"] .workspace-navbar,
 html[data-workspace-navbar-theme="primary"] .workspace-sidebar {
-  color: white;
-  --pn-primary: white;
+  color: hsl(var(--primary-foreground));
+  --pn-primary: hsl(var(--primary-foreground));
   --pn-bg-surface: hsl(var(--primary));
-  --pn-bg-surface-secondary: rgb(255 255 255 / 0.12);
-  --pn-body-color: white;
-  --pn-secondary: rgb(255 255 255 / 0.7);
-  --pn-border-color: rgb(255 255 255 / 0.2);
+  --pn-bg-surface-secondary: hsl(var(--primary-foreground) / 0.12);
+  --pn-body-color: hsl(var(--primary-foreground));
+  --pn-secondary: hsl(var(--primary-foreground) / 0.85);
+  --pn-border-color: hsl(var(--primary-foreground) / 0.2);
 }
 html[data-workspace-navbar-theme="dark"] .workspace-sidebar-profile small,
 html[data-workspace-navbar-theme="primary"] .workspace-sidebar-profile small {
@@ -1438,15 +1440,15 @@ html[data-workspace-navbar-theme="dark"] .workspace-app-sidebar {
 }
 html[data-workspace-navbar-theme="primary"] .workspace-app-sidebar {
   --sidebar: var(--primary);
-  --sidebar-foreground: 0 0% 100%;
-  --sidebar-accent: 0 0% 100% / 0.12;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-border: 0 0% 100% / 0.18;
-  --sidebar-ring: 0 0% 100%;
-  --workspace-sidebar-selected: rgb(255 255 255 / 0.16);
-  --workspace-sidebar-selected-foreground: white;
+  --sidebar-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--primary-foreground) / 0.12;
+  --sidebar-accent-foreground: var(--primary-foreground);
+  --sidebar-border: var(--primary-foreground) / 0.18;
+  --sidebar-ring: var(--primary-foreground);
+  --workspace-sidebar-selected: hsl(var(--primary-foreground) / 0.16);
+  --workspace-sidebar-selected-foreground: hsl(var(--primary-foreground));
 }
-.dark .workspace-app-sidebar {
+html.dark:not([data-workspace-navbar-theme="primary"]) .workspace-app-sidebar {
   --workspace-sidebar-selected-foreground: color-mix(in srgb, hsl(var(--primary)) 50%, white);
 }
 @media (max-width: 767.98px) {

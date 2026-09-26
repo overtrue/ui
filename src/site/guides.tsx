@@ -25,10 +25,11 @@ const content = {
       <h2>Quiet surfaces, clear priorities</h2>
       <p>
         Use the page background to separate sections, a card surface to group
-        related information, and a border only where it explains a boundary.
-        Keep cards flat; reserve shadows for menus, dialogs, and other surfaces
-        that float above the page. Reserve the accent color for the current
-        selection, a primary action, or one important data series.
+        related information, and a border only where it explains a boundary. Use
+        a subtle contact shadow on cards and controls; reserve deeper shadows
+        for menus, dialogs, and other surfaces that float above the page.
+        Reserve the accent color for the current selection, a primary action, or
+        one important data series.
       </p>
       <div className="principle-specimen" aria-label="Example metric hierarchy">
         <span>Monthly recurring revenue</span>
@@ -70,12 +71,12 @@ const content = {
             </tr>
             <tr>
               <td>Body and controls</td>
-              <td>12–14 px</td>
+              <td>14 px · 16 px for mobile inputs</td>
               <td>Reading and everyday actions</td>
             </tr>
             <tr>
               <td>Supporting text</td>
-              <td>11–12 px</td>
+              <td>12–13 px</td>
               <td>Dates, units, and context</td>
             </tr>
           </tbody>
@@ -118,6 +119,54 @@ const content = {
         include their local component dependencies. You can open the source
         selector on any block’s detail page to inspect every included file.
       </p>
+      <h2>Choose between similar components</h2>
+      <div className="guide-table-wrap">
+        <table className="guide-table">
+          <thead>
+            <tr>
+              <th>Need</th>
+              <th>Start with</th>
+              <th>Use when you need more</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>A metric</td>
+              <td>
+                <Link to="/components/stat-card">Stat card</Link> · formatted
+                values and explicit direction
+              </td>
+              <td>
+                <Link to="/components/kpi-card">KPI card</Link> · numeric
+                formatting and fractional deltas
+              </td>
+            </tr>
+            <tr>
+              <td>Related metrics</td>
+              <td>
+                <Link to="/components/metric-group">Metric group</Link> · a
+                shared surface
+              </td>
+              <td>
+                Separate cards when each metric needs its own context or action
+              </td>
+            </tr>
+            <tr>
+              <td>A record list</td>
+              <td>
+                <Link to="/components/data-table">Data table</Link> · search,
+                sort, and pagination
+              </td>
+              <td>
+                <Link to="/components/advanced-data-table">
+                  Interactive table
+                </Link>{" "}
+                · selection, column controls, and bulk actions
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <h2>Build a readable summary</h2>
       <p>
         Give the page a title, group related metrics, and put the main task

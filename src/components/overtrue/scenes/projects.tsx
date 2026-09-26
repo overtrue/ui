@@ -1,5 +1,6 @@
 import { ProjectPortfolio } from "@/registry/overtrue/project-portfolio";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { IconChevronDown } from "@tabler/icons-react";
 import { projects, tasks as initialTasks, team } from "@/data/workspace/studio";
 import {
@@ -66,13 +67,27 @@ export function TaskBoard({
   list?: boolean;
 }) {
   const [items, setItems] = useState(initialTasks),
-    [query, setQuery] = useState(""),
     [filter, setFilter] = useState("All work"),
     [adding, setAdding] = useState(false),
     [title, setTitle] = useState("");
+  const [params, setParams] = useSearchParams();
+  const query = params.get("q") ?? "";
+  const setQuery = (value: string) => {
+    setParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        if (value) next.set("q", value);
+        else next.delete("q");
+        return next;
+      },
+      { replace: true },
+    );
+  };
   const shown = items.filter(
     (t) =>
-      t.title.toLowerCase().includes(query.toLowerCase()) &&
+      `${t.id} ${t.title} ${t.project}`
+        .toLowerCase()
+        .includes(query.trim().toLowerCase()) &&
       (filter === "All work" || t.person === team[0].name),
   );
   const change = (id: string, status: string) =>

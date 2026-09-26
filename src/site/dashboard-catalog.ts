@@ -104,7 +104,7 @@ export const dashboardCatalog = [
     dependencies: [],
     imports: "KpiCard",
     usage:
-      '<KpiCard\n  label="Booked work"\n  value={36800}\n  format="currency"\n  delta={0.128}\n  deltaLabel="vs. last 30 days"\n  trend={[24200, 25800, 27900, 30400, 32100, 34500, 36800]}\n/>',
+      '<KpiCard\n  label="Booked work"\n  value={36800}\n  format="currency"\n  delta={0.128}\n  deltaLabel="vs. last 30 days"\n  sparkline={[24200, 25800, 27900, 30400, 32100, 34500, 36800]}\n/>',
     notes:
       "Uses your application theme. Replace the sample data and connect the callbacks to your own workflow.",
     previewWidth: 800,
@@ -140,9 +140,14 @@ export const dashboardCatalog = [
         'Context for the delta, e.g. "vs. last 30 days".',
       ],
       [
-        "trend?",
+        "sparkline?",
         "number[]",
         "Series for the sparkline. Rendered when it has two or more points.",
+      ],
+      [
+        "trend?",
+        "number[]",
+        "Deprecated alias for sparkline; sparkline takes precedence when both are provided.",
       ],
       ["format?", "NumberFormat", ""],
       [

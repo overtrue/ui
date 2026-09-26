@@ -1,5 +1,4 @@
 import {
-  Area,
   CartesianGrid,
   ComposedChart,
   Bar,
@@ -14,6 +13,10 @@ import { MetricGroup } from "@/registry/overtrue/metric-group";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { projects, revenue, clients, tasks } from "@/data/workspace/studio";
+import {
+  revenueReport,
+  type RevenueGrouping,
+} from "@/data/workspace/revenue-report";
 import {
   Scene,
   SceneCard,
@@ -33,19 +36,16 @@ export default function Overview({
   title?: string;
   pageId?: string;
 }) {
-  const [period, setPeriod] = useState("This month");
-  const chartData =
-    period === "This quarter"
-      ? Array.from({ length: 4 }, (_, i) => ({
-          label: `Q${i + 1}`,
-          value: revenue
-            .slice(i * 3, i * 3 + 3)
-            .reduce((sum, point) => sum + point.value, 0),
-        }))
-      : revenue;
-  const totalRevenue = revenue.reduce((sum, point) => sum + point.value, 0);
-  const bookedRevenue =
-    period === "This quarter" ? chartData[2].value : revenue[8].value;
+  const [grouping, setGrouping] = useState<RevenueGrouping>("Monthly");
+  const report = revenueReport(grouping);
+  const septemberChange = (revenue[8].value / revenue[7].value - 1) * 100;
+  const reviews = tasks.filter((task) => task.status === "In review");
+  const attention = [
+    ...reviews,
+    ...tasks.filter(
+      (task) => task.status === "In progress" && task.priority === "High",
+    ),
+  ];
   return (
     <Scene
       id={pageId}
@@ -58,23 +58,20 @@ export default function Overview({
       }
     >
       <div className="scene-toolbar">
-        <span>Monday, September 21 · Week 39</span>
-        <FilterTabs
-          items={["This month", "This quarter"]}
-          value={period}
-          onChange={setPeriod}
-        />
+        <span>Monday, September 21, 2026 · Studio snapshot</span>
       </div>
       <MetricGroup className="mb-6">
         <Metric
-          label="Booked revenue"
-          value={"$" + bookedRevenue.toLocaleString()}
-          change="+12.8%"
+          label="September revenue"
+          value={"$" + revenue[8].value.toLocaleString("en-US")}
+          note={`${septemberChange.toFixed(1)}% vs. August · booked & planned`}
         />
         <Metric
-          label="Projects moving"
-          value="5"
-          note="across 6 client relationships"
+          label="Open projects"
+          value={String(
+            projects.filter((project) => project.status !== "Complete").length,
+          )}
+          note={`across ${clients.length} client relationships`}
         />
         <Metric
           label="Team capacity"
@@ -83,37 +80,68 @@ export default function Overview({
           note="for new work"
         />
         <Metric
-          label="Awaiting approval"
-          value="3"
-          note="2 proposals · 1 deliverable"
+          label="Awaiting review"
+          value={String(reviews.length)}
+          note="deliverable ready for review"
         />
       </MetricGroup>
+      <SceneCard
+        title="Needs attention"
+        description="Review the handover, then focus on the next priority."
+        action={<Go to="/tasks-list">Open work queue</Go>}
+      >
+        <ul className="scene-attention-list">
+          {attention.map((task) => (
+            <li key={task.id}>
+              <Link to={`/tasks-list?q=${task.id}`}>
+                <span>
+                  <Pill>
+                    {task.status === "In review"
+                      ? "Ready for review"
+                      : "High priority"}
+                  </Pill>
+                  <strong>{task.title}</strong>
+                  <small>
+                    {task.person} · Due {task.due}
+                  </small>
+                </span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </SceneCard>
       <div className="scene-grid-main">
         <div>
           <SceneCard
-            title="Revenue & delivery"
-            description="Booked work across the studio · 2026"
+            title="Revenue outlook"
+            description="January–December 2026 · Booked & planned work"
             action={
-              <DownloadButton
-                rows={chartData.map((r) => [r.label, String(r.value)])}
-              />
+              <div className="scene-report-actions">
+                <FilterTabs
+                  items={["Monthly", "Quarterly"]}
+                  value={grouping}
+                  onChange={(value) => setGrouping(value as RevenueGrouping)}
+                />
+                <DownloadButton
+                  name={`studio-revenue-2026-${grouping.toLowerCase()}`}
+                  rows={report.rows}
+                />
+              </div>
             }
           >
             <div className="scene-chart-summary">
-              <strong>${totalRevenue.toLocaleString()}</strong>
+              <strong>${report.total.toLocaleString("en-US")}</strong>
               <span>booked & planned for 2026</span>
             </div>
             <div
               className="showcase-revenue-chart"
               role="img"
-              aria-label={`${period === "This quarter" ? "Quarterly" : "Monthly"} booked revenue: ${chartData.map((point) => `${point.label} $${point.value}`).join(", ")}`}
+              aria-label={`${grouping} booked and planned revenue for 2026: ${report.series.map((point) => `${point.label} $${point.value}`).join(", ")}`}
             >
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart
-                  data={chartData.map((point) => ({
-                    ...point,
-                    target: Math.round(point.value * 1.12),
-                  }))}
+                  data={report.series}
                   margin={{ top: 15, right: 6, bottom: 0, left: -15 }}
                 >
                   <CartesianGrid
@@ -143,19 +171,9 @@ export default function Overview({
                     }}
                     formatter={(value: number) => `$${value.toLocaleString()}`}
                   />
-                  <Area
-                    dataKey="target"
-                    name="Target"
-                    type="monotone"
-                    fill="var(--scene-accent)"
-                    fillOpacity={0.06}
-                    stroke="var(--scene-muted)"
-                    strokeDasharray="4 4"
-                    isAnimationActive={false}
-                  />
                   <Bar
                     dataKey="value"
-                    name="Booked"
+                    name="Booked & planned"
                     fill="var(--scene-accent)"
                     radius={[3, 3, 0, 0]}
                     maxBarSize={28}
@@ -167,11 +185,7 @@ export default function Overview({
             <div className="showcase-chart-legend">
               <span>
                 <i />
-                Booked revenue
-              </span>
-              <span>
-                <i />
-                Delivery target
+                Booked & planned revenue
               </span>
               <small>USD · September–December includes planned work</small>
             </div>

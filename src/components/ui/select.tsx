@@ -60,7 +60,7 @@ function SelectTrigger({
 
 function SelectValue({ placeholder }: { placeholder?: string }) {
   const { value } = React.useContext(SelectContext)
-  return <span className={value ? "" : "text-[#9ca3af]"}>{value || placeholder}</span>
+  return <span className={value ? "" : "text-muted-foreground"}>{value || placeholder}</span>
 }
 
 function SelectContent({ className, children }: { className?: string; children: React.ReactNode }) {
@@ -69,7 +69,7 @@ function SelectContent({ className, children }: { className?: string; children: 
   return (
     <div
       className={cn(
-        "absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-[#e5e7eb] bg-white p-1 text-sm shadow-md",
+        "absolute z-50 mt-2 max-h-60 w-full overflow-auto rounded-md border border-border bg-popover p-1 text-sm text-popover-foreground shadow-lg shadow-black/5 dark:shadow-black/20",
         className,
       )}
     >
@@ -84,8 +84,8 @@ function SelectItem({ value, children }: { value: string; children: React.ReactN
     <button
       type="button"
       className={cn(
-        "relative flex w-full cursor-pointer select-none items-center rounded px-2 py-1.5 hover:bg-[#f3f4f6]",
-        current === value && "bg-[#eaf2fb] text-[#066fd1]",
+        "relative flex w-full cursor-pointer select-none items-center rounded-sm px-3 py-2 text-start outline-none hover:bg-muted focus-visible:bg-muted",
+        current === value && "bg-accent text-accent-foreground font-medium",
       )}
       onClick={() => setValue(value)}
     >

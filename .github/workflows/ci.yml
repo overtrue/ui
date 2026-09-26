@@ -41,6 +41,7 @@ jobs:
           node scripts/registry/verify.mjs
           pnpm usage:check
           pnpm content:check
+          node scripts/examples/verify-revenue.mjs
           git diff --exit-code
       - name: Package browser test build
         if: matrix.node == '24'

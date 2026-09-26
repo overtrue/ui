@@ -657,9 +657,6 @@
   flex: 0 0 auto;
   width: auto;
 }
-.scene-form .scene-form-grid + label {
-  margin-top: 20px;
-}
 .overtrue-workspace [data-slot="metric-chart"] .card-header {
   padding: revert-layer;
 }

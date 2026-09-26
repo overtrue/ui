@@ -466,17 +466,15 @@ function ComponentTile({ name }: { name: ItemName }) {
     <article
       className={`component-tile tile-${name}${item.category === "Blocks" && !("previewHeight" in item) ? " tile-wide" : ""}`}
     >
-      <div className="tile-preview">
+      <div className="tile-preview" inert aria-hidden="true">
         <FitPreview
-          // Keep the metric group's four-column overview at its detail-view width.
+          fit={item.category === "Blocks" ? "contain" : "responsive"}
           width={
             "previewWidth" in item
               ? item.previewWidth
               : item.category === "Blocks"
                 ? 1024
-                : name === "metric-group"
-                  ? 840
-                  : 400
+                : 400
           }
           height={
             "previewHeight" in item
@@ -492,7 +490,7 @@ function ComponentTile({ name }: { name: ItemName }) {
       <Link className="tile-caption" to={catalogPath(item)}>
         <span>
           {item.title}
-          <small>{item.category}</small>
+          <small>{item.category} · Open full preview</small>
         </span>
         <ArrowUpRight size={16} />
       </Link>
@@ -736,6 +734,38 @@ function ComponentPage() {
           )}
           <p>{item.description}</p>
         </div>
+        {[
+          "stat-card",
+          "kpi-card",
+          "metric-group",
+          "data-table",
+          "advanced-data-table",
+        ].includes(item.name) && (
+          <p className="note">
+            {item.name === "stat-card" ||
+            item.name === "kpi-card" ||
+            item.name === "metric-group" ? (
+              <>
+                Start with <Link to="/components/stat-card">Stat card</Link> for
+                a formatted value and an explicit trend. Choose{" "}
+                <Link to="/components/kpi-card">KPI card</Link> for numeric
+                formatting and fractional deltas, or{" "}
+                <Link to="/components/metric-group">Metric group</Link> for
+                related values on one surface. Both cards use{" "}
+                <code>sparkline</code> for chart data.
+              </>
+            ) : (
+              <>
+                Start with <Link to="/components/data-table">Data table</Link>{" "}
+                for search, sorting, and pagination. Choose{" "}
+                <Link to="/components/advanced-data-table">
+                  Interactive table
+                </Link>{" "}
+                when you need row selection, column controls, or bulk actions.
+              </>
+            )}
+          </p>
+        )}
         <div className="workspace-toolbar">
           <div
             className="filter-tabs"

@@ -1,9 +1,9 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-/** overtrue/ui .form-control — 40px, padding 9px 16px, border #e5e7eb, radius 6px, 14px */
+/** Shared control surface, with visible focus and validation states in either theme. */
 const controlBase =
-  "flex w-full rounded-md border border-[#e5e7eb] bg-white px-4 py-[9px] text-sm text-[#374151] shadow-none placeholder:text-[#9ca3af] focus:outline-none focus:border-[#066fd1] focus:ring-0 disabled:cursor-not-allowed disabled:bg-[#f3f4f6] disabled:text-[#9ca3af]"
+  "flex w-full min-w-0 rounded-md border border-input bg-card px-3 py-2 text-base leading-5 text-foreground shadow-xs placeholder:text-muted-foreground transition-[border-color,box-shadow] outline-none focus:border-ring focus:ring-2 focus:ring-ring/20 [&:user-invalid]:border-destructive [&:user-invalid]:ring-2 [&:user-invalid]:ring-destructive/20 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none sm:text-sm motion-reduce:transition-none"
 
 const Input = React.forwardRef<
   HTMLInputElement,
