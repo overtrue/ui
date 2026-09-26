@@ -205,7 +205,7 @@ export function TaskBoard({
       ) : (
         <div className="scene-board">
           {["Planned", "In progress", "In review", "Complete"].map((status) => (
-            <section key={status}>
+            <section key={status} data-status={status}>
               <header>
                 <h2>{status}</h2>
                 <span>{shown.filter((t) => t.status === status).length}</span>

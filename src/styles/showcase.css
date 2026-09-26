@@ -942,10 +942,12 @@
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--pn-border-color);
 }
 .form-workbench-heading h1 {
   margin: 8px 0;
-  font-size: 28px;
+  font-size: 34px;
   font-weight: 650;
   letter-spacing: -0.8px;
 }
@@ -956,6 +958,7 @@
   color: var(--pn-secondary);
 }
 .form-workbench-heading .form-workbench-eyebrow {
+  color: var(--pn-primary);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 1.3px;
@@ -972,9 +975,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  padding-block: 0 20px;
+  padding: 8px;
   margin-bottom: 28px;
-  border-bottom: 1px solid var(--pn-border-color);
+  border: 1px solid var(--pn-border-color);
+  border-radius: var(--radius);
+  background: var(--pn-bg-surface);
 }
 .form-workbench-nav button {
   padding: 9px 13px;
@@ -992,9 +997,9 @@
   background: var(--pn-bg-surface-secondary);
 }
 .form-workbench-nav button[aria-pressed="true"] {
-  color: var(--pn-primary);
-  background: color-mix(in srgb, var(--pn-primary) 9%, var(--pn-bg-surface));
-  border-color: color-mix(in srgb, var(--pn-primary) 18%, transparent);
+  color: hsl(var(--primary-foreground));
+  background: var(--pn-primary);
+  border-color: var(--pn-primary);
 }
 .form-workbench-nav button:focus-visible {
   outline: 2px solid var(--pn-primary);

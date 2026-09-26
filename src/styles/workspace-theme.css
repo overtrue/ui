@@ -39,6 +39,10 @@
 .overtrue-workspace #workspace-content {
   flex: 1;
   min-width: 0;
+  background: linear-gradient(
+    color-mix(in srgb, hsl(var(--primary)) 3%, hsl(var(--background))),
+    hsl(var(--background)) 400px
+  );
 }
 .overtrue-workspace .pn-container-xl {
   max-width: 1392px;
@@ -1372,6 +1376,29 @@ html[data-workspace-navbar-theme="primary"] .workspace-logo img {
   color: var(--workspace-sidebar-selected-foreground);
   font-weight: 550;
 }
+.workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"] {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+.workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"]:focus-visible {
+  outline: 2px solid hsl(var(--sidebar-foreground));
+  outline-offset: 2px;
+}
+html[data-workspace-navbar-theme="primary"]
+  .workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"] {
+  background: var(--workspace-sidebar-selected);
+  color: var(--workspace-sidebar-selected-foreground);
+}
+.workspace-app-sidebar [data-sidebar="menu-sub-button"] {
+  padding-inline: 12px;
+}
+.workspace-app-sidebar [data-slot="sidebar-inner"] {
+  background: color-mix(
+    in srgb,
+    hsl(var(--sidebar)) 70%,
+    hsl(var(--background))
+  );
+}
 .workspace-app-sidebar [data-sidebar="footer"] {
   padding: 12px;
   border-top: 1px solid hsl(var(--sidebar-border));
@@ -1395,6 +1422,11 @@ html[data-workspace-navbar-theme="primary"] .workspace-logo img {
   margin-top: 2px;
   font-size: 11px;
   opacity: 0.6;
+}
+.workspace-app-sidebar .workspace-sidebar-account {
+  border: 1px solid hsl(var(--sidebar-border));
+  background: hsl(var(--sidebar));
+  border-radius: var(--radius);
 }
 .workspace-sidebar-menu-label {
   padding: 8px 12px;

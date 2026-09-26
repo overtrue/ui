@@ -60,7 +60,7 @@ export default function Overview({
       <div className="scene-toolbar">
         <span>Monday, September 21, 2026 · Studio snapshot</span>
       </div>
-      <MetricGroup className="mb-6">
+      <MetricGroup className="mb-6 scene-overview-metrics">
         <Metric
           label="September revenue"
           value={"$" + revenue[8].value.toLocaleString("en-US")}
