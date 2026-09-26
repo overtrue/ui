@@ -256,6 +256,11 @@ try {
       .locator(".card-collection")
       .getByRole("button", { name: "Clear filters" })
       .click();
+    assert.ok(
+      await page
+        .getByRole("searchbox", { name: "Search card blocks", exact: true })
+        .evaluate((input) => input === document.activeElement),
+    );
     assert.equal(await blockSearch.inputValue(), "  INVOICE  ");
     assert.equal(
       new URL(page.url()).searchParams.get("blockCategory"),

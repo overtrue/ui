@@ -97,6 +97,7 @@ function CardPreview({
 }
 export function CardCollection() {
   const [params, setParams] = useSearchParams();
+  const search = useRef<HTMLInputElement>(null);
   const query = params.get("q") ?? "";
   const requestedCategory = params.get("category") ?? "All cards";
   const category = categories.includes(requestedCategory)
@@ -142,6 +143,7 @@ export function CardCollection() {
       </div>
       <div className="card-filters">
         <SearchField
+          ref={search}
           containerClassName="catalog-search"
           label="Search card blocks"
           placeholder="Search cards, charts, forms…"
@@ -205,6 +207,7 @@ export function CardCollection() {
               const next = new URLSearchParams(window.location.search);
               for (const key of ["q", "category", "page"]) next.delete(key);
               setParams(next, { replace: true });
+              search.current?.focus();
             }}
           >
             Clear filters

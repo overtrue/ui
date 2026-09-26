@@ -125,9 +125,11 @@ try {
     "component filters survive reload and Back; typing does not trigger page search",
   );
 
-  await page
-    .getByRole("button", { name: "Clear search components", exact: true })
-    .click();
+  await catalogSearch.press("Tab");
+  await focused(
+    page.getByRole("button", { name: "Clear search components", exact: true }),
+  );
+  await page.keyboard.press("Enter");
   await focused(catalogSearch);
   await page.waitForURL("**/components?category=Feedback");
   await page.waitForFunction(
@@ -139,6 +141,7 @@ try {
     .getByRole("button", { name: "Reset filters", exact: true })
     .click();
   await page.waitForURL("**/components");
+  await focused(catalogSearch);
   await page.waitForFunction(
     () => document.querySelectorAll(".component-tile").length === 52,
   );
@@ -198,6 +201,7 @@ try {
     .fill("no-such-page-xyz");
   await page.getByRole("button", { name: "Clear search", exact: true }).click();
   await page.waitForURL("**/examples");
+  await focused(page.getByRole("searchbox", { name: "Search pages" }));
   await page.waitForFunction(
     () => document.querySelectorAll(".example-list > a").length === 119,
   );

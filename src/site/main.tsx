@@ -351,6 +351,7 @@ function ComponentTile({ name }: { name: ItemName }) {
 }
 function Catalog({ blocks = false }: { blocks?: boolean }) {
   const [params, setParams] = useSearchParams();
+  const search = useRef<HTMLInputElement>(null);
   const collection = blockCollections.find(
     (group) => group.label === params.get("blockCategory"),
   );
@@ -396,6 +397,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
     next.delete(queryKey);
     next.delete(categoryKey);
     setParams(next, { replace: true });
+    search.current?.focus();
   };
   return (
     <main className="section catalog-page">
@@ -443,6 +445,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           ))}
         </div>
         <SearchField
+          ref={search}
           containerClassName="catalog-search"
           label={blocks ? "Search composed blocks" : "Search components"}
           placeholder={blocks ? "Find a block…" : "Search components…"}
@@ -921,6 +924,7 @@ function Docs() {
 }
 function Examples() {
   const [params, setParams] = useSearchParams();
+  const search = useRef<HTMLInputElement>(null);
   const query = params.get("q") ?? "";
   const setQuery = (value: string) => {
     const next = new URLSearchParams(window.location.search);
@@ -998,6 +1002,7 @@ function Examples() {
           {pages.length} workspace examples
         </p>
         <SearchField
+          ref={search}
           containerClassName="catalog-search"
           label="Search pages"
           placeholder="Find a page…"
@@ -1032,7 +1037,10 @@ function Examples() {
           <button
             type="button"
             className="site-button"
-            onClick={() => setQuery("")}
+            onClick={() => {
+              setQuery("");
+              search.current?.focus();
+            }}
           >
             Clear search
           </button>
