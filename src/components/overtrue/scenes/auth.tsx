@@ -141,7 +141,10 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
                 <>
                   <label>
                     Country
-                    <select defaultValue="United Kingdom (+44)">
+                    <select
+                      className="native-select"
+                      defaultValue="United Kingdom (+44)"
+                    >
                       <option>United Kingdom (+44)</option>
                       <option>United States (+1)</option>
                       <option>Germany (+49)</option>

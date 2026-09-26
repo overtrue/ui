@@ -1397,7 +1397,7 @@
   padding: 0;
 }
 .scene [data-slot="search-field"] input[type="search"] {
-  padding-inline-start: 36px;
+  padding-inline: 36px;
 }
 .scene-select {
   position: relative;

@@ -1,0 +1,37 @@
+:root {
+  --native-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.dark {
+  --native-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* Reserve the same space for the indicator regardless of the browser chrome. */
+select.native-select:not([multiple]):is(:not([size]), [size="0"], [size="1"]) {
+  appearance: none;
+  background-image: var(--native-select-chevron);
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  padding-inline-end: 40px;
+}
+
+select.native-select:dir(rtl):not([multiple]):is(
+    :not([size]),
+    [size="0"],
+    [size="1"]
+  ) {
+  background-position: left 12px center;
+}
+
+@media (forced-colors: active) {
+  select.native-select:not([multiple]):is(
+      :not([size]),
+      [size="0"],
+      [size="1"]
+    ) {
+    appearance: auto;
+    background-image: none;
+    padding-inline-end: 12px;
+  }
+}

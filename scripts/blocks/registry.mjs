@@ -162,6 +162,7 @@ export function prepareCardRegistry(origin) {
     "src/styles/workspace-theme.css",
     "src/styles/scenes.css",
     "src/styles/showcase.css",
+    "src/styles/native-select.css",
   ];
   const styles = cssFiles
     .map((file) => {

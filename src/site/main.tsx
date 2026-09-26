@@ -57,6 +57,7 @@ import "./site.css";
 import "./home-hero.css";
 import "./home-story.css";
 import "./navigation-polish.css";
+import "@/styles/native-select.css";
 
 const sources = import.meta.glob("../registry/overtrue/*.tsx", {
   query: "?raw",
@@ -526,6 +527,7 @@ function ComponentPage() {
         <label className="component-picker">
           Browse {collection.toLowerCase()}
           <select
+            className="native-select"
             aria-label={`Browse ${collection.toLowerCase()}`}
             value={item.name}
             onChange={(event) => {
@@ -639,6 +641,7 @@ function ComponentPage() {
                 Source file
               </label>
               <select
+                className="native-select"
                 id="source-file"
                 value={sourceFile}
                 onChange={(event) => setSourceFile(event.target.value)}

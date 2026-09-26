@@ -153,6 +153,7 @@ export function CardCollection() {
         <label className="card-category">
           Category
           <select
+            className="native-select"
             aria-label="Card category"
             value={category}
             onChange={(e) => update("category", e.target.value)}

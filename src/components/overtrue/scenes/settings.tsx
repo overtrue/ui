@@ -112,7 +112,7 @@ export function Settings({
                   </label>
                   <label>
                     Industry
-                    <select {...field("industry")}>
+                    <select className="native-select" {...field("industry")}>
                       <option>Design & creative</option>
                       <option>Technology</option>
                       <option>Culture & education</option>
@@ -121,7 +121,7 @@ export function Settings({
                   </label>
                   <label>
                     Default currency
-                    <select {...field("currency")}>
+                    <select className="native-select" {...field("currency")}>
                       <option>USD — US Dollar</option>
                       <option>EUR — Euro</option>
                       <option>GBP — British Pound</option>
@@ -134,7 +134,7 @@ export function Settings({
                 </label>
                 <label>
                   Timezone
-                  <select {...field("timezone")}>
+                  <select className="native-select" {...field("timezone")}>
                     <option>Europe / London</option>
                     <option>Europe / Berlin</option>
                     <option>Asia / Tokyo</option>
@@ -183,7 +183,7 @@ export function Settings({
                 </div>
                 <label>
                   Default member role
-                  <select {...field("role")}>
+                  <select className="native-select" {...field("role")}>
                     <option>Member</option>
                     <option>Editor</option>
                     <option>Viewer</option>
@@ -291,6 +291,7 @@ export function Wizard({ id = "wizard" }: { id?: string }) {
                   <label>
                     Client
                     <select
+                      className="native-select"
                       value={client}
                       onChange={(e) => setClient(e.target.value)}
                     >
