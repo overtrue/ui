@@ -135,6 +135,9 @@ try {
     .fill("no-such-page-xyz");
   await page.getByRole("button", { name: "Clear search", exact: true }).click();
   await page.waitForURL("**/examples");
+  await page.waitForFunction(
+    () => document.querySelectorAll(".example-list > a").length === 119,
+  );
   assert.equal(await page.locator(".example-list > a").count(), 119);
   checks.push(
     "example filters are shareable and have a recoverable empty state",
@@ -216,6 +219,7 @@ try {
     exact: true,
   });
   await mobileToggle.click();
+  await mobileToggle.and(page.locator('[aria-expanded="true"]')).waitFor();
   assert.equal(await mobileToggle.getAttribute("aria-expanded"), "true");
   await page.keyboard.press("Escape");
   await page.waitForFunction(
