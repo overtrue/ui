@@ -57,9 +57,9 @@ try {
     await page.goto(${JSON.stringify(origin)} + '/blocks/project-portfolio');
     await page.getByRole('searchbox', {name:'Find a project…'}).fill('  visitor  ');
     check(await page.locator('[data-slot=media-card]').count() === 1, 'project search trims whitespace');
-    await page.getByRole('searchbox').fill('no-such-project');
+    await page.getByRole('searchbox', {name:'Find a project…'}).fill('no-such-project');
     check(await page.getByText('No projects match this search.', {exact:true}).isVisible(), 'project search empty state');
-    await page.getByRole('searchbox').fill('');
+    await page.getByRole('searchbox', {name:'Find a project…'}).fill('');
     check(await page.locator('[data-slot=media-card]').count() === 3, 'project search restores records');
     await page.getByRole('button', {name:'Source',exact:true}).click();
     const files = await page.getByLabel('Source file').locator('option').allTextContents();

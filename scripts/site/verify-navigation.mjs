@@ -23,9 +23,7 @@ try {
   });
   const dialog = page.locator(".page-search-dialog");
   const focused = async (locator) =>
-    assert.ok(
-      await locator.evaluate((element) => element === document.activeElement),
-    );
+    locator.and(page.locator(":focus")).waitFor({ timeout: 5000 });
   const closeSearch = async () => {
     await searchInput.press("Escape");
     await dialog.waitFor({ state: "hidden" });
