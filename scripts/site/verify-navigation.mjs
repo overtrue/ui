@@ -98,7 +98,7 @@ try {
   );
 
   await page.goto(`${origin}/components`);
-  const catalogSearch = page.getByRole("textbox", {
+  const catalogSearch = page.getByRole("searchbox", {
     name: "Search components",
     exact: true,
   });
@@ -125,16 +125,76 @@ try {
     "component filters survive reload and Back; typing does not trigger page search",
   );
 
+  await page
+    .getByRole("button", { name: "Clear search components", exact: true })
+    .click();
+  await focused(catalogSearch);
+  await page.waitForURL("**/components?category=Feedback");
+  await page.waitForFunction(
+    () => document.querySelectorAll(".component-tile").length === 2,
+  );
+  assert.equal(await catalogSearch.inputValue(), "");
+  assert.equal(await page.locator(".component-tile").count(), 2);
+  await page
+    .getByRole("button", { name: "Reset filters", exact: true })
+    .click();
+  await page.waitForURL("**/components");
+  await page.waitForFunction(
+    () => document.querySelectorAll(".component-tile").length === 52,
+  );
+  assert.equal(await page.locator(".component-tile").count(), 52);
+  await catalogSearch.fill("sparkline");
+  await page.waitForURL("**/components?q=sparkline");
+  await page.waitForFunction(() => {
+    const count = document.querySelector(
+      '[aria-label="Filter components"] button .filter-count',
+    );
+    return (
+      new URL(location.href).searchParams.get("q") === "sparkline" &&
+      document.querySelector(".component-tile.tile-sparkline") &&
+      Number(count?.textContent) === 3 &&
+      Number(count?.textContent) ===
+        document.querySelectorAll(".component-tile").length
+    );
+  });
+  checks.push(
+    "catalog search clears without losing category, resets all filters, and keeps counts in sync",
+  );
+
+  await page.goto(`${origin}/components/search-field`);
+  await page.waitForFunction(() => {
+    const nav = document.querySelector(".component-sidebar-links");
+    const active = nav?.querySelector('[aria-current="page"]');
+    if (!nav || !active) return false;
+    const bounds = nav.getBoundingClientRect();
+    const link = active.getBoundingClientRect();
+    return link.top >= bounds.top && link.bottom <= bounds.bottom;
+  });
+  assert.equal(await page.evaluate(() => window.scrollY), 0);
+  const directorySearch = page.getByRole("searchbox", {
+    name: "Find in components",
+  });
+  await directorySearch.fill("no-such-component");
+  await page
+    .locator(".sidebar-empty")
+    .getByRole("button", { name: "Clear search" })
+    .click();
+  await focused(directorySearch);
+  assert.equal(await directorySearch.inputValue(), "");
+  checks.push(
+    "deep component links reveal the current sidebar item without moving the document, and empty directory search restores focus",
+  );
+
   await page.goto(`${origin}/examples`);
-  await page.getByRole("textbox", { name: "Search pages" }).fill("settings");
+  await page.getByRole("searchbox", { name: "Search pages" }).fill("settings");
   await page.waitForURL("**/examples?q=settings");
   await page.reload();
   assert.equal(
-    await page.getByRole("textbox", { name: "Search pages" }).inputValue(),
+    await page.getByRole("searchbox", { name: "Search pages" }).inputValue(),
     "settings",
   );
   await page
-    .getByRole("textbox", { name: "Search pages" })
+    .getByRole("searchbox", { name: "Search pages" })
     .fill("no-such-page-xyz");
   await page.getByRole("button", { name: "Clear search", exact: true }).click();
   await page.waitForURL("**/examples");

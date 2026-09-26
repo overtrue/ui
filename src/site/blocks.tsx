@@ -4,7 +4,6 @@ import {
   IconArrowLeft,
   IconArrowRight,
   IconArrowUpRight,
-  IconSearch,
   IconDeviceDesktop,
   IconDeviceMobile,
   IconArrowDown,
@@ -13,6 +12,7 @@ import {
 import cards from "../blocks/catalog.json";
 import { Command, CopyButton, HighlightedCode } from "./code";
 import { FitPreview } from "./fit-preview";
+import { SearchField } from "@/registry/overtrue/search-field";
 
 const sources = new Map(
   Object.entries(
@@ -141,15 +141,16 @@ export function CardCollection() {
         </div>
       </div>
       <div className="card-filters">
-        <label className="search-box">
-          <IconSearch size={16} />
-          <input
-            aria-label="Search card blocks"
-            placeholder="Search cards, charts, forms…"
-            value={query}
-            onChange={(e) => update("q", e.target.value)}
-          />
-        </label>
+        <SearchField
+          containerClassName="catalog-search"
+          label="Search card blocks"
+          placeholder="Search cards, charts, forms…"
+          value={query}
+          onValueChange={(value) => update("q", value)}
+          autoComplete="off"
+          spellCheck={false}
+          name="q"
+        />
         <label className="card-category">
           Category
           <select
