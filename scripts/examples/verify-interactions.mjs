@@ -21,9 +21,11 @@ try {
  await page.getByRole('button', { name: 'Monthly', exact: true }).click();
  check((await page.getByRole('img', { name: /Monthly booked and planned revenue for 2026/ }).getAttribute('aria-label')).includes('Dec $7400'), 'monthly chart restores the full year');
  await page.getByRole('link', { name: /Ready for review Prepare the identity handover/ }).click();
+ await page.getByLabel('Status of WK-184').waitFor();
  check(await page.locator('.scene-table tbody tr').count() === 1, 'attention link opens the matching task');
  check(await page.getByLabel('Status of WK-184').isVisible(), 'review task can be acted on');
  await page.getByPlaceholder('Search tasks…').fill('');
+ await page.getByLabel('Status of WK-182').waitFor();
  check(await page.locator('.scene-table tbody tr').count() === 6, 'clearing the deep link restores the queue');
  await go('tasks');await page.getByRole('button',{name:'Add task',exact:true}).click();await page.getByLabel('Task title').fill('Review the accessibility checklist');await page.getByRole('button',{name:'Create task',exact:true}).click();check(await page.getByRole('heading',{name:'Review the accessibility checklist'}).isVisible(),'create task');
  await page.getByLabel('Status of WK-194').selectOption('Complete');check(await page.locator('.scene-board > section').filter({has:page.getByRole('heading',{name:'Complete',exact:true})}).getByText('Review the accessibility checklist').isVisible(),'move task between columns');
