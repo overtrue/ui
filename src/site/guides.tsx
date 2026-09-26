@@ -61,7 +61,7 @@ const content = {
           <tbody>
             <tr>
               <td>Page title</td>
-              <td>24–28 px</td>
+              <td>24–34 px</td>
               <td>One clear subject</td>
             </tr>
             <tr>
