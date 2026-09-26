@@ -19,6 +19,7 @@ try {
     if (message.type() === "error") errors.push(message.text());
   });
   await page.goto(origin);
+  const wall = page.locator(".component-hero");
   const hero = page.locator(".hero-product");
   const showcase = page.locator(".assembled-preview");
   const switches = page.getByRole("group", { name: "Featured blocks" });
@@ -79,6 +80,62 @@ try {
           document.documentElement.classList.toggle("dark", theme === "dark"),
         theme,
       );
+      await wall.scrollIntoViewIfNeeded();
+      assert.equal(
+        await page.locator(".component-wall").getAttribute("inert"),
+        "",
+      );
+      assert.equal(
+        await page.locator(".component-wall").getAttribute("aria-hidden"),
+        "true",
+      );
+      assert.ok(
+        await page
+          .getByRole("button", {
+            name: "Animation disabled by system preference",
+          })
+          .isDisabled(),
+      );
+      assert.ok(
+        await page
+          .locator(".wall-column")
+          .evaluateAll((columns) =>
+            columns.every(
+              (column) =>
+                getComputedStyle(column).animationPlayState === "paused",
+            ),
+          ),
+      );
+      const layout = await page.evaluate(() => {
+        const header = document.querySelector(".site-header-inner");
+        const heading = document
+          .querySelector("#home-title")
+          .getBoundingClientRect();
+        const hero = document
+          .querySelector(".component-hero")
+          .getBoundingClientRect();
+        const nav = header.getBoundingClientRect();
+        return {
+          height: hero.height,
+          viewportHeight: innerHeight,
+          navFits: nav.left >= 0 && nav.right <= innerWidth,
+          headingClear: heading.top > nav.bottom,
+          capsule:
+            parseFloat(getComputedStyle(header).borderRadius) >= nav.height / 2,
+          noOverflow: document.documentElement.scrollWidth <= innerWidth + 1,
+        };
+      });
+      assert.equal(layout.height, layout.viewportHeight);
+      assert.ok(
+        layout.navFits &&
+          layout.headingClear &&
+          layout.capsule &&
+          layout.noOverflow,
+        JSON.stringify(layout),
+      );
+      await wall.screenshot({
+        path: `${output}/component-wall-${width}-${theme}.png`,
+      });
       await checkSelect(hero.getByLabel("Report period", { exact: true }));
       assert.equal(
         await hero
@@ -163,6 +220,79 @@ try {
       );
     }
   }
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await wall.scrollIntoViewIfNeeded();
+  const firstColumn = page.locator(".wall-column").first();
+  await page.waitForFunction(
+    () =>
+      getComputedStyle(document.querySelector(".wall-column"))
+        .animationPlayState === "running",
+  );
+  const movingTransform = await firstColumn.evaluate(
+    (column) => getComputedStyle(column).transform,
+  );
+  await page.waitForFunction(
+    (previous) =>
+      getComputedStyle(document.querySelector(".wall-column")).transform !==
+      previous,
+    movingTransform,
+  );
+  await page
+    .getByRole("button", { name: "Pause animation", exact: true })
+    .click();
+  await page.waitForFunction(
+    () =>
+      getComputedStyle(document.querySelector(".wall-column"))
+        .animationPlayState === "paused",
+  );
+  const pausedTransform = await firstColumn.evaluate(
+    (column) => getComputedStyle(column).transform,
+  );
+  await page.evaluate(
+    () =>
+      new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve)),
+      ),
+  );
+  assert.equal(
+    await firstColumn.evaluate((column) => getComputedStyle(column).transform),
+    pausedTransform,
+  );
+  await page
+    .getByRole("button", { name: "Resume animation", exact: true })
+    .click();
+  await page.waitForFunction(
+    () =>
+      getComputedStyle(document.querySelector(".wall-column"))
+        .animationPlayState === "running",
+  );
+  const loops = await page.locator(".wall-column").evaluateAll((columns) =>
+    columns.map((column) => {
+      const [first, second] = column.children;
+      return (
+        first.textContent === second.textContent &&
+        Math.abs(
+          first.getBoundingClientRect().height -
+            second.getBoundingClientRect().height,
+        ) < 1 &&
+        first.getBoundingClientRect().height >= innerHeight
+      );
+    }),
+  );
+  assert.ok(
+    loops.every(Boolean),
+    "each loop repeats without a gap or height change",
+  );
+  await page.getByRole("link", { name: "See them at work" }).click();
+  await page.waitForURL("**/#workspace-preview");
+  await page.locator(".collection-section").scrollIntoViewIfNeeded();
+  await page.waitForFunction(
+    () => document.querySelector(".component-hero").dataset.paused === "true",
+  );
+  checks.push(
+    "full-screen component wall, capsule navigation, reduced motion, pause/resume, seamless loop geometry, offscreen animation suspension",
+  );
   await page.setViewportSize({ width: 1440, height: 1000 });
   await hero.getByLabel("Report period").selectOption("6 months");
   await hero.getByText("$24,600", { exact: true }).waitFor();

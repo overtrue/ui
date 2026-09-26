@@ -21,7 +21,6 @@ import {
   IconMoon as Moon,
   IconSun as Sun,
   IconSearch as Search,
-  IconTerminal2 as Terminal,
   IconStack2 as Layers,
   IconCode as Code2,
   IconBox as Box,
@@ -50,8 +49,10 @@ import { BrandMark } from "@/components/brand-mark";
 import { sitePages } from "./pages";
 import { siteOwner } from "./demo-data";
 import { HomeDetails } from "./home-details";
+import { HomeHero } from "./home-hero";
 import { CardCollection, CardBlockPage } from "./blocks";
 import "./site.css";
+import "./home-hero.css";
 
 const sources = import.meta.glob("../registry/overtrue/*.tsx", {
   query: "?raw",
@@ -162,7 +163,9 @@ function Header() {
     return () => cancelAnimationFrame(frame);
   }, [location.pathname, location.hash]);
   return (
-    <header className="site-header">
+    <header
+      className={`site-header${location.pathname === "/" ? " site-header-home" : ""}`}
+    >
       <div className="site-header-inner">
         <Link to="/" aria-label="overtrue/ui home">
           <Logo />
@@ -197,6 +200,7 @@ function Header() {
           </a>
           <button
             ref={toggleRef}
+            type="button"
             className="icon-button mobile-toggle"
             aria-controls="site-navigation"
             aria-label={open ? "Close navigation" : "Open navigation"}
@@ -273,47 +277,12 @@ function Footer() {
 function Home() {
   return (
     <main>
-      <section className="hero">
-        <div className="hero-grid" aria-hidden="true" />
-        <div className="hero-copy">
-          <Link className="eyebrow-link" to="/docs">
-            <span className="live-dot" />
-            The admin collection for shadcn/ui
-            <ArrowRight size={13} />
-          </Link>
-          <h1>
-            Your next dashboard.
-            <br />
-            <span>Already taking shape.</span>
-          </h1>
-          <p>
-            Components and complete blocks for dashboards, admin panels, and
-            consoles.
-          </p>
-          <div className="hero-actions">
-            <Link className="site-button primary" to="/components">
-              Explore components
-              <ArrowRight size={16} />
-            </Link>
-            <Link className="site-button" to="/docs">
-              Get started
-              <Code2 size={16} />
-            </Link>
-          </div>
-          <div className="hero-install">
-            <Terminal size={14} />
-            <code>{command("stat-card")}</code>
-            <CopyButton text={command("stat-card")} />
-          </div>
-          <div className="hero-meta">
-            <span>{componentCount} components</span>
-            <i />
-            <span>{blockCount} complete blocks</span>
-            <span>{cardCount} card patterns</span>
-            <i />
-            <span>Free & MIT licensed</span>
-          </div>
-        </div>
+      <HomeHero />
+      <section
+        className="workspace-showcase"
+        id="workspace-preview"
+        aria-label="Interactive workspace preview"
+      >
         <div className="hero-product">
           <div className="product-label">
             <span>
