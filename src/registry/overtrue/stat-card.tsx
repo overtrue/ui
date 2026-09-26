@@ -52,11 +52,11 @@ export function StatCard({
       data-trend={trend}
       data-tone={tone}
       className={cn(
-        "min-w-0 gap-0 rounded-lg border bg-card py-0 shadow-none",
+        "min-w-0 gap-0 rounded-lg border bg-card py-0 ring-0 shadow-sm shadow-black/[0.03] dark:shadow-black/10",
         className,
       )}
     >
-      <CardContent className="p-5">
+      <CardContent className="p-6">
         <p className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
           {title}
           {icon && (

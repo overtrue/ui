@@ -7,7 +7,7 @@ export function MetricGroup({ className, ...props }: ComponentProps<"div">) {
     <div
       data-slot="metric-group"
       className={cn(
-        "grid grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-px overflow-hidden rounded-lg border border-border bg-border text-card-foreground [&>*]:bg-card",
+        "grid grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-px overflow-hidden rounded-lg border border-border bg-border text-card-foreground shadow-sm shadow-black/[0.03] dark:shadow-black/10 [&>*]:bg-card",
         className,
       )}
       {...props}
@@ -27,7 +27,7 @@ export function MetricGroupItem({
 }) {
   return (
     <div className={cn("@container min-w-0 wrap-anywhere px-4 py-5 sm:px-6", className)} {...props}>
-      <p className="m-0 text-xs text-muted-foreground">{label}</p>
+      <p className="m-0 text-sm font-medium text-muted-foreground">{label}</p>
       <p className="my-3 text-[clamp(1rem,14cqi,1.875rem)] font-semibold tracking-tight tabular-nums">
         {value}
       </p>

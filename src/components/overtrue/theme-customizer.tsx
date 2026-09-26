@@ -26,7 +26,7 @@ export interface ThemeState {
 
 export const DEFAULT_THEME: ThemeState = {
   scheme: "light",
-  accent: "#4263c7",
+  accent: "#2563eb",
   font: "sans",
   base: "gray",
   radius: 0.5,
@@ -39,9 +39,9 @@ export const DEFAULT_THEME: ThemeState = {
 const STORAGE_KEY = "overtrue-workspace-theme-v2"
 
 const ACCENTS = [
-  "#066fd1",
-  "#4299e1",
   DEFAULT_THEME.accent,
+  "#4299e1",
+  "#6366f1",
   "#ae3ec9",
   "#d6336c",
   "#d63939",
@@ -84,7 +84,7 @@ export function hexToHsl(hex: string): string {
     }
     h /= 6
   }
-  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`
+  return `${+(h * 360).toFixed(2)} ${+(s * 100).toFixed(2)}% ${+(l * 100).toFixed(2)}%`
 }
 
 export function loadTheme(): ThemeState {
@@ -126,11 +126,21 @@ export function persistTheme(theme: ThemeState) {
 
 // Each palette uses the same semantic tokens for shadcn and workspace surfaces.
 const BASE_PALETTES: Record<ThemeBase, { light: string[]; dark: string[] }> = {
-  gray: { light: ["#f9fafb", "#374151", "#ffffff", "#f3f4f6", "#6b7280", "#e5e7eb"], dark: ["#111827", "#e5e7eb", "#1f2937", "#272e35", "#9ca3af", "#374151"] },
-  slate: { light: ["#f8fafc", "#334155", "#ffffff", "#f1f5f9", "#64748b", "#e2e8f0"], dark: ["#0f172a", "#e2e8f0", "#1e293b", "#334155", "#94a3b8", "#334155"] },
-  zinc: { light: ["#fafafa", "#3f3f46", "#ffffff", "#f4f4f5", "#71717a", "#e4e4e7"], dark: ["#18181b", "#e4e4e7", "#27272a", "#27272a", "#a1a1aa", "#3f3f46"] },
-  neutral: { light: ["#fafafa", "#404040", "#ffffff", "#f5f5f5", "#737373", "#e5e5e5"], dark: ["#171717", "#e5e5e5", "#262626", "#262626", "#a3a3a3", "#404040"] },
-  stone: { light: ["#fafaf9", "#44403c", "#ffffff", "#f5f5f4", "#78716c", "#e7e5e4"], dark: ["#1c1917", "#e7e5e4", "#292524", "#292524", "#a8a29e", "#44403c"] },
+  gray: { light: ["#f9fafb", "#111827", "#ffffff", "#f3f4f6", "#6b7280", "#e5e7eb", "#d1d5db"], dark: ["#030712", "#f9fafb", "#111827", "#1f2937", "#9ca3af", "#1f2937", "#374151"] },
+  slate: { light: ["#f8fafc", "#334155", "#ffffff", "#f1f5f9", "#64748b", "#e2e8f0", "#cbd5e1"], dark: ["#0f172a", "#e2e8f0", "#1e293b", "#334155", "#94a3b8", "#334155", "#475569"] },
+  zinc: { light: ["#fafafa", "#3f3f46", "#ffffff", "#f4f4f5", "#71717a", "#e4e4e7", "#d4d4d8"], dark: ["#18181b", "#e4e4e7", "#27272a", "#27272a", "#a1a1aa", "#3f3f46", "#52525b"] },
+  neutral: { light: ["#fafafa", "#404040", "#ffffff", "#f5f5f5", "#737373", "#e5e5e5", "#d4d4d4"], dark: ["#171717", "#e5e5e5", "#262626", "#262626", "#a3a3a3", "#404040", "#525252"] },
+  stone: { light: ["#fafaf9", "#44403c", "#ffffff", "#f5f5f4", "#78716c", "#e7e5e4", "#d6d3d1"], dark: ["#1c1917", "#e7e5e4", "#292524", "#292524", "#a8a29e", "#44403c", "#57534e"] },
+}
+
+/** Choose the stronger contrast, including for custom yellow and lime accents. */
+export function accentForeground(hex: string): string {
+  const channels = [1, 3, 5].map((offset) => {
+    const channel = parseInt(hex.slice(offset, offset + 2), 16) / 255
+    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
+  })
+  const luminance = channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722
+  return 1.05 / (luminance + 0.05) >= (luminance + 0.05) / 0.05 ? "#ffffff" : "#000000"
 }
 
 export function applyTheme(t: ThemeState) {
@@ -141,23 +151,33 @@ export function applyTheme(t: ThemeState) {
       (t.scheme === "auto" &&
         window.matchMedia("(prefers-color-scheme: dark)").matches),
   )
-  const palette = BASE_PALETTES[t.base][root.classList.contains("dark") ? "dark" : "light"]
-  const [background, foreground, card, muted, mutedForeground, border] = palette.map(hexToHsl)
-  for (const [name, value] of Object.entries({ background, foreground, card, "card-foreground": foreground, popover: card, "popover-foreground": foreground, muted, "muted-foreground": mutedForeground, border, input: border, sidebar: card, "sidebar-foreground": foreground, "sidebar-border": border })) {
+  const dark = root.classList.contains("dark")
+  const palette = BASE_PALETTES[t.base][dark ? "dark" : "light"]
+  const [background, foreground, card, muted, mutedForeground, border, input] = palette.map(hexToHsl)
+  for (const [name, value] of Object.entries({ background, foreground, card, "card-foreground": foreground, popover: card, "popover-foreground": foreground, muted, "muted-foreground": mutedForeground, border, input, sidebar: card, "sidebar-foreground": foreground, "sidebar-border": border })) {
     root.style.setProperty("--" + name, value)
   }
+  root.style.setProperty("--secondary", muted)
+  root.style.setProperty("--secondary-foreground", foreground)
+  root.style.setProperty("--accent", muted)
+  root.style.setProperty("--accent-foreground", foreground)
+  root.style.setProperty("--sidebar-accent", muted)
+  root.style.setProperty("--sidebar-accent-foreground", foreground)
   root.dataset.workspaceNavbarTheme = t.navbarTheme ?? "default"
   root.dataset.workspaceBase = t.base
+  const accent = dark && t.accent === DEFAULT_THEME.accent ? "#60a5fa" : t.accent
+  const primaryForeground = hexToHsl(accentForeground(accent))
   root.style.setProperty(
     "--workspace-primary-rgb",
-    [1, 3, 5].map((i) => parseInt(t.accent.slice(i, i + 2), 16)).join(", "),
+    [1, 3, 5].map((i) => parseInt(accent.slice(i, i + 2), 16)).join(", "),
   )
-  root.style.setProperty("--primary", hexToHsl(t.accent))
-  root.style.setProperty("--ring", hexToHsl(t.accent))
-  root.style.setProperty("--chart-1", hexToHsl(t.accent))
-  root.style.setProperty("--sidebar-ring", hexToHsl(t.accent))
-  root.style.setProperty("--accent", hexToHsl(t.accent))
-  root.style.setProperty("--sidebar-primary", hexToHsl(t.accent))
+  root.style.setProperty("--primary", hexToHsl(accent))
+  root.style.setProperty("--primary-foreground", primaryForeground)
+  root.style.setProperty("--ring", hexToHsl(accent))
+  root.style.setProperty("--chart-1", hexToHsl(accent))
+  root.style.setProperty("--sidebar-ring", hexToHsl(accent))
+  root.style.setProperty("--sidebar-primary", hexToHsl(accent))
+  root.style.setProperty("--sidebar-primary-foreground", primaryForeground)
   root.style.setProperty("--radius", `${t.radius}rem`)
   root.style.setProperty("--font-sans", FONT_STACKS[t.font])
   root.dataset.container = t.container
@@ -320,7 +340,7 @@ export function ThemeCustomizer({
                   {ACCENTS.map((color) => (
                     <label
                       key={color}
-                      style={{ background: color }}
+                      style={{ background: color, color: accentForeground(color) }}
                       className={cn(theme.accent === color && "is-selected")}
                     >
                       <input

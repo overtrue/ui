@@ -19,7 +19,7 @@ mkdirSync(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: "chrome" });
 const results = [];
 const errors = [];
-const flatCards = new Set([
+const quietCards = new Set([
   "stat-card",
   "settings-panel",
   "feature-card",
@@ -55,6 +55,36 @@ try {
   });
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 1000 });
+    await page.goto(origin + "/components");
+    await page
+      .getByRole("textbox", { name: "Search components", exact: true })
+      .fill("Metric group");
+    const thumbnail = page.locator(".tile-metric-group");
+    await thumbnail.waitFor();
+    const preview = await thumbnail.evaluate((element) => {
+      const content = element.querySelector(".fit-preview-content");
+      const label = element.querySelector('[data-slot="metric-group"] p');
+      return {
+        scale: new DOMMatrix(getComputedStyle(content).transform).a,
+        fontSize: parseFloat(getComputedStyle(label).fontSize),
+        inert: element.querySelector(".tile-preview").inert,
+      };
+    });
+    assert.equal(
+      preview.scale,
+      1,
+      `Component preview shrinks text at ${width}px`,
+    );
+    assert.ok(
+      preview.fontSize >= 12,
+      `Component preview text is too small at ${width}px`,
+    );
+    assert.ok(
+      preview.inert,
+      "Cropped previews must not expose clipped controls to keyboard users",
+    );
+    await thumbnail.getByRole("link", { name: /Open full preview/ }).click();
+    await page.waitForURL(origin + "/components/metric-group");
     for (const item of catalog) {
       const response = await page.goto(origin + catalogPath(item));
       assert.equal(response.status(), 200);
@@ -95,7 +125,19 @@ try {
         )),
         `${item.name}: overflow at ${width}`,
       );
-      if (flatCards.has(item.name)) {
+      if (item.name === "kpi-card") {
+        const readable = await page
+          .locator('[data-slot="kpi-card"]')
+          .evaluateAll((cards) =>
+            cards.every((card) => {
+              const label = card.querySelector("p").getBoundingClientRect();
+              const value = card.querySelector("h3").getBoundingClientRect();
+              return label.bottom <= value.top;
+            }),
+          );
+        assert.ok(readable, `KPI labels overlap their values at ${width}px`);
+      }
+      if (quietCards.has(item.name)) {
         const shadows = await page
           .locator(
             ".detail-preview .card, .detail-preview [data-slot=command-palette], .detail-data-table > section, .detail-preview [data-slot=dashboard]",
@@ -105,10 +147,12 @@ try {
           );
         assert.ok(shadows.length, `${item.name}: missing card surface`);
         assert.ok(
-          shadows.every(
-            (shadow) => !/(?:^|\s)-?[1-9]\d*(?:\.\d+)?px/.test(shadow),
+          shadows.every((shadow) =>
+            [...shadow.matchAll(/(-?\d+(?:\.\d+)?)px/g)].every(
+              ([, value]) => Math.abs(Number(value)) <= 3,
+            ),
           ),
-          `${item.name}: unexpected card elevation ${shadows}`,
+          `${item.name}: card shadow exceeds the subtle surface tier ${shadows}`,
         );
       }
       if (width === 1440) {

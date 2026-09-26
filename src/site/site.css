@@ -5,24 +5,25 @@
 @custom-variant dark (&:is(.dark *));
 :root {
   --background: #f9fafb;
-  --foreground: #202631;
+  --foreground: #111827;
   --card: #fff;
-  --card-foreground: #202631;
+  --card-foreground: #111827;
   --popover: #fff;
-  --popover-foreground: #202631;
-  --primary: #066fd1;
+  --popover-foreground: #111827;
+  --primary: #2563eb;
   --primary-foreground: #fff;
-  --secondary: #f0f2f5;
-  --secondary-foreground: #202631;
-  --muted: #f1f3f5;
-  --muted-foreground: #697386;
-  --accent: #edf4fc;
-  --accent-foreground: #066fd1;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #111827;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --accent: #eff6ff;
+  --accent-foreground: #2563eb;
   --destructive: #dc2626;
+  --destructive-foreground: #fff;
   --border: #e5e7eb;
-  --input: #dce0e6;
-  --ring: #066fd1;
-  --chart-1: #066fd1;
+  --input: #d1d5db;
+  --ring: #2563eb;
+  --chart-1: #2563eb;
   --chart-2: #16a34a;
   --chart-3: #d97706;
   --chart-4: #8b5cf6;
@@ -33,35 +34,37 @@
   --site-subtle: #f8f9fb;
   --code-bg: #fafbfc;
   --hero-grid: rgba(20, 40, 60, 0.045);
+  color-scheme: light;
 }
 .dark {
-  --background: #141a23;
-  --foreground: #e5e9f0;
-  --card: #1a222e;
-  --card-foreground: #edf0f6;
-  --popover: #1a222e;
-  --popover-foreground: #edf0f6;
+  --background: #030712;
+  --foreground: #f9fafb;
+  --card: #111827;
+  --card-foreground: #f9fafb;
+  --popover: #111827;
+  --popover-foreground: #f9fafb;
   --primary: #60a5fa;
-  --primary-foreground: #102136;
-  --secondary: #222d3c;
-  --secondary-foreground: #edf0f6;
-  --muted: #222d3c;
-  --muted-foreground: #9ca9bc;
-  --accent: #1f334f;
+  --primary-foreground: #030712;
+  --secondary: #1f2937;
+  --secondary-foreground: #f9fafb;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --accent: #172554;
   --accent-foreground: #93c5fd;
   --destructive: #f87171;
-  --border: #2e3948;
-  --input: #364456;
+  --destructive-foreground: #030712;
+  --border: #1f2937;
+  --input: #374151;
   --ring: #60a5fa;
   --chart-1: #60a5fa;
   --chart-2: #4ade80;
   --chart-3: #fbbf24;
   --chart-4: #a78bfa;
   --chart-5: #f472b6;
-  --site-bg: #10161f;
-  --site-ink: #ecf0f6;
-  --site-subtle: #141c27;
-  --code-bg: #151e2a;
+  --site-bg: #030712;
+  --site-ink: #f9fafb;
+  --site-subtle: #111827;
+  --code-bg: #111827;
   --hero-grid: rgba(200, 220, 255, 0.045);
   color-scheme: dark;
 }
@@ -86,6 +89,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -138,7 +142,7 @@
   }
   ::selection {
     background: #b9d9fa;
-    color: #102136;
+    color: #030712;
   }
   .card {
     display: flex;
@@ -146,7 +150,7 @@
     border: 1px solid var(--border);
     background: var(--card);
     color: var(--card-foreground);
-    border-radius: 8px;
+    border-radius: var(--radius);
   }
   .card-title {
     color: var(--card-foreground);
@@ -157,11 +161,6 @@
   }
   .card-body {
     min-width: 0;
-  }
-  input {
-    color: var(--foreground) !important;
-    background-color: var(--card) !important;
-    border-color: var(--input) !important;
   }
   .dark button[class*="bg-white"] {
     background: var(--card);
@@ -2352,7 +2351,7 @@
   overflow-wrap: anywhere;
 }
 
-/* Thumbnails retain their layout width; card collections crop tall previews. */
+/* Component thumbnails reflow; full layouts scale and tall cards can crop. */
 .fit-preview {
   position: relative;
   display: grid;

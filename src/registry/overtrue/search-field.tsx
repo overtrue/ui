@@ -50,7 +50,7 @@ export function SearchField({
         onChange={(event) => onValueChange(event.target.value)}
         placeholder={placeholder}
         className={cn(
-          "h-9 w-full border-input bg-background ps-9 pe-9 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-search-cancel-button]:appearance-none",
+          "h-10 w-full rounded-md border-input bg-card dark:bg-card ps-9 pe-9 text-base text-foreground shadow-xs placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 sm:text-sm [&::-webkit-search-cancel-button]:appearance-none",
           className,
         )}
       />

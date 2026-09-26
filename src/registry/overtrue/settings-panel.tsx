@@ -52,13 +52,14 @@ export function SettingsPanel({
           }
         }}
       >
-        <fieldset disabled={saving} className="min-w-0 space-y-4 p-5">
+        <fieldset disabled={saving} className="min-w-0 space-y-6 p-6">
           <div className="grid gap-2">
             <label htmlFor={`${id}-name`} className="text-sm font-medium">
               Workspace name
             </label>
             <Input
               id={`${id}-name`}
+              className="h-10 rounded-md border-input bg-card dark:bg-card text-base shadow-xs focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 [&:user-invalid]:border-destructive [&:user-invalid]:ring-2 [&:user-invalid]:ring-destructive/20 aria-invalid:border-destructive aria-invalid:ring-destructive/20 disabled:bg-muted dark:disabled:bg-muted sm:text-sm"
               required
               name="workspace-name"
               autoComplete="organization"
@@ -76,6 +77,7 @@ export function SettingsPanel({
             </label>
             <Input
               id={`${id}-email`}
+              className="h-10 rounded-md border-input bg-card dark:bg-card text-base shadow-xs focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 [&:user-invalid]:border-destructive [&:user-invalid]:ring-2 [&:user-invalid]:ring-destructive/20 aria-invalid:border-destructive aria-invalid:ring-destructive/20 disabled:bg-muted dark:disabled:bg-muted sm:text-sm"
               required
               type="email"
               name="contact-email"
@@ -89,7 +91,7 @@ export function SettingsPanel({
             />
           </div>
         </fieldset>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-muted/30 px-6 py-4">
           <p
             role={failed ? "alert" : "status"}
             className={cn(
@@ -102,8 +104,7 @@ export function SettingsPanel({
           </p>
           <Button
             type="submit"
-            size="sm"
-            className="ml-auto shrink-0 bg-primary text-primary-foreground shadow-none hover:bg-primary/90"
+            className="ml-auto h-10 shrink-0 rounded-md border border-primary bg-primary px-4 text-sm text-primary-foreground shadow-xs hover:bg-primary/90"
             disabled={saving || !dirty}
           >
             {saving ? "Saving…" : "Save changes"}

@@ -3,30 +3,32 @@ import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-/** overtrue/ui .btn — primary #066fd1, padding 9px 16px, radius 6px, weight 500, height 40px */
+/** Quiet surfaces and a single primary action, driven by the active theme. */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         workspace: "",
         default:
-          "border border-transparent bg-[#066fd1] text-[#f9fafb] hover:bg-[#0560b5]",
+          "border border-primary bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
         destructive:
-          "border border-transparent bg-[#dc2626] text-white hover:bg-[#b91c1c]",
-        outline: "border border-input bg-card text-foreground hover:bg-muted",
+          "border border-destructive bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90",
+        outline:
+          "border border-input bg-card text-foreground shadow-xs hover:bg-muted",
         secondary:
-          "border border-transparent bg-[#6b7280] text-white hover:bg-[#4b5563]",
+          "border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
           "border border-transparent bg-transparent text-foreground hover:bg-muted",
-        link: "border-transparent text-[#066fd1] underline-offset-4 hover:underline",
+        link: "border-transparent text-primary underline-offset-4 hover:underline",
         success:
           "border border-transparent bg-[#16a34a] text-white hover:bg-[#15803d]",
         warning:
           "border border-transparent bg-[#f76707] text-white hover:bg-[#ea580c]",
         info: "border border-transparent bg-[#4299e1] text-white hover:bg-[#3380c9]",
         dark: "border border-transparent bg-[#111827] text-white hover:bg-[#1f2937]",
-        light: "border border-input bg-card text-foreground hover:bg-muted",
+        light:
+          "border border-input bg-card text-foreground shadow-xs hover:bg-muted",
       },
       size: {
         /* overtrue/ui measured: 40px height, 9px 16px padding */

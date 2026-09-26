@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
-/** Fit a preview into a thumbnail without changing its layout width. */
+/** Scale full layouts; let individual components reflow at their real size. */
 export function FitPreview({
   children,
   width = 400,
@@ -10,7 +10,7 @@ export function FitPreview({
   children: ReactNode;
   width?: number;
   height?: number;
-  fit?: "contain" | "crop-tall";
+  fit?: "contain" | "crop-tall" | "responsive";
 }) {
   const viewport = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
@@ -41,11 +41,14 @@ export function FitPreview({
   }, [width]);
 
   // Keep narrow thumbnails proportional instead of leaving desktop-sized gaps.
-  const viewportHeight = size.available
-    ? Math.min(height, size.available * 0.75)
-    : height;
+  const viewportHeight =
+    fit === "responsive"
+      ? height
+      : size.available
+        ? Math.min(height, size.available * 0.75)
+        : height;
   const scale =
-    size.available && size.height
+    fit !== "responsive" && size.available && size.height
       ? Math.min(
           1,
           size.available / size.width,
@@ -56,18 +59,25 @@ export function FitPreview({
       : 1;
 
   return (
-    <div ref={viewport} className="fit-preview" style={{ height: viewportHeight }}>
+    <div
+      ref={viewport}
+      className="fit-preview"
+      style={{ height: viewportHeight }}
+    >
       <div
         className="fit-preview-stage"
         style={{
-          width: size.width * scale,
+          width: fit === "responsive" ? "100%" : size.width * scale,
           height: Math.min(viewportHeight, size.height * scale),
         }}
       >
         <div
           ref={content}
           className="fit-preview-content"
-          style={{ width, transform: `scale(${scale})` }}
+          style={{
+            width: fit === "responsive" ? "100%" : width,
+            transform: `scale(${scale})`,
+          }}
         >
           {children}
         </div>

@@ -51,7 +51,7 @@ export default function KpiCardDeliveryDemo() {
           format="currency"
           delta={report.booked / report.previous - 1}
           deltaLabel={comparison}
-          trend={report.trend}
+          sparkline={report.trend}
           icon={<IconBriefcase size={16} />}
         />
         <KpiCard
@@ -59,7 +59,7 @@ export default function KpiCardDeliveryDemo() {
           value={report.delivered}
           delta={report.delivered / report.previousDelivered - 1}
           deltaLabel={comparison}
-          trend={report.deliveryTrend}
+          sparkline={report.deliveryTrend}
           icon={<IconCircleCheck size={16} />}
         />
         <KpiCard
@@ -67,7 +67,7 @@ export default function KpiCardDeliveryDemo() {
           value={`${report.days} days`}
           delta={report.days / report.previousDays - 1}
           deltaLabel={comparison}
-          trend={report.reviewTrend}
+          sparkline={report.reviewTrend}
           invertDelta
           icon={<IconClock size={16} />}
         />

@@ -60,6 +60,8 @@ export interface KpiCardProps extends Omit<
   /** Context for the delta, e.g. "vs. last 30 days". */
   deltaLabel?: string;
   /** Series for the sparkline. Rendered when it has two or more points. */
+  sparkline?: number[];
+  /** @deprecated Use sparkline. Retained for existing consumers. */
   trend?: number[];
   format?: NumberFormat;
   /** ISO 4217 code, used when `format` is "currency". */
@@ -76,6 +78,7 @@ function KpiCard({
   value,
   delta,
   deltaLabel,
+  sparkline,
   trend,
   format = "number",
   currency,
@@ -85,6 +88,7 @@ function KpiCard({
   children,
   ...props
 }: KpiCardProps) {
+  const series = sparkline ?? trend;
   const direction = getDeltaDirection(delta);
   const isPositive =
     direction === "flat" ? null : (direction === "up") !== invertDelta;
@@ -103,7 +107,7 @@ function KpiCard({
       {...props}
     >
       <CardHeader className="px-5">
-        <CardDescription className="flex items-center gap-1.5 [&>svg]:size-4">
+        <CardDescription className="row-start-1 flex items-center gap-1.5 [&>svg]:size-4">
           {icon}
           {label}
         </CardDescription>
@@ -111,14 +115,14 @@ function KpiCard({
           <MetricValue value={value} format={format} currency={currency} />
         </CardTitle>
         {delta !== undefined ? (
-          <CardAction>
+          <CardAction className="row-span-1">
             <DeltaBadge delta={delta} invert={invertDelta} />
           </CardAction>
         ) : null}
       </CardHeader>
-      {trend && trend.length > 1 ? (
+      {series && series.length > 1 ? (
         <CardContent className="px-5">
-          <Sparkline data={trend} color={trendColor} />
+          <Sparkline data={series} color={trendColor} />
         </CardContent>
       ) : null}
       {deltaLabel || children ? (

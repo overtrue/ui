@@ -21,7 +21,7 @@ export default function KpiCardDemo() {
           format="currency"
           delta={0.128}
           deltaLabel="vs. previous month"
-          trend={revenue}
+          sparkline={revenue}
         />
         <KpiCard
           label="Client relationships"
@@ -29,7 +29,7 @@ export default function KpiCardDemo() {
           format="compact"
           delta={0.2}
           deltaLabel="vs. previous month"
-          trend={users}
+          sparkline={users}
         />
         <KpiCard
           label="Rework rate"
@@ -37,7 +37,7 @@ export default function KpiCardDemo() {
           format="percent"
           delta={-0.16}
           deltaLabel="vs. previous month"
-          trend={churn}
+          sparkline={churn}
           invertDelta
         />
         <KpiCard

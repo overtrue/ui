@@ -36,7 +36,7 @@ function HeaderActions() {
     <div className="workspace-header-actions">
       <a
         className="pn-btn workspace-docs"
-        href="/components"
+        href="/docs"
         target="_blank"
         rel="noreferrer"
       >
@@ -306,7 +306,7 @@ export function WorkspaceShell({
             <div>
               Copyright © 2026 <Link to="/">overtrue/ui</Link>. All rights
               reserved. <span className="workspace-footer-dot">•</span>{" "}
-              <a href="/components" target="_blank" rel="noreferrer">
+              <a href="/workspace/" target="_blank" rel="noreferrer">
                 Workspace demo
               </a>
             </div>
@@ -315,7 +315,7 @@ export function WorkspaceShell({
                 Documentation
               </a>
               <Link to="/license">License</Link>
-              <a href="/components" target="_blank" rel="noreferrer">
+              <a href="https://github.com/overtrue/ui" target="_blank" rel="noreferrer">
                 Source code
               </a>
               <a href="/components" target="_blank" rel="noreferrer">
