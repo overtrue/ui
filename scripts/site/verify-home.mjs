@@ -247,6 +247,10 @@ try {
       getComputedStyle(document.querySelector(".wall-column"))
         .animationPlayState === "paused",
   );
+  // CSS reports paused before the compositor finishes the pending pause.
+  await firstColumn.evaluate((column) =>
+    Promise.all(column.getAnimations().map((animation) => animation.ready)),
+  );
   const pausedTransform = await firstColumn.evaluate(
     (column) => getComputedStyle(column).transform,
   );
