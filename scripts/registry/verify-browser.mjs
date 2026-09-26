@@ -100,11 +100,16 @@ try {
     passed.push('documentation cross-page section navigation');
     await page.goto(${JSON.stringify(origin)} + '/components');
     await page.getByRole('textbox', { name: 'Search components', exact: true }).fill('resource progress');
+    await page.waitForFunction(() => document.querySelectorAll('.component-tile').length === 1);
     check(await page.locator('.component-tile').count() === 1, 'component search');
     await page.getByRole('textbox', { name: 'Search components', exact: true }).fill('not-a-component');
+    await page.getByText('No components found.').waitFor();
     check(await page.getByText('No components found.').isVisible(), 'empty search state');
     await page.getByRole('button', { name: 'Clear filters' }).click();
+    await page.locator('.component-tile').first().waitFor();
     await page.getByRole('button', { name: 'Forms', exact: true }).click();
+    await page.getByRole('button', { name: 'Forms', exact: true, pressed: true }).waitFor();
+    await page.waitForFunction(() => document.querySelectorAll('.component-tile').length === 1);
     check(await page.locator('.component-tile').count() === 1, 'category filtering');
     await page.goto(${JSON.stringify(origin)} + '/components/data-table');
     await page.getByRole('searchbox', { name: 'Search team members' }).fill('Maya');
@@ -149,6 +154,7 @@ try {
     await page.locator('.docs-mobile-contents:not([open])').waitFor(); passed.push('mobile documentation closes after selection');
     await page.goto(${JSON.stringify(origin)} + '/examples');
     await page.getByRole('textbox', { name: 'Search pages' }).fill('accordion');
+    await page.waitForFunction(() => document.querySelectorAll('.example-list > a').length === 1);
     check(await page.locator('.example-list > a').count() === 1, 'reference search');
     await page.locator('.example-list > a').click();
     await page.locator('[data-workspace-page="accordion"]').waitFor();
