@@ -64,6 +64,7 @@ try {
         "2-step-verification",
       ]) {
         await page.goto(`${origin}/workspace/#/${route}`);
+        await page.locator(`[data-workspace-page="${route}"]`).waitFor();
         await checkSelects();
         assert.ok(
           await page.evaluate(
