@@ -93,13 +93,31 @@ try {
         const probe = document.createElement('span');
         el.append(probe);
         const color = token => { probe.style.color = 'var(' + token + ')'; return getComputedStyle(probe).color; };
-        const surface = getComputedStyle(el.firstElementChild);
+        const surfaces = [...el.children].filter(child => child !== probe).slice(1);
         const group = getComputedStyle(el);
-        const valid = surface.backgroundColor === color('--card') &&
+        const card = color('--card');
+        const valid = surfaces.every(surface => getComputedStyle(surface).backgroundColor === card) &&
           group.borderTopColor === color('--border') && group.color === color('--card-foreground');
         probe.remove();
         return valid;
       }), 'exported metric colors match their ' + theme + ' theme tokens');
+      check(await metrics.evaluate(el => {
+        const primary = el.firstElementChild;
+        // Computed colors here are rgb() or color(srgb) from the accent mix.
+        const luminance = color => {
+          const values = color.match(/[\\d.]+/g).slice(0, 3).map(Number);
+          const channels = (color.startsWith('color(srgb') ? values : values.map(value => value / 255))
+            .map(value => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+          return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+        };
+        const surface = getComputedStyle(primary).backgroundColor;
+        const background = luminance(surface);
+        return surface !== getComputedStyle(el.children[1]).backgroundColor &&
+          [...primary.children].every(child => {
+            const text = luminance(getComputedStyle(child).color);
+            return (Math.max(text, background) + 0.05) / (Math.min(text, background) + 0.05) >= 4.5;
+          });
+      }), 'emphasized metric keeps readable text in ' + theme + ' mode');
       check(await metrics.evaluate(el => new Set([...el.children].map(child => child.offsetTop)).size === 1),
         'exported metric overview keeps all four columns in ' + theme + ' mode');
     }
