@@ -77,7 +77,10 @@ try {
   await page.waitForURL("**#usage");
   await page.waitForFunction(() => {
     const heading = document.getElementById("usage").getBoundingClientRect();
-    return heading.top >= 80 && heading.top < 300;
+    const header = document
+      .querySelector(".site-header")
+      .getBoundingClientRect();
+    return heading.top >= header.bottom && heading.top < header.bottom + 60;
   });
   checks.push(
     "keyboard search ranks results, opens pages, and documentation links clear the sticky header",

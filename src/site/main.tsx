@@ -162,7 +162,7 @@ function Header() {
       return;
     }
     const frame = requestAnimationFrame(() =>
-      document.getElementById(id)?.scrollIntoView(),
+      document.getElementById(id)?.scrollIntoView({ behavior: "instant" }),
     );
     return () => cancelAnimationFrame(frame);
   }, [location.pathname, location.hash]);

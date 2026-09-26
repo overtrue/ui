@@ -135,7 +135,8 @@
 #installation,
 #usage,
 #props {
-  scroll-margin-top: 112px;
+  /* The root already reserves 100px for the floating navigation. */
+  scroll-margin-top: 12px;
 }
 .component-picker select {
   min-height: 44px;
