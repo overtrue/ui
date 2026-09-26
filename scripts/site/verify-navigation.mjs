@@ -216,6 +216,35 @@ try {
     await page.screenshot({ path: `${output}/workspace-search-${theme}.png` });
     await closeSearch();
   }
+  await page.setViewportSize({ width: 1440, height: 844 });
+  await page.goto(`${origin}/workspace/#/tasks`);
+  await page.locator('[data-workspace-page="tasks"]').waitFor();
+  for (const theme of ["dark", "light"]) {
+    await page
+      .getByRole("button", { name: `Use ${theme} theme`, exact: true })
+      .click();
+    await page
+      .getByRole("link", { name: "Work queue", exact: true })
+      .press("Shift+Tab");
+    assert.ok(
+      await page
+        .getByRole("link", { name: "Project board", exact: true })
+        .evaluate((element) => {
+          const style = getComputedStyle(element);
+          return (
+            element.matches(":focus-visible") &&
+            style.outlineStyle === "solid" &&
+            parseFloat(style.outlineWidth) >= 2 &&
+            style.outlineColor !== style.backgroundColor
+          );
+        }),
+      `Selected navigation retains a visible keyboard focus in ${theme} mode`,
+    );
+  }
+  checks.push(
+    "selected sidebar links retain a distinct keyboard focus in both themes",
+  );
+  await page.setViewportSize({ width: 320, height: 844 });
   await page.goto(`${origin}/workspace/#/layout-horizontal`);
   const mobileToggle = page.getByRole("button", {
     name: "Toggle navigation",

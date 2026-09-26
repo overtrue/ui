@@ -1380,6 +1380,10 @@ html[data-workspace-navbar-theme="primary"] .workspace-logo img {
   background: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
 }
+.workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"]:focus-visible {
+  outline: 2px solid hsl(var(--sidebar-foreground));
+  outline-offset: 2px;
+}
 html[data-workspace-navbar-theme="primary"]
   .workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"] {
   background: var(--workspace-sidebar-selected);
