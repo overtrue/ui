@@ -6,11 +6,6 @@ import {
   IconMoon,
   IconSun,
   IconBell,
-  IconCommand,
-  IconFolder,
-  IconChecklist,
-  IconUsers,
-  IconCalendar,
   IconBook,
   IconChevronRight,
   IconMenu2,
@@ -22,6 +17,7 @@ import {
   useThemeState,
 } from "@/components/overtrue/theme-customizer";
 import { Logo, MenuItems, Navigation, WorkspaceSidebar } from "./navigation";
+import { WorkspaceSearch } from "./page-search";
 import {
   SidebarProvider,
   SidebarInset,
@@ -114,48 +110,14 @@ function HeaderActions() {
           </div>
         </Dropdown.Portal>
       </Dropdown.Root>
+      <WorkspaceSearch />
       <Dropdown.Root>
         <Dropdown.Trigger asChild>
           <Button
             variant="workspace"
-            className="workspace-icon-button"
-            aria-label="Quick access"
+            className="workspace-user"
+            aria-label="Account menu for Chris An"
           >
-            <IconCommand size={20} stroke={1.5} />
-          </Button>
-        </Dropdown.Trigger>
-        <Dropdown.Portal>
-          <div className="overtrue-workspace workspace-portal">
-            <Dropdown.Content
-              className="pn-dropdown-menu pn-show workspace-dropdown-content workspace-shortcuts-menu"
-              align="end"
-              sideOffset={8}
-            >
-              <Dropdown.Label className="workspace-shortcuts-heading">
-                Quick access
-                <span>Your everyday workspace</span>
-              </Dropdown.Label>
-              {[
-                { title: "Projects", description: "Explore ongoing work", href: "/cards", icon: IconFolder },
-                { title: "Work queue", description: "Keep your next steps in view", href: "/tasks-list", icon: IconChecklist },
-                { title: "People", description: "Meet your team", href: "/users", icon: IconUsers },
-                { title: "Calendar", description: "Make room for what’s next", href: "/fullcalendar", icon: IconCalendar },
-              ].map(({ title, description, href, icon: Icon }) => (
-                <Dropdown.Item key={href} className="workspace-shortcut" asChild>
-                  <Link to={href}>
-                    <span className="workspace-shortcut-icon"><Icon size={19} stroke={1.5} /></span>
-                    <span><strong>{title}</strong><small>{description}</small></span>
-                    <IconChevronRight size={15} stroke={1.5} />
-                  </Link>
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Content>
-          </div>
-        </Dropdown.Portal>
-      </Dropdown.Root>
-      <Dropdown.Root>
-        <Dropdown.Trigger asChild>
-          <Button variant="workspace" className="workspace-user" aria-label="Account menu for Chris An">
             <img
               src="/assets/overtrue/people/overtrue.png"
               width="32"
@@ -201,6 +163,18 @@ export function WorkspaceShell({
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const mobileToggle = React.useRef<HTMLButtonElement>(null);
+  React.useEffect(() => {
+    if (!mobileOpen) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !event.defaultPrevented) {
+        setMobileOpen(false);
+        mobileToggle.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, [mobileOpen]);
   const [customizerOpen, setCustomizerOpen] = React.useState(false);
   const [sidebarHovered, setSidebarHovered] = React.useState(false);
   const { pathname } = useLocation();
@@ -257,7 +231,9 @@ export function WorkspaceShell({
                 <Button
                   variant="workspace"
                   className="workspace-mobile-toggle"
+                  ref={mobileToggle}
                   aria-label="Toggle navigation"
+                  aria-controls="workspace-navigation"
                   aria-expanded={mobileOpen}
                   onClick={() => setMobileOpen((v) => !v)}
                 >
@@ -283,14 +259,20 @@ export function WorkspaceShell({
             </div>
           </header>
           {!vertical && !condensed && (
-            <div className={cn("workspace-navbar", mobileOpen && "is-open")}>
+            <div
+              id="workspace-navigation"
+              className={cn("workspace-navbar", mobileOpen && "is-open")}
+            >
               <div className="pn-container-xl">
                 <Navigation onCustomize={() => setCustomizerOpen(true)} />
               </div>
             </div>
           )}
           {condensed && mobileOpen && (
-            <div className="workspace-mobile-navigation">
+            <div
+              id="workspace-navigation"
+              className="workspace-mobile-navigation"
+            >
               <Navigation
                 vertical
                 onCustomize={() => setCustomizerOpen(true)}
@@ -315,7 +297,11 @@ export function WorkspaceShell({
                 Documentation
               </a>
               <Link to="/license">License</Link>
-              <a href="https://github.com/overtrue/ui" target="_blank" rel="noreferrer">
+              <a
+                href="https://github.com/overtrue/ui"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Source code
               </a>
               <a href="/components" target="_blank" rel="noreferrer">

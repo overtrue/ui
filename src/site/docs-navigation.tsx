@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { IconSearch } from "@tabler/icons-react";
+import { catalogPath, catalog } from "./catalog";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { IconArrowUpRight } from "@tabler/icons-react";
 import { guides } from "./pages";
@@ -62,5 +65,67 @@ export function DocsMobileNavigation() {
       <summary>Documentation</summary>
       <DocsNavigation />
     </details>
+  );
+}
+
+export function ComponentSidebar({
+  items,
+  collection,
+  collectionPath,
+}: {
+  items: (typeof catalog)[number][];
+  collection: string;
+  collectionPath: string;
+}) {
+  const [query, setQuery] = useState("");
+  const filtered = items.filter((item) =>
+    `${item.title} ${item.name} ${item.category}`
+      .toLowerCase()
+      .includes(query.trim().toLowerCase()),
+  );
+  const groups = [...new Set(filtered.map((item) => item.category))];
+  return (
+    <aside className="docs-sidebar component-sidebar">
+      <Link className="back-link" to={collectionPath}>
+        ← All {collection.toLowerCase()}
+      </Link>
+      <label className="sidebar-search">
+        <IconSearch size={14} aria-hidden="true" />
+        <input
+          type="search"
+          aria-label={`Find in ${collection.toLowerCase()}`}
+          placeholder={`Find ${collection.toLowerCase()}…`}
+          autoComplete="off"
+          spellCheck={false}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
+      </label>
+      <nav
+        className="component-sidebar-links"
+        aria-label={`${collection} directory`}
+      >
+        {groups.map((group) => (
+          <div key={group}>
+            <h2>{group}</h2>
+            {filtered
+              .filter((item) => item.category === group)
+              .map((item) => (
+                <NavLink key={item.name} to={catalogPath(item)}>
+                  {item.title}
+                </NavLink>
+              ))}
+          </div>
+        ))}
+        {!filtered.length && (
+          <div className="sidebar-empty">
+            <p role="status">No matches.</p>
+            <button type="button" onClick={() => setQuery("")}>
+              Clear search
+            </button>
+          </div>
+        )}
+      </nav>
+    </aside>
   );
 }

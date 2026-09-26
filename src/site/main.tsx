@@ -42,7 +42,12 @@ import { FitPreview } from "./fit-preview";
 import workspacePages from "@/data/workspace/pages.json";
 import { Command, CopyButton, HighlightedCode } from "./code";
 import { GuidePage, GuideLinks } from "./guides";
-import { DocsSidebar, DocsMobileNavigation } from "./docs-navigation";
+import {
+  DocsSidebar,
+  DocsMobileNavigation,
+  ComponentSidebar,
+} from "./docs-navigation";
+import { SiteSearch } from "./search";
 import { BrandMark } from "@/components/brand-mark";
 import { sitePages } from "./pages";
 import { HomeStory } from "./home-story";
@@ -51,6 +56,7 @@ import { CardCollection, CardBlockPage } from "./blocks";
 import "./site.css";
 import "./home-hero.css";
 import "./home-story.css";
+import "./navigation-polish.css";
 
 const sources = import.meta.glob("../registry/overtrue/*.tsx", {
   query: "?raw",
@@ -181,6 +187,7 @@ function Header() {
           </NavLink>
         </nav>
         <div className="header-actions">
+          <SiteSearch />
           <a
             className="icon-button"
             href="https://github.com/overtrue/ui"
@@ -338,34 +345,29 @@ function ComponentTile({ name }: { name: ItemName }) {
   );
 }
 function Catalog({ blocks = false }: { blocks?: boolean }) {
-  const [componentQuery, setComponentQuery] = useState(""),
-    [componentCategory, setComponentCategory] = useState("All");
   const [params, setParams] = useSearchParams();
   const collection = blockCollections.find(
     (group) => group.label === params.get("blockCategory"),
   );
-  const query = blocks ? (params.get("blockQuery") ?? "") : componentQuery;
-  const category = blocks ? (collection?.label ?? "All") : componentCategory;
-  const updateBlockFilter = (
-    key: "blockQuery" | "blockCategory",
-    value: string,
-  ) => {
+  const categories = blocks
+    ? ["All", ...blockCollections.map((group) => group.label)]
+    : ["All", "Data display", "Layout", "Feedback", "Navigation", "Forms"];
+  const queryKey = blocks ? "blockQuery" : "q";
+  const categoryKey = blocks ? "blockCategory" : "category";
+  const query = params.get(queryKey) ?? "";
+  const category = blocks
+    ? (collection?.label ?? "All")
+    : (categories.find((value) => value === params.get(categoryKey)) ?? "All");
+  const updateFilter = (key: string, value: string) => {
     // History updates before React renders; preserve changes from the other collection.
     const next = new URLSearchParams(window.location.search);
-    if (value && !(key === "blockCategory" && value === "All"))
+    if (value && !(key === categoryKey && value === "All"))
       next.set(key, value);
     else next.delete(key);
     setParams(next, { replace: true });
   };
-  const setQuery = (value: string) =>
-    blocks ? updateBlockFilter("blockQuery", value) : setComponentQuery(value);
-  const setCategory = (value: string) =>
-    blocks
-      ? updateBlockFilter("blockCategory", value)
-      : setComponentCategory(value);
-  const categories = blocks
-    ? ["All", ...blockCollections.map((group) => group.label)]
-    : ["All", "Data display", "Layout", "Feedback", "Navigation", "Forms"];
+  const setQuery = (value: string) => updateFilter(queryKey, value);
+  const setCategory = (value: string) => updateFilter(categoryKey, value);
   const items = catalog.filter(
     (item) =>
       (blocks ? item.category === "Blocks" : item.category !== "Blocks") &&
@@ -440,12 +442,11 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           />
         </label>
       </div>
-      {blocks && (
-        <p className="block-result-count" role="status">
-          {items.length} of {blockCount} blocks
-          {category !== "All" ? ` · ${category}` : ""}
-        </p>
-      )}
+      <p className="block-result-count" role="status">
+        {items.length} of {blocks ? blockCount : componentCount}{" "}
+        {blocks ? "blocks" : "components"}
+        {category !== "All" ? ` · ${category}` : ""}
+      </p>
       <div className={blocks ? "block-grid" : "component-grid"}>
         {items.map((item) => (
           <ComponentTile key={item.name} name={item.name} />
@@ -459,15 +460,10 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           <button
             className="site-button"
             onClick={() => {
-              if (blocks) {
-                const next = new URLSearchParams(window.location.search);
-                next.delete("blockQuery");
-                next.delete("blockCategory");
-                setParams(next, { replace: true });
-              } else {
-                setQuery("");
-                setCategory("All");
-              }
+              const next = new URLSearchParams(window.location.search);
+              next.delete(queryKey);
+              next.delete(categoryKey);
+              setParams(next, { replace: true });
             }}
           >
             Clear filters
@@ -520,18 +516,12 @@ function ComponentPage() {
   const source = sources[`../registry/overtrue/${sourceFile}.tsx`] ?? "";
   const usage = usageSource(item);
   return (
-    <main className="docs-layout section">
-      <aside className="docs-sidebar">
-        <Link className="back-link" to={collectionPath}>
-          ← All {collection.toLowerCase()}
-        </Link>
-        <p>{collection}</p>
-        {siblings.map((entry) => (
-          <NavLink key={entry.name} to={catalogPath(entry)}>
-            {entry.title}
-          </NavLink>
-        ))}
-      </aside>
+    <main className="docs-layout section component-docs">
+      <ComponentSidebar
+        items={siblings}
+        collection={collection}
+        collectionPath={collectionPath}
+      />
       <article className="docs-content">
         <label className="component-picker">
           Browse {collection.toLowerCase()}
@@ -574,6 +564,12 @@ function ComponentPage() {
           )}
           <p>{item.description}</p>
         </div>
+        <nav className="component-sections" aria-label="On this page">
+          <a href="#component-preview">Preview</a>
+          <a href="#installation">Installation</a>
+          <a href="#usage">Usage</a>
+          {"api" in item && <a href="#props">Props</a>}
+        </nav>
         {[
           "stat-card",
           "kpi-card",
@@ -606,7 +602,7 @@ function ComponentPage() {
             )}
           </p>
         )}
-        <div className="workspace-toolbar">
+        <div className="workspace-toolbar" id="component-preview">
           <div
             className="filter-tabs"
             role="group"
@@ -671,7 +667,7 @@ function ComponentPage() {
           {" · "}
           <a href={`/r/${item.name}.json`}>Registry JSON</a>
         </p>
-        <h2>Usage</h2>
+        <h2 id="usage">Usage</h2>
         <p>
           {isBlock
             ? "A starting point for your page. Edit the installed layout, fields, and actions for your product."
@@ -680,7 +676,7 @@ function ComponentPage() {
         <Command text={usage} label="React" language="tsx" />
         {"api" in item && (
           <>
-            <h2>Props</h2>
+            <h2 id="props">Props</h2>
             <div className="api-table-scroll">
               <table className="api-table">
                 <thead>
@@ -896,7 +892,14 @@ function Docs() {
   );
 }
 function Examples() {
-  const [query, setQuery] = useState("");
+  const [params, setParams] = useSearchParams();
+  const query = params.get("q") ?? "";
+  const setQuery = (value: string) => {
+    const next = new URLSearchParams(window.location.search);
+    if (value) next.set("q", value);
+    else next.delete("q");
+    setParams(next, { replace: true });
+  };
   const pages = workspacePages.filter((page) =>
     `${page.title} ${page.path}`
       .toLowerCase()
@@ -940,7 +943,7 @@ function Examples() {
         </div>
       </div>
       <div className="catalog-toolbar">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground" role="status">
           {pages.length} workspace examples
         </p>
         <label className="search-box">
@@ -967,7 +970,18 @@ function Examples() {
         ))}
       </div>
       {!pages.length && (
-        <p className="search-empty">No matching pages. Try another search.</p>
+        <div className="search-empty">
+          <Search size={24} aria-hidden="true" />
+          <h2>No matching pages.</h2>
+          <p>Try a different page name or clear your search.</p>
+          <button
+            type="button"
+            className="site-button"
+            onClick={() => setQuery("")}
+          >
+            Clear search
+          </button>
+        </div>
       )}
     </main>
   );

@@ -75,9 +75,13 @@ const groups: CommandPaletteGroup[] = [
   },
 ];
 
-export default function CommandPaletteDemo() {
+export default function CommandPaletteDemo({
+  enableShortcut = true,
+}: {
+  enableShortcut?: boolean;
+}) {
   const [open, setOpen] = React.useState(false);
-  useCommandPaletteShortcut(setOpen);
+  useCommandPaletteShortcut(setOpen, enableShortcut);
 
   return (
     <>

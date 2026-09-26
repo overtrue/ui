@@ -176,6 +176,7 @@ export function DashboardExample({
   name: string;
   expanded?: boolean;
 }) {
+  const CommandDemo = examples["command-palette-demo"];
   const item = dashboardCatalog.find((item) => item.name === name);
   if (!item) return null;
   return (
@@ -208,7 +209,11 @@ export function DashboardExample({
                   </p>
                 }
               >
-                <Demo />
+                {example.name === "command-palette-demo" ? (
+                  <CommandDemo enableShortcut={expanded} />
+                ) : (
+                  <Demo />
+                )}
               </Suspense>
             </section>
           );

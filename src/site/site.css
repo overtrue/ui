@@ -2,6 +2,7 @@
 @source "./";
 @source "../registry";
 @source "../components/ui";
+@source "../components/page-search.tsx";
 @custom-variant dark (&:is(.dark *));
 :root {
   --background: #f9fafb;
