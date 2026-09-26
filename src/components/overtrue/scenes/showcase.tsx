@@ -746,7 +746,7 @@ export function ClientForm() {
               </label>
               <label>
                 Industry
-                <select>
+                <select className="native-select">
                   <option>Culture & education</option>
                   <option>Design & creative</option>
                   <option>Technology</option>
@@ -755,7 +755,7 @@ export function ClientForm() {
               </label>
               <label>
                 Relationship owner
-                <select>
+                <select className="native-select">
                   {team.map((p) => (
                     <option key={p.id}>{p.name}</option>
                   ))}
@@ -801,7 +801,7 @@ export function ClientForm() {
               </label>
               <label>
                 Currency
-                <select>
+                <select className="native-select">
                   <option>USD — US Dollar</option>
                   <option>EUR — Euro</option>
                   <option>GBP — British Pound</option>
@@ -809,7 +809,7 @@ export function ClientForm() {
               </label>
               <label>
                 Payment terms
-                <select>
+                <select className="native-select">
                   <option>Net 30 days</option>
                   <option>Net 14 days</option>
                   <option>Due on receipt</option>
@@ -950,6 +950,7 @@ export function Onboarding() {
                   <label>
                     Team size
                     <select
+                      className="native-select"
                       value={size}
                       onChange={(e) => setSize(e.target.value)}
                     >

@@ -61,7 +61,7 @@ const content = {
           <tbody>
             <tr>
               <td>Page title</td>
-              <td>24–28 px</td>
+              <td>24–34 px</td>
               <td>One clear subject</td>
             </tr>
             <tr>
@@ -365,9 +365,14 @@ export function GuidePage() {
           <span>/</span>
           {guide.title}
         </div>
-        <p className="overline">THE OVERTRUE/UI HANDBOOK</p>
-        <h1>{guide.title}</h1>
-        <p className="lead">{guide.description}</p>
+        <header className="documentation-intro">
+          <p className="overline">
+            THE OVERTRUE/UI HANDBOOK{" "}
+            <span>/ {String(index + 1).padStart(2, "0")}</span>
+          </p>
+          <h1>{guide.title}</h1>
+          <p className="lead">{guide.description}</p>
+        </header>
         {content[guide.slug]}
         <nav className="guide-pagination" aria-label="Guide pagination">
           <Link to={index > 0 ? `/docs/${guides[index - 1].slug}` : "/docs"}>

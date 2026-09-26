@@ -153,6 +153,7 @@ export function CardCollection() {
         <label className="card-category">
           Category
           <select
+            className="native-select"
             aria-label="Card category"
             value={category}
             onChange={(e) => update("category", e.target.value)}
@@ -273,7 +274,7 @@ export function CardBlockPage() {
         <IconArrowLeft size={15} />
         All blocks
       </Link>
-      <div className="page-intro">
+      <div className="page-intro documentation-intro">
         <p className="overline">{card.category}</p>
         <h1>{card.title}</h1>
         <p>

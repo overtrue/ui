@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { controlBase } from "@/components/ui/input"
+import "@/styles/native-select.css"
 
 const SelectContext = React.createContext<{
   value: string
@@ -103,7 +104,7 @@ function FormSelect({
 }: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
-      className={cn(controlBase, "h-10", className)}
+      className={cn(controlBase, "native-select h-10", className)}
       defaultValue={defaultValue}
       {...props}
     >

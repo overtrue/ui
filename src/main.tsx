@@ -8,6 +8,7 @@ import "./styles/workspace-base.css"
 import "./styles/workspace-theme.css"
 import "./styles/scenes.css"
 import "./styles/showcase.css"
+import "./styles/native-select.css"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
