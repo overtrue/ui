@@ -89,6 +89,9 @@ try {
           await page
             .getByRole("button", { name: "Access", exact: true })
             .click();
+          await page
+            .getByRole("combobox", { name: "Default member role", exact: true })
+            .waitFor();
           await checkSelects();
         }
       }
@@ -129,6 +132,11 @@ try {
       await page
         .getByRole("button", { name: "Clear search tasks…", exact: true })
         .click();
+      await page.waitForFunction(
+        () =>
+          document.querySelector('[data-slot="search-field"] input').value ===
+          "",
+      );
       assert.equal(await search.inputValue(), "");
       await search.and(page.locator(":focus")).waitFor();
 
@@ -164,6 +172,9 @@ try {
       await checkSelects();
       await page.goto(`${origin}/components/section-card`);
       await page.getByRole("button", { name: "Source", exact: true }).click();
+      await page
+        .getByRole("combobox", { name: "Source file", exact: true })
+        .waitFor();
       await checkSelects();
     }
     await page.evaluate(() => {
