@@ -54,6 +54,7 @@ import { HomeStory } from "./home-story";
 import { HomeHero } from "./home-hero";
 import { CardCollection, CardBlockPage } from "./blocks";
 import { CollectionIntro } from "./collection-intro";
+import { SearchField } from "@/registry/overtrue/search-field";
 import "./site.css";
 import "./home-hero.css";
 import "./home-story.css";
@@ -350,6 +351,7 @@ function ComponentTile({ name }: { name: ItemName }) {
 }
 function Catalog({ blocks = false }: { blocks?: boolean }) {
   const [params, setParams] = useSearchParams();
+  const search = useRef<HTMLInputElement>(null);
   const collection = blockCollections.find(
     (group) => group.label === params.get("blockCategory"),
   );
@@ -372,17 +374,31 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
   };
   const setQuery = (value: string) => updateFilter(queryKey, value);
   const setCategory = (value: string) => updateFilter(categoryKey, value);
-  const items = catalog.filter(
+  const matchingQuery = catalog.filter(
     (item) =>
       (blocks ? item.category === "Blocks" : item.category !== "Blocks") &&
-      (category === "All" ||
-        (blocks
-          ? collection?.names.includes(item.name)
-          : item.category === category)) &&
-      `${item.title} ${item.description}`
+      `${item.title} ${item.name} ${item.description}`
         .toLowerCase()
         .includes(query.trim().toLowerCase()),
   );
+  const categoryItems = (value: string) =>
+    matchingQuery.filter(
+      (item) =>
+        value === "All" ||
+        (blocks
+          ? blockCollections
+              .find((group) => group.label === value)
+              ?.names.includes(item.name)
+          : item.category === value),
+    );
+  const items = categoryItems(category);
+  const clearFilters = () => {
+    const next = new URLSearchParams(window.location.search);
+    next.delete(queryKey);
+    next.delete(categoryKey);
+    setParams(next, { replace: true });
+    search.current?.focus();
+  };
   return (
     <main className="section catalog-page">
       <CollectionIntro blocks={blocks} />
@@ -416,29 +432,47 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
         >
           {categories.map((value) => (
             <button
+              type="button"
               key={value}
               aria-pressed={value === category}
               onClick={() => setCategory(value)}
             >
               {value === "All" && blocks ? "All blocks" : value}
+              <span className="filter-count" aria-hidden="true">
+                {categoryItems(value).length}
+              </span>
             </button>
           ))}
         </div>
-        <label className="search-box">
-          <Search size={16} aria-hidden="true" />
-          <input
-            aria-label={blocks ? "Search composed blocks" : "Search components"}
-            placeholder={blocks ? "Find a block…" : "Search components…"}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </label>
+        <SearchField
+          ref={search}
+          containerClassName="catalog-search"
+          label={blocks ? "Search composed blocks" : "Search components"}
+          placeholder={blocks ? "Find a block…" : "Search components…"}
+          value={query}
+          onValueChange={setQuery}
+          autoComplete="off"
+          spellCheck={false}
+          name={queryKey}
+        />
       </div>
-      <p className="block-result-count" role="status">
-        {items.length} of {blocks ? blockCount : componentCount}{" "}
-        {blocks ? "blocks" : "components"}
-        {category !== "All" ? ` · ${category}` : ""}
-      </p>
+      <div className="catalog-results">
+        <p className="block-result-count" role="status">
+          <strong>{items.length}</strong> of{" "}
+          {blocks ? blockCount : componentCount}{" "}
+          {blocks ? "blocks" : "components"}
+          {category !== "All" ? ` · ${category}` : ""}
+        </p>
+        {(query || category !== "All") && (
+          <button
+            type="button"
+            className="catalog-reset"
+            onClick={clearFilters}
+          >
+            <X size={13} aria-hidden="true" /> Reset filters
+          </button>
+        )}
+      </div>
       <div className={blocks ? "block-grid" : "component-grid"}>
         {items.map((item) => (
           <ComponentTile key={item.name} name={item.name} />
@@ -446,18 +480,10 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
       </div>
       {!items.length && (
         <div className="search-empty">
-          <Search size={24} />
+          <Search size={24} aria-hidden="true" />
           <h2>{blocks ? "No matching blocks." : "No components found."}</h2>
           <p>Try a different term or category.</p>
-          <button
-            className="site-button"
-            onClick={() => {
-              const next = new URLSearchParams(window.location.search);
-              next.delete(queryKey);
-              next.delete(categoryKey);
-              setParams(next, { replace: true });
-            }}
-          >
+          <button className="site-button" type="button" onClick={clearFilters}>
             Clear filters
           </button>
         </div>
@@ -898,6 +924,7 @@ function Docs() {
 }
 function Examples() {
   const [params, setParams] = useSearchParams();
+  const search = useRef<HTMLInputElement>(null);
   const query = params.get("q") ?? "";
   const setQuery = (value: string) => {
     const next = new URLSearchParams(window.location.search);
@@ -974,15 +1001,17 @@ function Examples() {
         <p className="text-sm text-muted-foreground" role="status">
           {pages.length} workspace examples
         </p>
-        <label className="search-box">
-          <Search size={16} />
-          <input
-            aria-label="Search pages"
-            placeholder="Find a page…"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </label>
+        <SearchField
+          ref={search}
+          containerClassName="catalog-search"
+          label="Search pages"
+          placeholder="Find a page…"
+          value={query}
+          onValueChange={setQuery}
+          autoComplete="off"
+          spellCheck={false}
+          name="q"
+        />
       </div>
       <div className="example-list">
         {pages.map((page) => (
@@ -1008,7 +1037,10 @@ function Examples() {
           <button
             type="button"
             className="site-button"
-            onClick={() => setQuery("")}
+            onClick={() => {
+              setQuery("");
+              search.current?.focus();
+            }}
           >
             Clear search
           </button>

@@ -735,29 +735,6 @@
 .filter-tabs button:hover {
   color: var(--site-ink);
 }
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 9px 11px;
-  color: var(--muted-foreground);
-  background: var(--card);
-  flex-shrink: 0;
-}
-.search-box input {
-  background: transparent !important;
-  outline: none;
-  border: 0;
-  min-width: 0;
-  width: 170px;
-  font-size: 12px;
-}
-.search-box:focus-within {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
 .search-empty {
   padding: 80px 20px;
   text-align: center;
@@ -1486,12 +1463,6 @@
     padding: 7px 9px;
     font-size: 11px;
   }
-  .search-box {
-    width: 100%;
-  }
-  .search-box input {
-    width: 100%;
-  }
   .component-grid .tile-preview {
     min-height: 260px;
   }
@@ -2087,10 +2058,6 @@
   margin: 28px 0 24px;
   flex-wrap: wrap;
 }
-.card-filters .search-box {
-  flex: 1;
-  min-width: 220px;
-}
 .card-category {
   display: flex;
   align-items: center;
@@ -2236,9 +2203,6 @@
   }
   .card-filters {
     gap: 12px;
-  }
-  .card-filters .search-box {
-    flex-basis: 100%;
   }
   .card-result-count {
     margin-left: auto;

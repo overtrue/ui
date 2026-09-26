@@ -4,7 +4,6 @@ import {
   IconArrowLeft,
   IconArrowRight,
   IconArrowUpRight,
-  IconSearch,
   IconDeviceDesktop,
   IconDeviceMobile,
   IconArrowDown,
@@ -13,6 +12,7 @@ import {
 import cards from "../blocks/catalog.json";
 import { Command, CopyButton, HighlightedCode } from "./code";
 import { FitPreview } from "./fit-preview";
+import { SearchField } from "@/registry/overtrue/search-field";
 
 const sources = new Map(
   Object.entries(
@@ -97,6 +97,7 @@ function CardPreview({
 }
 export function CardCollection() {
   const [params, setParams] = useSearchParams();
+  const search = useRef<HTMLInputElement>(null);
   const query = params.get("q") ?? "";
   const requestedCategory = params.get("category") ?? "All cards";
   const category = categories.includes(requestedCategory)
@@ -141,15 +142,17 @@ export function CardCollection() {
         </div>
       </div>
       <div className="card-filters">
-        <label className="search-box">
-          <IconSearch size={16} />
-          <input
-            aria-label="Search card blocks"
-            placeholder="Search cards, charts, forms…"
-            value={query}
-            onChange={(e) => update("q", e.target.value)}
-          />
-        </label>
+        <SearchField
+          ref={search}
+          containerClassName="catalog-search"
+          label="Search card blocks"
+          placeholder="Search cards, charts, forms…"
+          value={query}
+          onValueChange={(value) => update("q", value)}
+          autoComplete="off"
+          spellCheck={false}
+          name="q"
+        />
         <label className="card-category">
           Category
           <select
@@ -204,6 +207,7 @@ export function CardCollection() {
               const next = new URLSearchParams(window.location.search);
               for (const key of ["q", "category", "page"]) next.delete(key);
               setParams(next, { replace: true });
+              search.current?.focus();
             }}
           >
             Clear filters

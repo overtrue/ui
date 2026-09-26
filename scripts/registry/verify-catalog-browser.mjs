@@ -57,7 +57,7 @@ try {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto(origin + "/components");
     await page
-      .getByRole("textbox", { name: "Search components", exact: true })
+      .getByRole("searchbox", { name: "Search components", exact: true })
       .fill("Metric group");
     const thumbnail = page.locator(".tile-metric-group");
     await thumbnail.waitFor();
@@ -206,7 +206,10 @@ try {
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto(origin + "/blocks");
-    const blockSearch = page.getByLabel("Search composed blocks");
+    const blockSearch = page.getByRole("searchbox", {
+      name: "Search composed blocks",
+      exact: true,
+    });
     const blockTiles = page.locator(".block-grid .tile-caption");
     const filters = page.locator('[aria-label="Filter composed blocks"]');
     const expectBlockCount = async (count) => {
@@ -246,17 +249,26 @@ try {
       "true",
     );
 
-    await page.getByLabel("Search card blocks").fill("not-a-real-card");
+    await page
+      .getByRole("searchbox", { name: "Search card blocks", exact: true })
+      .fill("not-a-real-card");
     await page
       .locator(".card-collection")
       .getByRole("button", { name: "Clear filters" })
       .click();
+    assert.ok(
+      await page
+        .getByRole("searchbox", { name: "Search card blocks", exact: true })
+        .evaluate((input) => input === document.activeElement),
+    );
     assert.equal(await blockSearch.inputValue(), "  INVOICE  ");
     assert.equal(
       new URL(page.url()).searchParams.get("blockCategory"),
       "Billing",
     );
-    await page.getByLabel("Search card blocks").fill("chart");
+    await page
+      .getByRole("searchbox", { name: "Search card blocks", exact: true })
+      .fill("chart");
     await blockSearch.fill("not-a-real-block");
     const empty = page.locator(".catalog-page > .search-empty");
     await empty.getByRole("heading", { name: "No matching blocks." }).waitFor();
@@ -272,7 +284,9 @@ try {
     );
     await empty.getByRole("button", { name: "Clear filters" }).click();
     assert.equal(
-      await page.getByLabel("Search card blocks").inputValue(),
+      await page
+        .getByRole("searchbox", { name: "Search card blocks", exact: true })
+        .inputValue(),
       "chart",
     );
     await expectBlockCount(
