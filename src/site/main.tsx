@@ -53,10 +53,12 @@ import { sitePages } from "./pages";
 import { HomeStory } from "./home-story";
 import { HomeHero } from "./home-hero";
 import { CardCollection, CardBlockPage } from "./blocks";
+import { CollectionIntro } from "./collection-intro";
 import "./site.css";
 import "./home-hero.css";
 import "./home-story.css";
 import "./navigation-polish.css";
+import "./inner-pages.css";
 import "@/styles/native-select.css";
 
 const sources = import.meta.glob("../registry/overtrue/*.tsx", {
@@ -313,6 +315,7 @@ function ComponentTile({ name }: { name: ItemName }) {
   return (
     <article
       className={`component-tile tile-${name}${item.category === "Blocks" && !("previewHeight" in item) ? " tile-wide" : ""}`}
+      data-category={item.category}
     >
       <div className="tile-preview" inert aria-hidden="true">
         <FitPreview
@@ -382,19 +385,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
   );
   return (
     <main className="section catalog-page">
-      <div className="page-intro">
-        <p className="overline">THE OVERTRUE/UI COLLECTION</p>
-        <h1>
-          {blocks
-            ? "A head start, assembled."
-            : "Small components. Big head start."}
-        </h1>
-        <p>
-          {blocks
-            ? "Complete interfaces and individual cards from the workspace examples. Every piece is yours to change."
-            : "Practical, composable pieces for your next admin interface. Preview it. Install it. Make it yours."}
-        </p>
-      </div>
+      <CollectionIntro blocks={blocks} />
       {blocks && (
         <>
           <nav className="collection-shortcuts" aria-label="Block collections">
@@ -549,7 +540,11 @@ function ComponentPage() {
           <ChevronRight size={12} />
           {item.title}
         </div>
-        <div className="page-intro">
+        <div className="page-intro documentation-intro">
+          <p className="overline">
+            {isBlock ? "COMPOSED INTERFACE" : item.category.toUpperCase()}{" "}
+            <span>/ EDITABLE SOURCE</span>
+          </p>
           <h1>{item.title}</h1>
           {dashboardCatalog.some((entry) => entry.name === item.name) && (
             <p className="component-credit" data-component-credit>
@@ -572,38 +567,6 @@ function ComponentPage() {
           <a href="#usage">Usage</a>
           {"api" in item && <a href="#props">Props</a>}
         </nav>
-        {[
-          "stat-card",
-          "kpi-card",
-          "metric-group",
-          "data-table",
-          "advanced-data-table",
-        ].includes(item.name) && (
-          <p className="note">
-            {item.name === "stat-card" ||
-            item.name === "kpi-card" ||
-            item.name === "metric-group" ? (
-              <>
-                Start with <Link to="/components/stat-card">Stat card</Link> for
-                a formatted value and an explicit trend. Choose{" "}
-                <Link to="/components/kpi-card">KPI card</Link> for numeric
-                formatting and fractional deltas, or{" "}
-                <Link to="/components/metric-group">Metric group</Link> for
-                related values on one surface. Both cards use{" "}
-                <code>sparkline</code> for chart data.
-              </>
-            ) : (
-              <>
-                Start with <Link to="/components/data-table">Data table</Link>{" "}
-                for search, sorting, and pagination. Choose{" "}
-                <Link to="/components/advanced-data-table">
-                  Interactive table
-                </Link>{" "}
-                when you need row selection, column controls, or bulk actions.
-              </>
-            )}
-          </p>
-        )}
         <div className="workspace-toolbar" id="component-preview">
           <div
             className="filter-tabs"
@@ -656,6 +619,38 @@ function ComponentPage() {
             </div>
             <HighlightedCode text={source} language="tsx" />
           </div>
+        )}
+        {[
+          "stat-card",
+          "kpi-card",
+          "metric-group",
+          "data-table",
+          "advanced-data-table",
+        ].includes(item.name) && (
+          <p className="note">
+            {item.name === "stat-card" ||
+            item.name === "kpi-card" ||
+            item.name === "metric-group" ? (
+              <>
+                Start with <Link to="/components/stat-card">Stat card</Link> for
+                a formatted value and an explicit trend. Choose{" "}
+                <Link to="/components/kpi-card">KPI card</Link> for numeric
+                formatting and fractional deltas, or{" "}
+                <Link to="/components/metric-group">Metric group</Link> for
+                related values on one surface. Both cards use{" "}
+                <code>sparkline</code> for chart data.
+              </>
+            ) : (
+              <>
+                Start with <Link to="/components/data-table">Data table</Link>{" "}
+                for search, sorting, and pagination. Choose{" "}
+                <Link to="/components/advanced-data-table">
+                  Interactive table
+                </Link>{" "}
+                when you need row selection, column controls, or bulk actions.
+              </>
+            )}
+          </p>
         )}
         <h2 id="installation">Installation</h2>
         <p>
@@ -766,13 +761,20 @@ function Docs() {
       <DocsSidebar />
       <article className="docs-content prose-docs">
         <DocsMobileNavigation />
-        <p className="overline">DOCUMENTATION</p>
-        <h1 id="introduction">Meet your new starting point.</h1>
-        <p className="lead">
-          overtrue/ui is a collection of editable components for admin panels,
-          dashboards, and consoles. Familiar shadcn/ui foundations, with the
-          compact layouts and considered details.
-        </p>
+        <header className="documentation-intro">
+          <p className="overline">
+            DOCUMENTATION <span>/ START HERE</span>
+          </p>
+          <h1 id="introduction">
+            Meet your new <br />
+            <em>starting point.</em>
+          </h1>
+          <p className="lead">
+            overtrue/ui is a collection of editable components for admin panels,
+            dashboards, and consoles. Familiar shadcn/ui foundations, with
+            compact layouts and considered details.
+          </p>
+        </header>
         <div className="docs-callout">
           <Layers size={20} />
           <p>
@@ -910,8 +912,10 @@ function Examples() {
   );
   return (
     <main className="section examples-page">
-      <div className="page-intro">
-        <p className="overline">WORKSPACE EXAMPLES</p>
+      <div className="page-intro examples-intro">
+        <p className="overline">
+          THE WORKSPACE ATLAS <span>/ 03</span>
+        </p>
         <h1>{workspacePages.length} pages. Plenty of possibilities.</h1>
         <p>
           Explore project boards, client records, billing, and the everyday
@@ -919,9 +923,13 @@ function Examples() {
         </p>
       </div>
       <div className="example-feature">
-        <div>
-          <Layers size={28} />
-          <h2>The complete demo</h2>
+        <div className="example-feature-copy">
+          <p className="overline">ACME STUDIO / LIVE DEMO</p>
+          <h2>
+            A workspace,
+            <br />
+            <em>with character.</em>
+          </h2>
           <p>
             One place to explore dashboards, forms, charts, layouts, and the
             details in between.
@@ -930,6 +938,22 @@ function Examples() {
             Open live preview
             <ArrowUpRight size={16} />
           </a>
+          <span className="example-feature-note">
+            Try the flows. Explore the details.
+          </span>
+        </div>
+        <div className="example-feature-preview" inert aria-hidden="true">
+          <div className="example-window-bar">
+            <span />
+            <span />
+            <span />
+            <small>acme.studio / overview</small>
+          </div>
+          <FitPreview width={1050} height={660} fit="crop-tall">
+            <div className="example-dashboard-crop">
+              <Example name="dashboard" />
+            </div>
+          </FitPreview>
         </div>
         <div className="example-feature-links">
           {[
@@ -937,8 +961,9 @@ function Examples() {
             { name: "Forms", path: "/form-elements" },
             { name: "Charts", path: "/charts" },
             { name: "Settings", path: "/settings" },
-          ].map((link) => (
+          ].map((link, index) => (
             <a key={link.name} href={`/workspace/#${link.path}`}>
+              <span className="example-link-index">0{index + 1}</span>
               {link.name}
               <ArrowUpRight size={16} />
             </a>
@@ -962,6 +987,9 @@ function Examples() {
       <div className="example-list">
         {pages.map((page) => (
           <a key={page.path} href={`/workspace/#${page.path}`}>
+            <span className="example-page-index" aria-hidden="true">
+              {String(workspacePages.indexOf(page) + 1).padStart(2, "0")}
+            </span>
             <span>
               {page.title}
               <small>
