@@ -22,7 +22,7 @@ function hasErrorBorder(element) {
 
 try {
   for (const scheme of ["light", "dark"]) {
-    for (const width of [1440, 390]) {
+    for (const width of [1440, 390, 320]) {
       const page = await browser.newPage({ viewport: { width, height: 900 } });
       page.on("pageerror", (error) => errors.push(error.message));
       await page.addInitScript((scheme) => {
@@ -220,6 +220,42 @@ try {
             3,
             "clearing a search preserves archived conversations",
           );
+        }
+      }
+      if (width < 576) {
+        for (const route of ["tasks-list", "datatables", "tables"]) {
+          await page.goto(`${origin}/workspace/#/${route}`);
+          await page.locator(`[data-workspace-page="${route}"]`).waitFor();
+          const table = page.locator(".scene-table-wrap").first();
+          assert.ok(
+            await table.evaluate((element) => {
+              const pinned = element
+                .querySelector("th")
+                .getBoundingClientRect();
+              return pinned.width < element.clientWidth / 2;
+            }),
+            `${route} leaves room for data beside the pinned mobile column`,
+          );
+          if (route === "tasks-list") {
+            const status = page.getByRole("combobox", {
+              name: "Status of WK-182",
+              exact: true,
+            });
+            await status.scrollIntoViewIfNeeded();
+            await status.selectOption("In review");
+            assert.equal(await status.inputValue(), "In review");
+            assert.ok(
+              await status.evaluate((element) => {
+                const rect = element.getBoundingClientRect();
+                const hit = document.elementFromPoint(
+                  rect.left + rect.width / 2,
+                  rect.top + rect.height / 2,
+                );
+                return hit === element;
+              }),
+              "the pinned task name does not cover the status control",
+            );
+          }
         }
       }
       checked++;
