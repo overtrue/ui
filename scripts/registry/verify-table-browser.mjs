@@ -47,6 +47,9 @@ try {
         .getByRole("button", { name: "Clear search", exact: true })
         .click();
       assert.equal(await search.inputValue(), "");
+      assert.ok(
+        await search.evaluate((input) => input === document.activeElement),
+      );
       assert.equal(await simple.locator("tbody tr").count(), 5);
       await search.fill("Maya");
       const clear = simple.getByRole("button", {
@@ -100,6 +103,9 @@ try {
       await basic.getByRole("button", { name: "Clear filters" }).click();
       await basic.getByText("Page 1 of 2", { exact: true }).waitFor();
       assert.equal(await filter.inputValue(), "");
+      assert.ok(
+        await filter.evaluate((input) => input === document.activeElement),
+      );
       assert.equal(await basic.locator("tbody tr").count(), 8);
       await basic.getByRole("button", { name: "Views", exact: true }).click();
       assert.ok(

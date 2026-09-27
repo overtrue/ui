@@ -36,32 +36,13 @@
 .component-sidebar .back-link {
   margin-bottom: 14px;
 }
-.sidebar-search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 10px;
+.directory-search {
   margin: 0 3px 18px;
-  min-height: 36px;
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  color: var(--muted-foreground);
-  background: var(--site-bg);
-}
-.sidebar-search:focus-within {
-  border-color: var(--ring);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 12%, transparent);
-}
-.sidebar-search svg {
   flex-shrink: 0;
 }
-.sidebar-search input {
-  min-width: 0;
-  width: 100%;
-  outline: none;
-  background: transparent;
+.directory-search input {
+  height: 36px;
   font-size: 11px;
-  color: var(--foreground);
 }
 .component-sidebar-links {
   min-height: 0;
@@ -75,12 +56,19 @@
   margin-top: 20px;
 }
 .component-sidebar-links h2 {
+  display: flex;
+  justify-content: space-between;
   margin: 0 0 6px;
   padding-inline: 10px;
   font-size: 10px;
   font-weight: 600;
   line-height: 2;
   color: var(--foreground);
+}
+.component-sidebar-links h2 span {
+  color: var(--muted-foreground);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
 }
 .component-sidebar-links a {
   display: block;

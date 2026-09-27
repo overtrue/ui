@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { IconCheck } from "@tabler/icons-react";
 import {
   Scene,
   SceneCard,
@@ -31,6 +32,7 @@ export function Settings({
     [notifications, setNotifications] = useState([true, false, true, true]),
     [twoStep, setTwoStep] = useState(true);
   const field = (key: keyof typeof fields) => ({
+    name: key,
     value: fields[key],
     onChange: (
       event: React.ChangeEvent<
@@ -58,7 +60,10 @@ export function Settings({
               setSaved(false);
             }}
           />
-          <p>Changes in this example stay in the current session.</p>
+          <p>
+            Explore each section. Leaving or reloading this page restores the
+            sample data.
+          </p>
         </aside>
         <SceneCard
           title={
@@ -92,19 +97,36 @@ export function Settings({
                     </p>
                   </div>
                 </div>
+                <p className="scene-form-hint">
+                  Fields marked with * are required.
+                </p>
                 <div className="scene-form-grid">
                   <label>
-                    {client ? "Client name" : "Workspace name"}
+                    <span className="scene-field-label">
+                      {client ? "Client name" : "Workspace name"}{" "}
+                      <span className="scene-required" aria-hidden="true">
+                        *
+                      </span>
+                    </span>
                     <input
                       required
+                      autoComplete="organization"
+                      pattern=".*\S.*"
                       {...field("name")}
                       placeholder="Company or organization"
                     />
                   </label>
                   <label>
-                    Contact email
+                    <span className="scene-field-label">
+                      Contact email{" "}
+                      <span className="scene-required" aria-hidden="true">
+                        *
+                      </span>
+                    </span>
                     <input
                       type="email"
+                      autoComplete="email"
+                      spellCheck={false}
                       required
                       {...field("email")}
                       placeholder="hello@example.com"
@@ -205,11 +227,12 @@ export function Settings({
                 {client ? "Save client" : "Save changes"}
               </Action>
               {saved && (
-                <span role="status">
+                <div className="scene-form-result" role="status">
+                  <IconCheck size={18} aria-hidden="true" />
                   {client
-                    ? "Client saved in this demo session."
-                    : "Your changes have been saved for this session."}
-                </span>
+                    ? "Client saved in this preview."
+                    : "Your changes have been saved in this preview."}
+                </div>
               )}
             </div>
           </form>

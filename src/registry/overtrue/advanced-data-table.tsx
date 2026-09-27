@@ -1074,9 +1074,15 @@ function DataTableContent<TData extends RowData>({
                   variant="outline"
                   size="sm"
                   className="mt-4 shadow-none"
-                  onClick={() => {
+                  onClick={(event) => {
                     table.resetColumnFilters();
                     table.setPageIndex(0);
+                    event.currentTarget
+                      .closest('[data-slot="data-table"]')
+                      ?.querySelector<HTMLElement>(
+                        '[data-slot="data-table-search"]:not(:disabled), [data-slot="data-table-toolbar"] button:not(:disabled)',
+                      )
+                      ?.focus();
                   }}
                 >
                   Clear filters

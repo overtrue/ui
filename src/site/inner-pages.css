@@ -130,11 +130,98 @@
 }
 .catalog-page > .catalog-toolbar {
   margin-top: 24px;
+  flex-wrap: wrap;
+}
+.catalog-search {
+  width: 260px;
+  flex-shrink: 0;
+  max-width: 100%;
+}
+.catalog-search input {
+  font-size: 12px;
+}
+.catalog-page .catalog-toolbar .filter-tabs {
+  flex: 1;
+  gap: 4px;
+}
+.catalog-page .catalog-toolbar .filter-tabs button {
+  min-height: 40px;
+  padding-inline: 12px;
+  color: var(--foreground);
+}
+.catalog-page .catalog-toolbar .filter-tabs button:hover {
+  background: var(--muted);
+}
+.filter-count {
+  min-width: 18px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+.catalog-results {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 36px;
+  margin-bottom: 20px;
+}
+.catalog-results .block-result-count {
+  margin: 0;
+}
+.catalog-results strong {
+  color: var(--foreground);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.catalog-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.catalog-reset:hover {
+  background: var(--muted);
+  color: var(--foreground);
+}
+.catalog-results + :is(.component-grid, .block-grid) {
+  margin-top: 0;
+}
+.card-filters .catalog-search {
+  flex: 1;
 }
 .catalog-page .catalog-toolbar .filter-tabs button[aria-pressed="true"] {
   background: var(--foreground);
   color: var(--site-bg);
   box-shadow: 0 1px 2px #00000014;
+}
+@media (max-width: 767px) {
+  .catalog-search {
+    width: 100%;
+  }
+  .card-filters .catalog-search {
+    flex-basis: 100%;
+  }
+  .catalog-search input {
+    height: 44px;
+    font-size: 16px;
+    padding-inline-end: 44px;
+  }
+  .catalog-search > button {
+    width: 36px;
+    height: 36px;
+  }
+  .catalog-page .catalog-toolbar .filter-tabs button,
+  .catalog-reset {
+    min-height: 44px;
+  }
 }
 .catalog-page :is(.component-tile, .card-library-tile) {
   border-radius: 12px;

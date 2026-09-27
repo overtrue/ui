@@ -27,12 +27,7 @@ export function Billing({ id = "pay" }: { id?: string }) {
           name="workspace-invoices"
           rows={[
             ["Invoice", "Client", "Amount", "Status"],
-            ...invoices.map((i) => [
-              i.id,
-              i.client,
-              String(i.amount),
-              i.status,
-            ]),
+            ...shown.map((i) => [i.id, i.client, String(i.amount), i.status]),
           ]}
         />
       }
@@ -60,14 +55,19 @@ export function Billing({ id = "pay" }: { id?: string }) {
           value={filter}
           onChange={setFilter}
         />
-        <div className="scene-table-wrap">
+        <div
+          className="scene-table-wrap"
+          tabIndex={0}
+          role="region"
+          aria-label="Invoices, scroll to see all columns"
+        >
           <table className="scene-table">
             <thead>
               <tr>
                 <th>Invoice</th>
                 <th>Client</th>
                 <th>Issued</th>
-                <th>Amount</th>
+                <th className="scene-number">Amount</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -82,7 +82,7 @@ export function Billing({ id = "pay" }: { id?: string }) {
                     <small>{i.description}</small>
                   </td>
                   <td>{i.issued}</td>
-                  <td>${i.amount.toLocaleString()}</td>
+                  <td className="scene-number">${i.amount.toLocaleString()}</td>
                   <td>
                     <Pill>{i.status}</Pill>
                   </td>
@@ -90,6 +90,21 @@ export function Billing({ id = "pay" }: { id?: string }) {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="scene-table-summary" role="status">
+          <span>
+            {shown.length} of {invoices.length} invoices
+            {filter !== "All invoices" ? ` · ${filter}` : ""}
+          </span>
+          <span>
+            View total{" "}
+            <strong>
+              $
+              {shown
+                .reduce((total, invoice) => total + invoice.amount, 0)
+                .toLocaleString()}
+            </strong>
+          </span>
         </div>
       </SceneCard>
     </Scene>
@@ -151,8 +166,8 @@ export function Invoice() {
           <thead>
             <tr>
               <th>Description</th>
-              <th>Qty</th>
-              <th>Amount</th>
+              <th className="scene-number">Qty</th>
+              <th className="scene-number">Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -163,8 +178,10 @@ export function Invoice() {
                   Discovery & initial direction · 35% project deposit
                 </small>
               </td>
-              <td>1</td>
-              <td>${inv.amount.toLocaleString()}.00</td>
+              <td className="scene-number">1</td>
+              <td className="scene-number">
+                ${inv.amount.toLocaleString()}.00
+              </td>
             </tr>
           </tbody>
         </table>

@@ -904,8 +904,20 @@
       [data-workspace-page="tables"]
     )
     .scene-table
-    th:first-child {
-    min-width: 240px;
+    :is(th, td):first-child {
+    width: min(40vw, 160px);
+    min-width: min(40vw, 160px);
+    max-width: min(40vw, 160px);
+    overflow-wrap: anywhere;
+  }
+  :is(
+      [data-workspace-page="tasks-list"],
+      [data-workspace-page="datatables"],
+      [data-workspace-page="tables"]
+    )
+    .scene-table
+    :is(th, td) {
+    padding-inline: 16px;
   }
   .workspace-cookie-banner .pn-row {
     row-gap: 12px;

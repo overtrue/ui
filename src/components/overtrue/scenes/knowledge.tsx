@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { documents } from "@/data/workspace/studio";
 import { Scene, SceneCard, SearchField, Go, Pill } from "./shared";
 const questions = [
@@ -28,6 +28,7 @@ const questions = [
   ],
 ];
 export function Knowledge({ id = "search-results" }: { id?: string }) {
+  const searchRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState(
     () => new URLSearchParams(location.hash.split("?")[1]).get("query") ?? "",
   );
@@ -55,6 +56,7 @@ export function Knowledge({ id = "search-results" }: { id?: string }) {
             difference.
           </p>
           <SearchField
+            ref={searchRef}
             value={query}
             onChange={setQuery}
             placeholder="What would you like to know?"
@@ -71,7 +73,14 @@ export function Knowledge({ id = "search-results" }: { id?: string }) {
         <div className="scene-empty-search">
           <h3>No results for “{query}”</h3>
           <p>Try a shorter phrase, such as “project” or “files”.</p>
-          <button className="scene-button" onClick={() => setQuery("")}>
+          <button
+            type="button"
+            className="scene-button"
+            onClick={() => {
+              setQuery("");
+              searchRef.current?.focus();
+            }}
+          >
             Clear search
           </button>
         </div>
@@ -322,9 +331,9 @@ export function Legal({ id = "license" }: { id?: string }) {
       >
         <div className="scene-article">
           <p>
-            overtrue/ui is a collection of interfaces for admin tools, dashboards,
-            and team workspaces. The component source is available under the MIT
-            license.
+            overtrue/ui is a collection of interfaces for admin tools,
+            dashboards, and team workspaces. The component source is available
+            under the MIT license.
           </p>
           <h2>Your code, your application</h2>
           <p>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { team, updates } from "@/data/workspace/studio";
 import {
   Scene,
@@ -41,6 +41,7 @@ const threads = [
   },
 ];
 export function Inbox() {
+  const searchRef = useRef<HTMLInputElement>(null);
   const [selected, setSelected] = useState(0),
     [query, setQuery] = useState(""),
     [drafts, setDrafts] = useState<Record<number, string>>({}),
@@ -74,6 +75,7 @@ export function Inbox() {
       <div className="scene-inbox">
         <aside>
           <SearchField
+            ref={searchRef}
             value={query}
             onChange={setQuery}
             placeholder="Search messages…"
@@ -184,8 +186,11 @@ export function Inbox() {
               <Action
                 onClick={() => {
                   setQuery("");
-                  setArchived([]);
-                  setSelected(0);
+                  if (!query) {
+                    setArchived([]);
+                    setSelected(0);
+                  }
+                  searchRef.current?.focus();
                 }}
               >
                 {query ? "Clear search" : "Restore conversations"}

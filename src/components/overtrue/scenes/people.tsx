@@ -11,7 +11,7 @@ import {
   MediaCardContent,
 } from "@/registry/overtrue/media-card";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { team, projects } from "@/data/workspace/studio";
 import {
   Scene,
@@ -26,6 +26,7 @@ import {
   Action,
 } from "./shared";
 export function People() {
+  const searchRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   return (
     <Scene
@@ -37,6 +38,7 @@ export function People() {
       <div className="scene-toolbar">
         <span>8 members · Working across Europe & Asia</span>
         <SearchField
+          ref={searchRef}
           value={query}
           onChange={setQuery}
           placeholder="Search people or disciplines…"
@@ -50,7 +52,14 @@ export function People() {
         <div className="scene-empty-search">
           <h3>No members found</h3>
           <p>Try a name, discipline, or city.</p>
-          <Action onClick={() => setQuery("")}>Clear search</Action>
+          <Action
+            onClick={() => {
+              setQuery("");
+              searchRef.current?.focus();
+            }}
+          >
+            Clear search
+          </Action>
         </div>
       )}
       <div className="scene-people-grid">

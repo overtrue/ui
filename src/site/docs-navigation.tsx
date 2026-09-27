@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { IconSearch } from "@tabler/icons-react";
+import { useEffect, useRef, useState } from "react";
+import { SearchField } from "@/registry/overtrue/search-field";
 import { catalogPath, catalog } from "./catalog";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { IconArrowUpRight } from "@tabler/icons-react";
@@ -78,6 +78,20 @@ export function ComponentSidebar({
   collectionPath: string;
 }) {
   const [query, setQuery] = useState("");
+  const directory = useRef<HTMLElement>(null);
+  const search = useRef<HTMLInputElement>(null);
+  const { pathname } = useLocation();
+  useEffect(() => {
+    const nav = directory.current;
+    const active = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!nav || !active || !nav.clientHeight) return;
+    const link = active.getBoundingClientRect();
+    const bounds = nav.getBoundingClientRect();
+    if (link.top < bounds.top || link.bottom > bounds.bottom) {
+      nav.scrollTop +=
+        link.top - bounds.top - (nav.clientHeight - link.height) / 2;
+    }
+  }, [pathname, query]);
   const filtered = items.filter((item) =>
     `${item.title} ${item.name} ${item.category}`
       .toLowerCase()
@@ -89,25 +103,30 @@ export function ComponentSidebar({
       <Link className="back-link" to={collectionPath}>
         ← All {collection.toLowerCase()}
       </Link>
-      <label className="sidebar-search">
-        <IconSearch size={14} aria-hidden="true" />
-        <input
-          type="search"
-          aria-label={`Find in ${collection.toLowerCase()}`}
-          placeholder={`Find ${collection.toLowerCase()}…`}
-          autoComplete="off"
-          spellCheck={false}
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
-      </label>
+      <SearchField
+        ref={search}
+        containerClassName="directory-search"
+        label={`Find in ${collection.toLowerCase()}`}
+        placeholder={`Find ${collection.toLowerCase()}…`}
+        autoComplete="off"
+        spellCheck={false}
+        name="directory-search"
+        value={query}
+        onValueChange={setQuery}
+      />
       <nav
+        ref={directory}
         className="component-sidebar-links"
         aria-label={`${collection} directory`}
       >
         {groups.map((group) => (
           <div key={group}>
-            <h2>{group}</h2>
+            <h2>
+              {group}
+              <span aria-hidden="true">
+                {filtered.filter((item) => item.category === group).length}
+              </span>
+            </h2>
             {filtered
               .filter((item) => item.category === group)
               .map((item) => (
@@ -120,7 +139,13 @@ export function ComponentSidebar({
         {!filtered.length && (
           <div className="sidebar-empty">
             <p role="status">No matches.</p>
-            <button type="button" onClick={() => setQuery("")}>
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                search.current?.focus();
+              }}
+            >
               Clear search
             </button>
           </div>
