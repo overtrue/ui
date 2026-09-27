@@ -13,7 +13,10 @@ let checked = 0;
 
 function hasErrorBorder(element) {
   const marker = document.createElement("span");
-  marker.style.color = "hsl(var(--destructive))";
+  const token = getComputedStyle(element).getPropertyValue("--destructive");
+  marker.style.color = CSS.supports("color", token)
+    ? "var(--destructive)"
+    : "hsl(var(--destructive))";
   element.parentElement.append(marker);
   const expected = getComputedStyle(marker).color;
   marker.remove();
@@ -258,6 +261,26 @@ try {
           }
         }
       }
+      await page.goto(
+        `${origin}/card-preview.html?id=client-form-02-primary-contact-2&theme=${scheme}`,
+      );
+      const cardEmail = page.getByRole("textbox", {
+        name: "Contact email",
+        exact: true,
+      });
+      await cardEmail.pressSequentially("invalid");
+      await cardEmail.press("Tab");
+      await page.waitForFunction(
+        hasErrorBorder,
+        await cardEmail.elementHandle(),
+      );
+      assert.notEqual(
+        await cardEmail.evaluate(
+          (element) => getComputedStyle(element).boxShadow,
+        ),
+        "none",
+        "installed cards retain the shared error ring with full-color theme tokens",
+      );
       checked++;
       await page.close();
     }

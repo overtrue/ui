@@ -341,7 +341,7 @@
   vertical-align: middle;
 }
 .scene-table tbody tr:hover {
-  background: hsl(var(--muted) / 0.5);
+  background: color-mix(in srgb, hsl(var(--muted)) 50%, transparent);
 }
 .scene-table tr:last-child td {
   border: 0;
@@ -1492,7 +1492,8 @@
 .scene :is(input, textarea, select):user-invalid,
 .scene-auth input:user-invalid {
   border-color: hsl(var(--destructive));
-  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.15);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, hsl(var(--destructive)) 15%, transparent);
 }
 .scene :is(input, textarea, select):disabled {
   background: hsl(var(--muted));
