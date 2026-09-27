@@ -62,7 +62,7 @@ export function Records({ id = "datatables" }: { id?: string }) {
                 <th>Project</th>
                 <th>Owner</th>
                 <th>Status</th>
-                <th>Budget</th>
+                <th className="scene-number">Budget</th>
                 <th>Delivery</th>
               </tr>
             </thead>
@@ -81,7 +81,7 @@ export function Records({ id = "datatables" }: { id?: string }) {
                   <td>
                     <Pill>{p.status}</Pill>
                   </td>
-                  <td>${p.budget.toLocaleString()}</td>
+                  <td className="scene-number">${p.budget.toLocaleString()}</td>
                   <td>{p.due}</td>
                 </tr>
               ))}
@@ -90,6 +90,20 @@ export function Records({ id = "datatables" }: { id?: string }) {
           {!rows.length && (
             <p className="scene-empty">No projects match this search.</p>
           )}
+        </div>
+        <div className="scene-table-summary" role="status">
+          <span>
+            {rows.length} of {projects.length} projects
+          </span>
+          <span>
+            View budget{" "}
+            <strong>
+              $
+              {rows
+                .reduce((total, project) => total + project.budget, 0)
+                .toLocaleString()}
+            </strong>
+          </span>
         </div>
       </SceneCard>
       <div className="scene-grid-two">
@@ -348,8 +362,8 @@ export function ServiceStatus({ id = "uptime" }: { id?: string }) {
           <div className="scene-note">
             <h3>Context matters.</h3>
             <p>
-              These are illustrative service records for the overtrue/ui demo, not a
-              live status feed.
+              These are illustrative service records for the overtrue/ui demo,
+              not a live status feed.
             </p>
           </div>
         </aside>

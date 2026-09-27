@@ -717,6 +717,9 @@ export function ClientForm() {
       title="A new client relationship"
       description="Start with the essentials. Keep contact, billing, and project context together."
     >
+      <p className="scene-form-hint">
+        Fields marked with * are required. Everything else can be added later.
+      </p>
       <form
         className="scene-grid-main scene-form"
         onSubmit={(e) => {
@@ -732,9 +735,17 @@ export function ClientForm() {
           >
             <div className="scene-form-grid">
               <label>
-                Client name
+                <span className="scene-field-label">
+                  Client name{" "}
+                  <span className="scene-required" aria-hidden="true">
+                    *
+                  </span>
+                </span>
                 <input
                   required
+                  name="organization"
+                  autoComplete="section-client organization"
+                  pattern=".*\S.*"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Company or organization"
@@ -742,11 +753,17 @@ export function ClientForm() {
               </label>
               <label>
                 Website
-                <input type="url" placeholder="https://example.com" />
+                <input
+                  name="website"
+                  type="url"
+                  autoComplete="section-client url"
+                  spellCheck={false}
+                  placeholder="https://example.com"
+                />
               </label>
               <label>
                 Industry
-                <select className="native-select">
+                <select name="industry" className="native-select">
                   <option>Culture & education</option>
                   <option>Design & creative</option>
                   <option>Technology</option>
@@ -755,7 +772,7 @@ export function ClientForm() {
               </label>
               <label>
                 Relationship owner
-                <select className="native-select">
+                <select name="owner" className="native-select">
                   {team.map((p) => (
                     <option key={p.id}>{p.name}</option>
                   ))}
@@ -769,39 +786,78 @@ export function ClientForm() {
           >
             <div className="scene-form-grid">
               <label>
-                Contact name
-                <input required placeholder="Full name" />
+                <span className="scene-field-label">
+                  Contact name{" "}
+                  <span className="scene-required" aria-hidden="true">
+                    *
+                  </span>
+                </span>
+                <input
+                  name="contact-name"
+                  autoComplete="section-contact name"
+                  pattern=".*\S.*"
+                  required
+                  placeholder="Full name"
+                />
               </label>
               <label>
-                Contact email
-                <input type="email" required placeholder="hello@example.com" />
+                <span className="scene-field-label">
+                  Contact email{" "}
+                  <span className="scene-required" aria-hidden="true">
+                    *
+                  </span>
+                </span>
+                <input
+                  name="contact-email"
+                  type="email"
+                  autoComplete="section-contact email"
+                  spellCheck={false}
+                  required
+                  placeholder="hello@example.com"
+                />
               </label>
               <label>
                 Role
-                <input placeholder="For example, Project lead" />
+                <input
+                  name="contact-role"
+                  autoComplete="section-contact organization-title"
+                  placeholder="For example, Project lead"
+                />
               </label>
               <label>
                 Phone number
-                <input type="tel" placeholder="+44 20 7946 0000" />
+                <input
+                  name="contact-phone"
+                  type="tel"
+                  autoComplete="section-contact tel"
+                  placeholder="+44 20 7946 0000"
+                />
+              </label>
+              <label className="col-span-full">
+                Project context
+                <textarea
+                  name="project-context"
+                  rows={4}
+                  placeholder="What are they hoping to achieve?"
+                />
               </label>
             </div>
-            <label>
-              Project context
-              <textarea
-                rows={4}
-                placeholder="What are they hoping to achieve?"
-              />
-            </label>
           </SceneCard>
           <SceneCard title="03 · Billing preferences">
             <div className="scene-form-grid">
               <label>
                 Billing email
-                <input type="email" placeholder="accounts@example.com" />
+                <input
+                  name="billing-email"
+                  type="email"
+                  autoComplete="section-billing email"
+                  spellCheck={false}
+                  placeholder="accounts@example.com"
+                />
               </label>
               <label>
                 Currency
-                <select className="native-select">
+                <select name="currency" className="native-select">
                   <option>USD — US Dollar</option>
                   <option>EUR — Euro</option>
                   <option>GBP — British Pound</option>
@@ -809,7 +865,7 @@ export function ClientForm() {
               </label>
               <label>
                 Payment terms
-                <select className="native-select">
+                <select name="payment-terms" className="native-select">
                   <option>Net 30 days</option>
                   <option>Net 14 days</option>
                   <option>Due on receipt</option>
@@ -817,11 +873,15 @@ export function ClientForm() {
               </label>
               <label>
                 Tax reference
-                <input placeholder="Optional" />
+                <input
+                  name="tax-reference"
+                  spellCheck={false}
+                  placeholder="Optional"
+                />
               </label>
             </div>
             <label className="scene-checkbox">
-              <input type="checkbox" defaultChecked />
+              <input name="copy-invoices" type="checkbox" defaultChecked />
               Send a copy of invoices to the primary contact
             </label>
             <div className="scene-form-footer">
@@ -830,7 +890,11 @@ export function ClientForm() {
               </Action>
               <Go to="/client-overview">Cancel</Go>
               {saved && (
-                <span role="status">{name} saved in this demo session.</span>
+                <div className="scene-form-result" role="status">
+                  <IconCheck size={18} aria-hidden="true" />
+                  {name.trim()} saved in this preview. Leaving or reloading this
+                  page restores the sample data.
+                </div>
               )}
             </div>
           </SceneCard>
