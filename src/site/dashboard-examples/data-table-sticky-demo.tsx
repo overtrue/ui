@@ -330,7 +330,7 @@ const columns = helper.columns([
     // Pinned columns need a size: the sticky offsets are measured from it.
     size: 48,
     enableHiding: false,
-    header: () => <span className="sr-only"> Start something </span>,
+    header: () => <span className="sr-only">Actions</span>,
     cell: ({ row }) => (
       <div className="flex justify-end">
         <RowActions row={row} />

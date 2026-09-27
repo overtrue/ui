@@ -162,13 +162,73 @@ try {
           () => document.documentElement.scrollWidth <= innerWidth + 1,
         ),
       );
+      for (const route of [
+        "users",
+        "gallery",
+        "search-results",
+        "email-inbox",
+      ]) {
+        await page.goto(`${origin}/workspace/#/${route}`);
+        await page.locator(`[data-workspace-page="${route}"]`).waitFor();
+        if (route === "email-inbox") {
+          await page
+            .getByRole("button", { name: "Archive", exact: true })
+            .click();
+        }
+        const search = page.getByRole("searchbox");
+        await search.fill("no-matching-record");
+        await page
+          .getByRole("button", {
+            name: route === "gallery" ? "Clear filters" : "Clear search",
+            exact: true,
+          })
+          .click();
+        assert.ok(
+          await search.evaluate((input) => input === document.activeElement),
+          `${route} returns focus to search after an empty result`,
+        );
+        assert.equal(await search.inputValue(), "");
+        if (route === "gallery") {
+          const preview = page.locator(".scene-library > button").first();
+          await preview.click();
+          await page.getByRole("dialog").waitFor();
+          await page
+            .getByRole("button", { name: "Next asset", exact: true })
+            .click();
+          await page.keyboard.press("Escape");
+          await page.getByRole("dialog").waitFor({ state: "hidden" });
+          assert.ok(
+            await preview.evaluate(
+              (button) => button === document.activeElement,
+            ),
+            "Escape returns to the asset that opened the preview after browsing",
+          );
+          await preview.press("Enter");
+          await page
+            .getByRole("button", { name: "Close preview", exact: true })
+            .click();
+          assert.ok(
+            await preview.evaluate(
+              (button) => button === document.activeElement,
+            ),
+            "the close button restores preview trigger focus",
+          );
+        }
+        if (route === "email-inbox") {
+          assert.equal(
+            await page.locator(".scene-inbox > aside > button").count(),
+            3,
+            "clearing a search preserves archived conversations",
+          );
+        }
+      }
       checked++;
       await page.close();
     }
   }
   assert.deepEqual(errors, []);
   console.log(
-    `Verified client validation, authentication errors, disabled fields, form feedback, numeric alignment, and filtered CSV exports in ${checked} viewport/theme combinations.`,
+    `Verified client validation, authentication errors, disabled fields, form feedback, numeric alignment, filtered CSV exports, empty-state and dialog focus, and archived conversations in ${checked} viewport/theme combinations.`,
   );
 } finally {
   await browser.close();

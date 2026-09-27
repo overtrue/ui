@@ -1,7 +1,7 @@
 import { SearchField as RegistrySearchField } from "@/registry/overtrue/search-field";
 import { FilterTabs as RegistryFilterTabs } from "@/registry/overtrue/filter-tabs";
 import { MetricGroupItem } from "@/registry/overtrue/metric-group";
-import { useState, type ReactNode } from "react";
+import { useState, type ReactNode, type Ref } from "react";
 import { Link } from "react-router-dom";
 import {
   IconArrowUpRight,
@@ -227,16 +227,19 @@ export function Feed({ limit = 5 }: { limit?: number }) {
   );
 }
 export function SearchField({
+  ref,
   value,
   onChange,
   placeholder = "Search records…",
 }: {
+  ref?: Ref<HTMLInputElement>;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
 }) {
   return (
     <RegistrySearchField
+      ref={ref}
       label={placeholder}
       value={value}
       onValueChange={onChange}

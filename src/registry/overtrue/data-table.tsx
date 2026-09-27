@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import {
   IconArrowDown as ArrowDown,
   IconArrowUp as ArrowUp,
@@ -37,6 +37,7 @@ export function DataTable<T>({
   title?: string;
   pageSize?: number;
 }) {
+  const searchRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<{ key: string; direction: 1 | -1 } | null>(
     null,
@@ -76,6 +77,7 @@ export function DataTable<T>({
       <div className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
         <h2 className="text-sm font-semibold text-card-foreground">{title}</h2>
         <SearchField
+          ref={searchRef}
           label={`Search ${title.toLowerCase()}`}
           value={query}
           onValueChange={(value) => {
@@ -172,6 +174,7 @@ export function DataTable<T>({
               onClick={() => {
                 setQuery("");
                 setPage(0);
+                searchRef.current?.focus();
               }}
             >
               Clear search

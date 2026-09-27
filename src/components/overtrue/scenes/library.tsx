@@ -37,6 +37,8 @@ export function Library({
   masonry?: boolean;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const previewTriggerRef = useRef<HTMLButtonElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState(""),
     [filter, setFilter] = useState("All assets"),
     [selected, setSelected] = useState<(typeof assets)[number] | null>(null);
@@ -53,6 +55,11 @@ export function Library({
     const index = shown.indexOf(selected);
     setSelected(shown[(index + direction + shown.length) % shown.length]);
   };
+  const closePreview = () => {
+    dialogRef.current?.close();
+    setSelected(null);
+    previewTriggerRef.current?.focus();
+  };
   return (
     <Scene
       id={id}
@@ -66,6 +73,7 @@ export function Library({
           onChange={setFilter}
         />
         <SearchField
+          ref={searchRef}
           value={query}
           onChange={setQuery}
           placeholder="Search the library…"
@@ -85,6 +93,7 @@ export function Library({
             onClick={() => {
               setQuery("");
               setFilter("All assets");
+              searchRef.current?.focus();
             }}
           >
             Clear filters
@@ -101,7 +110,13 @@ export function Library({
         }
       >
         {shown.map((a) => (
-          <button key={a.title} onClick={() => setSelected(a)}>
+          <button
+            key={a.title}
+            onClick={(event) => {
+              previewTriggerRef.current = event.currentTarget;
+              setSelected(a);
+            }}
+          >
             <img src={a.image} alt={a.title} />
             <span>
               <strong>{a.title}</strong>
@@ -126,9 +141,12 @@ export function Library({
               movePreview(event.key === "ArrowRight" ? 1 : -1);
             }
           }}
-          onCancel={() => setSelected(null)}
+          onCancel={(event) => {
+            event.preventDefault();
+            closePreview();
+          }}
           onClick={(e) => {
-            if (e.target === e.currentTarget) setSelected(null);
+            if (e.target === e.currentTarget) closePreview();
           }}
           aria-label={selected.title}
           className="scene-asset-dialog"
@@ -138,7 +156,7 @@ export function Library({
               <h2>{selected.title}</h2>
               <Pill>{selected.category}</Pill>
             </div>
-            <Action onClick={() => setSelected(null)}>Close preview</Action>
+            <Action onClick={closePreview}>Close preview</Action>
           </header>
           <img src={selected.image} alt={selected.title} />
           <footer>
