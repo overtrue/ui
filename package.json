@@ -71,7 +71,7 @@
     "@types/node": "^22.13.5",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^5.2.0",
     "cheerio": "^1.2.0",
     "postcss": "^8.5.28",
     "prettier": "^3.9.8",
