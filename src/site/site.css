@@ -122,6 +122,7 @@
   select,
   textarea {
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
   button:not(:disabled),
   select {
@@ -140,6 +141,9 @@
   select:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 4px;
+  }
+  :where(h1, h2, h3) {
+    text-wrap: balance;
   }
   ::selection {
     background: #b9d9fa;
@@ -247,11 +251,18 @@
   border-radius: 6px;
   color: var(--muted-foreground);
   flex-shrink: 0;
+  transition:
+    background-color 160ms,
+    color 160ms;
 }
 .icon-button:hover,
 .copy-button:hover {
   background: var(--muted);
   color: var(--site-ink);
+}
+.copy-button[data-copied="true"] {
+  color: var(--accent-foreground);
+  background: var(--accent);
 }
 .header-preview {
   display: inline-flex;
@@ -340,8 +351,10 @@
   font-size: 13px;
   font-weight: 500;
   transition:
-    background 0.15s,
-    box-shadow 0.15s;
+    background-color 160ms,
+    box-shadow 160ms,
+    opacity 160ms,
+    transform 160ms;
 }
 .site-button:hover {
   background: var(--muted);
@@ -354,6 +367,21 @@
 }
 .site-button.primary:hover {
   opacity: 0.87;
+}
+.site-button:active {
+  transform: translateY(1px);
+}
+:is(.site-button, .text-link, .tile-caption, .wall-discover, .example-list > a)
+  > svg {
+  transition: transform 180ms ease;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :is(.site-button, .text-link, .tile-caption, .example-list > a):hover > svg {
+    transform: translateX(3px);
+  }
+  .wall-discover:hover > svg {
+    transform: translateY(3px);
+  }
 }
 .hero-install {
   display: flex;
@@ -912,7 +940,7 @@
   margin: 38px 0 14px;
 }
 .docs-content > p {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.85;
   color: var(--muted-foreground);
   margin: 12px 0;
@@ -932,7 +960,7 @@
 }
 .code-box pre {
   padding: 19px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.8;
   overflow: auto;
   tab-size: 2;
@@ -998,7 +1026,7 @@
   max-height: 540px;
   overflow: auto;
   padding: 20px;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.8;
   tab-size: 2;
 }

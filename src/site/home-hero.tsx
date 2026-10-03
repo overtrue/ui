@@ -190,6 +190,7 @@ export function HomeHero() {
   const hero = useRef<HTMLElement>(null);
   const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [pageVisible, setPageVisible] = useState(() => !document.hidden);
   const [reducedMotion, setReducedMotion] = useState(
     () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
@@ -197,13 +198,16 @@ export function HomeHero() {
   useEffect(() => {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const updatePreference = () => setReducedMotion(preference.matches);
+    const updateVisibility = () => setPageVisible(!document.hidden);
     preference.addEventListener("change", updatePreference);
+    document.addEventListener("visibilitychange", updateVisibility);
     const observer = new IntersectionObserver(([entry]) =>
       setVisible(entry.isIntersecting),
     );
     observer.observe(hero.current!);
     return () => {
       preference.removeEventListener("change", updatePreference);
+      document.removeEventListener("visibilitychange", updateVisibility);
       observer.disconnect();
     };
   }, []);
@@ -213,7 +217,7 @@ export function HomeHero() {
       ref={hero}
       className="component-hero"
       aria-labelledby="home-title"
-      data-paused={paused || !visible || reducedMotion}
+      data-paused={paused || !visible || !pageVisible || reducedMotion}
     >
       <div className="component-wall" aria-hidden="true" inert>
         {columns.map((items, index) => (
@@ -268,7 +272,7 @@ export function HomeHero() {
         <button
           type="button"
           className="wall-motion"
-          onClick={() => setPaused(!paused)}
+          onClick={() => setPaused((current) => !current)}
           disabled={reducedMotion}
           aria-pressed={paused}
           aria-label={

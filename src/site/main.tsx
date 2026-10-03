@@ -115,16 +115,41 @@ function Header() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const navigationRef = useRef<HTMLElement>(null);
   useEffect(() => {
     if (!open) return;
     const close = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && !event.defaultPrevented) {
         setOpen(false);
         toggleRef.current?.focus();
       }
     };
+    const dismissOutside = (event: Event) => {
+      if (
+        event.target instanceof Node &&
+        !navigationRef.current?.contains(event.target) &&
+        !toggleRef.current?.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    };
+    const desktop = window.matchMedia("(min-width: 900px)");
+    const dismissDesktop = () => {
+      if (desktop.matches) setOpen(false);
+    };
     window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
+    document.addEventListener("pointerdown", dismissOutside);
+    document.addEventListener("focusin", dismissOutside);
+    desktop.addEventListener("change", dismissDesktop);
+    navigationRef.current
+      ?.querySelector<HTMLAnchorElement>("a")
+      ?.focus({ preventScroll: true });
+    return () => {
+      window.removeEventListener("keydown", close);
+      document.removeEventListener("pointerdown", dismissOutside);
+      document.removeEventListener("focusin", dismissOutside);
+      desktop.removeEventListener("change", dismissDesktop);
+    };
   }, [open]);
   useEffect(() => {
     setOpen(false);
@@ -179,6 +204,7 @@ function Header() {
           <Logo />
         </Link>
         <nav
+          ref={navigationRef}
           className={open ? "main-nav open" : "main-nav"}
           id="site-navigation"
           aria-label="Main navigation"

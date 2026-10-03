@@ -32,9 +32,9 @@ import { CopyButton, HighlightedCode } from "./code";
 import { HomeDetails } from "./home-details";
 
 const accents = [
-  { name: "Cobalt", color: "#2563eb" },
-  { name: "Iris", color: "#7c3aed" },
-  { name: "Jade", color: "#0f766e" },
+  { name: "Cobalt", color: "#2563eb", darkColor: "#60a5fa" },
+  { name: "Iris", color: "#7c3aed", darkColor: "#a78bfa" },
+  { name: "Jade", color: "#0f766e", darkColor: "#5eead4" },
 ];
 const initialTasks = [
   {
@@ -108,9 +108,7 @@ function ComponentStudio() {
         style={
           {
             "--studio-accent": accent.color,
-            "--primary": accent.color,
-            "--primary-foreground": "#fff",
-            "--ring": accent.color,
+            "--studio-accent-dark": accent.darkColor,
           } as CSSProperties
         }
       >
@@ -180,6 +178,9 @@ function ComponentStudio() {
                 <div className="studio-progress-note">
                   <StatusBadge
                     variant={completed === tasks.length ? "success" : "info"}
+                    className={
+                      completed < tasks.length ? "bg-primary/5" : undefined
+                    }
                   >
                     {completed === tasks.length
                       ? "Ready to go"

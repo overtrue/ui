@@ -226,6 +226,9 @@
 .catalog-page :is(.component-tile, .card-library-tile) {
   border-radius: 12px;
   box-shadow: 0 2px 4px #0f172a04;
+  transition:
+    border-color 180ms,
+    box-shadow 180ms;
 }
 .catalog-page .component-tile[data-category="Data display"] {
   --gallery-tint: var(--primary);
@@ -261,12 +264,17 @@
     background-color 160ms,
     color 160ms;
 }
-.catalog-page :is(.component-tile, .card-library-tile):hover {
+.catalog-page
+  :is(.component-tile, .card-library-tile):is(:hover, :focus-within) {
   border-color: color-mix(in srgb, var(--primary) 28%, var(--border));
   box-shadow: 0 8px 28px -18px #0f172a40;
 }
 .catalog-page :is(.tile-caption, .card-library-link):hover > svg,
-.catalog-page .card-library-link:hover .tile-caption > svg {
+.catalog-page :is(.tile-caption, .card-library-link):focus-visible > svg,
+.catalog-page
+  .card-library-link:is(:hover, :focus-visible)
+  .tile-caption
+  > svg {
   background: var(--foreground);
   color: var(--site-bg);
 }
@@ -477,6 +485,9 @@
   border: 0;
   border-bottom: 1px solid var(--border);
   border-radius: 0;
+  transition:
+    background-color 160ms,
+    color 160ms;
 }
 .example-list > a > span:not(.example-page-index) {
   flex: 1;
@@ -556,6 +567,21 @@
   }
   .component-docs .component-sections a {
     margin-inline-end: 12px;
+    font-size: 12px;
+  }
+  .docs-content :is(.code-box, .source-view) pre {
+    font-size: 12px;
+  }
+  .docs-content :is(input:not([type="checkbox"]):not([type="radio"]), select) {
+    font-size: 16px;
+  }
+  .copy-button {
+    width: 44px;
+    height: 44px;
+  }
+  .workspace-toolbar :is(.filter-tabs button, .text-link) {
+    min-height: 44px;
+    font-size: 12px;
   }
   .example-feature {
     grid-template-columns: 1fr;

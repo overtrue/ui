@@ -98,7 +98,11 @@ export function MenuItems({ items }: { items: Menu[] }) {
             </Dropdown.Portal>
           </Dropdown.Sub>
         ) : (
-          <Dropdown.Item key={item.title} className="pn-dropdown-item" asChild>
+          <Dropdown.Item
+            key={item.href ?? item.title}
+            className="pn-dropdown-item"
+            asChild
+          >
             {item.href?.startsWith("http") ? (
               <a href={item.href} target="_blank" rel="noreferrer">
                 <Label title={item.title} />
@@ -189,7 +193,7 @@ function SidebarChildren({ items }: { items: Menu[] }) {
   return (
     <SidebarMenuSub>
       {items.map((item) => (
-        <SidebarMenuSubItem key={item.title}>
+        <SidebarMenuSubItem key={item.href ?? item.title}>
           {item.children?.length ? (
             <Collapsible
               key={`${item.title}:${pathname}`}

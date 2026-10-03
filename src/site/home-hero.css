@@ -30,8 +30,8 @@
   font-size: 20px;
 }
 .site-header .main-nav {
-  gap: 22px;
-  font-size: 12px;
+  gap: 20px;
+  font-size: 13px;
 }
 .site-header .header-actions {
   gap: 4px;
@@ -76,6 +76,7 @@
   transform: translateX(-50%);
   pointer-events: none;
   user-select: none;
+  opacity: 0.72;
 }
 .wall-column {
   animation: wall-travel 90s linear infinite;
@@ -124,7 +125,7 @@
   inset: 0;
   background:
     radial-gradient(
-      ellipse 540px 360px at 50% 50%,
+      ellipse 660px 390px at 50% 50%,
       var(--background) 40%,
       color-mix(in srgb, var(--background) 98%, transparent) 62%,
       transparent 100%
@@ -141,7 +142,8 @@
 .wall-copy {
   position: relative;
   text-align: center;
-  max-width: 640px;
+  width: 100%;
+  max-width: 900px;
 }
 .wall-copy .eyebrow-link {
   padding: 8px 12px;
@@ -151,27 +153,31 @@
   font-size: 11px;
 }
 .wall-copy h1 {
-  margin: 24px 0 20px;
+  margin: 28px 0 24px;
   color: var(--site-ink);
-  font-size: 54px;
+  font-size: 72px;
   line-height: 1.08;
-  letter-spacing: -2.5px;
+  letter-spacing: -3px;
   font-weight: 600;
   text-wrap: balance;
 }
 .wall-copy h1 span {
-  color: var(--muted-foreground);
+  color: var(--primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -2.8px;
 }
 .wall-copy > p {
   color: var(--muted-foreground);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.8;
 }
 .wall-copy .hero-actions {
-  margin-top: 24px;
+  margin-top: 28px;
 }
 .wall-copy .site-button {
-  min-height: 44px;
+  min-height: 48px;
   border-radius: 999px;
   padding: 10px 20px;
 }
@@ -187,11 +193,13 @@
   align-items: center;
   gap: 16px;
   color: var(--muted-foreground);
-  font-size: 11px;
+  font-size: 12px;
 }
 .wall-inventory {
   display: flex;
+  align-items: center;
   gap: 10px;
+  justify-self: start;
 }
 .wall-discover,
 .wall-motion {
@@ -200,16 +208,24 @@
   gap: 8px;
   min-height: 44px;
 }
+.wall-discover {
+  justify-self: start;
+}
 .wall-discover:hover,
 .wall-motion:hover:not(:disabled) {
   color: var(--foreground);
 }
+.wall-inventory,
+.wall-discover,
 .wall-motion {
-  justify-self: end;
-  padding: 0 12px;
+  min-height: 44px;
+  padding: 0 16px;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--card);
+}
+.wall-motion {
+  justify-self: end;
 }
 .wall-motion:disabled {
   cursor: default;
@@ -225,7 +241,35 @@
 }
 @media (min-width: 1800px) {
   .wall-copy h1 {
-    font-size: 64px;
+    font-size: 80px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .wall-copy > * {
+    animation: hero-arrive 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .wall-copy h1 {
+    animation-delay: 70ms;
+  }
+  .wall-copy > p {
+    animation-delay: 140ms;
+  }
+  .wall-copy .hero-actions,
+  .wall-copy .wall-copy-note {
+    animation-delay: 210ms;
+  }
+  .wall-copy:focus-within > * {
+    animation: none;
+  }
+}
+@keyframes hero-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 @media (max-width: 899px) {
@@ -248,6 +292,9 @@
     border-radius: 24px;
     background: var(--card);
     box-shadow: 0 12px 30px -12px #00000026;
+    max-height: calc(100dvh - 104px - env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
   .site-header .main-nav.open {
     display: flex;
@@ -263,6 +310,10 @@
   .site-header .main-nav a:hover {
     background: var(--muted);
   }
+  .site-header .main-nav a.active {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
   .site-header .header-preview {
     display: none;
   }
@@ -275,8 +326,11 @@
     padding-bottom: 16px;
   }
   .wall-copy h1 {
-    font-size: 46px;
+    font-size: 56px;
     letter-spacing: -2px;
+  }
+  .wall-copy h1 span {
+    letter-spacing: -1.8px;
   }
   .wall-veil {
     background:
@@ -309,7 +363,7 @@
     gap: 6px;
   }
   .site-header .icon-button {
-    width: 40px;
+    width: 44px;
     height: 44px;
   }
   .component-hero {
@@ -321,8 +375,11 @@
     gap: 14px;
   }
   .wall-copy h1 {
-    font-size: 38px;
-    letter-spacing: -1.6px;
+    font-size: 44px;
+    letter-spacing: -1.8px;
+  }
+  .wall-copy h1 span {
+    letter-spacing: -1.5px;
   }
   .wall-copy > p {
     font-size: 14px;
@@ -331,7 +388,7 @@
     display: none;
   }
   .wall-copy .eyebrow-link {
-    font-size: 10px;
+    font-size: 11px;
     gap: 6px;
   }
   .wall-copy .site-button {
@@ -342,7 +399,7 @@
     inset-inline: 20px;
     bottom: max(16px, env(safe-area-inset-bottom));
     gap: 8px;
-    font-size: 10px;
+    font-size: 11px;
   }
   .wall-veil {
     background:
@@ -353,6 +410,16 @@
         transparent 100%
       ),
       linear-gradient(to bottom, transparent 60%, var(--background));
+  }
+}
+@media (max-width: 359px) {
+  .wall-copy h1 {
+    font-size: 38px;
+  }
+  .wall-inventory,
+  .wall-discover,
+  .wall-motion {
+    padding-inline: 10px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

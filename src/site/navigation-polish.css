@@ -161,6 +161,10 @@
   }
 }
 @media (max-width: 480px) {
+  .site-search-trigger {
+    width: 44px;
+    min-height: 44px;
+  }
   .site-header a[aria-label="overtrue/ui on GitHub"] {
     display: none;
   }

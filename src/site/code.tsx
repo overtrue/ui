@@ -26,6 +26,7 @@ export function CopyButton({
     <button
       className="copy-button"
       type="button"
+      data-copied={status === "Copied"}
       aria-label={status || label}
       title={status || label}
       onClick={async () => {

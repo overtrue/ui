@@ -80,6 +80,7 @@
   display: flex;
   align-items: center;
   gap: 0;
+  flex-shrink: 0;
 }
 .overtrue-workspace .workspace-docs {
   gap: 8px;
@@ -351,9 +352,16 @@
   font-size: 12px;
 }
 .overtrue-workspace button:focus-visible,
-.overtrue-workspace a:focus-visible {
+.overtrue-workspace a:focus-visible,
+.overtrue-workspace summary:focus-visible {
   outline: 2px solid var(--pn-primary);
   outline-offset: 2px;
+}
+.overtrue-workspace :where(button, a, summary, input, select, textarea) {
+  touch-action: manipulation;
+}
+.overtrue-workspace :is(.workspace-icon-button, .workspace-user, .workspace-nav-link) {
+  transition: background-color 160ms, color 160ms;
 }
 .overtrue-workspace .workspace-nav-link:focus-visible {
   outline: none;
@@ -535,13 +543,45 @@
     display: none;
   }
   .overtrue-workspace .workspace-icon-button {
-    width: 32px;
+    width: 44px;
+    height: 44px;
+  }
+  .overtrue-workspace .workspace-header [data-slot="sidebar-trigger"],
+  .overtrue-workspace .workspace-mobile-toggle {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+  .overtrue-workspace .workspace-user {
+    min-width: 44px;
+    min-height: 44px;
+    margin-inline-start: 0;
+  }
+  .overtrue-workspace :is(.pn-form-control, .pn-form-select):not(.pn-form-control-sm):not(.pn-form-select-sm) {
+    font-size: 16px;
+    min-height: 44px;
+  }
+  .overtrue-workspace .pn-btn:not(.pn-btn-sm) {
+    min-height: 44px;
+  }
+  .overtrue-workspace .pn-btn-icon:not(.pn-btn-sm) {
+    min-width: 44px;
   }
   .overtrue-workspace .workspace-footer {
     padding: 24px 0;
   }
   .overtrue-workspace .workspace-footer-links {
     justify-content: center;
+  }
+}
+@media (max-width: 479.98px) {
+  .overtrue-workspace .workspace-header .workspace-logo {
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .overtrue-workspace .workspace-header .workspace-logo > span {
+    display: none;
   }
 }
 @media print {
@@ -1491,10 +1531,19 @@ html.dark:not([data-workspace-navbar-theme="primary"]) .workspace-app-sidebar {
   .workspace-sidebar-breadcrumb {
     flex: 1;
   }
+  .workspace-app-sidebar :is([data-sidebar="menu-button"], [data-sidebar="menu-sub-button"]) {
+    height: auto;
+    min-height: 44px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .workspace-app-sidebar .workspace-sidebar-chevron {
-    transition: none;
+  .overtrue-workspace *,
+  .overtrue-workspace *::before,
+  .overtrue-workspace *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

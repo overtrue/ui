@@ -345,7 +345,9 @@
   margin: 10px 0 0;
 }
 .scene-auth.is-centered {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-height: 100svh;
   padding: 48px 20px;
   background: var(--pn-body-bg, #f5f7fa);
@@ -355,6 +357,7 @@
 }
 .scene-auth.is-centered > section {
   min-height: 0;
+  width: 100%;
   max-width: 450px;
   padding: 32px;
   margin: 0 auto;
@@ -366,6 +369,9 @@
 .scene-auth.is-centered .scene-auth-mobile-logo {
   display: block;
   margin-bottom: 32px;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.6px;
 }
 .scene-auth.is-centered h1 {
   font-size: 24px;
@@ -432,6 +438,17 @@
   }
   .scene-auth.is-centered > section {
     padding: 26px 22px;
+  }
+  .scene-password-field button {
+    right: 4px;
+    min-width: 52px;
+    min-height: 44px;
+  }
+  .scene-auth .scene-checkbox,
+  .scene-auth .scene-toolbar a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 }
 .showcase-code {
@@ -1104,6 +1121,7 @@
   }
   .form-workbench-nav button {
     padding: 8px 10px;
+    min-height: 44px;
   }
   .form-workbench-section-heading {
     align-items: start;
@@ -1152,9 +1170,6 @@
 }
 [data-workspace-page="form-elements"] .is-people .pn-form-selectgroup-label {
   height: 100%;
-}
-.dark .form-workbench-nav button[aria-pressed="true"] {
-  color: color-mix(in srgb, var(--pn-primary) 45%, white);
 }
 @media (max-width: 767px) {
   .form-workbench-example.is-floating > div,

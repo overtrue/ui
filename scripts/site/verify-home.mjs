@@ -332,14 +332,24 @@ try {
       .getAttribute("aria-pressed"),
     "true",
   );
-  assert.equal(
-    await studio
-      .locator(".studio-workbench")
-      .evaluate((element) =>
-        getComputedStyle(element).getPropertyValue("--primary").trim(),
-      ),
-    "#7c3aed",
-  );
+  for (const [theme, color] of [
+    ["light", "#7c3aed"],
+    ["dark", "#a78bfa"],
+  ]) {
+    await page.evaluate(
+      (theme) =>
+        document.documentElement.classList.toggle("dark", theme === "dark"),
+      theme,
+    );
+    assert.equal(
+      await studio
+        .locator(".studio-workbench")
+        .evaluate((element) =>
+          getComputedStyle(element).getPropertyValue("--primary").trim(),
+        ),
+      color,
+    );
+  }
   await studio
     .getByRole("checkbox", { name: "Make the details yours", exact: true })
     .check();
