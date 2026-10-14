@@ -13,6 +13,7 @@ export function DetailList({
 }: ComponentProps<"dl"> & { items: readonly DetailItem[] }) {
   return (
     <dl
+      data-slot="detail-list"
       className={cn("@container/details m-0 grid gap-3 text-sm", className)}
       {...props}
     >

@@ -133,11 +133,10 @@ export function CardCollection() {
     >
       <div className="section-heading">
         <div>
-          <p className="overline">FROM THE WORKSPACE</p>
-          <h2 id="card-collection-title">Every card, ready to use.</h2>
+          <h2 id="card-collection-title">Cards</h2>
           <p>
-            {cards.length} card patterns from the examples. Browse, try, and
-            take the source with you.
+            {cards.length} cards extracted from the workspace examples, each
+            with its sample data and local interactions.
           </p>
         </div>
       </div>

@@ -50,17 +50,19 @@ import {
 import { SiteSearch } from "./search";
 import { BrandMark } from "@/components/brand-mark";
 import { sitePages } from "./pages";
-import { HomeStory } from "./home-story";
-import { HomeHero } from "./home-hero";
+import { Home } from "./home";
 import { CardCollection, CardBlockPage } from "./blocks";
 import { CollectionIntro } from "./collection-intro";
 import { SearchField } from "@/registry/overtrue/search-field";
+import { usePointerGlow } from "./pointer-glow";
+import "@fontsource-variable/mona-sans/wdth.css";
+import "@fontsource-variable/jetbrains-mono/wght.css";
 import "./site.css";
-import "./home-hero.css";
-import "./home-story.css";
 import "./navigation-polish.css";
 import "./inner-pages.css";
 import "@/styles/native-select.css";
+import "./system.css";
+import "./home.css";
 
 const sources = import.meta.glob("../registry/overtrue/*.tsx", {
   query: "?raw",
@@ -230,8 +232,7 @@ function Header() {
           </a>
           <ThemeToggle />
           <a className="header-preview" href="/workspace/">
-            Live preview
-            <ArrowUpRight size={14} />
+            Open workspace
           </a>
           <button
             ref={toggleRef}
@@ -256,7 +257,7 @@ function Footer() {
         <Link to="/">
           <Logo />
         </Link>
-        <p>A good starting point for the work ahead.</p>
+        <p>Dashboard and console components for shadcn/ui. Open source under the MIT license.</p>
       </div>
       <nav className="footer-links" aria-label="Footer navigation">
         <div>
@@ -304,38 +305,22 @@ function Footer() {
           </a>
           .
         </span>
-        <span>React · Tailwind CSS · shadcn/ui · Tabler Icons</span>
+        <span>Built with React, Tailwind CSS, shadcn/ui, and Tabler Icons.</span>
       </div>
     </footer>
   );
 }
-function Home() {
-  return (
-    <main className="homepage">
-      <HomeHero />
-      <HomeStory>
-        <div
-          className="home-component-grid"
-          role="region"
-          aria-label="Component previews"
-          tabIndex={0}
-        >
-          {(
-            [
-              "stat-card",
-              "metric-chart",
-              "resource-progress",
-              "status-badge",
-              "avatar-stack",
-              "steps",
-            ] as ItemName[]
-          ).map((name) => (
-            <ComponentTile key={name} name={name} />
-          ))}
-        </div>
-      </HomeStory>
-    </main>
-  );
+/** Catalog copy marks identifiers with backticks; show them as code. */
+function inlineCode(text: string) {
+  return text
+    .split(/(`[^`]+`)/g)
+    .map((part, index) =>
+      part.startsWith("`") && part.endsWith("`") && part.length > 2 ? (
+        <code key={index}>{part.slice(1, -1)}</code>
+      ) : (
+        part
+      ),
+    );
 }
 function ComponentTile({ name }: { name: ItemName }) {
   const item = catalog.find((item) => item.name === name)!;
@@ -346,29 +331,33 @@ function ComponentTile({ name }: { name: ItemName }) {
     >
       <div className="tile-preview" inert aria-hidden="true">
         <FitPreview
-          fit={item.category === "Blocks" ? "contain" : "responsive"}
+          fit={item.category === "Blocks" ? "contain" : "width"}
           width={
-            "previewWidth" in item
-              ? item.previewWidth
-              : item.category === "Blocks"
-                ? 1024
-                : 400
+            item.category === "Blocks"
+              ? "previewWidth" in item
+                ? item.previewWidth
+                : 1024
+              : Math.min("previewWidth" in item ? item.previewWidth : 400, 480)
           }
           height={
-            "previewHeight" in item
-              ? item.previewHeight
-              : item.category === "Blocks"
-                ? 480
-                : 280
+            item.category === "Blocks"
+              ? "previewHeight" in item
+                ? item.previewHeight
+                : 480
+              : 252
           }
         >
           <Example name={name} />
         </FitPreview>
       </div>
-      <Link className="tile-caption" to={catalogPath(item)}>
+      <Link
+        className="tile-caption"
+        to={catalogPath(item)}
+        aria-label={`${item.title}, open full preview`}
+      >
         <span>
           {item.title}
-          <small>{item.category} · Open full preview</small>
+          <small>{item.description}</small>
         </span>
         <ArrowUpRight size={16} />
       </Link>
@@ -378,6 +367,8 @@ function ComponentTile({ name }: { name: ItemName }) {
 function Catalog({ blocks = false }: { blocks?: boolean }) {
   const [params, setParams] = useSearchParams();
   const search = useRef<HTMLInputElement>(null);
+  const grid = useRef<HTMLDivElement>(null);
+  usePointerGlow(grid, ".component-tile");
   const collection = blockCollections.find(
     (group) => group.label === params.get("blockCategory"),
   );
@@ -442,7 +433,6 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           </nav>
           <div className="complete-block-heading">
             <h2 id="composed-blocks">Composed blocks</h2>
-            <p>Practical starting points for the work inside your product.</p>
           </div>
         </>
       )}
@@ -499,7 +489,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           </button>
         )}
       </div>
-      <div className={blocks ? "block-grid" : "component-grid"}>
+      <div ref={grid} className={blocks ? "block-grid" : "component-grid"}>
         {items.map((item) => (
           <ComponentTile key={item.name} name={item.name} />
         ))}
@@ -593,10 +583,6 @@ function ComponentPage() {
           {item.title}
         </div>
         <div className="page-intro documentation-intro">
-          <p className="overline">
-            {isBlock ? "COMPOSED INTERFACE" : item.category.toUpperCase()}{" "}
-            <span>/ EDITABLE SOURCE</span>
-          </p>
           <h1>{item.title}</h1>
           {dashboardCatalog.some((entry) => entry.name === item.name) && (
             <p className="component-credit" data-component-credit>
@@ -611,7 +597,7 @@ function ComponentPage() {
               , with styling and examples tailored for overtrue/ui.
             </p>
           )}
-          <p>{item.description}</p>
+          <p>{inlineCode(item.description)}</p>
         </div>
         <nav className="component-sections" aria-label="On this page">
           <a href="#component-preview">Preview</a>
@@ -745,7 +731,7 @@ function ComponentPage() {
                       <td>
                         <code>{type}</code>
                       </td>
-                      <td>{details}</td>
+                      <td>{inlineCode(details)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -755,7 +741,7 @@ function ComponentPage() {
         )}
         <h2>Make it yours</h2>
         <p>
-          {"notes" in item
+          {inlineCode("notes" in item
             ? item.notes
             : item.name === "analytics-overview"
               ? "Pass AnalyticsReport[] through reports to replace the sample periods. The selector changes every panel together; CSV export uses the selected report. Traffic totals, source totals, and the first funnel stage should agree. Pass reports={[]} for the empty state. All included data is fictional."
@@ -773,7 +759,7 @@ function ComponentPage() {
                           ? "Supply stable row IDs with getRowId. Columns define a searchable and sortable value; use render for custom cells. Filtering and pagination run on the client."
                           : item.name === "dashboard"
                             ? "All metrics and members are example data. Navigation, filtering, report export, and local settings work in the demo. Connect your API and authentication before using it as a real console."
-                            : "Edit the installed TypeScript source to fit your product. Components inherit your semantic color tokens and support the .dark theme convention."}
+                            : "Edit the installed TypeScript source to fit your product. Components inherit your semantic color tokens and support the .dark theme convention.")}
         </p>
         <p className="note">
           {item.dependencies.length
@@ -814,13 +800,7 @@ function Docs() {
       <article className="docs-content prose-docs">
         <DocsMobileNavigation />
         <header className="documentation-intro">
-          <p className="overline">
-            DOCUMENTATION <span>/ START HERE</span>
-          </p>
-          <h1 id="introduction">
-            Meet your new <br />
-            <em>starting point.</em>
-          </h1>
+          <h1 id="introduction">Introduction</h1>
           <p className="lead">
             overtrue/ui is a collection of editable components for admin panels,
             dashboards, and consoles. Familiar shadcn/ui foundations, with
@@ -966,34 +946,24 @@ function Examples() {
   return (
     <main className="section examples-page">
       <div className="page-intro examples-intro">
-        <p className="overline">
-          THE WORKSPACE ATLAS <span>/ 03</span>
-        </p>
-        <h1>{workspacePages.length} pages. Plenty of possibilities.</h1>
+        <h1>Examples</h1>
         <p>
-          Explore project boards, client records, billing, and the everyday
-          details that make a workspace useful.
+          {workspacePages.length} pages from Acme Studio, a sample workspace:
+          project boards, client records, billing, settings, and the everyday
+          details in between.
         </p>
       </div>
       <div className="example-feature">
         <div className="example-feature-copy">
-          <p className="overline">ACME STUDIO / LIVE DEMO</p>
-          <h2>
-            A workspace,
-            <br />
-            <em>with character.</em>
-          </h2>
+          <h2>Acme Studio</h2>
           <p>
-            One place to explore dashboards, forms, charts, layouts, and the
-            details in between.
+            A complete sample workspace with navigation, forms, charts, and
+            settings. Everything runs locally with sample data.
           </p>
           <a className="site-button primary" href="/workspace/">
-            Open live preview
+            Open Acme Studio
             <ArrowUpRight size={16} />
           </a>
-          <span className="example-feature-note">
-            Try the flows. Explore the details.
-          </span>
         </div>
         <div className="example-feature-preview" inert aria-hidden="true">
           <div className="example-window-bar">
@@ -1014,9 +984,8 @@ function Examples() {
             { name: "Forms", path: "/form-elements" },
             { name: "Charts", path: "/charts" },
             { name: "Settings", path: "/settings" },
-          ].map((link, index) => (
+          ].map((link) => (
             <a key={link.name} href={`/workspace/#${link.path}`}>
-              <span className="example-link-index">0{index + 1}</span>
               {link.name}
               <ArrowUpRight size={16} />
             </a>
@@ -1078,9 +1047,8 @@ function Examples() {
 function NotFound() {
   return (
     <main className="not-found section">
-      <p className="overline">404 / NOT FOUND</p>
-      <h1>This page got away.</h1>
-      <p>Let’s get you back to something useful.</p>
+      <h1>Page not found</h1>
+      <p>The address may be mistyped, or the page may have moved.</p>
       <Link className="site-button primary" to="/components">
         Browse components
         <ArrowRight size={16} />

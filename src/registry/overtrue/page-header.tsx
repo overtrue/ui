@@ -11,7 +11,10 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <header className="flex flex-wrap items-end justify-between gap-4">
+    <header
+      data-slot="page-header"
+      className="flex flex-wrap items-end justify-between gap-4"
+    >
       <div>
         {eyebrow && (
           <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">

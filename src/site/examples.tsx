@@ -1,6 +1,8 @@
 import { BusinessExample } from "./business-examples";
 import { ReusableExample } from "./reusable-examples";
 import { DashboardExample } from "./dashboard-examples";
+import { LiveExample } from "./live-examples";
+import { liveCatalog } from "./live-catalog";
 import { dashboardCatalog } from "./dashboard-catalog";
 import { CompositionExample } from "./composition-examples";
 import { AnalyticsExample } from "./analytics-examples";
@@ -41,6 +43,8 @@ export function Example({
   const [chosen, setChosen] = useState(false);
   if (dashboardCatalog.some((item) => item.name === name))
     return <DashboardExample name={name} expanded={expanded} />;
+  if (liveCatalog.some((item) => item.name === name))
+    return <LiveExample name={name} expanded={expanded} />;
   switch (name) {
     case "stat-card":
       return (

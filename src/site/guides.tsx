@@ -366,10 +366,6 @@ export function GuidePage() {
           {guide.title}
         </div>
         <header className="documentation-intro">
-          <p className="overline">
-            THE OVERTRUE/UI HANDBOOK{" "}
-            <span>/ {String(index + 1).padStart(2, "0")}</span>
-          </p>
           <h1>{guide.title}</h1>
           <p className="lead">{guide.description}</p>
         </header>

@@ -10,7 +10,8 @@ export function FitPreview({
   children: ReactNode;
   width?: number;
   height?: number;
-  fit?: "contain" | "crop-tall" | "responsive";
+  /** "width" scales to the available width and crops tall content with a fade. */
+  fit?: "contain" | "crop-tall" | "responsive" | "width";
 }) {
   const viewport = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
@@ -42,13 +43,17 @@ export function FitPreview({
 
   // Keep narrow thumbnails proportional instead of leaving desktop-sized gaps.
   const viewportHeight =
-    fit === "responsive"
+    fit === "responsive" || fit === "width"
       ? height
       : size.available
         ? Math.min(height, size.available * 0.75)
         : height;
+  // "width" keeps type at its real size: content reflows to the column and crops.
+  const fluid = fit === "responsive" || fit === "width";
   const scale =
-    fit !== "responsive" && size.available && size.height
+    fit === "width"
+      ? 1
+      : fit !== "responsive" && size.available && size.height
       ? Math.min(
           1,
           size.available / size.width,
@@ -62,12 +67,17 @@ export function FitPreview({
     <div
       ref={viewport}
       className="fit-preview"
+      data-cropped={
+        fit === "width" && size.height * scale > viewportHeight + 1
+          ? ""
+          : undefined
+      }
       style={{ height: viewportHeight }}
     >
       <div
         className="fit-preview-stage"
         style={{
-          width: fit === "responsive" ? "100%" : size.width * scale,
+          width: fluid ? "100%" : size.width * scale,
           height: Math.min(viewportHeight, size.height * scale),
         }}
       >
@@ -75,7 +85,7 @@ export function FitPreview({
           ref={content}
           className="fit-preview-content"
           style={{
-            width: fit === "responsive" ? "100%" : width,
+            width: fluid ? "100%" : width,
             transform: `scale(${scale})`,
           }}
         >

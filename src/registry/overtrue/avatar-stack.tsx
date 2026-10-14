@@ -18,6 +18,7 @@ export function AvatarStack({
   const visible = members.slice(0, Math.max(0, max));
   return (
     <div
+      data-slot="avatar-stack"
       className={cn("flex items-center -space-x-2", className)}
       aria-label={members.map((member) => member.name).join(", ")}
     >

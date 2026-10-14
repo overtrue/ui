@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import { mkdirSync, writeFileSync } from "node:fs";
+import { catalog, componentCount } from "../../src/site/catalog.ts";
 
 const require = createRequire(import.meta.url);
 const { chromium } = createRequire(
@@ -143,23 +144,31 @@ try {
   await page.waitForURL("**/components");
   await focused(catalogSearch);
   await page.waitForFunction(
-    () => document.querySelectorAll(".component-tile").length === 52,
+    (count) => document.querySelectorAll(".component-tile").length === count,
+    componentCount,
   );
-  assert.equal(await page.locator(".component-tile").count(), 52);
+  assert.equal(await page.locator(".component-tile").count(), componentCount);
   await catalogSearch.fill("sparkline");
   await page.waitForURL("**/components?q=sparkline");
-  await page.waitForFunction(() => {
+  const sparklineMatches = catalog.filter(
+    (item) =>
+      item.category !== "Blocks" &&
+      `${item.title} ${item.name} ${item.description}`
+        .toLowerCase()
+        .includes("sparkline"),
+  ).length;
+  await page.waitForFunction((expected) => {
     const count = document.querySelector(
       '[aria-label="Filter components"] button .filter-count',
     );
     return (
       new URL(location.href).searchParams.get("q") === "sparkline" &&
       document.querySelector(".component-tile.tile-sparkline") &&
-      Number(count?.textContent) === 3 &&
+      Number(count?.textContent) === expected &&
       Number(count?.textContent) ===
         document.querySelectorAll(".component-tile").length
     );
-  });
+  }, sparklineMatches);
   checks.push(
     "catalog search clears without losing category, resets all filters, and keeps counts in sync",
   );

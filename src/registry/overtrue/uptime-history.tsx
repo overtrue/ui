@@ -30,7 +30,11 @@ export function UptimeHistory({
 }) {
   const id = useId();
   return (
-    <div className={cn("min-w-0 space-y-2", className)} {...props}>
+    <div
+      data-slot="uptime-history"
+      className={cn("min-w-0 space-y-2", className)}
+      {...props}
+    >
       {samples.length ? (
         <>
           <div

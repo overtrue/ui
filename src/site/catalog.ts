@@ -1,9 +1,11 @@
 import cards from "../blocks/catalog.json" with { type: "json" };
 import { dashboardCatalog } from "./dashboard-catalog.ts";
+import { liveCatalog } from "./live-catalog.ts";
 
 export const cardCount = cards.length;
 const items = [
   ...dashboardCatalog,
+  ...liveCatalog,
   {
     name: "integration-list",
     title: "Integration list",
@@ -622,6 +624,7 @@ const displayOrder: readonly string[] = [
   "section-card",
   "stat-card",
   "kpi-card",
+  "number-ticker",
   "metric-group",
   "metric-value",
   "delta-badge",
@@ -643,12 +646,14 @@ const displayOrder: readonly string[] = [
   "task-list",
   "file-list",
   "activity-feed",
+  "log-stream",
   "timeline",
   "event-timeline",
   "status-badge",
   "empty-state",
   "steps",
   "metric-chart",
+  "live-chart",
   "trend-chart",
   "bar-chart",
   "composed-chart",
@@ -662,6 +667,7 @@ const displayOrder: readonly string[] = [
   "conversion-funnel",
   "funnel-chart",
   "resource-progress",
+  "bullet-chart",
   "storage-meter",
   "tick-bar",
   "segmented-meter",
@@ -669,17 +675,21 @@ const displayOrder: readonly string[] = [
   "activity-rings",
   "uptime-history",
   "activity-heatmap",
+  "cohort-grid",
+  "host-map",
   "heatmap-chart",
   "dot-plot",
   "radar-chart",
   "scatter-chart",
   "sankey-chart",
+  "spotlight-card",
   "feature-card",
   "media-card",
   "ribbon-card",
   "status-edge-card",
   "pricing-card",
   "corner-frame",
+  "realtime-monitor",
   "dashboard",
   "analytics-overview",
   "project-portfolio",
@@ -728,6 +738,7 @@ export const blockCollections: readonly {
   {
     label: "Overviews",
     names: [
+      "realtime-monitor",
       "dashboard",
       "analytics-overview",
       "project-portfolio",

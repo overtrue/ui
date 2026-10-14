@@ -89,7 +89,12 @@ export function TaskList({
   emptyMessage?: string;
 }) {
   return (
-    <SectionCard title={title} className={className} contentClassName="py-2">
+    <SectionCard
+      data-slot="task-list"
+      title={title}
+      className={className}
+      contentClassName="py-2"
+    >
       {tasks.length ? (
         <ul aria-label={title} className="m-0 list-none p-0">
           {tasks.map(({ id, ...task }) => (

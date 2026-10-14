@@ -24,7 +24,11 @@ export function ResourceProgress({
   );
   const percent = (current / capacity) * 100;
   return (
-    <div className={cn("min-w-0 space-y-2", className)} {...props}>
+    <div
+      data-slot="resource-progress"
+      className={cn("min-w-0 space-y-2", className)}
+      {...props}
+    >
       <div className="flex items-center justify-between gap-3 text-xs">
         <span id={id} className="min-w-0 text-muted-foreground">
           {label}
@@ -42,7 +46,7 @@ export function ResourceProgress({
         className="h-1.5 overflow-hidden rounded-full bg-muted"
       >
         <div
-          className="h-full rounded-full bg-primary"
+          className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out motion-reduce:transition-none"
           style={{ width: `${percent}%` }}
         />
       </div>

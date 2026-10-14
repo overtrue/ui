@@ -135,6 +135,11 @@
       "permanent": true
     },
     {
+      "source": "/components/realtime-monitor",
+      "destination": "/blocks/realtime-monitor",
+      "permanent": true
+    },
+    {
       "source": "/components/team-access",
       "destination": "/blocks/team-access",
       "permanent": true

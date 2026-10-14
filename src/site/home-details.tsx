@@ -46,7 +46,7 @@ const homeProjects = [
   portfolioProjects[2],
 ];
 
-export function HomeDetails() {
+export function FeaturedBlocks() {
   const [selected, setSelected] = useState<(typeof featured)[number]["name"]>(
     featured[0].name,
   );
@@ -54,28 +54,24 @@ export function HomeDetails() {
   const active = featured.find((entry) => entry.name === selected)!;
   const PreviewIcon = active.icon;
   return (
-    <>
       <section
-        className="story-section assembled-section story-reveal"
+        className="home-band assembled-section"
         aria-labelledby="assembled-title"
       >
-        <div className="story-heading">
+        <div className="home-heading">
+          <h2 className="headline" id="assembled-title">
+            Start from a finished screen.
+          </h2>
           <div>
-            <p className="story-kicker">
-              <span>05 /</span> THE HEAD START
+            <p className="lede">
+              Blocks combine components into complete interfaces you can
+              install and adapt: a project portfolio, an analytics report, a
+              status page.
             </p>
-            <h2 className="story-title" id="assembled-title">
-              Skip the
-              <br />
-              <em>blank canvas.</em>
-            </h2>
-            <p className="assembled-intro">
-              A few pieces, already put together. Choose a starting point.
-            </p>
+            <Link className="text-link" to="/blocks">
+              Browse all blocks <IconArrowRight size={16} />
+            </Link>
           </div>
-          <Link className="text-link" to="/blocks">
-            Browse all blocks <IconArrowRight size={16} />
-          </Link>
         </div>
         <div className="assembled-shell">
           <div className="showcase-rail">
@@ -85,7 +81,7 @@ export function HomeDetails() {
               aria-label="Featured blocks"
             >
               {featured.map(
-                ({ name, title, icon: Icon, description }, index) => (
+                ({ name, title, icon: Icon, description }) => (
                   <button
                     key={name}
                     type="button"
@@ -97,7 +93,7 @@ export function HomeDetails() {
                     <span className="showcase-option-heading">
                       <Icon size={17} stroke={1.6} />
                       <strong>{title}</strong>
-                      <span className="showcase-number">0{index + 1}</span>
+                      
                     </span>
                     <span className="showcase-option-description">
                       {description}
@@ -144,20 +140,20 @@ export function HomeDetails() {
           </div>
         </div>
       </section>
+  );
+}
+
+export function Questions() {
+  return (
       <section
-        className="story-section questions-section story-reveal"
+        className="home-band questions-section"
         aria-labelledby="questions-title"
       >
         <div>
-          <p className="story-kicker">
-            <span>06 /</span> GOOD TO KNOW
-          </p>
-          <h2 className="story-title" id="questions-title">
-            A little
-            <br />
-            <em>clarity.</em>
+          <h2 className="headline" id="questions-title">
+            Questions
           </h2>
-          <p>The practical details, in one place.</p>
+          <p className="lede">Licensing, compatibility, and what isn’t included.</p>
           <Link className="text-link" to="/docs">
             Read the documentation <IconArrowRight size={16} />
           </Link>
@@ -206,6 +202,5 @@ export function HomeDetails() {
           </details>
         </div>
       </section>
-    </>
   );
 }

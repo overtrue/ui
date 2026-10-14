@@ -12,7 +12,10 @@ export function EmptyState({
   icon?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center rounded-lg border border-dashed bg-card px-6 py-12 text-center">
+    <div
+      data-slot="empty-state"
+      className="flex flex-col items-center rounded-lg border border-dashed bg-card px-6 py-12 text-center"
+    >
       <span className="mb-5 flex size-12 items-center justify-center rounded-xl border bg-background text-muted-foreground">
         {icon ?? <Inbox className="size-5" />}
       </span>

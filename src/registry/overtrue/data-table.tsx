@@ -71,6 +71,7 @@ export function DataTable<T>({
   const safePage = Math.min(page, lastPage);
   return (
     <section
+      data-slot="data-table"
       className="min-w-0 overflow-hidden rounded-lg border bg-card shadow-none"
       aria-label={title}
     >

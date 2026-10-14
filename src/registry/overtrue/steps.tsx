@@ -8,7 +8,7 @@ export function Steps({
   current: number;
 }) {
   return (
-    <ol className="flex flex-wrap gap-x-6 gap-y-4">
+    <ol data-slot="steps" className="flex flex-wrap gap-x-6 gap-y-4">
       {steps.map((step, index) => (
         <li
           key={`${index}-${step}`}

@@ -46,6 +46,12 @@ export function StatCard({
       : tone === "negative"
         ? "text-destructive"
         : "text-muted-foreground";
+  const pillClass =
+    tone === "positive"
+      ? "bg-emerald-500/10 dark:bg-emerald-400/10"
+      : tone === "negative"
+        ? "bg-destructive/10"
+        : "bg-muted";
   return (
     <Card
       data-slot="stat-card"
@@ -76,15 +82,16 @@ export function StatCard({
           />
         )}
         {(change || description) && (
-          <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs">
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
             {change && (
               <span
                 className={cn(
-                  "inline-flex items-center gap-0.5 font-medium",
+                  "inline-flex h-5 items-center gap-0.5 rounded-full pr-1.5 pl-1 font-medium tabular-nums",
                   toneClass,
+                  pillClass,
                 )}
               >
-                <Icon className="size-3.5" aria-hidden="true" />
+                <Icon className="size-3" aria-hidden="true" stroke={2.25} />
                 <span className="sr-only">
                   {trend === "up"
                     ? "Increase"

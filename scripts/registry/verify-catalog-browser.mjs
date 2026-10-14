@@ -83,7 +83,7 @@ try {
       preview.inert,
       "Cropped previews must not expose clipped controls to keyboard users",
     );
-    await thumbnail.getByRole("link", { name: /Open full preview/ }).click();
+    await thumbnail.getByRole("link", { name: /open full preview/i }).click();
     await page.waitForURL(origin + "/components/metric-group");
     for (const item of catalog) {
       const response = await page.goto(origin + catalogPath(item));
