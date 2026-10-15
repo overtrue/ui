@@ -33,6 +33,7 @@ import {
   blockCount,
   blockCollections,
   cardCount,
+  componentCategories,
   type ItemName,
 } from "./catalog";
 import { usageSource } from "./usage";
@@ -56,6 +57,7 @@ import { CardCollection, CardBlockPage } from "./blocks";
 import { CollectionIntro } from "./collection-intro";
 import { SearchField } from "@/registry/overtrue/search-field";
 import { usePointerGlow } from "./pointer-glow";
+import { PreviewStage, StageFrame, STAGE_PARAM } from "./preview-stage";
 import {
   ThemeStudioButton,
   ThemeStudioPanel,
@@ -381,7 +383,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
   );
   const categories = blocks
     ? ["All", ...blockCollections.map((group) => group.label)]
-    : ["All", "Data display", "Layout", "Feedback", "Navigation", "Forms"];
+    : ["All", ...componentCategories];
   const queryKey = blocks ? "blockQuery" : "q";
   const categoryKey = blocks ? "blockCategory" : "category";
   const query = params.get(queryKey) ?? "";
@@ -416,6 +418,16 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           : item.category === value),
     );
   const items = categoryItems(category);
+  const tabs = useRef<HTMLDivElement>(null);
+  // On narrow screens the tab row scrolls; keep the selected tab in view.
+  useEffect(() => {
+    const row = tabs.current;
+    const pressed = row?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (!row || !pressed || row.scrollWidth <= row.clientWidth) return;
+    const left = pressed.offsetLeft - row.offsetLeft;
+    if (left < row.scrollLeft || left + pressed.offsetWidth > row.scrollLeft + row.clientWidth)
+      row.scrollTo({ left: Math.max(0, left - 16) });
+  }, [category]);
   const clearFilters = () => {
     const next = new URLSearchParams(window.location.search);
     next.delete(queryKey);
@@ -449,6 +461,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
         }
       >
         <div
+          ref={tabs}
           className="filter-tabs"
           role="group"
           aria-label={blocks ? "Filter composed blocks" : "Filter components"}
@@ -629,10 +642,13 @@ function ComponentPage() {
               </button>
             ))}
           </div>
-          <a className="text-link" href="#installation">
-            Install
-            <ArrowDown size={13} aria-hidden="true" />
-          </a>
+          <div className="preview-actions">
+            <PreviewStage item={item} />
+            <a className="text-link" href="#installation">
+              Install
+              <ArrowDown size={13} aria-hidden="true" />
+            </a>
+          </div>
         </div>
         {tab === "Preview" ? (
           <div className={`detail-preview detail-${item.name}`}>
@@ -1095,7 +1111,16 @@ function NotFound() {
     </main>
   );
 }
+/** `?stage=1` on a component or block page renders only its preview, for the full-screen stage. */
+function stageItem(pathname: string, search: string) {
+  if (!new URLSearchParams(search).has(STAGE_PARAM)) return undefined;
+  const match = pathname.match(/^\/(components|blocks)\/([^/]+)\/?$/);
+  return match ? catalog.find((item) => item.name === match[2]) : undefined;
+}
 function App() {
+  const location = useLocation();
+  const staged = stageItem(location.pathname, location.search);
+  if (staged) return <StageFrame name={staged.name} />;
   return (
     <>
       <a className="skip-link" href="#main">

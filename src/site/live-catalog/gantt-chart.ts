@@ -1,7 +1,7 @@
 export default {
   name: "gantt-chart",
   title: "Gantt chart",
-  category: "Data display",
+  category: "Charts",
   description:
     "A project schedule with a grouped task list, zoomable time grid, progress bars, milestones, dependency arrows and a today line.",
   dependencies: [],

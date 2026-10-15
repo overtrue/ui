@@ -18,6 +18,12 @@ overtrue/ui 是用于 admin、dashboard 和 console 的界面工具包。产品�
 
 工作空间采用现代应用框架：侧栏贴在框架底色上，每个页面落在一块带细边与柔和阴影的圆角面板里；顶部以 ⌘K 命令栏为主要导航入口，页面进入时有一次短促的上浮。视觉层 `src/styles/workspace-modern.css` 最后加载，只通过 shadcn 语义变量改写工作空间基础层和 scene 组合，因此自定义面板里的主色、底色、圆角和字体全部继续生效。Studio overview 有流式生成的周报（InsightCard），Operations overview 内嵌实时监控和发布流水线，Project portfolio 带交付甘特图。
 
+组件与 block 统一采用 Instrument 视觉语言（详见 `docs/design/visual-language.md`）：数据是光源，表面保持安静；层次来自光与叠层而不是粗边框。卡片为 `rounded-2xl`，浅色用柔和双层阴影，深色用顶部内高光；折线 2px，深色模式下按系列色发光；面积为由线向基线渐隐的渐变；柱形圆角并带轻微渐变，悬停时其余柱变暗；提示框为毛玻璃浮层；入场时折线描绘、柱与面积从基线升起、数字滚动，减少动态效果时全部直接呈现终态。任意 CSS 值（`color-mix()`、渐变、SVG 填充）一律使用 `var(--color-primary)`、`var(--color-chart-1)` 等 Tailwind 主题变量，因为旧版 shadcn 项目（包括本站工作空间）的原始 `--primary` 是不带 `hsl()` 的三元组。
+
+组件目录按用途分为指标、图表、运维、表格与列表、AI、布局、导航、表单和反馈九类，顺序由 `componentCategories` 统一定义，目录筛选、首页索引和文档侧栏共用。每个组件与 block 的预览都可以进入全屏舞台：预览在独立 iframe 中运行，可切换手机、平板、桌面宽度和明暗主题，因此视口断点与容器查询都按真实宽度响应。
+
+旗舰 block 包括 Realtime monitor、Incident review、Model usage（AI 网关：按模型统计请求、token、花费与延迟，点选模型即在图表中单独显示）和 Revenue overview（MRR、MRR 变动桥、套餐构成、留存与目标，各面板数据相互一致）。后两者也是工作空间中的 AI usage 与 Revenue 页面。
+
 可扩展性分四层：语义变量（主题）、`data-slot` 与状态属性（局部样式）、格式化函数与 render props（内容）、组合（block）。站点右上角的 Theme Studio 可以选主色或自定义颜色、圆角和中性色，自动推导图表色板和暗色变体，实时重绘整站与所有预览，并导出 shadcn `globals.css` 可用的 oklch 变量；工作空间首次打开时会继承这套主题。新组件必须给根节点和关键部件加 `data-slot`，颜色来自 CSS 变量并允许 props 覆盖，提供格式化与 render props，状态同时支持受控与非受控。
 
 | 内容 | 位置 |
@@ -36,7 +42,7 @@ overtrue/ui 是用于 admin、dashboard 和 console 的界面工具包。产品�
 
 | 用途 | 默认值 / 原则 |
 | --- | --- |
-| 主操作 | `#2563eb`（深色默认 `#60a5fa`），用于主要按钮、选中态和重点数据 |
+| 主操作 | Ultramarine `#2a5bff`（深色 `#7b93ff`），用于主要按钮、选中态和重点数据 |
 | 正文 | 深灰蓝，以主题正文变量为准 |
 | 次要信息 | 中性灰，不能替代必要标签 |
 | 成功 | 低饱和绿色，配合文字状态 |
@@ -50,7 +56,7 @@ overtrue/ui 是用于 admin、dashboard 和 console 的界面工具包。产品�
 
 ## 字体与密度
 
-采用系统无衬线字体栈。普通业务页标题在桌面约 34px、手机约 24px，字重 600、轻微负字距；卡片标题 14–17px；正文与表单标签 14px；表格正文 13px、表头 12px。10px 文字只用于辅助元信息，不承载操作所需的唯一信息。
+正文与界面使用 Mona Sans 可变字体，代码、日志与标识符使用 JetBrains Mono。普通业务页标题在桌面约 34px、手机约 24px，字重 600、轻微负字距；卡片标题 14–17px；正文与表单标签 14px；表格正文 13px、表头 12px。10px 文字只用于辅助元信息，不承载操作所需的唯一信息。
 
 指标使用 29px 左右的数字。营销页和编辑文章允许更大的标题，但不把这种密度带进操作表格。
 

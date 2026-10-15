@@ -1,7 +1,7 @@
 export default {
   name: "deploy-pipeline",
   title: "Deploy pipeline",
-  category: "Data display",
+  category: "Operations",
   description:
     "Follow a CI/CD run as stages of parallel jobs, with live timers, flowing connectors into the running stage, and retry on failure.",
   dependencies: [],

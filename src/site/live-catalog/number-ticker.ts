@@ -1,7 +1,7 @@
 export default {
   name: "number-ticker",
   title: "Number ticker",
-  category: "Data display",
+  category: "Metrics",
   description:
     "An odometer-style number for live metrics: each digit rolls on its own wheel when the value changes.",
   dependencies: [],

@@ -587,9 +587,6 @@
 .tile-page-header .tile-preview h1 {
   font-size: 20px;
 }
-.tile-steps .tile-preview ol {
-  flex-direction: column;
-}
 .ownership {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1552,9 +1549,6 @@
   .detail-analytics-overview,
   .detail-dashboard {
     padding: 10px;
-  }
-  .detail-steps ol {
-    flex-direction: column;
   }
   .docs-content > h2 {
     font-size: 22px;

@@ -1,7 +1,7 @@
 export default {
   name: "trace-waterfall",
   title: "Trace waterfall",
-  category: "Data display",
+  category: "Operations",
   description:
     "A distributed trace as a collapsible span tree beside a zoomable time axis, with the critical path, errors, and span detail one click away.",
   dependencies: [],

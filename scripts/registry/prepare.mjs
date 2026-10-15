@@ -37,6 +37,7 @@ const items = catalog.map((item) => {
       ...(content.includes('from "recharts-analytics"') ? ["recharts-analytics@npm:recharts@3.10.1"] : []),
       ...(content.includes("@tanstack/react-table") ? ["@tanstack/react-table@9.2.4"] : []),
       ...(content.includes("@radix-ui/react-tabs") ? ["@radix-ui/react-tabs"] : []),
+      ...(content.includes("@radix-ui/react-popover") ? ["@radix-ui/react-popover"] : []),
     ],
     registryDependencies: [
       ...new Set([

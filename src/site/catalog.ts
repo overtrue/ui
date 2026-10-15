@@ -135,7 +135,7 @@ const items = [
   {
     name: "stat-card",
     title: "Stat card",
-    category: "Data display",
+    category: "Metrics",
     description:
       "A key metric with a sparkline, period comparison, and meaningful trend direction.",
     dependencies: ["card"],
@@ -145,7 +145,7 @@ const items = [
   {
     name: "metric-chart",
     title: "Metric chart",
-    category: "Data display",
+    category: "Charts",
     description:
       "An area chart with period comparison, value formatting, and an accessible summary.",
     dependencies: ["card"],
@@ -155,7 +155,7 @@ const items = [
   {
     name: "data-table",
     title: "Data table",
-    category: "Data display",
+    category: "Tables & lists",
     description: "Search, sort, and paginate. Bring your own data.",
     dependencies: ["button", "input", "table"],
     usage:
@@ -179,6 +179,18 @@ const items = [
     description: "Small signals for healthy, pending, and failed states.",
     dependencies: [],
     usage: '<StatusBadge variant="success">Active</StatusBadge>',
+    api: [
+      [
+        "variant?",
+        '"success" | "warning" | "error" | "info" | "neutral"',
+        "Defaults to neutral.",
+      ],
+      [
+        "live?",
+        "boolean",
+        "Pulses the dot softly for states happening now; still under reduced motion.",
+      ],
+    ],
   },
   {
     name: "storage-meter",
@@ -194,7 +206,7 @@ const items = [
   {
     name: "avatar-stack",
     title: "Avatar stack",
-    category: "Data display",
+    category: "Tables & lists",
     description: "Put a face—or a set of initials—to your team.",
     dependencies: [],
     usage:
@@ -208,6 +220,7 @@ const items = [
     dependencies: [],
     usage:
       '<PageHeader eyebrow="Workspace" title="Team members" description="Manage access to your workspace." />',
+    api: [["className?", "string", ""]],
   },
   {
     name: "empty-state",
@@ -226,6 +239,12 @@ const items = [
     dependencies: [],
     usage:
       '<Steps steps={["Account", "Workspace", "Invite team"]} current={1} />',
+    api: [
+      ["steps", "string[]", ""],
+      ["current", "number", "Zero-based index of the step in progress."],
+      ["orientation?", '"horizontal" | "vertical"', "Defaults to horizontal."],
+      ["className?", "string", ""],
+    ],
   },
   {
     name: "pricing-card",
@@ -291,17 +310,25 @@ const items = [
   {
     name: "detail-list",
     title: "Detail list",
-    category: "Data display",
+    category: "Tables & lists",
     description:
       "Readable label–value pairs for profiles, invoices, and project details.",
     dependencies: [],
     usage:
       '<DetailList items={[{ id: "location", label: "Location", value: "Lisbon, Portugal" }]} />',
+    api: [
+      ["items", "readonly DetailItem[]", ""],
+      [
+        "divided?",
+        "boolean",
+        "Separates rows with hairlines for dense property panels.",
+      ],
+    ],
   },
   {
     name: "resource-progress",
     title: "Resource progress",
-    category: "Data display",
+    category: "Metrics",
     description:
       "Labeled progress for delivery milestones, storage quotas, and resource usage.",
     dependencies: [],
@@ -311,7 +338,7 @@ const items = [
   {
     name: "uptime-history",
     title: "Uptime history",
-    category: "Data display",
+    category: "Operations",
     description:
       "Availability over time, with a text alternative for every sample.",
     dependencies: [],
@@ -321,7 +348,7 @@ const items = [
   {
     name: "metric-group",
     title: "Metric group",
-    category: "Data display",
+    category: "Metrics",
     description:
       "A compact shared surface for related metrics and their context.",
     dependencies: [],
@@ -352,7 +379,7 @@ const items = [
   {
     name: "sparkline",
     title: "Sparkline",
-    category: "Data display",
+    category: "Charts",
     description:
       "A lightweight inline trend for cards and compact summaries, with a text alternative.",
     dependencies: [],
@@ -362,7 +389,7 @@ const items = [
   {
     name: "ranked-list",
     title: "Ranked list",
-    category: "Data display",
+    category: "Tables & lists",
     description:
       "Compare sources, products, or regions with sorted bars, values, and share of total.",
     dependencies: [],
@@ -372,7 +399,7 @@ const items = [
   {
     name: "conversion-funnel",
     title: "Conversion funnel",
-    category: "Data display",
+    category: "Charts",
     description:
       "A readable journey through conversion stages, including overall and step conversion rates.",
     dependencies: [],
@@ -440,7 +467,7 @@ const items = [
     usage:
       '<StatusEdgeCard title="Action required" tone="danger" edge="start">\n  <p>Update the payment method to keep your workspace active.</p>\n</StatusEdgeCard>',
     notes:
-      "Edges use logical start/end positions for RTL layouts. The stripe is decorative: always include the status in text. Success, warning, and info use your corresponding color tokens, falling back to primary when absent. Supports all SectionCard props.",
+      "Edges use logical start/end positions for RTL layouts. The stripe is decorative: always include the status in text. Success and warning use your success and warning color tokens, falling back to emerald and amber; info falls back to primary. Supports all SectionCard props.",
     api: [
       ["edge", '"top" | "bottom" | "start" | "end"', "Defaults to top."],
       [
@@ -503,7 +530,7 @@ const items = [
   {
     name: "chart-legend",
     title: "Chart legend",
-    category: "Data display",
+    category: "Charts",
     description:
       "Series keys and formatted values for charts, quotas, and compact reports.",
     dependencies: [],
@@ -524,7 +551,7 @@ const items = [
   {
     name: "timeline",
     title: "Timeline",
-    category: "Data display",
+    category: "Tables & lists",
     description:
       "Release milestones and activity history with timestamps and optional avatars.",
     dependencies: [],
@@ -575,7 +602,7 @@ const items = [
   {
     name: "file-list",
     title: "File list",
-    category: "Data display",
+    category: "Tables & lists",
     description:
       "Readable attachment rows with metadata, links, and caller-owned actions.",
     dependencies: [],
@@ -618,16 +645,43 @@ const items = [
     ],
   },
 ] as const;
-// Browse from page structure and everyday records to reporting and specialized charts.
+/** Component categories in browsing order. Blocks are grouped by blockCollections. */
+export const componentCategories = [
+  "Metrics",
+  "Charts",
+  "Operations",
+  "Tables & lists",
+  "AI",
+  "Layout",
+  "Navigation",
+  "Forms",
+  "Feedback",
+] as const;
+const categoryRank = (category: string) => {
+  const index = (componentCategories as readonly string[]).indexOf(category);
+  return category === "Blocks" ? -1 : index < 0 ? componentCategories.length : index;
+};
+// Within a category, browse from everyday pieces to specialized ones.
 const displayOrder: readonly string[] = [
   "realtime-monitor",
   "incident-review",
+  "model-usage",
+  "revenue-overview",
+  "service-explorer",
   "dashboard",
   "analytics-overview",
   "project-portfolio",
   "service-status",
-  "page-header",
-  "section-card",
+  "team-access",
+  "notification-preferences",
+  "integration-list",
+  "invoice-list",
+  "settings-panel",
+  "member-card",
+  "task-list",
+  "activity-feed",
+  "storage-meter",
+  "pricing-card",
   "stat-card",
   "kpi-card",
   "number-ticker",
@@ -635,81 +689,84 @@ const displayOrder: readonly string[] = [
   "metric-value",
   "delta-badge",
   "metric-list",
-  "data-table",
-  "advanced-data-table",
-  "search-field",
-  "filter-tabs",
-  "period-tabs",
-  "command-palette",
-  "team-access",
-  "notification-preferences",
-  "integration-list",
-  "invoice-list",
-  "settings-panel",
-  "member-card",
-  "avatar-stack",
-  "detail-list",
-  "task-list",
-  "file-list",
-  "activity-feed",
-  "log-stream",
-  "trace-waterfall",
-  "deploy-pipeline",
-  "timeline",
-  "event-timeline",
-  "status-badge",
-  "insight-card",
-  "empty-state",
-  "steps",
+  "bullet-chart",
+  "resource-progress",
+  "tick-bar",
+  "segmented-meter",
+  "radial-gauge",
+  "activity-rings",
+  "stacked-area-chart",
   "metric-chart",
   "live-chart",
-  "latency-histogram",
   "trend-chart",
   "bar-chart",
-  "waterfall-chart",
   "composed-chart",
+  "waterfall-chart",
+  "latency-histogram",
+  "experiment-result",
   "sparkline",
   "trend-sparkline",
-  "chart-legend",
-  "ranked-list",
   "bar-list",
   "distribution-bar",
   "donut-chart",
   "conversion-funnel",
   "funnel-chart",
-  "resource-progress",
-  "bullet-chart",
-  "storage-meter",
-  "tick-bar",
-  "segmented-meter",
-  "radial-gauge",
-  "activity-rings",
-  "uptime-history",
-  "activity-heatmap",
   "cohort-grid",
-  "host-map",
-  "geo-map",
-  "treemap",
-  "gantt-chart",
+  "activity-heatmap",
   "heatmap-chart",
+  "treemap",
+  "sankey-chart",
+  "gantt-chart",
   "dot-plot",
   "radar-chart",
   "scatter-chart",
-  "sankey-chart",
+  "chart-legend",
+  "service-map",
+  "trace-waterfall",
+  "flame-graph",
+  "log-stream",
+  "json-viewer",
+  "deploy-pipeline",
+  "host-map",
+  "geo-map",
+  "uptime-history",
+  "data-table",
+  "advanced-data-table",
+  "ranked-list",
+  "detail-list",
+  "file-list",
+  "timeline",
+  "event-timeline",
+  "avatar-stack",
+  "insight-card",
+  "assistant-panel",
+  "page-header",
+  "section-card",
   "spotlight-card",
   "feature-card",
   "media-card",
   "ribbon-card",
   "status-edge-card",
-  "pricing-card",
   "corner-frame",
+  "command-palette",
+  "filter-tabs",
+  "period-tabs",
+  "steps",
+  "filter-bar",
+  "date-range-picker",
+  "search-field",
+  "status-badge",
+  "empty-state",
 ];
 export const catalog = [...items].sort((a, b) => {
   const rank = (name: string) => {
     const index = displayOrder.indexOf(name);
     return index < 0 ? displayOrder.length : index;
   };
-  return rank(a.name) - rank(b.name);
+  return (
+    categoryRank(a.category) - categoryRank(b.category) ||
+    rank(a.name) - rank(b.name)
+  );
 });
 export type CatalogItem = (typeof catalog)[number];
 export type ItemName = CatalogItem["name"];
@@ -734,6 +791,9 @@ export const blockCollections: readonly {
     names: [
       "realtime-monitor",
       "incident-review",
+      "model-usage",
+      "revenue-overview",
+      "service-explorer",
       "dashboard",
       "analytics-overview",
       "project-portfolio",

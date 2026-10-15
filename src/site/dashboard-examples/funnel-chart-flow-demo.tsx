@@ -5,7 +5,7 @@
 import { FunnelChart } from "@/registry/overtrue/funnel-chart";
 
 const steps = [
-  { name: "Brief opened", value: 197, color: "var(--color-lime-400)" },
+  { name: "Brief opened", value: 197, color: "var(--color-chart-2)" },
   { name: "Review started", value: 110, color: "var(--color-chart-1)" },
   { name: "Feedback sent", value: 77, color: "var(--color-chart-5)" },
   { name: "Approved", value: 38, color: "var(--color-chart-4)" },

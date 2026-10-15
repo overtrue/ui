@@ -1,7 +1,7 @@
 export default {
   name: "geo-map",
   title: "Geo map",
-  category: "Data display",
+  category: "Operations",
   description:
     "A dot-matrix world map with glowing markers sized by value, status colours, and animated arcs between locations.",
   dependencies: [],

@@ -12,6 +12,12 @@
     "href": "./operations-overview.html"
   },
   {
+    "title": "AI usage",
+    "section": "Workspace",
+    "icon": "sparkles",
+    "href": "./ai-usage.html"
+  },
+  {
     "title": "Inbox",
     "section": "Workspace",
     "icon": "inbox",
@@ -139,6 +145,10 @@
     "section": "Work",
     "icon": "credit-card",
     "children": [
+      {
+        "title": "Revenue",
+        "href": "./revenue.html"
+      },
       {
         "title": "Billing & payments",
         "href": "./pay.html"

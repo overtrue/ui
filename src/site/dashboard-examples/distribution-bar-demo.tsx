@@ -14,6 +14,18 @@ const devices = [
 export default function DistributionBarDemo() {
   return (
     <div className="w-full max-w-lg">
+      <div className="mb-4 flex items-end justify-between gap-4">
+        <div>
+          <p className="text-muted-foreground text-xs">Booked hours</p>
+          <p className="mt-1 text-3xl font-semibold tracking-[-0.035em] tabular-nums">
+            100.3K
+            <span className="text-muted-foreground ml-1.5 text-base font-medium tracking-normal">
+              hours
+            </span>
+          </p>
+        </div>
+        <p className="text-muted-foreground pb-1 text-xs">Last 90 days</p>
+      </div>
       <DistributionBar segments={devices} showValues />
     </div>
   );

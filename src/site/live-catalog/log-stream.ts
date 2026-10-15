@@ -1,7 +1,7 @@
 export default {
   name: "log-stream",
   title: "Log stream",
-  category: "Data display",
+  category: "Operations",
   description:
     "Follow a live event stream with level filters, search, and a tail that pauses when someone scrolls up to read.",
   dependencies: [],

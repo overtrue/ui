@@ -60,6 +60,55 @@ export interface MetricValueProps extends Omit<
   suffix?: React.ReactNode;
 }
 
+// Units and currency symbols sit quieter than the digits they qualify, in
+// whatever color the figure has. They never drop below 12px, and a currency
+// symbol rises toward the cap height only once the figure is large.
+const quiet = "font-medium tracking-normal text-current/55";
+const unitSize = "text-[length:max(0.6em,0.75rem)]";
+const symbolSize =
+  "mr-[0.04em] text-[length:max(0.62em,0.75rem)] align-[calc((1em_-_0.75rem)*1.1)]";
+
+/**
+ * Split "$1,234.5", "-€12", "12.4%" or "2.4 days" into a quiet symbol, the
+ * digits, and a quiet unit. Magnitude letters (K, M, B) stay with the digits.
+ * Anything else, such as "Q3 2026", renders untouched.
+ */
+function typeset(text: string) {
+  const match =
+    /^([+\-\u2212]?)([^\d\s+\-\u2212]{0,3})(\d(?:[\d.,\u202f\u00a0]*\d)?[KkMBT]?)(%|\s+\S.*)?$/.exec(
+      text,
+    );
+  if (!match || /[a-z]/i.test(match[2].replace(/[A-Z]{1,2}(?=\$)/, "")))
+    return text;
+  const [, sign, symbol, digits, unit] = match;
+  return (
+    <>
+      {sign}
+      {symbol ? (
+        <span data-slot="metric-value-affix" className={cn(quiet, symbolSize)}>
+          {symbol}
+        </span>
+      ) : null}
+      {digits}
+      {unit ? (
+        <span data-slot="metric-value-unit" className={cn(quiet, unitSize)}>
+          {unit}
+        </span>
+      ) : null}
+    </>
+  );
+}
+
+function Unit({ children }: { children: React.ReactNode }) {
+  if (children === null || children === undefined || children === false)
+    return null;
+  return (
+    <span data-slot="metric-value-unit" className={cn(quiet, unitSize)}>
+      {children}
+    </span>
+  );
+}
+
 /** A formatted number. Large values are abbreviated and reveal the full value on hover. */
 function MetricValue({
   value,
@@ -71,13 +120,13 @@ function MetricValue({
   className,
   ...props
 }: MetricValueProps) {
-  const classes = cn("tabular-nums", className);
+  const classes = cn("tabular-nums tracking-[-0.02em]", className);
 
   if (typeof value !== "number") {
     return (
       <span data-slot="metric-value" className={classes} {...props}>
-        {value}
-        {suffix}
+        {typeset(value)}
+        <Unit>{suffix}</Unit>
       </span>
     );
   }
@@ -87,8 +136,8 @@ function MetricValue({
   if (!abbreviate) {
     return (
       <span data-slot="metric-value" className={classes} {...props}>
-        {full}
-        {suffix}
+        {typeset(full)}
+        <Unit>{suffix}</Unit>
       </span>
     );
   }
@@ -100,14 +149,17 @@ function MetricValue({
           <span
             data-slot="metric-value"
             data-compact=""
-            className={cn(classes, "cursor-default")}
+            className={cn(
+              classes,
+              "cursor-default decoration-current/30 decoration-dotted underline-offset-[0.18em] hover:underline",
+            )}
             {...props}
           >
-            {formatNumber(value, { format, currency, compact: true })}
-            {suffix}
+            {typeset(formatNumber(value, { format, currency, compact: true }))}
+            <Unit>{suffix}</Unit>
           </span>
         </TooltipTrigger>
-        <TooltipContent className="tabular-nums">
+        <TooltipContent className="font-medium tabular-nums">
           {full}
           {suffix}
         </TooltipContent>

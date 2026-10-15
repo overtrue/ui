@@ -46,9 +46,7 @@ import { formatNumber } from "./metric-format";
 import {
   ChartContainer,
   ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
   type ChartConfig,
 } from "./analytics-chart";
 
@@ -79,6 +77,8 @@ export interface ScatterChartProps extends Omit<
   xLabel?: string;
   yLabel?: string;
   sizeLabel?: string;
+  /** Print `xLabel` at the end of the x-axis and `yLabel` above the y-axis. */
+  showAxisLabels?: boolean;
   showGrid?: boolean;
   showXAxis?: boolean;
   showYAxis?: boolean;
@@ -89,7 +89,10 @@ export interface ScatterChartProps extends Omit<
   sizeFormatter?: (value: number) => string;
   /** Radius of each point in px when sizeKey is not set. */
   dotRadius?: number;
-  /** Bubble area range in px² when sizeKey is set, smallest to largest. */
+  /**
+   * Bubble area range in px² when sizeKey is set, smallest to largest. Areas grow
+   * in proportion to the value, measured from zero.
+   */
   sizeRange?: [number, number];
   /** Recharts domain for the x-axis, e.g. ["auto", "auto"]. Defaults to [0, "auto"]. */
   xDomain?: React.ComponentProps<typeof XAxis>["domain"];
@@ -99,6 +102,15 @@ export interface ScatterChartProps extends Omit<
   animate?: boolean;
   animationDuration?: number;
 }
+
+const EASE = "cubic-bezier(0.22,1,0.36,1)";
+const GRID = "color-mix(in oklab, var(--color-foreground) 7%, transparent)";
+const AXIS = "color-mix(in oklab, var(--color-foreground) 14%, transparent)";
+const TICK = {
+  fill: "var(--color-muted-foreground)",
+  fontSize: 11,
+  className: "tabular-nums",
+};
 
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
 
@@ -123,10 +135,9 @@ function slug(label: string) {
   return label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
-interface ScatterTooltipContentProps extends Pick<
-  React.ComponentProps<typeof ChartTooltipContent>,
-  "active" | "payload"
-> {
+interface ScatterTooltipContentProps {
+  active?: boolean;
+  payload?: ReadonlyArray<{ payload?: unknown }>;
   config: ChartConfig;
   rows: { key: string; label: string; format: (value: number) => string }[];
   nameKey?: string;
@@ -147,15 +158,21 @@ function ScatterTooltipContent({
   const title = name != null ? String(name) : seriesLabel;
 
   return (
-    <div className="grid min-w-[8rem] gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl">
-      <div className="flex items-center gap-2 font-medium">
+    <div className="grid min-w-44 gap-2 rounded-xl border border-border/70 bg-popover/90 px-3 py-2.5 text-xs text-popover-foreground shadow-xl backdrop-blur-md">
+      <div className="flex items-center gap-2">
         <span
-          className="size-2 shrink-0 rounded-[2px]"
-          style={{ backgroundColor: `var(--color-${seriesKey})` }}
+          aria-hidden="true"
+          className="size-2.5 shrink-0 rounded-full shadow-[0_0_0_3px_color-mix(in_oklab,var(--scatter-swatch)_20%,transparent)]"
+          style={
+            {
+              backgroundColor: `var(--color-${seriesKey})`,
+              "--scatter-swatch": `var(--color-${seriesKey})`,
+            } as React.CSSProperties
+          }
         />
-        <span className="flex-1">{title}</span>
+        <span className="font-medium text-foreground">{title}</span>
         {name != null ? (
-          <span className="text-muted-foreground font-normal">
+          <span className="ml-auto pl-3 text-muted-foreground">
             {seriesLabel}
           </span>
         ) : null}
@@ -164,10 +181,10 @@ function ScatterTooltipContent({
         {rows.map((row) => (
           <div
             key={row.key}
-            className="flex items-center justify-between gap-4"
+            className="flex items-center justify-between gap-6"
           >
             <span className="text-muted-foreground">{row.label}</span>
-            <span className="font-mono font-medium tabular-nums">
+            <span className="font-medium text-foreground tabular-nums">
               {row.format(Number(point[row.key]))}
             </span>
           </div>
@@ -175,6 +192,13 @@ function ScatterTooltipContent({
       </div>
     </div>
   );
+}
+
+interface PointShapeProps {
+  cx?: number;
+  cy?: number;
+  size?: number;
+  index?: number;
 }
 
 /** A scatter chart on shadcn's chart primitives: correlation dots per series, or bubbles when a size key is set. */
@@ -187,6 +211,7 @@ function ScatterChart({
   xLabel,
   yLabel,
   sizeLabel,
+  showAxisLabels = false,
   showGrid = true,
   showXAxis = true,
   showYAxis = true,
@@ -196,11 +221,11 @@ function ScatterChart({
   yFormatter = (value) => formatNumber(value, { format: "compact" }),
   sizeFormatter = (value) => formatNumber(value, { format: "compact" }),
   dotRadius = 4,
-  sizeRange = [40, 400],
+  sizeRange = [60, 1100],
   xDomain,
   yDomain,
   animate = true,
-  animationDuration = 500,
+  animationDuration = 700,
   className,
   ...props
 }: ScatterChartProps) {
@@ -209,18 +234,33 @@ function ScatterChart({
     getReducedMotionSnapshot,
     getReducedMotionServerSnapshot,
   );
+  const uid = React.useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const [focusKey, setFocusKey] = React.useState<string | null>(null);
+  // Recharts marks every series' point at the hovered index as active, so track the real one here.
+  const [hovered, setHovered] = React.useState<{
+    series: string;
+    index: number;
+  } | null>(null);
   const resolved = React.useMemo(
     () =>
       series.map((s, index) => {
         const key = s.key ?? slug(s.label);
+        const rows = s.data.map((row) => ({ ...row, [SERIES_KEY]: key }));
+        // Draw the largest bubbles first so smaller ones stay on top and reachable.
+        if (sizeKey)
+          rows.sort(
+            (a, b) =>
+              Number((b as Record<string, unknown>)[sizeKey]) -
+              Number((a as Record<string, unknown>)[sizeKey]),
+          );
         return {
           key,
           label: s.label,
           color: s.color ?? `var(--color-chart-${(index % 5) + 1})`,
-          data: s.data.map((row) => ({ ...row, [SERIES_KEY]: key })),
+          data: rows,
         };
       }),
-    [series],
+    [series, sizeKey],
   );
   const config = Object.fromEntries(
     resolved.map((s) => [s.key, { label: s.label, color: s.color }]),
@@ -234,27 +274,153 @@ function ScatterChart({
   ];
   // Recharts sizes symbols by area, so a fixed radius becomes a fixed area.
   const dotArea = Math.round(Math.PI * dotRadius * dotRadius);
+  const withXTitle = showAxisLabels && showXAxis && !!xLabel;
+  const withYTitle = showAxisLabels && showYAxis && !!yLabel;
+
+  const renderPoint = (seriesKey: string) => (shape: PointShapeProps) => {
+    const { cx, cy } = shape;
+    const isActive =
+      hovered?.series === seriesKey && hovered.index === shape.index;
+    if (
+      cx == null ||
+      cy == null ||
+      !Number.isFinite(cx) ||
+      !Number.isFinite(cy)
+    )
+      return <g />;
+    const r = Math.max(0, Math.sqrt(Math.max(shape.size ?? 0, 0) / Math.PI));
+    const color = `var(--color-${seriesKey})`;
+    const dimmed = focusKey !== null && focusKey !== seriesKey;
+    if (sizeKey) {
+      return (
+        <g
+          data-slot="scatter-chart-point"
+          data-series={seriesKey}
+          data-active-point={isActive || undefined}
+          className="transition-opacity duration-150 motion-reduce:transition-none"
+          style={{ opacity: dimmed ? 0.2 : undefined }}
+        >
+          {isActive ? (
+            <circle cx={cx} cy={cy} r={r + 6} fill={color} fillOpacity={0.14} />
+          ) : null}
+          <circle
+            cx={cx}
+            cy={cy}
+            r={r}
+            fill={`url(#${uid}-bubble-${seriesKey})`}
+            stroke={color}
+            strokeOpacity={isActive ? 1 : 0.85}
+            strokeWidth={isActive ? 2 : 1.25}
+          />
+        </g>
+      );
+    }
+    return (
+      <g
+        data-slot="scatter-chart-point"
+        data-series={seriesKey}
+        data-active-point={isActive || undefined}
+        className="transition-opacity duration-150 motion-reduce:transition-none"
+        style={{ opacity: dimmed ? 0.2 : undefined }}
+      >
+        <circle
+          cx={cx}
+          cy={cy}
+          r={r + (isActive ? 6 : 3)}
+          fill={color}
+          fillOpacity={isActive ? 0.2 : 0.16}
+        />
+        <circle
+          cx={cx}
+          cy={cy}
+          r={r + (isActive ? 1 : 0)}
+          fill={color}
+          stroke="var(--color-card)"
+          strokeWidth={isActive ? 2 : 1}
+          className="dark:[filter:drop-shadow(0_0_5px_color-mix(in_oklab,var(--scatter-glow)_55%,transparent))]"
+          style={{ ["--scatter-glow" as string]: color }}
+        />
+      </g>
+    );
+  };
 
   return (
     <ChartContainer
       data-slot="scatter-chart"
+      data-variant={sizeKey ? "bubble" : "point"}
       config={config}
-      className={cn("aspect-auto h-64 w-full", className)}
+      className={cn(
+        "aspect-auto h-64 w-full",
+        // While one point is hovered, the rest step back.
+        "[&:has([data-active-point])_[data-slot=scatter-chart-point]:not([data-active-point])]:opacity-35",
+        className,
+      )}
       {...props}
     >
       <RechartsScatterChart
-        margin={{ top: 12, right: 12, bottom: 0, left: showYAxis ? 0 : 8 }}
+        margin={{
+          top: withYTitle && !showLegend ? 24 : 12,
+          right: 12,
+          bottom: 0,
+          left: showYAxis ? 0 : 8,
+        }}
       >
-        {showGrid ? <CartesianGrid /> : null}
+        <defs>
+          {resolved.map((s) => (
+            <radialGradient
+              key={s.key}
+              id={`${uid}-bubble-${s.key}`}
+              cx="38%"
+              cy="32%"
+              r="75%"
+            >
+              <stop
+                offset="0%"
+                stopColor={`var(--color-${s.key})`}
+                stopOpacity={0.62}
+              />
+              <stop
+                offset="100%"
+                stopColor={`var(--color-${s.key})`}
+                stopOpacity={0.3}
+              />
+            </radialGradient>
+          ))}
+        </defs>
+        {showGrid ? <CartesianGrid vertical={false} stroke={GRID} /> : null}
         <XAxis
           type="number"
           dataKey={xKey}
           hide={!showXAxis}
           domain={xDomain}
           tickLine={false}
-          axisLine={false}
+          axisLine={{ stroke: AXIS }}
           tickMargin={8}
+          tick={TICK}
+          height={withXTitle ? 44 : 30}
           tickFormatter={xFormatter}
+          label={
+            withXTitle
+              ? {
+                  content: ({ viewBox }) => {
+                    const box = viewBox as
+                      { x?: number; y?: number; width?: number } | undefined;
+                    if (box?.x == null || box.y == null || box.width == null)
+                      return null;
+                    return (
+                      <text
+                        x={box.x + box.width}
+                        y={box.y + 38}
+                        textAnchor="end"
+                        className="fill-muted-foreground text-[11px]"
+                      >
+                        {xLabel} →
+                      </text>
+                    );
+                  },
+                }
+              : undefined
+          }
         />
         <YAxis
           type="number"
@@ -264,44 +430,122 @@ function ScatterChart({
           tickLine={false}
           axisLine={false}
           tickMargin={8}
+          tick={TICK}
           width="auto"
           tickFormatter={yFormatter}
+          label={
+            // With a legend, the y title sits at the start of the legend row instead.
+            withYTitle && !showLegend
+              ? {
+                  content: ({ viewBox }) => {
+                    const box = viewBox as
+                      { x?: number; y?: number } | undefined;
+                    if (box?.x == null || box.y == null) return null;
+                    return (
+                      <text
+                        x={box.x}
+                        y={box.y - 11}
+                        textAnchor="start"
+                        className="fill-muted-foreground text-[11px]"
+                      >
+                        ↑ {yLabel}
+                      </text>
+                    );
+                  },
+                }
+              : undefined
+          }
         />
         {sizeKey ? (
-          <ZAxis type="number" dataKey={sizeKey} range={sizeRange} />
+          <ZAxis
+            type="number"
+            dataKey={sizeKey}
+            range={sizeRange}
+            domain={[0, "dataMax"]}
+          />
         ) : (
           <ZAxis type="number" range={[dotArea, dotArea]} />
         )}
         {showTooltip ? (
           <ChartTooltip
-            cursor={false}
-            content={
+            cursor={{
+              stroke:
+                "color-mix(in oklab, var(--color-foreground) 25%, transparent)",
+              strokeWidth: 1,
+              strokeDasharray: "3 3",
+            }}
+            isAnimationActive={false}
+            content={(tooltipProps) => (
               <ScatterTooltipContent
+                active={tooltipProps.active}
+                payload={
+                  tooltipProps.payload as ReadonlyArray<{ payload?: unknown }>
+                }
                 config={config}
                 rows={rows}
                 nameKey={nameKey}
               />
-            }
+            )}
           />
         ) : null}
-        {showLegend ? <ChartLegend content={<ChartLegendContent />} /> : null}
-        {resolved.map((s) => {
-          const color = `var(--color-${s.key})`;
-          return (
-            <Scatter
-              key={s.key}
-              name={s.key}
-              data={s.data}
-              fill={color}
-              fillOpacity={0.35}
-              stroke={color}
-              strokeWidth={1.5}
-              isAnimationActive={animate && !reducedMotion}
-              animationDuration={animationDuration}
-              animationEasing="ease-out"
-            />
-          );
-        })}
+        {showLegend ? (
+          <ChartLegend
+            verticalAlign="top"
+            align="right"
+            content={() => (
+              <div
+                data-slot="scatter-chart-legend"
+                className="flex items-start justify-between gap-4 pb-3"
+                onPointerLeave={() => setFocusKey(null)}
+              >
+                {withYTitle ? (
+                  <span className="shrink-0 text-[11px] leading-4 text-muted-foreground">
+                    ↑ {yLabel}
+                  </span>
+                ) : null}
+                <span className="ml-auto flex flex-wrap items-center justify-end gap-x-4 gap-y-1">
+                  {resolved.map((s) => (
+                    <span
+                      key={s.key}
+                      onPointerEnter={() => setFocusKey(s.key)}
+                      className={cn(
+                        "flex cursor-default items-center gap-1.5 text-xs text-muted-foreground transition-[color,opacity] duration-150 motion-reduce:transition-none",
+                        focusKey === s.key && "text-foreground",
+                        focusKey !== null && focusKey !== s.key && "opacity-50",
+                      )}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="size-2 rounded-full"
+                        style={{
+                          backgroundColor: s.color,
+                          boxShadow: `0 0 0 3px color-mix(in oklab, ${s.color} 18%, transparent)`,
+                        }}
+                      />
+                      {s.label}
+                    </span>
+                  ))}
+                </span>
+              </div>
+            )}
+          />
+        ) : null}
+        {resolved.map((s) => (
+          <Scatter
+            key={s.key}
+            name={s.key}
+            data={s.data}
+            fill={`var(--color-${s.key})`}
+            shape={renderPoint(s.key)}
+            onMouseEnter={(_: unknown, index: number) =>
+              setHovered({ series: s.key, index })
+            }
+            onMouseLeave={() => setHovered(null)}
+            isAnimationActive={animate && !reducedMotion}
+            animationDuration={animationDuration}
+            animationEasing={EASE}
+          />
+        ))}
       </RechartsScatterChart>
     </ChartContainer>
   );

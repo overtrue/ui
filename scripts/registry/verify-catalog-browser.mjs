@@ -146,13 +146,15 @@ try {
             cards.map((card) => getComputedStyle(card).boxShadow),
           );
         assert.ok(shadows.length, `${item.name}: missing card surface`);
+        // Cards use the ambient card tier (up to 0 8px 24px); larger shadows
+        // belong to floating surfaces such as menus and dialogs.
         assert.ok(
           shadows.every((shadow) =>
             [...shadow.matchAll(/(-?\d+(?:\.\d+)?)px/g)].every(
-              ([, value]) => Math.abs(Number(value)) <= 3,
+              ([, value]) => Math.abs(Number(value)) <= 24,
             ),
           ),
-          `${item.name}: card shadow exceeds the subtle surface tier ${shadows}`,
+          `${item.name}: card shadow exceeds the card surface tier ${shadows}`,
         );
       }
       if (width === 1440) {

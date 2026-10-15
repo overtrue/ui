@@ -143,7 +143,9 @@ export function Example({
           <StatusBadge variant="success">Active</StatusBadge>
           <StatusBadge variant="warning">Pending</StatusBadge>
           <StatusBadge variant="error">Failed</StatusBadge>
-          <StatusBadge variant="info">In progress</StatusBadge>
+          <StatusBadge variant="info" live>
+            In progress
+          </StatusBadge>
           <StatusBadge>Archived</StatusBadge>
         </div>
       );

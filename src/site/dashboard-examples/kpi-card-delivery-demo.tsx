@@ -49,6 +49,7 @@ export default function KpiCardDeliveryDemo() {
           label="Booked work"
           value={report.booked}
           format="currency"
+          maximumFractionDigits={0}
           delta={report.booked / report.previous - 1}
           deltaLabel={comparison}
           sparkline={report.trend}

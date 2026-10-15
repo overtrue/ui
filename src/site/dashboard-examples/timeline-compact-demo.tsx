@@ -56,28 +56,38 @@ const events = [
 
 export default function TimelineCompactDemo() {
   return (
-    <Timeline className="w-full max-w-md">
-      {events.map((event) => (
-        <TimelineItem key={event.title} className="gap-2">
-          <TimelineRail className="w-5">
-            <TimelineMarker className={cn("size-5", event.className)}>
-              <event.icon />
-            </TimelineMarker>
-            <TimelineConnector className="my-0.5" />
-          </TimelineRail>
-          <TimelineContent className="gap-0.5 pt-0 pb-3">
-            <TimelineHeader>
-              <TimelineTitle>{event.title}</TimelineTitle>
-              <TimelineTime dateTime={event.dateTime}>
-                {event.time}
-              </TimelineTime>
-            </TimelineHeader>
-            {event.description ? (
-              <TimelineDescription>{event.description}</TimelineDescription>
-            ) : null}
-          </TimelineContent>
-        </TimelineItem>
-      ))}
-    </Timeline>
+    <section className="w-full max-w-md rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
+      <header className="mb-4 flex items-baseline justify-between gap-4">
+        <h3 className="text-sm font-semibold tracking-tight">
+          Invoice INV-2041
+        </h3>
+        <span className="font-mono text-xs text-muted-foreground">
+          $4,800.00
+        </span>
+      </header>
+      <Timeline>
+        {events.map((event) => (
+          <TimelineItem key={event.title} className="gap-2">
+            <TimelineRail className="w-5">
+              <TimelineMarker className={cn("size-5", event.className)}>
+                <event.icon />
+              </TimelineMarker>
+              <TimelineConnector className="my-0.5" />
+            </TimelineRail>
+            <TimelineContent className="gap-0.5 pt-0 pb-3">
+              <TimelineHeader>
+                <TimelineTitle>{event.title}</TimelineTitle>
+                <TimelineTime dateTime={event.dateTime}>
+                  {event.time}
+                </TimelineTime>
+              </TimelineHeader>
+              {event.description ? (
+                <TimelineDescription>{event.description}</TimelineDescription>
+              ) : null}
+            </TimelineContent>
+          </TimelineItem>
+        ))}
+      </Timeline>
+    </section>
   );
 }

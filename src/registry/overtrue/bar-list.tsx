@@ -55,6 +55,9 @@ export interface BarListProps extends React.ComponentProps<"div"> {
   onItemClick?: (item: BarListItem) => void;
 }
 
+const keyframes =
+  "@keyframes bar-list-grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}";
+
 function BarList({
   data,
   valueFormatter = (value) => formatNumber(value, { format: "compact" }),
@@ -63,6 +66,7 @@ function BarList({
   showPercentage = false,
   onItemClick,
   className,
+  style,
   ...props
 }: BarListProps) {
   const items = React.useMemo(() => {
@@ -76,10 +80,14 @@ function BarList({
   return (
     <div
       data-slot="bar-list"
-      className={cn("flex flex-col gap-1.5", className)}
+      className={cn("flex flex-col gap-1", className)}
+      style={{ "--bar-list-color": color, ...style } as React.CSSProperties}
       {...props}
     >
-      {items.map((item) => {
+      <style href="overtrue-bar-list" precedence="default">
+        {keyframes}
+      </style>
+      {items.map((item, index) => {
         const width = max > 0 ? (item.value / max) * 100 : 0;
         const share = total > 0 ? item.value / total : 0;
         const interactive = Boolean(item.href || onItemClick);
@@ -89,15 +97,19 @@ function BarList({
           <div
             key={item.key ?? item.name}
             data-slot="bar-list-row"
-            className="flex items-center gap-3 text-sm"
+            className="group/row flex items-center gap-3 text-sm"
           >
-            <div className="relative flex h-8 min-w-0 flex-1 items-center">
+            <div className="relative flex h-8 min-w-0 flex-1 items-center rounded-md transition-colors duration-150 group-hover/row:bg-foreground/[0.035] motion-reduce:transition-none">
               <div
                 aria-hidden="true"
-                className="absolute inset-y-0 left-0 rounded-md transition-[width] duration-300"
+                data-slot="bar-list-bar"
+                className="absolute inset-y-0 left-0 origin-left rounded-md transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] [--bar-from:8%] [--bar-to:24%] group-hover/row:[--bar-from:13%] group-hover/row:[--bar-to:34%] motion-safe:animate-[bar-list-grow_700ms_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:transition-none dark:[--bar-from:12%] dark:[--bar-to:34%] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.06)] dark:group-hover/row:[--bar-from:18%] dark:group-hover/row:[--bar-to:46%]"
                 style={{
                   width: `${width}%`,
-                  backgroundColor: `color-mix(in oklab, ${color} 20%, transparent)`,
+                  minWidth: width > 0 ? 4 : 0,
+                  animationDelay: `${Math.min(index, 12) * 40}ms`,
+                  backgroundImage:
+                    "linear-gradient(90deg, color-mix(in oklab, var(--bar-list-color) var(--bar-from), transparent), color-mix(in oklab, var(--bar-list-color) var(--bar-to), transparent))",
                 }}
               />
               <Label
@@ -109,8 +121,9 @@ function BarList({
                     }
                   : {})}
                 className={cn(
-                  "relative flex min-w-0 items-center gap-2 px-2 text-left",
-                  interactive && "hover:underline",
+                  "relative flex min-w-0 items-center gap-2 rounded-md px-2.5 text-left text-foreground/90",
+                  interactive &&
+                    "underline-offset-4 outline-none hover:underline hover:decoration-muted-foreground/50 focus-visible:ring-2 focus-visible:ring-primary/30",
                 )}
               >
                 {item.icon ? (
@@ -121,10 +134,18 @@ function BarList({
                 <span className="truncate">{item.name}</span>
               </Label>
             </div>
-            <div className="flex shrink-0 items-center gap-2 tabular-nums">
-              <span className="font-medium">{valueFormatter(item.value)}</span>
+            <div className="flex shrink-0 items-center gap-3 tabular-nums">
+              <span
+                data-slot="bar-list-value"
+                className="min-w-12 text-right font-medium"
+              >
+                {valueFormatter(item.value)}
+              </span>
               {showPercentage ? (
-                <span className="text-muted-foreground w-12 text-right text-xs">
+                <span
+                  data-slot="bar-list-share"
+                  className="text-muted-foreground w-11 text-right text-xs"
+                >
                   {formatNumber(share, { format: "percent" })}
                 </span>
               ) : null}

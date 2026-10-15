@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { catalog, componentCount } from "../../src/site/catalog.ts";
 
 const require = createRequire(import.meta.url);
@@ -65,9 +65,13 @@ try {
   await page
     .getByRole("searchbox", { name: "Find in components" })
     .fill("chart");
+  // A query matches an item's title, name, or category, so "chart" keeps the
+  // whole Charts group as well as chart-named items elsewhere.
   await page.waitForFunction(() =>
     [...document.querySelectorAll(".component-sidebar-links a")].every((link) =>
-      /chart/i.test(`${link.textContent} ${link.getAttribute("href")}`),
+      /chart/i.test(
+        `${link.textContent} ${link.getAttribute("href")} ${link.parentElement?.querySelector("h2")?.textContent}`,
+      ),
     ),
   );
   assert.ok((await page.locator(".component-sidebar-links a").count()) > 0);
@@ -215,10 +219,17 @@ try {
   await page.getByRole("button", { name: "Clear search", exact: true }).click();
   await page.waitForURL("**/examples");
   await focused(page.getByRole("searchbox", { name: "Search pages" }));
+  const workspacePageCount = JSON.parse(
+    readFileSync("src/data/workspace/pages.json", "utf8"),
+  ).length;
   await page.waitForFunction(
-    () => document.querySelectorAll(".example-list > a").length === 119,
+    (count) => document.querySelectorAll(".example-list > a").length === count,
+    workspacePageCount,
   );
-  assert.equal(await page.locator(".example-list > a").count(), 119);
+  assert.equal(
+    await page.locator(".example-list > a").count(),
+    workspacePageCount,
+  );
   checks.push(
     "example filters are shareable and have a recoverable empty state",
   );

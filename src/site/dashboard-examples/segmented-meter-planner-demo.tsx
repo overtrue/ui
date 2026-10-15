@@ -5,7 +5,7 @@ const zones = [
   { from: 0, to: 40, color: "var(--color-chart-2)" },
   { from: 40, to: 75, color: "var(--color-chart-1)" },
   { from: 75, to: 90, color: "var(--color-chart-3)" },
-  { from: 90, to: 100, color: "var(--color-chart-4)" },
+  { from: 90, to: 100, color: "var(--color-chart-5)" },
 ];
 
 export default function SegmentedMeterPlannerDemo() {
@@ -20,13 +20,20 @@ export default function SegmentedMeterPlannerDemo() {
         ? "A busy week. Keep the remaining time for small requests."
         : "There is room for another piece of work.";
   return (
-    <div className="flex w-full max-w-lg flex-col gap-5 rounded-lg border border-border bg-card p-5">
+    <div className="flex w-full max-w-lg flex-col gap-5 rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <label htmlFor={id} className="text-sm font-medium">
           Booked hours this week
         </label>
-        <output htmlFor={id} className="text-sm tabular-nums">
-          {hours} / {capacity} h
+        <output
+          htmlFor={id}
+          className="text-sm font-semibold tracking-[-0.01em] tabular-nums"
+        >
+          {hours}
+          <span className="font-medium text-muted-foreground">
+            {" "}
+            / {capacity} h
+          </span>
         </output>
       </div>
       <input

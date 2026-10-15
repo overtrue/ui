@@ -107,6 +107,8 @@ for (const entry of index.items) {
       );
     if (file.content.includes('from "recharts-analytics"'))
       assert.ok(dependencies.includes("recharts-analytics@npm:recharts@3.10.1"), `${item.name}: missing analytics chart runtime`);
+    if (file.content.includes('from "@radix-ui/react-popover"'))
+      assert.ok(dependencies.includes("@radix-ui/react-popover"), `${item.name}: missing popover runtime`);
     if (file.content.includes('from "@tanstack/react-table"'))
       assert.ok(dependencies.includes("@tanstack/react-table@9.2.4"), `${item.name}: missing table runtime`);
   }

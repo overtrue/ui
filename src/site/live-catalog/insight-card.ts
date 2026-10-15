@@ -1,7 +1,7 @@
 export default {
   name: "insight-card",
   title: "Insight card",
-  category: "Feedback",
+  category: "AI",
   description:
     "Stream an AI summary token by token, with inline metric chips, numbered citations, and regenerate, copy and feedback actions.",
   dependencies: [],

@@ -1,7 +1,7 @@
 export default {
   name: "treemap",
   title: "Treemap",
-  category: "Data display",
+  category: "Charts",
   description:
     "A squarified treemap for hierarchical totals that zooms into any group with an animated layout tween and a breadcrumb back out.",
   dependencies: [],

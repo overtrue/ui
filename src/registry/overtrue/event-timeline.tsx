@@ -100,10 +100,14 @@ function TimelineMarker({
       data-slot="timeline-marker"
       aria-hidden={empty ? "true" : undefined}
       className={cn(
-        "bg-background text-muted-foreground flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full border",
+        "relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/80 bg-card text-muted-foreground",
+        "shadow-[0_1px_2px_rgb(0_0_0/0.06)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.06),0_1px_2px_rgb(0_0_0/0.4)]",
+        "transition-[color,background-color,border-color,box-shadow] duration-150 motion-reduce:transition-none",
         "[&>svg]:size-3 [&>img]:size-full [&>img]:object-cover",
-        "group-data-[status=current]/timeline-item:border-primary group-data-[status=current]/timeline-item:text-primary group-data-[status=current]/timeline-item:ring-primary/20 group-data-[status=current]/timeline-item:ring-2",
-        "group-data-[status=done]/timeline-item:bg-primary group-data-[status=done]/timeline-item:border-primary group-data-[status=done]/timeline-item:text-primary-foreground",
+        // The present step carries a soft primary halo, and a faint glow on dark surfaces.
+        "group-data-[status=current]/timeline-item:border-primary group-data-[status=current]/timeline-item:text-primary group-data-[status=current]/timeline-item:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-primary)_14%,transparent)]",
+        "dark:group-data-[status=current]/timeline-item:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-primary)_18%,transparent),0_0_14px_color-mix(in_oklab,var(--color-primary)_45%,transparent)]",
+        "group-data-[status=done]/timeline-item:border-primary group-data-[status=done]/timeline-item:bg-primary group-data-[status=done]/timeline-item:text-primary-foreground",
         className,
       )}
       {...props}
@@ -123,7 +127,9 @@ function TimelineConnector({
       data-slot="timeline-connector"
       aria-hidden="true"
       className={cn(
-        "bg-border my-1 w-px flex-1 group-last/timeline-item:hidden",
+        "my-1.5 w-px flex-1 bg-linear-to-b from-border to-border/40 group-last/timeline-item:hidden",
+        // Completed steps draw the rail in the accent, so progress reads at a glance.
+        "group-data-[status=done]/timeline-item:from-primary/50 group-data-[status=done]/timeline-item:to-primary/25",
         className,
       )}
       {...props}
@@ -159,7 +165,10 @@ function TimelineTitle({ className, ...props }: React.ComponentProps<"h3">) {
   return (
     <h3
       data-slot="timeline-title"
-      className={cn("text-sm leading-5 font-medium", className)}
+      className={cn(
+        "m-0 text-sm leading-5 font-medium tracking-tight text-foreground",
+        className,
+      )}
       {...props}
     />
   );
@@ -170,7 +179,7 @@ function TimelineTime({ className, ...props }: React.ComponentProps<"time">) {
     <time
       data-slot="timeline-time"
       className={cn(
-        "text-muted-foreground ml-auto text-xs whitespace-nowrap tabular-nums",
+        "ml-auto text-xs whitespace-nowrap text-muted-foreground tabular-nums",
         className,
       )}
       {...props}
@@ -185,7 +194,10 @@ function TimelineDescription({
   return (
     <p
       data-slot="timeline-description"
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn(
+        "m-0 text-[13px] leading-5 text-muted-foreground",
+        className,
+      )}
       {...props}
     />
   );

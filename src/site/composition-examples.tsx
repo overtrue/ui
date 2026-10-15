@@ -16,6 +16,7 @@ import {
   MediaCardFooter,
 } from "@/registry/overtrue/media-card";
 import { DetailList } from "@/registry/overtrue/detail-list";
+import { StatusBadge } from "@/registry/overtrue/status-badge";
 import { ResourceProgress } from "@/registry/overtrue/resource-progress";
 import {
   UptimeHistory,
@@ -44,10 +45,10 @@ export function CompositionExample({ name }: { name: ItemName }) {
               <IconGhost stroke={1.5} />
             </FeatureCardDecoration>
             <FeatureCardContent>
-              <CardTitle className="m-0 text-2xl font-semibold">
+              <CardTitle className="m-0 text-2xl leading-8 font-semibold tracking-[-0.025em] text-balance">
                 A little room for your next idea.
               </CardTitle>
-              <CardDescription className="m-0 max-w-lg text-sm leading-7 text-muted-foreground">
+              <CardDescription className="m-0 max-w-lg text-sm leading-6 text-pretty text-muted-foreground">
                 Bring the brief, the references, and the people together. Start
                 with a clear next step.
               </CardDescription>
@@ -61,10 +62,10 @@ export function CompositionExample({ name }: { name: ItemName }) {
           <FeatureCard className="min-h-64 justify-end text-white">
             <FeatureCardBackground src="/assets/overtrue/studio-space.png" />
             <FeatureCardContent>
-              <h3 className="m-0 text-2xl font-semibold">
+              <h3 className="m-0 text-2xl leading-8 font-semibold tracking-[-0.025em] text-balance">
                 Space for focused work.
               </h3>
-              <p className="m-0 max-w-lg text-sm leading-6 text-white/85">
+              <p className="m-0 max-w-lg text-sm leading-6 text-pretty text-white/80">
                 An image background uses the same content slot, with a contrast
                 overlay and room for actions.
               </p>
@@ -88,19 +89,31 @@ export function CompositionExample({ name }: { name: ItemName }) {
             />
             <MediaCardBody>
               <MediaCardContent>
-                <CardTitle className="m-0 text-lg font-semibold">
-                  Visitor experience
-                </CardTitle>
-                <CardDescription className="m-0 text-sm text-muted-foreground">
-                  An inviting first impression, from street to screen.
-                </CardDescription>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs text-muted-foreground">
+                    Culture venue · PRJ-241
+                  </span>
+                  <StatusBadge variant="info" live>
+                    In progress
+                  </StatusBadge>
+                </div>
+                <div>
+                  <CardTitle className="m-0 text-base leading-6 font-semibold tracking-tight">
+                    Visitor experience
+                  </CardTitle>
+                  <CardDescription className="m-0 mt-0.5 text-[13px] leading-5 text-muted-foreground">
+                    An inviting first impression, from street to screen.
+                  </CardDescription>
+                </div>
               </MediaCardContent>
               <MediaCardFooter>
                 <span className="text-xs text-muted-foreground">
                   Experience design
                 </span>
-                <Button asChild variant="outline">
-                  <a href="/workspace/#/datagrid">View brief</a>
+                <Button asChild variant="outline" size="sm">
+                  <a href="/workspace/#/datagrid">
+                    View brief <IconArrowUpRight />
+                  </a>
                 </Button>
               </MediaCardFooter>
             </MediaCardBody>
@@ -113,10 +126,10 @@ export function CompositionExample({ name }: { name: ItemName }) {
             />
             <MediaCardBody>
               <MediaCardContent className="justify-center">
-                <CardTitle className="m-0 text-lg font-semibold">
+                <CardTitle className="m-0 text-lg leading-7 font-semibold tracking-[-0.02em]">
                   Made with care.
                 </CardTitle>
-                <CardDescription className="m-0 text-sm leading-6 text-muted-foreground">
+                <CardDescription className="m-0 text-sm leading-6 text-pretty text-muted-foreground">
                   Use the split composition for editorial stories, onboarding,
                   and featured projects.
                 </CardDescription>
@@ -127,25 +140,37 @@ export function CompositionExample({ name }: { name: ItemName }) {
       );
     case "detail-list":
       return (
-        <DetailList
-          items={[
-            { id: "owner", label: "Owner", value: "Maya Okafor" },
-            { id: "client", label: "Client", value: "Culture venue" },
-            {
-              id: "email",
-              label: "Contact",
-              value: (
-                <a
-                  className="text-primary underline underline-offset-4"
-                  href="mailto:team@acme.example"
-                >
-                  team@acme.example
-                </a>
-              ),
-            },
-            { id: "due", label: "Delivery", value: "October 12, 2026" },
-          ]}
-        />
+        <div className="mx-auto w-full max-w-md rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
+          <DetailList
+            divided
+            items={[
+              { id: "owner", label: "Owner", value: "Maya Okafor" },
+              { id: "client", label: "Client", value: "Culture venue" },
+              {
+                id: "status",
+                label: "Status",
+                value: (
+                  <StatusBadge variant="info" live>
+                    In progress
+                  </StatusBadge>
+                ),
+              },
+              {
+                id: "email",
+                label: "Contact",
+                value: (
+                  <a
+                    className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
+                    href="mailto:team@acme.example"
+                  >
+                    team@acme.example
+                  </a>
+                ),
+              },
+              { id: "due", label: "Delivery", value: "October 12, 2026" },
+            ]}
+          />
+        </div>
       );
     case "resource-progress":
       return (

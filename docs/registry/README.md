@@ -30,7 +30,7 @@ Each component installs under `components/overtrue/`. Core UI dependencies are d
 - `/card-preview.html?id=...`: isolated interactive card renderer.
 - `/docs`: setup, namespace configuration, theme, compatibility boundary, and attribution.
 - `/docs/design`, `/docs/composition`, `/docs/accessibility`, `/docs/troubleshooting`: the product handbook, with linked examples and implementation guidance.
-- `/examples`: searchable index of all 119 workspace examples.
+- `/examples`: searchable index of all 121 workspace examples.
 - `/workspace/#/...`: original workspace gallery.
 - `/r/registry.json`, `/r/:name.json`: public registry files.
 - `/llms.txt`: discovery links and installation guidance.
@@ -46,7 +46,7 @@ Light and dark mode are separate from the workspace gallery's theme settings. Re
 
 The data table filters, sorts, and paginates local data; it is not a server-side table engine. Row identity is supplied explicitly. Storage is calculated against total capacity and negative/non-finite values are guarded. Settings support asynchronous save callbacks and error states; without a callback the form is an explicitly labeled demo. Dashboard navigation, period selection, and CSV export work with bundled example data. Authentication and backend persistence are application concerns.
 
-The workspace gallery is available for exploration, but its 119 pages are not advertised as independently installable registry items. Its structure and verification steps are documented in `docs/examples/README.md`.
+The workspace gallery is available for exploration, but its 121 pages are not advertised as independently installable registry items. Its structure and verification steps are documented in `docs/examples/README.md`.
 
 ## References
 

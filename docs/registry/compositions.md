@@ -85,5 +85,5 @@ The workspace has a small scoped CSS bridge for older unlayered card rules. Inst
 
 - `pnpm build` and `pnpm registry:check` validate types, build output, and dependency closure.
 - `node scripts/registry/verify-compositions.mjs` checks the new previews, source dependencies, search, period controls, decoration semantics, and progress labeling in a real browser.
-- Existing site and 119-route workspace checks cover desktop/mobile rendering and business interactions.
+- Existing site and 121-route workspace checks cover desktop/mobile rendering and business interactions.
 - Install the new items into a separate initialized shadcn project and build there to catch accidental dependencies on this app.

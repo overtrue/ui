@@ -73,9 +73,45 @@ const defaultColors = [
   "var(--color-chart-4)",
   "var(--color-chart-5)",
 ];
+const EASE = "cubic-bezier(0.22,1,0.36,1)";
 
 // Round so server and client render identical attributes.
 const round = (n: number) => Math.round(n * 1000) / 1000;
+
+/** Keeps the center content inside the innermost ring: it wraps first, then scales down. */
+function CenterFit({
+  diameter,
+  children,
+}: {
+  diameter: number;
+  children: React.ReactNode;
+}) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [scale, setScale] = React.useState(1);
+  React.useLayoutEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const measure = () => {
+      // A box fits a circle when its diagonal does.
+      const diagonal = Math.hypot(element.offsetWidth, element.offsetHeight);
+      setScale(diagonal > diameter && diagonal > 0 ? diameter / diagonal : 1);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [diameter]);
+  return (
+    <div
+      ref={ref}
+      data-slot="activity-rings-content"
+      className="flex flex-col items-center justify-center text-center leading-tight text-balance"
+      style={{ maxWidth: Math.max(0, diameter * 0.84), scale }}
+    >
+      {children}
+    </div>
+  );
+}
 
 /** Concentric progress rings, one per goal, in the style of a fitness watch. */
 function ActivityRings({
@@ -87,6 +123,7 @@ function ActivityRings({
   activeIndex: activeProp,
   onActiveIndexChange,
   className,
+  style,
   children,
   ...props
 }: ActivityRingsProps) {
@@ -104,12 +141,26 @@ function ActivityRings({
       return `${ring.label} ${Math.round((ring.value / (max || 1)) * 100)}%`;
     })
     .join(", ");
+  const geometry = rings.map((ring, index) => {
+    const max = ring.max ?? 100;
+    const value = Number.isFinite(ring.value) ? ring.value : 0;
+    const fraction = Math.min(1, Math.max(0, value / (max || 1)));
+    const r = center - thickness / 2 - index * (thickness + gap);
+    const color = ring.color ?? defaultColors[index % defaultColors.length];
+    return { ring, index, fraction, r, color };
+  });
+  const drawn = geometry.filter((item) => item.r > 0);
+  // Clear space inside the innermost ring, less a margin as wide as the gap.
+  const innermost = drawn.length
+    ? drawn[drawn.length - 1].r - thickness / 2
+    : 0;
+  const hole = Math.max(0, (innermost - Math.max(3, gap)) * 2);
 
   return (
     <div
       data-slot="activity-rings"
       className={cn("relative inline-flex shrink-0", className)}
-      style={{ width: size, height: size }}
+      style={{ ...style, width: size, height: size }}
       {...props}
     >
       <svg
@@ -118,15 +169,9 @@ function ActivityRings({
         viewBox={`0 0 ${size} ${size}`}
         role="img"
         aria-label={label}
-        className="absolute inset-0 -rotate-90"
+        className="absolute inset-0 overflow-visible"
       >
-        {rings.map((ring, index) => {
-          const max = ring.max ?? 100;
-          const fraction = Math.min(1, Math.max(0, ring.value / (max || 1)));
-          const r = center - thickness / 2 - index * (thickness + gap);
-          if (r <= 0) return null;
-          const color =
-            ring.color ?? defaultColors[index % defaultColors.length];
+        {drawn.map(({ ring, index, r, color }) => {
           const dimmed = active !== null && active !== index;
           return (
             <g
@@ -136,7 +181,7 @@ function ActivityRings({
               onMouseEnter={() => setActive(index)}
               onMouseLeave={() => setActive(null)}
               className="transition-opacity duration-200"
-              style={{ opacity: dimmed ? 0.35 : 1 }}
+              style={{ opacity: dimmed ? 0.4 : 1 }}
             >
               <circle
                 cx={center}
@@ -147,28 +192,84 @@ function ActivityRings({
                 strokeOpacity={trackOpacity}
                 strokeWidth={thickness}
               />
-              {fraction > 0 ? (
-                <circle
-                  cx={center}
-                  cy={center}
-                  r={round(r)}
-                  fill="none"
-                  stroke={color}
-                  strokeWidth={thickness}
-                  strokeLinecap="round"
-                  pathLength={1}
-                  strokeDasharray="1 1"
-                  strokeDashoffset={round(1 - fraction)}
-                  className="transition-[stroke-dashoffset] duration-700 ease-out"
-                />
-              ) : null}
             </g>
           );
         })}
       </svg>
+      {drawn.map(({ ring, index, fraction, r, color }) => {
+        if (fraction <= 0) return null;
+        const dimmed = active !== null && active !== index;
+        const capDeg = ((thickness / 2 / r) * 180) / Math.PI;
+        // The arc brightens from its start to its leading edge.
+        const fade = `conic-gradient(from ${round(-capDeg - 2)}deg, rgb(0 0 0 / 0.62) 0deg, #000 ${round(fraction * 360 + capDeg + 2)}deg, #000 360deg)`;
+        const delay = `${index * 90}ms`;
+        return (
+          <div
+            key={ring.label}
+            aria-hidden="true"
+            data-slot="activity-rings-fill"
+            data-active={active === index || undefined}
+            className="pointer-events-none absolute inset-0 transition-opacity duration-200 dark:drop-shadow-[0_0_6px_color-mix(in_oklab,var(--ring-color)_55%,transparent)]"
+            style={
+              {
+                opacity: dimmed ? 0.4 : 1,
+                "--ring-color": color,
+                "--ring-angle": `${round(fraction * 360)}deg`,
+              } as React.CSSProperties
+            }
+          >
+            <svg
+              width={size}
+              height={size}
+              viewBox={`0 0 ${size} ${size}`}
+              className="absolute inset-0 overflow-visible"
+              style={{ maskImage: fade, WebkitMaskImage: fade }}
+            >
+              <circle
+                cx={center}
+                cy={center}
+                r={round(r)}
+                fill="none"
+                stroke={color}
+                strokeWidth={thickness}
+                strokeLinecap="round"
+                pathLength={1}
+                strokeDasharray="1 1"
+                strokeDashoffset={round(1 - fraction)}
+                transform={`rotate(-90 ${center} ${center})`}
+                className="transition-[stroke-dashoffset] duration-700 starting:[stroke-dashoffset:1] motion-reduce:transition-none"
+                style={{
+                  transitionTimingFunction: EASE,
+                  transitionDelay: delay,
+                }}
+              />
+            </svg>
+            {/* The head sits above the faded start, so a full ring still closes cleanly. */}
+            <div
+              className="absolute top-1/2 left-1/2 size-0 [rotate:var(--ring-angle)] transition-[rotate] duration-700 starting:[rotate:0deg] motion-reduce:transition-none"
+              style={{ transitionTimingFunction: EASE, transitionDelay: delay }}
+            >
+              <span
+                className={cn(
+                  "absolute rounded-full",
+                  fraction > 0.92 &&
+                    "shadow-[0_0_4px_1px_rgb(0_0_0/0.18)] dark:shadow-[0_0_5px_1px_rgb(0_0_0/0.5)]",
+                )}
+                style={{
+                  width: thickness,
+                  height: thickness,
+                  left: -thickness / 2,
+                  top: -r - thickness / 2,
+                  backgroundColor: color,
+                }}
+              />
+            </div>
+          </div>
+        );
+      })}
       {children ? (
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-          {children}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <CenterFit diameter={hole}>{children}</CenterFit>
         </div>
       ) : null}
     </div>

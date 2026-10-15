@@ -40,13 +40,32 @@ export interface CornerFrameProps extends React.ComponentProps<"div"> {
   cornerColor?: string;
   /** Show a quiet hairline around the framed content. */
   bordered?: boolean;
+  /** Crosshair registration marks, or brackets that hug each corner. */
+  marks?: "cross" | "bracket";
 }
+
+const corners = ["top-left", "top-right", "bottom-right", "bottom-left"] as const;
+
+const crossPosition = {
+  "top-left": "top-0 left-0 -translate-x-1/2 -translate-y-1/2",
+  "top-right": "top-0 right-0 translate-x-1/2 -translate-y-1/2",
+  "bottom-right": "right-0 bottom-0 translate-x-1/2 translate-y-1/2",
+  "bottom-left": "bottom-0 left-0 -translate-x-1/2 translate-y-1/2",
+};
+
+const bracketPosition = {
+  "top-left": "-top-px -left-px border-t-2 border-l-2",
+  "top-right": "-top-px -right-px border-t-2 border-r-2",
+  "bottom-right": "-right-px -bottom-px border-r-2 border-b-2",
+  "bottom-left": "-bottom-px -left-px border-b-2 border-l-2",
+};
 
 /** A content frame with small registration marks at every corner. */
 function CornerFrame({
   cornerSize = 10,
   cornerColor = "var(--color-muted-foreground)",
   bordered = true,
+  marks = "cross",
   className,
   children,
   style,
@@ -61,33 +80,35 @@ function CornerFrame({
   return (
     <div
       data-slot="corner-frame"
-      className={cn("relative", bordered && "border", className)}
+      data-marks={marks}
+      className={cn("relative", bordered && "border border-border/70", className)}
       style={cornerStyle}
       {...props}
     >
       {children}
-      {(["top-left", "top-right", "bottom-right", "bottom-left"] as const).map(
-        (corner) => (
-          <span
-            key={corner}
-            data-corner={corner}
-            aria-hidden="true"
-            className={cn(
-              "pointer-events-none absolute z-10 size-(--corner-size)",
-              "before:absolute before:bg-(--corner-color) after:absolute after:bg-(--corner-color)",
-              "before:top-1/2 before:h-px before:w-full before:-translate-y-1/2 after:left-1/2 after:h-full after:w-px after:-translate-x-1/2",
-              corner === "top-left" &&
-                "top-0 left-0 -translate-x-1/2 -translate-y-1/2",
-              corner === "top-right" &&
-                "top-0 right-0 translate-x-1/2 -translate-y-1/2",
-              corner === "bottom-right" &&
-                "right-0 bottom-0 translate-x-1/2 translate-y-1/2",
-              corner === "bottom-left" &&
-                "bottom-0 left-0 -translate-x-1/2 translate-y-1/2",
-            )}
-          />
-        ),
-      )}
+      {corners.map((corner, index) => (
+        <span
+          key={corner}
+          data-corner={corner}
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute z-10 size-(--corner-size)",
+            // Marks settle in one after another, then stay still.
+            "transition-[scale,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:starting:scale-50 motion-safe:starting:opacity-0 motion-reduce:transition-none",
+            index === 1 && "delay-[40ms]",
+            index === 2 && "delay-[80ms]",
+            index === 3 && "delay-[120ms]",
+            "dark:drop-shadow-[0_0_4px_color-mix(in_oklab,var(--corner-color)_65%,transparent)]",
+            marks === "bracket"
+              ? cn("border-(--corner-color)", bracketPosition[corner])
+              : cn(
+                  crossPosition[corner],
+                  "before:absolute before:top-1/2 before:h-px before:w-full before:-translate-y-1/2 before:bg-(--corner-color)",
+                  "after:absolute after:left-1/2 after:h-full after:w-px after:-translate-x-1/2 after:bg-(--corner-color)",
+                ),
+          )}
+        />
+      ))}
     </div>
   );
 }

@@ -192,6 +192,22 @@
     "charts": 1
   },
   {
+    "path": "/ai-usage",
+    "title": "AI usage",
+    "file": "ai-usage.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
+    "path": "/revenue",
+    "title": "Revenue",
+    "file": "revenue.html",
+    "bare": false,
+    "layout": "default",
+    "charts": 0
+  },
+  {
     "path": "/datagrid",
     "title": "Data grid",
     "file": "datagrid.html",

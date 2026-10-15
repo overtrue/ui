@@ -55,12 +55,6 @@ export default function CommandPaletteInlineDemo() {
       groups={groups}
       className="w-full max-w-xl"
       placeholder="Find a project or client…"
-      footer={
-        <>
-          <span> 4 shortcuts </span>
-          <span> Search pages and actions </span>
-        </>
-      }
     />
   );
 }

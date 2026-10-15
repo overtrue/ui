@@ -503,7 +503,18 @@ html[data-workspace-navbar-theme="primary"]
     [data-slot="gantt-chart"],
     [data-slot="deploy-pipeline"],
     [data-slot="insight-card"],
-    [data-slot="incident-review"]
+    [data-slot="incident-review"],
+    [data-slot="revenue-overview"],
+    [data-slot="model-usage"],
+    [data-slot="service-explorer"],
+    [data-slot="stacked-area-chart"],
+    [data-slot="experiment-result"],
+    [data-slot="service-map"],
+    [data-slot="flame-graph"],
+    [data-slot="json-viewer"],
+    [data-slot="assistant-panel"],
+    [data-slot="date-range-picker"],
+    [data-slot="filter-bar"]
   )
   :is(h1, h2, h3, h4, h5, h6, p, dl, dd, ul, ol, table, th, td, button, label, small) {
   margin: revert-layer;
@@ -529,7 +540,18 @@ html[data-workspace-navbar-theme="primary"]
     [data-slot="gantt-chart"],
     [data-slot="deploy-pipeline"],
     [data-slot="insight-card"],
-    [data-slot="incident-review"]
+    [data-slot="incident-review"],
+    [data-slot="revenue-overview"],
+    [data-slot="model-usage"],
+    [data-slot="service-explorer"],
+    [data-slot="stacked-area-chart"],
+    [data-slot="experiment-result"],
+    [data-slot="service-map"],
+    [data-slot="flame-graph"],
+    [data-slot="json-viewer"],
+    [data-slot="assistant-panel"],
+    [data-slot="date-range-picker"],
+    [data-slot="filter-bar"]
   )
   :is(input, select, textarea) {
   height: revert-layer;

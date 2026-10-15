@@ -1,5 +1,6 @@
 import { catalog, catalogPath } from "./catalog.ts";
 import cards from "../blocks/catalog.json" with { type: "json" };
+import workspacePages from "../data/workspace/pages.json" with { type: "json" };
 
 export const guides = [
   {
@@ -63,7 +64,7 @@ export const sitePages = [
     path: "/examples",
     title: "Workspace examples",
     description:
-      "Explore 119 admin pages covering projects, people, billing, settings, forms, charts, and navigation.",
+      `Explore ${workspacePages.length} admin pages covering projects, people, billing, settings, forms, charts, and navigation.`,
   },
   ...guides.map((guide) => ({
     path: `/docs/${guide.slug}`,

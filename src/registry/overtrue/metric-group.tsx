@@ -7,7 +7,7 @@ export function MetricGroup({ className, ...props }: ComponentProps<"div">) {
     <div
       data-slot="metric-group"
       className={cn(
-        "grid grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-px overflow-hidden rounded-lg border border-border bg-border text-card-foreground shadow-sm shadow-black/[0.03] dark:shadow-black/10 [&>*]:bg-card",
+        "grid grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-px overflow-hidden rounded-2xl border border-border bg-border text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)] [&>*]:bg-card",
         className,
       )}
       {...props}
@@ -26,13 +26,22 @@ export function MetricGroupItem({
   context?: ReactNode;
 }) {
   return (
-    <div className={cn("@container min-w-0 wrap-anywhere px-4 py-5 sm:px-6", className)} {...props}>
-      <p className="m-0 text-sm font-medium text-muted-foreground">{label}</p>
-      <p className="my-3 text-[clamp(1rem,14cqi,1.875rem)] font-semibold tracking-tight tabular-nums">
+    <div
+      data-slot="metric-group-item"
+      className={cn(
+        "@container min-w-0 px-5 py-5 wrap-anywhere sm:px-6",
+        className,
+      )}
+      {...props}
+    >
+      <p className="m-0 text-[13px] leading-5 font-medium text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-2 mb-2.5 text-[clamp(1.125rem,14cqi,1.875rem)] leading-[1.15] font-semibold tracking-[-0.035em] tabular-nums">
         {value}
       </p>
       {context && (
-        <div className="text-xs text-muted-foreground">{context}</div>
+        <div className="text-xs leading-5 text-muted-foreground">{context}</div>
       )}
     </div>
   );
