@@ -620,6 +620,12 @@ const items = [
 ] as const;
 // Browse from page structure and everyday records to reporting and specialized charts.
 const displayOrder: readonly string[] = [
+  "realtime-monitor",
+  "incident-review",
+  "dashboard",
+  "analytics-overview",
+  "project-portfolio",
+  "service-status",
   "page-header",
   "section-card",
   "stat-card",
@@ -647,15 +653,20 @@ const displayOrder: readonly string[] = [
   "file-list",
   "activity-feed",
   "log-stream",
+  "trace-waterfall",
+  "deploy-pipeline",
   "timeline",
   "event-timeline",
   "status-badge",
+  "insight-card",
   "empty-state",
   "steps",
   "metric-chart",
   "live-chart",
+  "latency-histogram",
   "trend-chart",
   "bar-chart",
+  "waterfall-chart",
   "composed-chart",
   "sparkline",
   "trend-sparkline",
@@ -677,6 +688,9 @@ const displayOrder: readonly string[] = [
   "activity-heatmap",
   "cohort-grid",
   "host-map",
+  "geo-map",
+  "treemap",
+  "gantt-chart",
   "heatmap-chart",
   "dot-plot",
   "radar-chart",
@@ -689,11 +703,6 @@ const displayOrder: readonly string[] = [
   "status-edge-card",
   "pricing-card",
   "corner-frame",
-  "realtime-monitor",
-  "dashboard",
-  "analytics-overview",
-  "project-portfolio",
-  "service-status",
 ];
 export const catalog = [...items].sort((a, b) => {
   const rank = (name: string) => {
@@ -721,6 +730,17 @@ export const blockCollections: readonly {
   names: readonly ItemName[];
 }[] = [
   {
+    label: "Overviews",
+    names: [
+      "realtime-monitor",
+      "incident-review",
+      "dashboard",
+      "analytics-overview",
+      "project-portfolio",
+      "service-status",
+    ],
+  },
+  {
     label: "Workspace",
     names: [
       "team-access",
@@ -734,15 +754,5 @@ export const blockCollections: readonly {
   {
     label: "Operations",
     names: ["task-list", "activity-feed", "storage-meter"],
-  },
-  {
-    label: "Overviews",
-    names: [
-      "realtime-monitor",
-      "dashboard",
-      "analytics-overview",
-      "project-portfolio",
-      "service-status",
-    ],
   },
 ];

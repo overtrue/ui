@@ -414,7 +414,7 @@ export function PlanSettings() {
                 <p>8 seats × $29 · Monthly billing</p>
               </div>
               <div>
-                <small>NEXT BILLING DATE</small>
+                <small>Next billing date</small>
                 <h3>October 01, 2026</h3>
                 <p>No changes scheduled</p>
               </div>

@@ -118,7 +118,7 @@ kbd {
   line-height: 1.55;
   color: var(--site-graphite);
   max-width: 34em;
-  text-wrap: pretty;
+  text-wrap-style: pretty;
 }
 .live-dot {
   position: relative;
@@ -741,7 +741,7 @@ kbd {
   font-size: 17px;
   line-height: 1.55;
   color: var(--site-graphite);
-  text-wrap: pretty;
+  text-wrap-style: pretty;
 }
 .catalog-page > .catalog-toolbar {
   margin-top: 32px;
@@ -986,6 +986,7 @@ kbd {
 .detail-preview > .live-examples {
   max-width: none;
 }
+.detail-preview.detail-incident-review,
 .detail-preview.detail-realtime-monitor {
   display: block;
   padding: 16px;
@@ -1048,10 +1049,10 @@ kbd {
 }
 
 /* Details ------------------------------------------------------------------ */
-p,
-li,
-dd {
-  text-wrap: pretty;
+/* text-wrap-style, not the text-wrap shorthand: the shorthand also resets
+   wrapping and would undo Tailwind's truncate. */
+:where(p, li, dd) {
+  text-wrap-style: pretty;
 }
 /* A whole tile is one link; show focus around the tile, not the caption. */
 :is(.component-tile, .feature-cell):has(:is(.tile-caption, .feature-caption):focus-visible) {
@@ -1084,7 +1085,7 @@ dd {
   scrollbar-color: color-mix(in oklab, var(--site-ink) 20%, transparent) transparent;
 }
 :is(.showcase-option-description, .tile-caption small, .feature-caption small) {
-  text-wrap: pretty;
+  text-wrap-style: pretty;
 }
 
 /* The header earns its hairline only once the page moves under it. */
@@ -1099,5 +1100,329 @@ dd {
   from {
     border-bottom-color: transparent;
     background-color: color-mix(in srgb, var(--site-bg) 0%, transparent);
+  }
+}
+
+/* Theme studio ------------------------------------------------------------- */
+.studio-trigger {
+  position: relative;
+}
+.studio-trigger[data-custom]::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 2px var(--site-bg);
+}
+.studio-popover {
+  z-index: 60;
+  width: min(340px, calc(100vw - 24px));
+  max-height: min(640px, calc(100dvh - 90px));
+  overflow-y: auto;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  color: var(--site-ink);
+  box-shadow: var(--shadow-float);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  transform-origin: var(--radix-popover-content-transform-origin);
+  animation: studio-in 220ms var(--ease-out);
+  font-size: 14px;
+}
+@keyframes studio-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(-4px);
+  }
+}
+.studio-popover-head {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 14px;
+}
+.studio-popover-head strong {
+  font-size: 15px;
+  font-weight: 640;
+}
+.studio-popover-head span {
+  font-size: 13px;
+  color: var(--site-graphite);
+}
+.studio-panel {
+  display: grid;
+  gap: 18px;
+}
+.studio-panel fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.studio-panel legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 620;
+}
+.studio-panel legend output {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--site-graphite);
+}
+.studio-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.studio-swatch {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
+  cursor: pointer;
+  transition: transform 160ms var(--ease-out), box-shadow 160ms;
+}
+.studio-swatch:hover {
+  transform: scale(1.08);
+}
+.studio-swatch[aria-checked="true"] {
+  box-shadow:
+    0 0 0 2px var(--card),
+    0 0 0 4px var(--site-ink);
+}
+.studio-custom {
+  overflow: hidden;
+  background: conic-gradient(from 0deg, #f2555a, #e8a317, #65a30d, #0ea5a4, #2a5bff, #9b5cf6, #e5487d, #f2555a);
+}
+.studio-custom input {
+  position: absolute;
+  inset: -8px;
+  width: 44px;
+  height: 44px;
+  opacity: 0;
+  cursor: pointer;
+}
+.studio-hex {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 4px 10px 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+}
+.studio-hex span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+.studio-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--site-graphite);
+  cursor: pointer;
+}
+.studio-toggle input {
+  accent-color: var(--primary);
+}
+.studio-palette {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.studio-palette span {
+  display: grid;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08);
+}
+.studio-palette i {
+  display: block;
+  height: 18px;
+}
+.studio-range {
+  width: 100%;
+  accent-color: var(--primary);
+}
+.studio-neutrals {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.studio-neutrals button {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 12px;
+  color: var(--site-graphite);
+  cursor: pointer;
+  transition: border-color 160ms, color 160ms;
+}
+.studio-neutrals button span {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
+}
+.studio-neutrals button[aria-checked="true"] {
+  border-color: var(--primary);
+  color: var(--site-ink);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 18%, transparent);
+}
+.studio-export {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 6px 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--site-subtle);
+}
+.studio-export div {
+  display: grid;
+  gap: 1px;
+}
+.studio-export strong {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.studio-export span {
+  font-size: 12px;
+  color: var(--site-graphite);
+}
+.studio-code {
+  max-height: 280px;
+  overflow: auto;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--code-bg);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.studio-reset {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--site-graphite);
+  cursor: pointer;
+}
+.studio-reset:hover:not(:disabled) {
+  color: var(--site-ink);
+}
+.studio-reset:disabled {
+  opacity: 0.45;
+}
+.docs-studio {
+  margin: 24px 0 8px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: var(--shadow-raise);
+}
+.docs-studio .studio-panel {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 32px;
+}
+.docs-studio .studio-export,
+.docs-studio .studio-code,
+.docs-studio .studio-reset {
+  grid-column: 1 / -1;
+}
+@media (max-width: 700px) {
+  .docs-studio .studio-panel {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 400px) {
+  .studio-trigger {
+    display: none;
+  }
+}
+
+/* Examples, grouped like the workspace navigation. */
+.example-section {
+  margin-top: 40px;
+}
+.example-section h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 620;
+  color: var(--site-ink);
+}
+.example-section h2 span {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--site-graphite);
+}
+.example-list {
+  gap: 8px;
+}
+.example-list > a {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 14px;
+  font-weight: 520;
+  color: var(--site-ink);
+  box-shadow: var(--shadow-raise);
+  transition:
+    border-color 160ms,
+    box-shadow 200ms var(--ease-out);
+}
+.example-list > a:hover {
+  background: var(--card);
+  border-color: color-mix(in oklab, var(--site-ink) 18%, var(--border));
+  box-shadow: var(--shadow-float);
+}
+.example-list > a small {
+  margin-top: 3px;
+  font-size: 12.5px;
+  font-weight: 450;
+  color: var(--site-graphite);
+}
+@media (max-width: 1100px) {
+  .example-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .example-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .example-list {
+    grid-template-columns: 1fr;
   }
 }

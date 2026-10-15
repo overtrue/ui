@@ -133,11 +133,15 @@ try {
   await page.keyboard.press("Enter");
   await focused(catalogSearch);
   await page.waitForURL("**/components?category=Feedback");
+  const feedbackCount = catalog.filter(
+    (item) => item.category === "Feedback",
+  ).length;
   await page.waitForFunction(
-    () => document.querySelectorAll(".component-tile").length === 2,
+    (count) => document.querySelectorAll(".component-tile").length === count,
+    feedbackCount,
   );
   assert.equal(await catalogSearch.inputValue(), "");
-  assert.equal(await page.locator(".component-tile").count(), 2);
+  assert.equal(await page.locator(".component-tile").count(), feedbackCount);
   await page
     .getByRole("button", { name: "Reset filters", exact: true })
     .click();
@@ -301,7 +305,7 @@ try {
       .press("Shift+Tab");
     assert.ok(
       await page
-        .getByRole("link", { name: "Project board", exact: true })
+        .getByRole("link", { name: "Board", exact: true })
         .evaluate((element) => {
           const style = getComputedStyle(element);
           return (

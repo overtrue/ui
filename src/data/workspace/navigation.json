@@ -1,227 +1,220 @@
 [
   {
-    "title": "Workspace",
-    "href": "#",
+    "title": "Overview",
+    "section": "Workspace",
+    "icon": "home",
+    "href": "./index.html"
+  },
+  {
+    "title": "Operations",
+    "section": "Workspace",
+    "icon": "activity",
+    "href": "./operations-overview.html"
+  },
+  {
+    "title": "Inbox",
+    "section": "Workspace",
+    "icon": "inbox",
     "children": [
       {
-        "title": "Studio overview",
-        "href": "./index.html",
-        "children": []
-      },
-      {
-        "title": "Client relationships",
-        "href": "./client-overview.html",
-        "children": []
-      },
-      {
-        "title": "Operations overview",
-        "href": "./operations-overview.html",
-        "children": []
-      },
-      {
-        "title": "Activity",
-        "href": "./activity.html",
-        "children": []
-      },
-      {
-        "title": "Team calendar",
-        "href": "./fullcalendar.html",
-        "children": []
+        "title": "Email",
+        "href": "./email-inbox.html"
       },
       {
         "title": "Chat",
-        "href": "./chat.html",
-        "children": []
+        "href": "./chat.html"
       },
       {
-        "title": "Email inbox",
-        "href": "./email-inbox.html",
-        "children": []
+        "title": "Activity",
+        "href": "./activity.html"
+      },
+      {
+        "title": "Calendar",
+        "href": "./fullcalendar.html"
       }
     ]
   },
   {
     "title": "Projects",
-    "href": "#",
+    "section": "Work",
+    "icon": "folder",
     "children": [
       {
-        "title": "Project portfolio",
-        "href": "./cards.html",
-        "children": []
+        "title": "Portfolio",
+        "href": "./cards.html"
       },
       {
-        "title": "Project board",
-        "href": "./tasks.html",
-        "children": []
+        "title": "Board",
+        "href": "./tasks.html"
       },
       {
         "title": "Work queue",
-        "href": "./tasks-list.html",
-        "children": []
+        "href": "./tasks-list.html"
       },
       {
         "title": "Weekly priorities",
-        "href": "./sortable.html",
-        "children": []
+        "href": "./sortable.html"
       },
       {
-        "title": "Wizard",
-        "href": "./wizard.html",
-        "children": []
+        "title": "New project",
+        "href": "./wizard.html"
+      }
+    ]
+  },
+  {
+    "title": "Clients",
+    "section": "Work",
+    "icon": "briefcase",
+    "children": [
+      {
+        "title": "Relationships",
+        "href": "./client-overview.html"
       },
       {
-        "title": "Onboarding",
-        "href": "./onboarding.html",
-        "children": []
-      },
+        "title": "Client intake",
+        "href": "./form-layout.html"
+      }
+    ]
+  },
+  {
+    "title": "Creative",
+    "section": "Work",
+    "icon": "palette",
+    "children": [
       {
         "title": "Asset library",
-        "href": "./gallery.html",
-        "children": []
+        "href": "./gallery.html"
       },
       {
-        "title": "Photogrid",
-        "href": "./photogrid.html",
-        "children": []
+        "title": "Photo grid",
+        "href": "./photogrid.html"
       },
       {
         "title": "Lightbox",
-        "href": "./lightbox.html",
-        "children": []
+        "href": "./lightbox.html"
       },
       {
         "title": "Carousel",
-        "href": "./carousel.html",
-        "children": []
+        "href": "./carousel.html"
       },
       {
         "title": "Creative review",
-        "href": "./creative-review.html",
-        "children": []
+        "href": "./creative-review.html"
       },
       {
         "title": "Artwork review",
-        "href": "./artwork-review.html",
-        "children": []
+        "href": "./artwork-review.html"
       }
     ]
   },
   {
     "title": "People",
-    "href": "#",
+    "section": "Work",
+    "icon": "users",
     "children": [
       {
-        "title": "People",
-        "href": "./users.html",
-        "children": []
+        "title": "Directory",
+        "href": "./users.html"
       },
       {
         "title": "Profile",
-        "href": "./profile.html",
-        "children": []
+        "href": "./profile.html"
       },
       {
         "title": "Open positions",
-        "href": "./open-positions.html",
-        "children": []
+        "href": "./open-positions.html"
       },
       {
         "title": "Email signatures",
-        "href": "./signatures.html",
-        "children": []
+        "href": "./signatures.html"
       },
       {
         "title": "Email templates",
-        "href": "./emails.html",
-        "children": []
+        "href": "./emails.html"
       }
     ]
   },
   {
     "title": "Billing",
-    "href": "#",
+    "section": "Work",
+    "icon": "credit-card",
     "children": [
       {
         "title": "Billing & payments",
-        "href": "./pay.html",
-        "children": []
+        "href": "./pay.html"
       },
       {
         "title": "Invoice",
-        "href": "./invoice.html",
-        "children": []
-      },
-      {
-        "title": "Pricing cards",
-        "href": "./pricing.html",
-        "children": []
-      },
-      {
-        "title": "Pricing table",
-        "href": "./pricing-table.html",
-        "children": []
+        "href": "./invoice.html"
       },
       {
         "title": "Plans",
-        "href": "./settings-plan.html",
-        "children": []
+        "href": "./settings-plan.html"
+      },
+      {
+        "title": "Pricing cards",
+        "href": "./pricing.html"
+      },
+      {
+        "title": "Pricing table",
+        "href": "./pricing-table.html"
       }
     ]
   },
   {
-    "title": "Resources",
-    "href": "#",
+    "title": "Knowledge",
+    "section": "Studio",
+    "icon": "book",
     "children": [
       {
-        "title": "Settings",
-        "href": "./settings.html",
-        "children": []
-      },
-      {
-        "title": "Frequently Asked Questions",
-        "href": "./faq.html",
-        "children": []
-      },
-      {
         "title": "Studio handbook",
-        "href": "./search-results.html",
-        "children": []
+        "href": "./search-results.html"
       },
       {
         "title": "Handover guide",
-        "href": "./prose.html",
-        "children": []
+        "href": "./prose.html"
       },
       {
         "title": "Editorial story",
-        "href": "./editorial-story.html",
-        "children": []
+        "href": "./editorial-story.html"
       },
       {
         "title": "Working principles",
-        "href": "./text-features.html",
-        "children": []
+        "href": "./text-features.html"
+      },
+      {
+        "title": "FAQ",
+        "href": "./faq.html"
+      }
+    ]
+  },
+  {
+    "title": "Settings",
+    "section": "Studio",
+    "icon": "settings",
+    "children": [
+      {
+        "title": "Workspace settings",
+        "href": "./settings.html"
+      },
+      {
+        "title": "Onboarding",
+        "href": "./onboarding.html"
       },
       {
         "title": "Terms of service",
-        "href": "./terms-of-service.html",
-        "children": []
+        "href": "./terms-of-service.html"
       },
       {
         "title": "License",
-        "href": "./license.html",
-        "children": []
-      },
-      {
-        "title": "SVG Illustrations",
-        "href": "./illustrations.html",
-        "children": []
+        "href": "./license.html"
       }
     ]
   },
   {
     "title": "Components",
-    "href": "#",
+    "section": "Library",
+    "icon": "puzzle",
     "children": [
       {
         "title": "High-order components",
@@ -247,17 +240,12 @@
             "children": []
           },
           {
-            "title": "Client intake",
-            "href": "./form-layout.html",
-            "children": []
-          },
-          {
-            "title": "Star Ratings",
+            "title": "Star ratings",
             "href": "./stars-rating.html",
             "children": []
           },
           {
-            "title": "HugeRTE",
+            "title": "Rich text editor",
             "href": "./wysiwyg.html",
             "children": []
           }
@@ -267,12 +255,12 @@
         "title": "Access & states",
         "children": [
           {
-            "title": "2-Step Verification",
+            "title": "Two-step code",
             "href": "./2-step-verification-code.html",
             "children": []
           },
           {
-            "title": "2-Step Verification",
+            "title": "Two-step verification",
             "href": "./2-step-verification.html",
             "children": []
           },
@@ -292,12 +280,12 @@
             "children": []
           },
           {
-            "title": "Page 404",
+            "title": "Not found",
             "href": "./error-404.html",
             "children": []
           },
           {
-            "title": "Page 500",
+            "title": "Server error",
             "href": "./error-500.html",
             "children": []
           },
@@ -332,7 +320,7 @@
             "children": []
           },
           {
-            "title": "Sign in link",
+            "title": "Sign in with a link",
             "href": "./sign-in-link.html",
             "children": []
           },
@@ -372,7 +360,7 @@
             "children": []
           },
           {
-            "title": "Datatables",
+            "title": "Data tables",
             "href": "./datatables.html",
             "children": []
           },
@@ -382,12 +370,12 @@
             "children": []
           },
           {
-            "title": "Full Size Map",
+            "title": "Full-size map",
             "href": "./map-fullsize.html",
             "children": []
           },
           {
-            "title": "Vector Maps",
+            "title": "Vector maps",
             "href": "./maps-vector.html",
             "children": []
           },
@@ -427,7 +415,7 @@
             "children": []
           },
           {
-            "title": "All Elements",
+            "title": "All elements",
             "href": "./all-elements.html",
             "children": []
           },
@@ -452,12 +440,12 @@
             "children": []
           },
           {
-            "title": "Card Gradients",
+            "title": "Card gradients",
             "href": "./card-gradients.html",
             "children": []
           },
           {
-            "title": "Cards Masonry",
+            "title": "Masonry cards",
             "href": "./cards-masonry.html",
             "children": []
           },
@@ -517,7 +505,7 @@
             "children": []
           },
           {
-            "title": "Payment Providers",
+            "title": "Payment providers",
             "href": "./payment-providers.html",
             "children": []
           },
@@ -562,7 +550,7 @@
             "children": []
           },
           {
-            "title": "Driver Tour",
+            "title": "Product tour",
             "href": "./tour.html",
             "children": []
           },
@@ -575,6 +563,10 @@
             "title": "Widgets",
             "href": "./widgets.html",
             "children": []
+          },
+          {
+            "title": "Illustrations",
+            "href": "./illustrations.html"
           }
         ]
       }
@@ -582,7 +574,8 @@
   },
   {
     "title": "Layouts",
-    "href": "#",
+    "section": "Library",
+    "icon": "layout",
     "children": [
       {
         "title": "Boxed",

@@ -15,6 +15,12 @@ export const guides = [
       "Combine small components into a useful dashboard, then connect your own data.",
   },
   {
+    slug: "extending",
+    title: "Extending components",
+    description:
+      "Theme with tokens, restyle parts through data-slot hooks, swap content with render props, and feed live data into blocks.",
+  },
+  {
     slug: "accessibility",
     title: "Accessible interfaces",
     description:

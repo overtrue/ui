@@ -146,7 +146,7 @@ export function Widgets() {
               <IconSparkles />
             </FeatureCardDecoration>
             <FeatureCardContent>
-              <span className="scene-eyebrow">MAKE SPACE FOR FOCUS</span>
+              <span className="scene-eyebrow">Make space for focus</span>
               <h2 className="text-xl font-semibold leading-snug">
                 A quieter Friday.
               </h2>
@@ -388,7 +388,7 @@ export function GradientCards() {
             <IconUsers />
           </FeatureCardDecoration>
           <FeatureCardContent>
-            <span className="scene-eyebrow">BETTER TOGETHER</span>
+            <span className="scene-eyebrow">Better together</span>
             <h2 className="text-xl font-semibold leading-snug">
               A fresh pair of eyes.
             </h2>

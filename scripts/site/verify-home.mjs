@@ -244,8 +244,8 @@ try {
     1,
   );
   for (const [theme, color] of [
-    ["light", "#7c3aed"],
-    ["dark", "#a78bfa"],
+    ["light", "#6d5efc"],
+    ["dark", "#9698fc"],
   ]) {
     await page.evaluate(
       (theme) =>

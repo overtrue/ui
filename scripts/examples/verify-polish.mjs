@@ -27,7 +27,7 @@ try {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.context().addInitScript(() => {
       localStorage.setItem('overtrue-site-theme', '${dark ? "dark" : "light"}');
-      localStorage.setItem('overtrue-workspace-theme-v2', JSON.stringify({ scheme: '${dark ? "dark" : "light"}' }));
+      localStorage.setItem('overtrue-workspace-theme-v3', JSON.stringify({ scheme: '${dark ? "dark" : "light"}' }));
     });
   }`);
   for (let offset = 0; offset < selectedRoutes.length; offset += 10) {

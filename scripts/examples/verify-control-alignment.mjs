@@ -21,7 +21,7 @@ try {
     await context.addInitScript((scheme) => {
       localStorage.setItem("overtrue-site-theme", scheme);
       localStorage.setItem(
-        "overtrue-workspace-theme-v2",
+        "overtrue-workspace-theme-v3",
         JSON.stringify({ scheme }),
       );
     }, theme);

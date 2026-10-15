@@ -8,9 +8,15 @@ import {
   YAxis,
 } from "recharts";
 import { ServiceStatus } from "@/registry/overtrue/service-status";
+import {
+  RealtimeMonitor,
+  useSimulatedTelemetry,
+} from "@/registry/overtrue/realtime-monitor";
+import { InsightCard } from "@/registry/overtrue/insight-card";
+import { DeployPipeline } from "@/registry/overtrue/deploy-pipeline";
 import { ResourceProgress } from "@/registry/overtrue/resource-progress";
 import { MetricGroup } from "@/registry/overtrue/metric-group";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { projects, revenue, clients, tasks } from "@/data/workspace/studio";
 import {
@@ -60,6 +66,7 @@ export default function Overview({
       <div className="scene-toolbar">
         <span>Monday, September 21, 2026 · Studio snapshot</span>
       </div>
+      <StudioBrief />
       <MetricGroup className="mb-6 scene-overview-metrics">
         <Metric
           label="September revenue"
@@ -144,6 +151,12 @@ export default function Overview({
                   data={report.series}
                   margin={{ top: 15, right: 6, bottom: 0, left: -15 }}
                 >
+                  <defs>
+                    <linearGradient id="overview-revenue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--scene-accent)" stopOpacity={1} />
+                      <stop offset="100%" stopColor="var(--scene-accent)" stopOpacity={0.55} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid
                     vertical={false}
                     stroke="var(--scene-line)"
@@ -165,7 +178,8 @@ export default function Overview({
                     contentStyle={{
                       background: "var(--scene-surface)",
                       border: "1px solid var(--scene-line)",
-                      borderRadius: 6,
+                      borderRadius: 10,
+                      boxShadow: "0 12px 32px -12px rgb(13 20 36 / 0.3)",
                       color: "var(--scene-ink)",
                       fontSize: 12,
                     }}
@@ -174,9 +188,9 @@ export default function Overview({
                   <Bar
                     dataKey="value"
                     name="Booked & planned"
-                    fill="var(--scene-accent)"
-                    radius={[3, 3, 0, 0]}
-                    maxBarSize={28}
+                    fill="url(#overview-revenue)"
+                    radius={[6, 6, 2, 2]}
+                    maxBarSize={30}
                     isAnimationActive={false}
                   />
                 </ComposedChart>
@@ -357,8 +371,47 @@ export function Customers() {
     </Scene>
   );
 }
+const briefText =
+  "September is pacing at {{metric:Revenue|$5,600|neutral}} booked, {{metric:vs. August|-5.1%|negative}} with planned work still to land {{cite:1}}. The team has {{metric:Capacity|22% free|positive}} for new work {{cite:2}}. One deliverable is ready for review: the identity handover for Ceramics studio, due Sep 26 {{cite:3}}. Suggested next step: confirm the visitor arrival journey before Thursday so Maya can start the wayfinding pass.";
+
+/** A weekly brief that thinks, then streams in; regenerate replays it. */
+function StudioBrief() {
+  const [run, setRun] = useState(0);
+  const [status, setStatus] = useState<"thinking" | "streaming" | "done">(
+    "thinking",
+  );
+  useEffect(() => {
+    setStatus("thinking");
+    const write = window.setTimeout(() => setStatus("streaming"), 900);
+    const finish = window.setTimeout(() => setStatus("done"), 1000);
+    return () => {
+      window.clearTimeout(write);
+      window.clearTimeout(finish);
+    };
+  }, [run]);
+  return (
+    <InsightCard
+      key={run}
+      className="scene-brief"
+      title="This week at Acme Studio"
+      source="Workspace brief"
+      text={briefText}
+      status={status}
+      speed={160}
+      sources={[
+        { id: "1", label: "Revenue outlook", href: "#/invoice" },
+        { id: "2", label: "Team calendar", href: "#/fullcalendar" },
+        { id: "3", label: "Work queue", href: "#/tasks-list" },
+      ]}
+      onRegenerate={() => setRun((value) => value + 1)}
+    />
+  );
+}
+
 export function Operations() {
   const [region, setRegion] = useState("All regions");
+  const [paused, setPaused] = useState(false);
+  const telemetry = useSimulatedTelemetry({ paused });
   return (
     <Scene
       id="operations-overview"
@@ -374,6 +427,34 @@ export function Operations() {
         </div>
         <Pill>Healthy</Pill>
       </div>
+      <RealtimeMonitor
+        data={telemetry}
+        title="Workspace API"
+        environment="api.acme.studio"
+        paused={paused}
+        onPausedChange={setPaused}
+        className="scene-live-monitor"
+      />
+      <DeployPipeline
+        className="scene-release"
+        title="web #1284"
+        meta="main · 4f9c2ab Cache invoice PDFs at the edge"
+        stages={[
+          { id: "build", label: "Build", jobs: [{ id: "compile", label: "Compile", status: "success", duration: 72000 }] },
+          {
+            id: "test",
+            label: "Test",
+            jobs: [
+              { id: "unit", label: "Unit", status: "success", duration: 48000 },
+              { id: "e2e", label: "E2E", status: "success", duration: 161000 },
+              { id: "lint", label: "Lint", status: "success", duration: 21000 },
+            ],
+          },
+          { id: "scan", label: "Security scan", jobs: [{ id: "audit", label: "Audit", status: "success", duration: 38000 }] },
+          { id: "preview", label: "Deploy preview", jobs: [{ id: "preview-job", label: "Preview", status: "success", duration: 54000 }] },
+          { id: "prod", label: "Deploy production", jobs: [{ id: "prod-job", label: "Production", status: "running", startedAt: Date.now() - 42000 }] },
+        ]}
+      />
       <MetricGroup className="mb-6">
         <Metric
           label="Availability"

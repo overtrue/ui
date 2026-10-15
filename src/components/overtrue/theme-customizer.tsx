@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 
 export type ColorScheme = "light" | "dark" | "auto"
-export type ThemeBase = "slate" | "gray" | "zinc" | "neutral" | "stone"
+export type ThemeBase = "ink" | "slate" | "gray" | "zinc" | "neutral" | "stone"
 export type NavMode = "navbar" | "sidebar" | "horizontal"
 export type ContainerWidth = "default" | "fluid" | "boxed"
 export type NavbarBehavior = "default" | "sticky"
@@ -26,9 +26,9 @@ export interface ThemeState {
 
 export const DEFAULT_THEME: ThemeState = {
   scheme: "light",
-  accent: "#2563eb",
+  accent: "#2a5bff",
   font: "sans",
-  base: "gray",
+  base: "ink",
   radius: 0.5,
   nav: "sidebar",
   container: "default",
@@ -36,27 +36,27 @@ export const DEFAULT_THEME: ThemeState = {
   sidebar: "expanded",
 }
 
-const STORAGE_KEY = "overtrue-workspace-theme-v2"
+const STORAGE_KEY = "overtrue-workspace-theme-v3"
 
 const ACCENTS = [
   DEFAULT_THEME.accent,
-  "#4299e1",
-  "#6366f1",
-  "#ae3ec9",
-  "#d6336c",
-  "#d63939",
-  "#f76707",
-  "#f59f00",
-  "#74b816",
-  "#2fb344",
-  "#0ca678",
-  "#17a2b8",
+  "#6d5efc",
+  "#9b5cf6",
+  "#e5487d",
+  "#f2555a",
+  "#f76b15",
+  "#e8a317",
+  "#65a30d",
+  "#0f9f6e",
+  "#0ea5a4",
+  "#0891b2",
+  "#0d1424",
 ]
 
 const FONT_STACKS: Record<ThemeState["font"], string> = {
-  sans: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+  sans: '"Mona Sans Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   serif: 'Georgia, "Times New Roman", Times, serif',
-  mono: 'Menlo, Monaco, Consolas, "Liberation Mono", monospace',
+  mono: '"JetBrains Mono Variable", Menlo, Monaco, Consolas, monospace',
   comic: '"Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive',
 }
 
@@ -87,17 +87,36 @@ export function hexToHsl(hex: string): string {
   return `${+(h * 360).toFixed(2)} ${+(s * 100).toFixed(2)}% ${+(l * 100).toFixed(2)}%`
 }
 
+/** First visit: start from the theme built in the site's theme studio, if any. */
+function themeFromStudio(): ThemeState {
+  try {
+    const studio = JSON.parse(window.localStorage.getItem("overtrue-theme-studio") ?? "null")
+    if (!studio || typeof studio !== "object") return DEFAULT_THEME
+    const theme = { ...DEFAULT_THEME }
+    if (typeof studio.accent === "string" && /^#[\da-f]{6}$/i.test(studio.accent)) theme.accent = studio.accent.toLowerCase()
+    if (["ink", "slate", "zinc", "stone"].includes(studio.neutral)) theme.base = studio.neutral
+    if (typeof studio.radius === "number") {
+      const steps = [0, 0.5, 1, 1.5, 2] as const
+      const rem = studio.radius / 16
+      theme.radius = steps.reduce((best, step) => (Math.abs(step - rem) < Math.abs(best - rem) ? step : best), steps[0])
+    }
+    return theme
+  } catch {
+    return DEFAULT_THEME
+  }
+}
+
 export function loadTheme(): ThemeState {
   if (typeof window === "undefined") return DEFAULT_THEME
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
-    if (!raw) return DEFAULT_THEME
+    if (!raw) return themeFromStudio()
     const saved: unknown = JSON.parse(raw)
     if (!saved || typeof saved !== "object" || Array.isArray(saved)) return DEFAULT_THEME
     const theme = { ...DEFAULT_THEME }
     const choices = {
       scheme: ["light", "dark", "auto"], font: ["sans", "serif", "mono", "comic"],
-      base: ["slate", "gray", "zinc", "neutral", "stone"], radius: [0, 0.5, 1, 1.5, 2],
+      base: ["ink", "slate", "gray", "zinc", "neutral", "stone"], radius: [0, 0.5, 1, 1.5, 2],
       nav: ["navbar", "sidebar", "horizontal"], container: ["default", "fluid", "boxed"],
       navbar: ["default", "sticky"], sidebar: ["expanded", "folded"],
       navbarTheme: ["default", "dark", "primary"],
@@ -126,6 +145,7 @@ export function persistTheme(theme: ThemeState) {
 
 // Each palette uses the same semantic tokens for shadcn and workspace surfaces.
 const BASE_PALETTES: Record<ThemeBase, { light: string[]; dark: string[] }> = {
+  ink: { light: ["#f7f8fa", "#0d1424", "#ffffff", "#eef0f4", "#5d6678", "#e4e7ec", "#d5dae2"], dark: ["#07090f", "#eef1f7", "#0f131c", "#171c28", "#8b93a5", "#1d2330", "#2a3242"] },
   gray: { light: ["#f9fafb", "#111827", "#ffffff", "#f3f4f6", "#6b7280", "#e5e7eb", "#d1d5db"], dark: ["#030712", "#f9fafb", "#111827", "#1f2937", "#9ca3af", "#1f2937", "#374151"] },
   slate: { light: ["#f8fafc", "#334155", "#ffffff", "#f1f5f9", "#64748b", "#e2e8f0", "#cbd5e1"], dark: ["#0f172a", "#e2e8f0", "#1e293b", "#334155", "#94a3b8", "#334155", "#475569"] },
   zinc: { light: ["#fafafa", "#3f3f46", "#ffffff", "#f4f4f5", "#71717a", "#e4e4e7", "#d4d4d8"], dark: ["#18181b", "#e4e4e7", "#27272a", "#27272a", "#a1a1aa", "#3f3f46", "#52525b"] },
@@ -165,7 +185,7 @@ export function applyTheme(t: ThemeState) {
   root.style.setProperty("--sidebar-accent-foreground", foreground)
   root.dataset.workspaceNavbarTheme = t.navbarTheme ?? "default"
   root.dataset.workspaceBase = t.base
-  const accent = dark && t.accent === DEFAULT_THEME.accent ? "#60a5fa" : t.accent
+  const accent = dark && t.accent === DEFAULT_THEME.accent ? "#7b93ff" : t.accent
   const primaryForeground = hexToHsl(accentForeground(accent))
   root.style.setProperty(
     "--workspace-primary-rgb",
@@ -374,6 +394,7 @@ export function ThemeCustomizer({
                 "The gray palette behind every surface.",
                 theme.base,
                 [
+                  ["ink", "Ink"],
                   ["slate", "Slate"],
                   ["gray", "Gray"],
                   ["zinc", "Zinc"],

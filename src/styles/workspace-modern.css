@@ -1,0 +1,769 @@
+/*
+ * Workspace, modern layer. Loaded last; restyles the workspace base layer and the
+ * scene compositions through the same shadcn tokens the customizer controls, so
+ * every accent, base palette, radius and font choice still applies.
+ */
+.overtrue-workspace {
+  --ws-hairline: color-mix(in oklab, hsl(var(--foreground)) 9%, transparent);
+  --ws-raise:
+    0 1px 1px rgb(13 20 36 / 0.03), 0 2px 4px -2px rgb(13 20 36 / 0.06);
+  --ws-float:
+    0 1px 2px rgb(13 20 36 / 0.05), 0 16px 40px -16px rgb(13 20 36 / 0.22);
+  --ws-ring: 0 0 0 3px color-mix(in oklab, hsl(var(--primary)) 24%, transparent);
+  --ws-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --pn-card-shadow: var(--ws-raise);
+  --pn-box-shadow: var(--ws-float);
+  --pn-border-radius: calc(var(--radius) * 1.25);
+  --pn-border-radius-lg: calc(var(--radius) * 1.5);
+  --scene-control-line: color-mix(in oklab, hsl(var(--foreground)) 14%, transparent);
+  font-size: 14px;
+  font-feature-settings: "cv11" 1;
+  -webkit-font-smoothing: antialiased;
+}
+.dark .overtrue-workspace {
+  --ws-raise: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 1px 2px rgb(0 0 0 / 0.5);
+  --ws-float: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 50px -20px rgb(0 0 0 / 0.8);
+}
+
+/* Canvas: a faint light source above the content instead of a flat wash. */
+.overtrue-workspace #workspace-content {
+  background:
+    radial-gradient(
+      1200px 420px at 50% -120px,
+      color-mix(in oklab, hsl(var(--primary)) 9%, transparent),
+      transparent 70%
+    ),
+    hsl(var(--background));
+}
+
+/* Type ------------------------------------------------------------------- */
+.overtrue-workspace :is(h1, h2, h3, .pn-page-title, .pn-card-title) {
+  letter-spacing: -0.015em;
+}
+.overtrue-workspace :is(.scene-heading h1, .pn-page-title) {
+  font-size: clamp(26px, 2.6vw, 34px);
+  font-stretch: 108%;
+  font-weight: 640;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+}
+.overtrue-workspace :is(.scene-eyebrow, .pn-page-pretitle) {
+  font-size: 12.5px;
+  font-weight: 560;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--pn-secondary);
+}
+.overtrue-workspace .scene-heading .scene-eyebrow::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--scene-accent) 18%, transparent);
+}
+.overtrue-workspace .scene-heading {
+  border-bottom-color: var(--ws-hairline);
+}
+.overtrue-workspace :is(code, kbd, pre, .font-monospace) {
+  font-family: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Header ----------------------------------------------------------------- */
+.overtrue-workspace .workspace-header {
+  position: sticky;
+  top: 0;
+  background: color-mix(in srgb, hsl(var(--background)) 78%, transparent);
+  border-bottom-color: var(--ws-hairline);
+  backdrop-filter: blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+}
+.overtrue-workspace .workspace-docs {
+  height: 34px;
+  border-radius: calc(var(--radius) * 1.25);
+  box-shadow: var(--ws-raise);
+}
+.overtrue-workspace .workspace-icon-button {
+  width: 36px;
+  height: 36px;
+  border-radius: calc(var(--radius) * 1.25);
+  color: var(--pn-secondary);
+  transition:
+    background-color 160ms,
+    color 160ms;
+}
+.overtrue-workspace .workspace-icon-button:hover {
+  color: var(--pn-body-color);
+}
+.overtrue-workspace .workspace-notifications > span {
+  box-shadow: 0 0 0 2px hsl(var(--background));
+}
+
+/* Sidebar ---------------------------------------------------------------- */
+.workspace-app-sidebar {
+  --workspace-sidebar-selected: color-mix(in oklab, hsl(var(--primary)) 10%, transparent);
+}
+.workspace-app-sidebar [data-slot="sidebar-inner"] {
+  background: hsl(var(--sidebar));
+  border-color: var(--ws-hairline);
+}
+.dark .workspace-app-sidebar [data-slot="sidebar-inner"] {
+  background: color-mix(in srgb, hsl(var(--sidebar)) 55%, hsl(var(--background)));
+}
+.workspace-app-sidebar .workspace-sidebar-brand {
+  font-size: 19px;
+  font-stretch: 108%;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.workspace-app-sidebar .workspace-sidebar-brand svg {
+  width: 24px;
+  height: 24px;
+}
+.workspace-app-sidebar [data-sidebar="group-label"] {
+  font-size: 12px;
+  font-weight: 560;
+  letter-spacing: 0;
+  text-transform: none;
+  color: hsl(var(--muted-foreground));
+}
+.workspace-app-sidebar [data-sidebar="menu-button"] {
+  position: relative;
+  height: 34px;
+  font-size: 13.5px;
+  font-weight: 500;
+  border-radius: calc(var(--radius) * 1.25);
+  transition:
+    background-color 160ms,
+    color 160ms;
+}
+.workspace-app-sidebar [data-sidebar="menu-button"] > svg {
+  opacity: 0.65;
+  stroke-width: 1.75;
+}
+.workspace-app-sidebar [data-sidebar="menu-sub"] {
+  margin-inline-start: 19px;
+  border-color: var(--ws-hairline);
+}
+.workspace-app-sidebar [data-sidebar="menu-sub-button"] {
+  position: relative;
+  height: 30px;
+  font-size: 13px;
+  border-radius: calc(var(--radius) * 1);
+  color: hsl(var(--sidebar-foreground) / 0.72);
+  transition:
+    background-color 160ms,
+    color 160ms;
+}
+.workspace-app-sidebar [data-sidebar="menu-sub-button"]:hover {
+  color: hsl(var(--sidebar-foreground));
+}
+/* Selection reads as a lit row with an edge marker, not a solid block. */
+.workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"],
+html[data-workspace-navbar-theme="primary"]
+  .workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"] {
+  background: var(--workspace-sidebar-selected);
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
+.workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"]::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  border-radius: 2px;
+  background: hsl(var(--primary));
+  box-shadow: 0 0 10px color-mix(in oklab, hsl(var(--primary)) 70%, transparent);
+}
+.workspace-app-sidebar [data-sidebar="footer"] {
+  border-top-color: var(--ws-hairline);
+}
+.workspace-app-sidebar .workspace-sidebar-account {
+  border-color: var(--ws-hairline);
+  box-shadow: var(--ws-raise);
+  transition: border-color 160ms;
+}
+.workspace-app-sidebar .workspace-sidebar-account:hover {
+  border-color: color-mix(in oklab, hsl(var(--foreground)) 20%, transparent);
+}
+
+/* Cards ------------------------------------------------------------------ */
+.overtrue-workspace :is(.pn-card, .scene-card) {
+  border-color: var(--ws-hairline);
+  border-radius: calc(var(--radius) * 1.5);
+  box-shadow: var(--ws-raise);
+}
+.overtrue-workspace .scene-card > header,
+.overtrue-workspace .pn-card-header {
+  background: transparent;
+  border-bottom-color: var(--ws-hairline);
+}
+.overtrue-workspace :is(.scene-card h2, .pn-card-title) {
+  font-size: 15px;
+  font-weight: 620;
+}
+.overtrue-workspace :is(a.pn-card, .pn-card-link) {
+  transition:
+    border-color 200ms,
+    box-shadow 260ms var(--ws-ease),
+    transform 260ms var(--ws-ease);
+}
+.overtrue-workspace :is(a.pn-card, .pn-card-link):hover {
+  border-color: color-mix(in oklab, hsl(var(--foreground)) 18%, transparent);
+  box-shadow: var(--ws-float);
+  transform: translateY(-1px);
+}
+
+/* Metric groups: the featured figure glows instead of sitting on navy. */
+.overtrue-workspace [data-slot="metric-group"] {
+  border-color: var(--ws-hairline);
+  border-radius: calc(var(--radius) * 1.5);
+  box-shadow: var(--ws-raise);
+}
+.overtrue-workspace .scene-overview-metrics > :first-child {
+  position: relative;
+  background:
+    radial-gradient(
+      120% 140% at 0% 0%,
+      color-mix(in oklab, hsl(var(--primary)) 85%, white 0%) 0%,
+      color-mix(in oklab, hsl(var(--primary)) 70%, black) 100%
+    );
+  color: hsl(var(--primary-foreground));
+  overflow: hidden;
+}
+.overtrue-workspace .scene-overview-metrics > :first-child::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.07) 1px, transparent 1px);
+  background-size: 18px 18px;
+  -webkit-mask-image: linear-gradient(to left, #000, transparent 70%);
+  mask-image: linear-gradient(to left, #000, transparent 70%);
+  pointer-events: none;
+}
+.dark .overtrue-workspace .scene-overview-metrics > :first-child {
+  background:
+    radial-gradient(
+      120% 140% at 0% 0%,
+      color-mix(in oklab, hsl(var(--primary)) 42%, hsl(var(--card))) 0%,
+      color-mix(in oklab, hsl(var(--primary)) 14%, hsl(var(--card))) 100%
+    );
+  color: #fff;
+}
+.dark .overtrue-workspace .scene-overview-metrics > :first-child > p:nth-child(2) {
+  color: #fff;
+}
+.dark .overtrue-workspace .scene-overview-metrics > :first-child > :is(p:first-child, div) {
+  color: rgb(255 255 255 / 0.68);
+}
+.overtrue-workspace .scene-overview-metrics > :first-child > :is(p:first-child, div) {
+  color: color-mix(in srgb, hsl(var(--primary-foreground)) 72%, transparent);
+}
+.overtrue-workspace .scene-overview-metrics > :first-child > p:nth-child(2) {
+  color: hsl(var(--primary-foreground));
+}
+.overtrue-workspace [data-slot="metric-group"] p:nth-child(2) {
+  font-stretch: 106%;
+  font-weight: 640;
+  letter-spacing: -0.03em;
+}
+
+/* Buttons ---------------------------------------------------------------- */
+.overtrue-workspace :is(.pn-btn, .scene-button) {
+  border-radius: calc(var(--radius) * 1.25);
+  font-weight: 560;
+  transition:
+    background-color 160ms,
+    border-color 160ms,
+    box-shadow 200ms,
+    transform 120ms;
+}
+.overtrue-workspace :is(.pn-btn, .scene-button):active:not(:disabled) {
+  transform: translateY(1px);
+}
+.overtrue-workspace .pn-btn:not([class*="pn-btn-ghost"]):not(.pn-btn-link):not(.pn-btn-action):not(.pn-btn-close) {
+  box-shadow: var(--ws-raise);
+}
+.overtrue-workspace :is(.pn-btn-primary, .scene-button.is-primary) {
+  background-image: linear-gradient(rgb(255 255 255 / 0.14), rgb(255 255 255 / 0));
+  border-color: transparent;
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.2) inset,
+    0 1px 2px rgb(13 20 36 / 0.18),
+    0 6px 16px -8px color-mix(in oklab, hsl(var(--primary)) 80%, transparent) !important;
+}
+.overtrue-workspace :is(.pn-btn, .scene-button):focus-visible {
+  outline: none;
+  box-shadow: var(--ws-ring) !important;
+}
+.overtrue-workspace .scene-button:not(.is-primary) {
+  border-color: var(--scene-control-line);
+}
+
+/* Inputs ----------------------------------------------------------------- */
+/* :where() keeps the type exclusions at zero specificity so the focus and
+   invalid rules below can still win on border-color. */
+.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"])), .scene select, .scene textarea) {
+  border-radius: calc(var(--radius) * 1.25);
+  border-color: var(--scene-control-line);
+  box-shadow: 0 1px 1px rgb(13 20 36 / 0.03);
+  transition:
+    border-color 160ms,
+    box-shadow 160ms;
+}
+.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input, .scene select, .scene textarea):focus {
+  border-color: hsl(var(--primary));
+  box-shadow: var(--ws-ring);
+  outline: none;
+}
+/* Invalid fields keep their error border even while focused. */
+.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input, .scene select, .scene textarea):is([aria-invalid="true"], :user-invalid) {
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 3px color-mix(in oklab, hsl(var(--destructive)) 15%, transparent);
+}
+.overtrue-workspace .pn-form-label {
+  font-weight: 560;
+}
+.overtrue-workspace .pn-form-check-input:checked {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+
+/* Badges, tags, status ----------------------------------------------------- */
+.overtrue-workspace .pn-badge {
+  border-radius: 999px;
+  font-weight: 560;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.overtrue-workspace .pn-badge:not(.pn-badge-notification):not(.pn-badge-blink) {
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, currentColor 18%, transparent);
+}
+.overtrue-workspace .pn-tag {
+  border-radius: calc(var(--radius) * 1.25);
+  border-color: var(--ws-hairline);
+}
+
+/* Tables ----------------------------------------------------------------- */
+.overtrue-workspace :is(.pn-table, .scene-table) thead th {
+  background: transparent;
+  color: var(--pn-secondary);
+  font-size: 12.5px;
+  font-weight: 560;
+  letter-spacing: 0;
+  text-transform: none;
+  border-bottom-color: var(--ws-hairline);
+}
+.overtrue-workspace :is(.pn-table, .scene-table) > :not(caption) > * > * {
+  border-bottom-color: var(--ws-hairline);
+}
+.overtrue-workspace :is(.pn-table, .scene-table) tbody tr {
+  transition: background-color 140ms;
+}
+.overtrue-workspace :is(.pn-table, .scene-table) tbody tr:hover > * {
+  background-color: color-mix(in oklab, hsl(var(--primary)) 4%, transparent);
+}
+.overtrue-workspace :is(.pn-table, .scene-table) td {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Progress --------------------------------------------------------------- */
+.overtrue-workspace .pn-progress,
+.overtrue-workspace .scene-progress {
+  border-radius: 999px;
+  background: color-mix(in oklab, hsl(var(--foreground)) 8%, transparent);
+  overflow: hidden;
+}
+.overtrue-workspace .pn-progress-bar {
+  border-radius: 999px;
+  background-image: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.25));
+  transition: width 600ms var(--ws-ease);
+}
+
+/* Avatars ---------------------------------------------------------------- */
+.overtrue-workspace .pn-avatar {
+  box-shadow: 0 0 0 1px var(--ws-hairline);
+}
+.overtrue-workspace .pn-avatar-list .pn-avatar {
+  box-shadow: 0 0 0 2px var(--pn-bg-surface);
+}
+
+/* Navigation inside pages -------------------------------------------------- */
+.overtrue-workspace .pn-nav-tabs {
+  border-bottom-color: var(--ws-hairline);
+}
+.overtrue-workspace .pn-nav-tabs .pn-nav-link {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  font-weight: 520;
+  color: var(--pn-secondary);
+}
+.overtrue-workspace .pn-nav-tabs .pn-nav-link.pn-active,
+.overtrue-workspace .pn-nav-tabs .pn-nav-link:hover {
+  color: var(--pn-body-color);
+  background: transparent;
+}
+.overtrue-workspace .pn-nav-tabs .pn-nav-link.pn-active {
+  border-bottom-color: hsl(var(--primary));
+}
+.overtrue-workspace .pn-nav-pills .pn-nav-link.pn-active {
+  background: color-mix(in oklab, hsl(var(--primary)) 12%, transparent);
+  color: hsl(var(--primary));
+}
+.overtrue-workspace .pn-pagination .pn-page-link {
+  border-radius: calc(var(--radius) * 1.25);
+}
+
+/* Overlays --------------------------------------------------------------- */
+.overtrue-workspace :is(.pn-dropdown-menu, .workspace-dropdown-content) {
+  border-color: var(--ws-hairline);
+  border-radius: calc(var(--radius) * 1.75);
+  box-shadow: var(--ws-float);
+  padding: 6px;
+}
+.overtrue-workspace .pn-dropdown-item {
+  border-radius: calc(var(--radius) * 1.1);
+}
+.overtrue-workspace .pn-modal-content,
+.overtrue-workspace .workspace-settings-panel {
+  border-color: var(--ws-hairline);
+  box-shadow: var(--ws-float);
+}
+.overtrue-workspace .pn-alert {
+  border-radius: calc(var(--radius) * 1.5);
+  border-color: var(--ws-hairline);
+}
+
+/* Charts: thinner grid, rounded marks. */
+.overtrue-workspace .recharts-cartesian-grid line {
+  stroke: var(--ws-hairline);
+}
+
+/* Floating customize button ------------------------------------------------ */
+.overtrue-workspace .workspace-floating-customize {
+  border-radius: 14px;
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.2) inset,
+    0 10px 30px -10px color-mix(in oklab, hsl(var(--primary)) 80%, transparent) !important;
+}
+
+/* Footer ----------------------------------------------------------------- */
+.overtrue-workspace .workspace-footer {
+  border-top: 1px solid var(--ws-hairline);
+  color: var(--pn-secondary);
+}
+.overtrue-workspace .workspace-footer a {
+  color: var(--pn-secondary);
+}
+.overtrue-workspace .workspace-footer a:hover {
+  color: var(--pn-body-color);
+}
+
+/* Scrollbars ------------------------------------------------------------- */
+.overtrue-workspace * {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, hsl(var(--foreground)) 18%, transparent) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overtrue-workspace * {
+    transition-duration: 0ms !important;
+  }
+}
+
+/* Live monitor inside the operations page. */
+.overtrue-workspace :is(.scene-live-monitor, .scene-release, .scene-brief, .scene-delivery-plan) {
+  margin-bottom: 24px;
+  border-color: var(--ws-hairline);
+  border-radius: calc(var(--radius) * 1.75);
+  box-shadow: var(--ws-raise);
+}
+
+/*
+ * Registry components are styled with Tailwind utilities (in cascade layers).
+ * Let them win over the workspace base's unlayered element rules.
+ */
+.overtrue-workspace
+  :is(
+    [data-slot="realtime-monitor"],
+    [data-slot="live-chart"],
+    [data-slot="log-stream"],
+    [data-slot="host-map"],
+    [data-slot="bullet-chart"],
+    [data-slot="cohort-grid"],
+    [data-slot="number-ticker"],
+    [data-slot="spotlight-card"],
+    [data-slot="treemap"],
+    [data-slot="waterfall-chart"],
+    [data-slot="trace-waterfall"],
+    [data-slot="latency-histogram"],
+    [data-slot="geo-map"],
+    [data-slot="gantt-chart"],
+    [data-slot="deploy-pipeline"],
+    [data-slot="insight-card"],
+    [data-slot="incident-review"]
+  )
+  :is(h1, h2, h3, h4, h5, h6, p, dl, dd, ul, ol, table, th, td, button, label, small) {
+  margin: revert-layer;
+  font-size: revert-layer;
+  font-weight: revert-layer;
+  line-height: revert-layer;
+  letter-spacing: revert-layer;
+  color: revert-layer;
+}
+.overtrue-workspace
+  :is(
+    [data-slot="realtime-monitor"],
+    [data-slot="live-chart"],
+    [data-slot="log-stream"],
+    [data-slot="host-map"],
+    [data-slot="bullet-chart"],
+    [data-slot="cohort-grid"],
+    [data-slot="treemap"],
+    [data-slot="waterfall-chart"],
+    [data-slot="trace-waterfall"],
+    [data-slot="latency-histogram"],
+    [data-slot="geo-map"],
+    [data-slot="gantt-chart"],
+    [data-slot="deploy-pipeline"],
+    [data-slot="insight-card"],
+    [data-slot="incident-review"]
+  )
+  :is(input, select, textarea) {
+  height: revert-layer;
+  padding: revert-layer;
+  border: revert-layer;
+  border-radius: revert-layer;
+  background: revert-layer;
+  box-shadow: revert-layer;
+  font-size: revert-layer;
+}
+
+/* Auth pages: the card sits under a soft light on a measured grid. */
+.overtrue-workspace .scene-auth.is-centered {
+  background:
+    radial-gradient(
+      900px 520px at 50% 0%,
+      color-mix(in oklab, hsl(var(--primary)) 14%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(var(--ws-hairline) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(90deg, var(--ws-hairline) 1px, transparent 1px) 0 0 / 40px 40px,
+    hsl(var(--background));
+}
+.overtrue-workspace .scene-auth.is-centered > section {
+  border: 1px solid var(--ws-hairline);
+  border-radius: calc(var(--radius) * 2.25);
+  background: color-mix(in srgb, hsl(var(--card)) 86%, transparent);
+  box-shadow: var(--ws-float);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Customizer ---------------------------------------------------------------- */
+.overtrue-workspace .workspace-settings-body h3 {
+  font-size: 13px;
+  font-weight: 620;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--pn-body-color);
+}
+.overtrue-workspace .workspace-setting legend {
+  font-weight: 600;
+}
+.overtrue-workspace .workspace-setting-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.overtrue-workspace .workspace-setting-colors label {
+  width: 30px;
+  height: 30px;
+  min-height: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
+  transition:
+    transform 180ms var(--ws-ease),
+    box-shadow 180ms;
+}
+.overtrue-workspace .workspace-setting-colors label:hover {
+  transform: scale(1.08);
+}
+.overtrue-workspace .workspace-setting-colors label.is-selected {
+  box-shadow:
+    0 0 0 2px var(--pn-bg-surface),
+    0 0 0 4px var(--pn-body-color);
+}
+.overtrue-workspace .workspace-setting-choice {
+  border-radius: 999px;
+  border-color: var(--ws-hairline);
+}
+.overtrue-workspace .workspace-setting-choice.is-selected {
+  border-color: hsl(var(--primary));
+  box-shadow: var(--ws-ring);
+}
+
+/* App frame ------------------------------------------------------------------
+ * The sidebar sits on the frame; each page floats in a raised panel.
+ */
+.overtrue-workspace.workspace-layout-vertical {
+  --ws-frame: color-mix(in oklab, hsl(var(--background)) 94%, hsl(var(--foreground)));
+  background: var(--ws-frame);
+}
+.dark .overtrue-workspace.workspace-layout-vertical {
+  --ws-frame: color-mix(in oklab, hsl(var(--background)) 70%, black);
+}
+.workspace-layout-vertical .workspace-app-sidebar [data-slot="sidebar-inner"],
+.dark .workspace-layout-vertical .workspace-app-sidebar [data-slot="sidebar-inner"] {
+  background: var(--ws-frame);
+}
+.workspace-layout-vertical .workspace-app-sidebar [data-slot="sidebar-container"] {
+  border-inline-end: 0;
+}
+.overtrue-workspace.workspace-layout-vertical .workspace-sidebar-inset {
+  margin: 8px 8px 8px 0;
+  min-height: calc(100svh - 16px);
+  border: 1px solid var(--ws-hairline);
+  border-radius: 16px;
+  background: hsl(var(--background));
+  box-shadow:
+    0 1px 2px rgb(13 20 36 / 0.04),
+    0 8px 30px -12px rgb(13 20 36 / 0.12);
+  overflow: clip;
+}
+.dark .overtrue-workspace.workspace-layout-vertical .workspace-sidebar-inset {
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.04) inset,
+    0 20px 60px -30px rgb(0 0 0 / 0.9);
+}
+.overtrue-workspace.workspace-layout-vertical .workspace-header {
+  border-radius: 16px 16px 0 0;
+}
+@media (max-width: 767px) {
+  .overtrue-workspace.workspace-layout-vertical .workspace-sidebar-inset {
+    margin: 0;
+    min-height: 100svh;
+    border: 0;
+    border-radius: 0;
+  }
+  .overtrue-workspace.workspace-layout-vertical .workspace-header {
+    border-radius: 0;
+  }
+}
+
+/* Command bar: search is the primary way to move around. */
+.overtrue-workspace .workspace-search-trigger {
+  width: auto;
+  min-width: 240px;
+  height: 34px;
+  margin-inline-end: 10px;
+  padding: 0 6px 0 11px;
+  justify-content: flex-start;
+  gap: 8px;
+  border: 1px solid var(--ws-hairline);
+  border-radius: 10px;
+  background: hsl(var(--card));
+  color: var(--pn-secondary);
+  font-size: 13px;
+  box-shadow: var(--ws-raise);
+  transition:
+    border-color 160ms,
+    color 160ms;
+}
+.overtrue-workspace .workspace-search-trigger:hover {
+  border-color: color-mix(in oklab, hsl(var(--foreground)) 22%, transparent);
+  color: var(--pn-body-color);
+  background: hsl(var(--card));
+}
+.overtrue-workspace .workspace-search-trigger .page-search-trigger-text {
+  display: inline;
+  flex: 1;
+  text-align: start;
+}
+.overtrue-workspace .workspace-search-trigger .page-search-trigger-text::after {
+  content: " or jump to…";
+}
+.overtrue-workspace .workspace-search-trigger .page-search-trigger-key {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 6px;
+  background: hsl(var(--muted));
+  color: var(--pn-secondary);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+}
+@media (max-width: 1100px) {
+  .overtrue-workspace .workspace-search-trigger {
+    min-width: 0;
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+  }
+  .overtrue-workspace .workspace-search-trigger :is(.page-search-trigger-text, .page-search-trigger-key) {
+    display: none;
+  }
+}
+
+/* Each page arrives with a short rise; nothing animates after that. */
+@media (prefers-reduced-motion: no-preference) {
+  .overtrue-workspace #workspace-content > * {
+    animation: ws-page-in 420ms var(--ws-ease) both;
+  }
+}
+@keyframes ws-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.overtrue-workspace .workspace-header-actions > .workspace-search-trigger {
+  order: -1;
+}
+.workspace-layout-vertical .workspace-app-sidebar :is([data-slot="sidebar-container"], [data-slot="sidebar-inner"]) {
+  border: 0;
+}
+.overtrue-workspace .scene-brief {
+  margin-bottom: 24px;
+}
+.overtrue-workspace .scene-release {
+  margin-bottom: 24px;
+}
+.overtrue-workspace .scene-delivery-plan {
+  margin-top: 24px;
+}
+
+/* Breadcrumb follows the navigation trail; earlier steps recede. */
+.overtrue-workspace .workspace-sidebar-breadcrumb {
+  font-size: 13px;
+  gap: 8px;
+}
+.overtrue-workspace .workspace-sidebar-breadcrumb > span {
+  color: var(--pn-secondary);
+}
+.overtrue-workspace .workspace-sidebar-breadcrumb > span[aria-current="page"] {
+  color: var(--pn-body-color);
+  font-weight: 560;
+}
+.overtrue-workspace .workspace-sidebar-breadcrumb > svg {
+  width: 13px;
+  height: 13px;
+  opacity: 0.45;
+}
+/* Direct links in the sidebar share the section buttons' rhythm. */
+.workspace-app-sidebar .workspace-sidebar-link[data-active="true"] {
+  background: var(--workspace-sidebar-selected);
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
+.workspace-app-sidebar .workspace-sidebar-link[data-active="true"] > svg {
+  opacity: 1;
+}

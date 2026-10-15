@@ -16,6 +16,10 @@ overtrue/ui 是用于 admin、dashboard 和 console 的界面工具包。产品�
 
 产品路径完整连接展示、源码、安装、组合与排错。指南独立成页，提供当前导航状态和前后篇入口；组件详情可直接进入组合指南。FAQ 明确组件、Block、业务示例与后端服务的边界，不以页面数量暗示所有示例都能单独安装。
 
+工作空间采用现代应用框架：侧栏贴在框架底色上，每个页面落在一块带细边与柔和阴影的圆角面板里；顶部以 ⌘K 命令栏为主要导航入口，页面进入时有一次短促的上浮。视觉层 `src/styles/workspace-modern.css` 最后加载，只通过 shadcn 语义变量改写工作空间基础层和 scene 组合，因此自定义面板里的主色、底色、圆角和字体全部继续生效。Studio overview 有流式生成的周报（InsightCard），Operations overview 内嵌实时监控和发布流水线，Project portfolio 带交付甘特图。
+
+可扩展性分四层：语义变量（主题）、`data-slot` 与状态属性（局部样式）、格式化函数与 render props（内容）、组合（block）。站点右上角的 Theme Studio 可以选主色或自定义颜色、圆角和中性色，自动推导图表色板和暗色变体，实时重绘整站与所有预览，并导出 shadcn `globals.css` 可用的 oklch 变量；工作空间首次打开时会继承这套主题。新组件必须给根节点和关键部件加 `data-slot`，颜色来自 CSS 变量并允许 props 覆盖，提供格式化与 render props，状态同时支持受控与非受控。
+
 | 内容 | 位置 |
 | --- | --- |
 | 官网 | `src/site/` |

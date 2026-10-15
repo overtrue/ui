@@ -40,6 +40,7 @@ import { Example } from "./examples";
 import { dashboardCatalog } from "./dashboard-catalog";
 import { FitPreview } from "./fit-preview";
 import workspacePages from "@/data/workspace/pages.json";
+import workspaceNavigation from "@/data/workspace/navigation.json";
 import { Command, CopyButton, HighlightedCode } from "./code";
 import { GuidePage, GuideLinks } from "./guides";
 import {
@@ -55,6 +56,11 @@ import { CardCollection, CardBlockPage } from "./blocks";
 import { CollectionIntro } from "./collection-intro";
 import { SearchField } from "@/registry/overtrue/search-field";
 import { usePointerGlow } from "./pointer-glow";
+import {
+  ThemeStudioButton,
+  ThemeStudioPanel,
+  ThemeStudioProvider,
+} from "./theme-studio";
 import "@fontsource-variable/mona-sans/wdth.css";
 import "@fontsource-variable/jetbrains-mono/wght.css";
 import "./site.css";
@@ -220,6 +226,7 @@ function Header() {
         </nav>
         <div className="header-actions">
           <SiteSearch />
+          <ThemeStudioButton />
           <a
             className="icon-button"
             href="https://github.com/overtrue/ui"
@@ -861,8 +868,8 @@ function Docs() {
         <p>
           Components inherit your shadcn semantic tokens: background,
           foreground, card, primary, border, and muted. Keep your existing
-          theme, or install the optional overtrue/ui theme for our blue accent
-          and compact radii.
+          theme, or install the optional overtrue/ui theme for the Ultramarine
+          accent, Ink neutrals, and a matched chart palette.
         </p>
         <Command text={command("overtrue-theme")} />
         <p className="note">
@@ -870,19 +877,13 @@ function Docs() {
           changes if you already have a custom theme. Dark mode uses the{" "}
           <code>.dark</code> class.
         </p>
-        <div className="token-grid">
-          {[
-            ["Primary", "#066fd1"],
-            ["Background", "#f9fafb"],
-            ["Foreground", "#1f2937"],
-            ["Border", "#e5e7eb"],
-          ].map(([label, color]) => (
-            <div key={label}>
-              <span style={{ background: color }} />
-              <strong>{label}</strong>
-              <code>{color}</code>
-            </div>
-          ))}
+        <p>
+          Or build a theme here. The studio recolors this site and every preview
+          as you go, derives a chart palette and dark variants from your accent,
+          and exports the variables in the oklch() notation shadcn/ui uses.
+        </p>
+        <div className="docs-studio">
+          <ThemeStudioPanel />
         </div>
         <h2 id="workspace">{workspacePages.length} pages to explore</h2>
         <p>
@@ -928,6 +929,31 @@ function Docs() {
     </main>
   );
 }
+type NavEntry = { title: string; href?: string; section?: string; children?: NavEntry[] };
+/** Workspace pages grouped the way the workspace navigation groups them. */
+const exampleSections = (workspaceNavigation as NavEntry[]).reduce<
+  { label: string; entries: { path: string; title: string; group: string }[] }[]
+>((sections, menu) => {
+  const label = menu.section ?? "Workspace";
+  let section = sections.find((entry) => entry.label === label);
+  if (!section) {
+    section = { label, entries: [] };
+    sections.push(section);
+  }
+  const visit = (item: NavEntry, group: string) => {
+    if (item.href?.endsWith(".html")) {
+      const file = item.href.replace(/^\.\//, "").replace(/\.html$/, "");
+      const path = file === "index" ? "/" : `/${file}`;
+      const page = workspacePages.find((entry) => entry.path === path);
+      section!.entries.push({ path, title: page?.title ?? item.title, group });
+    }
+    item.children?.forEach((child) =>
+      visit(child, item === menu ? menu.title : group),
+    );
+  };
+  visit(menu, menu.title);
+  return sections;
+}, []);
 function Examples() {
   const [params, setParams] = useSearchParams();
   const search = useRef<HTMLInputElement>(null);
@@ -1008,22 +1034,35 @@ function Examples() {
           name="q"
         />
       </div>
-      <div className="example-list">
-        {pages.map((page) => (
-          <a key={page.path} href={`/workspace/#${page.path}`}>
-            <span className="example-page-index" aria-hidden="true">
-              {String(workspacePages.indexOf(page) + 1).padStart(2, "0")}
-            </span>
-            <span>
-              {page.title}
-              <small>
-                {page.path === "/" ? "Dashboard" : page.path.slice(1)}
-              </small>
-            </span>
-            <ArrowUpRight size={14} />
-          </a>
-        ))}
-      </div>
+      {exampleSections.map((section) => {
+        const entries = section.entries.filter((entry) =>
+          pages.some((page) => page.path === entry.path),
+        );
+        if (!entries.length) return null;
+        return (
+          <section
+            key={section.label}
+            className="example-section"
+            aria-labelledby={`examples-${section.label.toLowerCase()}`}
+          >
+            <h2 id={`examples-${section.label.toLowerCase()}`}>
+              {section.label}
+              <span>{entries.length}</span>
+            </h2>
+            <div className="example-list">
+              {entries.map((entry) => (
+                <a key={entry.path} href={`/workspace/#${entry.path}`}>
+                  <span>
+                    {entry.title}
+                    <small>{entry.group}</small>
+                  </span>
+                  <ArrowUpRight size={14} />
+                </a>
+              ))}
+            </div>
+          </section>
+        );
+      })}
       {!pages.length && (
         <div className="search-empty">
           <Search size={24} aria-hidden="true" />
@@ -1083,7 +1122,9 @@ function App() {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <ThemeStudioProvider>
+        <App />
+      </ThemeStudioProvider>
     </BrowserRouter>
   </StrictMode>,
 );

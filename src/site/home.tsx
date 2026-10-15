@@ -3,7 +3,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
   type ReactNode,
 } from "react";
 import { Link } from "react-router-dom";
@@ -39,6 +38,8 @@ import { FitPreview } from "./fit-preview";
 import { FeaturedBlocks, Questions } from "./home-details";
 import { HeroConsole } from "./hero-console";
 import { usePointerGlow } from "./pointer-glow";
+import { useStudio } from "./theme-studio";
+import { ACCENT_PRESETS, exportCss } from "./theme-tokens";
 
 const origin = window.location.origin;
 const installCommand = (name: string) =>
@@ -91,10 +92,10 @@ function Hero() {
 }
 
 const featured: { name: ItemName; span: string; width: number }[] = [
-  { name: "cohort-grid", span: "wide", width: 720 },
-  { name: "spotlight-card", span: "", width: 560 },
-  { name: "sankey-chart", span: "", width: 520 },
-  { name: "activity-heatmap", span: "wide", width: 760 },
+  { name: "geo-map", span: "wide", width: 760 },
+  { name: "insight-card", span: "", width: 520 },
+  { name: "deploy-pipeline", span: "", width: 640 },
+  { name: "trace-waterfall", span: "wide", width: 760 },
 ];
 const categoryOrder = [
   "Data display",
@@ -168,16 +169,10 @@ function LibraryIndex() {
   );
 }
 
-const accents = [
-  { name: "Ultramarine", light: "#2a5bff", dark: "#7b93ff" },
-  { name: "Iris", light: "#7c3aed", dark: "#a78bfa" },
-  { name: "Jade", light: "#0f766e", dark: "#5eead4" },
-  { name: "Ember", light: "#d9480f", dark: "#ff8a4c" },
-];
 const radii = [
-  { name: "Sharp", value: "0.125rem" },
-  { name: "Default", value: "0.5rem" },
-  { name: "Round", value: "0.875rem" },
+  { name: "Sharp", value: 2 },
+  { name: "Default", value: 8 },
+  { name: "Round", value: 14 },
 ];
 const initialTasks = [
   { id: "research", title: "Pick an accent", due: "Done", done: true },
@@ -186,12 +181,14 @@ const initialTasks = [
 ];
 
 function ThemeLab() {
-  const [accent, setAccent] = useState(accents[0]);
-  const [radius, setRadius] = useState(radii[1]);
+  const { theme, setTheme } = useStudio();
   const [tasks, setTasks] = useState(initialTasks);
   const [name, setName] = useState("Orbit studio");
   const [workspace, setWorkspace] = useState("Orbit studio");
   const completed = tasks.filter((task) => task.done).length;
+  const accentName =
+    ACCENT_PRESETS.find((preset) => preset.value === theme.accent.toLowerCase())
+      ?.name ?? "Custom";
   return (
     <section className="home-band theme-lab" aria-labelledby="theme-title">
       <div className="home-heading">
@@ -200,41 +197,38 @@ function ThemeLab() {
         </h2>
         <p className="lede">
           Components read shadcn’s semantic variables, so they take on your
-          accent, radius, and type without edits. Try a few here.
+          accent, radius, and type without edits. Pick one here and the whole
+          site follows.
         </p>
       </div>
-      <div
-        className="lab-shell"
-        style={
-          {
-            "--lab-accent": accent.light,
-            "--lab-accent-dark": accent.dark,
-            "--radius": radius.value,
-          } as CSSProperties
-        }
-      >
+      <div className="lab-shell">
         <div className="lab-controls">
           <fieldset>
-            <legend>Accent</legend>
-            <div className="lab-options">
-              {accents.map((item) => (
-                <button
-                  key={item.name}
-                  type="button"
-                  aria-pressed={accent.name === item.name}
-                  onClick={() => setAccent(item)}
-                >
-                  <span
+            <legend>
+              Accent <output>{accentName}</output>
+            </legend>
+            <div className="lab-swatch-grid">
+              {ACCENT_PRESETS.map((item) => {
+                const active = item.value === theme.accent.toLowerCase();
+                return (
+                  <button
+                    key={item.name}
+                    type="button"
+                    aria-pressed={active}
+                    aria-label={item.name}
+                    title={item.name}
                     className="lab-swatch"
-                    style={{ background: item.light }}
+                    style={{ background: item.value }}
+                    onClick={() =>
+                      setTheme((current) => ({ ...current, accent: item.value }))
+                    }
                   >
-                    {accent.name === item.name && (
-                      <IconCheck size={12} stroke={3} aria-hidden="true" />
+                    {active && (
+                      <IconCheck size={13} stroke={3} aria-hidden="true" />
                     )}
-                  </span>
-                  {item.name}
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
           </fieldset>
           <fieldset>
@@ -244,8 +238,10 @@ function ThemeLab() {
                 <button
                   key={item.name}
                   type="button"
-                  aria-pressed={radius.name === item.name}
-                  onClick={() => setRadius(item)}
+                  aria-pressed={theme.radius === item.value}
+                  onClick={() =>
+                    setTheme((current) => ({ ...current, radius: item.value }))
+                  }
                 >
                   <span
                     className="lab-corner"
@@ -257,9 +253,14 @@ function ThemeLab() {
               ))}
             </div>
           </fieldset>
+          <div className="lab-export">
+            <span>Theme CSS</span>
+            <CopyButton text={exportCss(theme)} label="Copy theme CSS" />
+          </div>
           <p className="lab-note">
-            The preview on the right uses the same installed components as your
-            project would.
+            Want more control?{" "}
+            <Link to="/docs#theming">Open the theme studio</Link> for custom
+            colors, neutrals, and chart palettes.
           </p>
         </div>
         <div className="lab-canvas">

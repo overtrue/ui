@@ -584,6 +584,19 @@ export function WorkspaceChart({
                 <stop offset="100%" stopColor={color(i)} stopOpacity={0.02} />
               </linearGradient>
             ))}
+            {series.map((_, i) => (
+              <linearGradient
+                id={`${unique}-bar-${i}`}
+                key={`bar-${i}`}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop offset="0%" stopColor={color(i)} stopOpacity={1} />
+                <stop offset="100%" stopColor={color(i)} stopOpacity={0.62} />
+              </linearGradient>
+            ))}
           </defs>
           {!spark && !brush && (
             <CartesianGrid
@@ -658,7 +671,12 @@ export function WorkspaceChart({
                   key={i}
                   {...shared}
                   stroke="none"
-                  fill={color(i)}
+                  fill={kind === "rangeBar" || kind === "candlestick" ? color(i) : `url(#${unique}-bar-${i})`}
+                  radius={
+                    !config.chart?.stacked || i === series.length - 1
+                      ? [5, 5, 0, 0]
+                      : undefined
+                  }
                   stackId={config.chart?.stacked ? "total" : undefined}
                 >{labels}</Bar>
               )

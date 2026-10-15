@@ -23,7 +23,7 @@ export default function Page() {
             {" "}
             <div className={"pn-col"}>
               {" "}
-              <h1 className={"pn-page-title"}>{"HugeRTE"}</h1>{" "}
+              <h1 className={"pn-page-title"}>{"Rich text editor"}</h1>{" "}
             </div>{" "}
             <div className={"pn-col-auto pn-ms-auto pn-d-print-none"}>
               {" "}
