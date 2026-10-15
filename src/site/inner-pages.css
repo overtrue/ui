@@ -223,61 +223,6 @@
     min-height: 44px;
   }
 }
-.catalog-page :is(.component-tile, .card-library-tile) {
-  border-radius: 12px;
-  box-shadow: 0 2px 4px #0f172a04;
-  transition:
-    border-color 180ms,
-    box-shadow 180ms;
-}
-.catalog-page .component-tile[data-category="Data display"] {
-  --gallery-tint: var(--primary);
-}
-.catalog-page .component-tile[data-category="Forms"] {
-  --gallery-tint: var(--chart-2);
-}
-.catalog-page .component-tile[data-category="Feedback"] {
-  --gallery-tint: var(--chart-3);
-}
-.catalog-page .component-tile[data-category="Navigation"] {
-  --gallery-tint: var(--chart-4);
-}
-.catalog-page .tile-preview {
-  background-color: color-mix(
-    in srgb,
-    var(--gallery-tint, var(--border)) 4%,
-    var(--site-subtle)
-  );
-  background-image: radial-gradient(var(--border) 0.65px, transparent 0.65px);
-  background-size: 16px 16px;
-}
-.catalog-page .tile-caption {
-  padding: 20px;
-  font-size: 14px;
-}
-.catalog-page .tile-caption > svg {
-  box-sizing: content-box;
-  padding: 8px;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  transition:
-    background-color 160ms,
-    color 160ms;
-}
-.catalog-page
-  :is(.component-tile, .card-library-tile):is(:hover, :focus-within) {
-  border-color: color-mix(in srgb, var(--primary) 28%, var(--border));
-  box-shadow: 0 8px 28px -18px #0f172a40;
-}
-.catalog-page :is(.tile-caption, .card-library-link):hover > svg,
-.catalog-page :is(.tile-caption, .card-library-link):focus-visible > svg,
-.catalog-page
-  .card-library-link:is(:hover, :focus-visible)
-  .tile-caption
-  > svg {
-  background: var(--foreground);
-  color: var(--site-bg);
-}
 .docs-layout {
   grid-template-columns: 216px minmax(0, 1fr);
   gap: 48px;

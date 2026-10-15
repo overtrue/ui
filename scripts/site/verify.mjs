@@ -126,13 +126,15 @@ try {
     }
     await page.setViewportSize({width:390,height:844});
     await page.goto(${JSON.stringify(origin)});
-    const gallery = page.getByRole('region',{name:'Component previews'});
-    await gallery.focus(); await page.keyboard.press('ArrowRight');
-    await page.waitForFunction(()=>document.querySelector('.home-component-grid').scrollLeft > 0);
-    checks.push('mobile component gallery scrolls with the keyboard');
-    const lastPreview = gallery.locator('.tile-caption').last();
-    await lastPreview.focus();
-    check(await lastPreview.evaluate(el=>el.getBoundingClientRect().right <= innerWidth), 'last component preview remains reachable');
+    const index = page.getByRole('navigation',{name:'All components and blocks'});
+    const lastEntry = index.getByRole('link').last();
+    await lastEntry.focus();
+    check(await lastEntry.evaluate(el=>{const box=el.getBoundingClientRect(); return box.left >= 0 && box.right <= innerWidth;}), 'mobile library index keeps every entry reachable');
+    const inspect = page.getByRole('button',{name:'Inspect'});
+    await inspect.click();
+    await page.locator('.inspect-box').first().waitFor();
+    check(await page.locator('.inspect-box').evaluateAll(boxes=>boxes.every(box=>{const r=box.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth + 1;})), 'mobile inspect targets stay inside the viewport');
+    await page.keyboard.press('Escape');
     await page.goto(${JSON.stringify(origin)} + '/docs/design');
     const trigger = page.getByRole('button',{name:'Open navigation',exact:true});
     await trigger.click(); await page.keyboard.press('Escape');
@@ -148,7 +150,7 @@ try {
     await page.getByRole('button',{name:'Switch to light theme'}).click(); await page.reload();
     check(await page.locator('html.dark').count() === 0, 'explicit theme overrides the system preference');
     await page.goto(${JSON.stringify(origin)} + '/not-a-page');
-    check(await page.getByRole('heading',{name:'This page got away.'}).isVisible(), 'unknown route gives useful recovery');
+    check(await page.getByRole('heading',{name:'Page not found'}).isVisible(), 'unknown route gives useful recovery');
     check(await page.locator('meta[name="robots"]').getAttribute('content') === 'noindex,follow', 'unknown route does not advertise itself for indexing');
     await page.emulateMedia({colorScheme:'light',reducedMotion:'reduce'});
     for (const width of [320,768]) {

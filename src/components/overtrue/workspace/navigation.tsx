@@ -7,9 +7,14 @@ import {
   IconFolder,
   IconUsers,
   IconCreditCard,
-  IconFiles,
   IconPuzzle,
   IconLayoutSidebar,
+  IconActivity,
+  IconInbox,
+  IconBriefcase,
+  IconPalette,
+  IconBook,
+  IconSettings,
   IconBrush,
   IconChevronDown,
   IconChevronRight,
@@ -40,16 +45,39 @@ import {
 import navigation from "@/data/workspace/navigation.json";
 import { cn } from "@/lib/utils";
 
-type Menu = { title: string; href?: string; children?: Menu[] };
-const icons = [
-  IconHome,
-  IconFolder,
-  IconUsers,
-  IconCreditCard,
-  IconFiles,
-  IconPuzzle,
-  IconLayoutSidebar,
-];
+type Menu = {
+  title: string;
+  href?: string;
+  section?: string;
+  icon?: string;
+  children?: Menu[];
+};
+const icons: Record<string, typeof IconHome> = {
+  home: IconHome,
+  activity: IconActivity,
+  inbox: IconInbox,
+  folder: IconFolder,
+  briefcase: IconBriefcase,
+  palette: IconPalette,
+  users: IconUsers,
+  "credit-card": IconCreditCard,
+  book: IconBook,
+  settings: IconSettings,
+  puzzle: IconPuzzle,
+  layout: IconLayoutSidebar,
+};
+const menus = navigation as Menu[];
+/** Top-level menus grouped by their section, in order of first appearance. */
+const sections = menus.reduce<{ label: string; menus: Menu[] }[]>(
+  (groups, menu) => {
+    const label = menu.section ?? "Workspace";
+    const group = groups.find((entry) => entry.label === label);
+    if (group) group.menus.push(menu);
+    else groups.push({ label, menus: [menu] });
+    return groups;
+  },
+  [],
+);
 export function workspaceHref(href = "#") {
   return href.endsWith(".html")
     ? href.replace(/^\.\//, "").replace(/\.html$/, "") === "index"
@@ -60,6 +88,25 @@ export function workspaceHref(href = "#") {
 const containsPath = (menu: Menu, pathname: string): boolean =>
   workspaceHref(menu.href) === pathname ||
   Boolean(menu.children?.some((child) => containsPath(child, pathname)));
+/** Section, menu and page titles leading to the current route. */
+export function navigationTrail(pathname: string): string[] {
+  const walk = (items: Menu[], trail: string[]): string[] | null => {
+    for (const item of items) {
+      const next = [...trail, item.title];
+      if (workspaceHref(item.href) === pathname) return next;
+      if (item.children) {
+        const found = walk(item.children, next);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+  for (const section of sections) {
+    const found = walk(section.menus, [section.label]);
+    if (found) return found;
+  }
+  return [];
+}
 function Label({ title }: { title: string }) {
   const isNew = title.endsWith(" New");
   return (
@@ -142,21 +189,19 @@ export function Navigation({
         vertical && "workspace-navigation-vertical",
       )}
     >
-      {navigation.map((menu, index) => {
-        const Icon = icons[index] ?? IconFolder;
+      {sections.map((section) => {
+        const Icon = icons[section.menus[0].icon ?? ""] ?? IconFolder;
+        const current = section.menus.some((menu) => containsPath(menu, pathname));
         return (
-          <Dropdown.Root key={menu.title}>
+          <Dropdown.Root key={section.label}>
             <Dropdown.Trigger asChild>
               <Button
                 variant="workspace"
-                aria-label={menu.title}
-                className={cn(
-                  "workspace-nav-link",
-                  containsPath(menu, pathname) && "is-current",
-                )}
+                aria-label={section.label}
+                className={cn("workspace-nav-link", current && "is-current")}
               >
                 <Icon size={20} stroke={1.5} />
-                <span>{menu.title}</span>
+                <span>{section.label}</span>
                 <IconChevronDown size={12} />
               </Button>
             </Dropdown.Trigger>
@@ -167,7 +212,7 @@ export function Navigation({
                   sideOffset={0}
                   align="start"
                 >
-                  <MenuItems items={menu.children} />
+                  <MenuItems items={section.menus} />
                 </Dropdown.Content>
               </div>
             </Dropdown.Portal>
@@ -251,8 +296,8 @@ export function WorkspaceSidebar({
 }) {
   const { pathname } = useLocation();
   const { state, isMobile, setOpenMobile } = useSidebar();
-  const activeGroup = navigation.find((menu) =>
-    containsPath(menu, pathname),
+  const activeGroup = menus.find(
+    (menu) => menu.children?.length && containsPath(menu, pathname),
   )?.title;
   const [expanded, setExpanded] = React.useState<string | undefined>(
     activeGroup,
@@ -290,19 +335,32 @@ export function WorkspaceSidebar({
       </SidebarHeader>
       <SidebarContent>
         <nav aria-label="Main navigation">
-          {[
-            { label: "Workspace", menus: navigation.slice(0, 5), offset: 0 },
-            { label: "Explore", menus: navigation.slice(5), offset: 5 },
-          ].map((group) => (
+          {sections.map((group) => (
             <SidebarGroup key={group.label}>
               <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
               <SidebarMenu>
-                {group.menus.map((menu, index) => {
-                  const Icon = icons[index + group.offset];
+                {group.menus.map((menu) => {
+                  const Icon = icons[menu.icon ?? ""] ?? IconFolder;
                   const active = containsPath(menu, pathname);
                   return (
                     <SidebarMenuItem key={menu.title}>
-                      {collapsed ? (
+                      {!menu.children?.length ? (
+                        <SidebarMenuButton
+                          asChild
+                          tooltip={menu.title}
+                          isActive={active}
+                          className="workspace-sidebar-link"
+                        >
+                          <Link
+                            to={workspaceHref(menu.href)}
+                            aria-current={active ? "page" : undefined}
+                            onClick={() => setOpenMobile(false)}
+                          >
+                            <Icon stroke={1.5} />
+                            <span>{menu.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      ) : collapsed ? (
                         <Dropdown.Root>
                           <Dropdown.Trigger asChild>
                             <SidebarMenuButton
@@ -325,7 +383,7 @@ export function WorkspaceSidebar({
                                 <Dropdown.Label className="workspace-sidebar-menu-label">
                                   {menu.title}
                                 </Dropdown.Label>
-                                <MenuItems items={menu.children} />
+                                <MenuItems items={menu.children ?? []} />
                               </Dropdown.Content>
                             </div>
                           </Dropdown.Portal>
@@ -349,7 +407,7 @@ export function WorkspaceSidebar({
                             </SidebarMenuButton>
                           </CollapsibleTrigger>
                           <CollapsibleContent>
-                            <SidebarChildren items={menu.children} />
+                            <SidebarChildren items={menu.children ?? []} />
                           </CollapsibleContent>
                         </Collapsible>
                       )}

@@ -40,7 +40,7 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
         </a>
         <div>
           <span className="scene-eyebrow">
-            A LITTLE STRUCTURE. A LOT OF POSSIBILITY.
+            A little structure, a lot of possibility.
           </span>
           <h2>
             Make room
@@ -72,7 +72,7 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
             overtrue/ui
           </a>
           <span className="scene-eyebrow">
-            {signup ? "YOUR NEXT CHAPTER" : "ACME STUDIO"}
+            {signup ? "Your next chapter" : "Acme Studio"}
           </span>
           {lock && (
             <div className="scene-lock-avatar">
@@ -278,8 +278,8 @@ export function Empty({ id = "empty" }: { id?: string }) {
       />
       <span className="scene-eyebrow">
         {id.startsWith("error")
-          ? id.replace("error-", "").toUpperCase()
-          : "A LITTLE ROOM TO GROW"}
+          ? id === "error-404" ? "Error 404" : id === "error-500" ? "Error 500" : "Maintenance"
+          : "A little room to grow"}
       </span>
       <h1>{title}</h1>
       <p>

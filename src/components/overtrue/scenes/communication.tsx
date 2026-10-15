@@ -217,7 +217,7 @@ export function Chat() {
     >
       <div className="scene-chat">
         <aside>
-          <span className="scene-eyebrow">PROJECT CHANNELS</span>
+          <span className="scene-eyebrow">Project channels</span>
           {[
             "Studio general",
             "Culture venue",

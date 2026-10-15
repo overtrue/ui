@@ -1,9 +1,11 @@
 import cards from "../blocks/catalog.json" with { type: "json" };
 import { dashboardCatalog } from "./dashboard-catalog.ts";
+import { liveCatalog } from "./live-catalog.ts";
 
 export const cardCount = cards.length;
 const items = [
   ...dashboardCatalog,
+  ...liveCatalog,
   {
     name: "integration-list",
     title: "Integration list",
@@ -618,10 +620,17 @@ const items = [
 ] as const;
 // Browse from page structure and everyday records to reporting and specialized charts.
 const displayOrder: readonly string[] = [
+  "realtime-monitor",
+  "incident-review",
+  "dashboard",
+  "analytics-overview",
+  "project-portfolio",
+  "service-status",
   "page-header",
   "section-card",
   "stat-card",
   "kpi-card",
+  "number-ticker",
   "metric-group",
   "metric-value",
   "delta-badge",
@@ -643,14 +652,21 @@ const displayOrder: readonly string[] = [
   "task-list",
   "file-list",
   "activity-feed",
+  "log-stream",
+  "trace-waterfall",
+  "deploy-pipeline",
   "timeline",
   "event-timeline",
   "status-badge",
+  "insight-card",
   "empty-state",
   "steps",
   "metric-chart",
+  "live-chart",
+  "latency-histogram",
   "trend-chart",
   "bar-chart",
+  "waterfall-chart",
   "composed-chart",
   "sparkline",
   "trend-sparkline",
@@ -662,6 +678,7 @@ const displayOrder: readonly string[] = [
   "conversion-funnel",
   "funnel-chart",
   "resource-progress",
+  "bullet-chart",
   "storage-meter",
   "tick-bar",
   "segmented-meter",
@@ -669,21 +686,23 @@ const displayOrder: readonly string[] = [
   "activity-rings",
   "uptime-history",
   "activity-heatmap",
+  "cohort-grid",
+  "host-map",
+  "geo-map",
+  "treemap",
+  "gantt-chart",
   "heatmap-chart",
   "dot-plot",
   "radar-chart",
   "scatter-chart",
   "sankey-chart",
+  "spotlight-card",
   "feature-card",
   "media-card",
   "ribbon-card",
   "status-edge-card",
   "pricing-card",
   "corner-frame",
-  "dashboard",
-  "analytics-overview",
-  "project-portfolio",
-  "service-status",
 ];
 export const catalog = [...items].sort((a, b) => {
   const rank = (name: string) => {
@@ -711,6 +730,17 @@ export const blockCollections: readonly {
   names: readonly ItemName[];
 }[] = [
   {
+    label: "Overviews",
+    names: [
+      "realtime-monitor",
+      "incident-review",
+      "dashboard",
+      "analytics-overview",
+      "project-portfolio",
+      "service-status",
+    ],
+  },
+  {
     label: "Workspace",
     names: [
       "team-access",
@@ -724,14 +754,5 @@ export const blockCollections: readonly {
   {
     label: "Operations",
     names: ["task-list", "activity-feed", "storage-meter"],
-  },
-  {
-    label: "Overviews",
-    names: [
-      "dashboard",
-      "analytics-overview",
-      "project-portfolio",
-      "service-status",
-    ],
   },
 ];

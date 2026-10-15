@@ -10,7 +10,7 @@
   --card-foreground: 221 39% 11%; /* #111827 */
   --popover: 0 0% 100%;
   --popover-foreground: 221 39% 11%;
-  --primary: 221 83% 53%; /* #2563eb */
+  --primary: 226 100% 58%; /* #2a5bff */
   --primary-foreground: 0 0% 100%;
   --secondary: 220 14% 96%;
   --secondary-foreground: 221 39% 11%;
@@ -29,11 +29,11 @@
   --info-foreground: 0 0% 100%;
   --warning: 32 94% 44%;
   --warning-foreground: 0 0% 100%;
-  --chart-1: 221 83% 53%;
-  --chart-2: 142 71% 37%;
-  --chart-3: 32 94% 44%;
-  --chart-4: 263 70% 58%;
-  --chart-5: 340 75% 55%;
+  --chart-1: 226 100% 58%;
+  --chart-2: 160 83% 34%;
+  --chart-3: 40 91% 46%;
+  --chart-4: 258 90% 66%;
+  --chart-5: 340 75% 59%;
   --radius: 0.5rem;
   --sidebar: 0 0% 100%;
   --sidebar-foreground: 215 19% 27%;
@@ -44,19 +44,19 @@
   --sidebar-border: 220 13% 91%;
   --sidebar-ring: 221 83% 53%;
 
-  --pn-blue: #066fd1;
-  --pn-azure: #4299e1;
-  --pn-indigo: #4c6ef5;
-  --pn-purple: #ae3ec9;
-  --pn-pink: #d6336c;
-  --pn-red: #dc2626;
-  --pn-orange: #f76707;
-  --pn-yellow: #f59f00;
-  --pn-lime: #74b816;
-  --pn-green: #16a34a;
-  --pn-teal: #0ca678;
-  --pn-cyan: #15aabf;
-  --pn-dark: #111827;
+  --pn-blue: #2a5bff;
+  --pn-azure: #3b82f6;
+  --pn-indigo: #6d5efc;
+  --pn-purple: #9b5cf6;
+  --pn-pink: #e5487d;
+  --pn-red: #e5484d;
+  --pn-orange: #f76b15;
+  --pn-yellow: #e8a317;
+  --pn-lime: #65a30d;
+  --pn-green: #0f9f6e;
+  --pn-teal: #0ea5a4;
+  --pn-cyan: #0891b2;
+  --pn-dark: #0d1424;
   --pn-light: #f3f4f6;
   --pn-card-border: hsl(var(--border));
   --pn-card-shadow: 0 1px 3px rgb(3 7 18 / 0.04), 0 1px 2px -1px rgb(3 7 18 / 0.04);
@@ -91,6 +91,11 @@
   --muted-foreground: 220 9% 65%;
   --border: 215 28% 17%;
   --pn-card-border: rgba(255, 255, 255, 0.08);
+  --chart-1: 229 100% 74%;
+  --chart-2: 158 64% 52%;
+  --chart-3: 43 96% 56%;
+  --chart-4: 255 92% 76%;
+  --chart-5: 329 86% 70%;
   --pn-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   --pn-line: rgba(255, 255, 255, 0.06);
   --pn-line-strong: rgba(255, 255, 255, 0.08);
@@ -165,6 +170,12 @@
 @layer base {
   * {
     box-sizing: border-box;
+  }
+  /* shadcn/ui convention: registry components expect themed borders by default. */
+  *,
+  ::before,
+  ::after {
+    border-color: hsl(var(--border));
   }
   body {
     margin: 0;

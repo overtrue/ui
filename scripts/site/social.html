@@ -3,22 +3,53 @@
 <meta charset="utf-8">
 <title>overtrue/ui social card</title>
 <style>
+@font-face { font-family: "Mona Sans"; src: url("../../node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-wdth-normal.woff2") format("woff2-variations"); font-weight: 200 900; font-stretch: 75% 125%; }
+@font-face { font-family: "JetBrains Mono"; src: url("../../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2") format("woff2-variations"); font-weight: 100 800; }
 * { box-sizing: border-box; }
-body { margin: 0; width: 1200px; height: 630px; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #19212d; background: #f8f9fb; padding: 60px 64px; }
-.brand { display: flex; align-items: center; gap: 12px; font-size: 30px; font-weight: 650; letter-spacing: -1.3px; }
-.brand em { font-style: normal; color: #066fd1; }
-main { display: grid; grid-template-columns: 1.3fr 1fr; gap: 56px; align-items: center; margin-top: 54px; }
-h1 { font-size: 62px; line-height: 1.12; font-weight: 550; letter-spacing: -2.9px; margin: 0 0 24px; }
-p { max-width: 490px; font-size: 21px; color: #697386; line-height: 1.6; margin: 0; }
-.card { border: 1px solid #e1e5eb; border-radius: 14px; background: white; padding: 30px; box-shadow: 0 12px 36px -26px #13243a50; transform: rotate(-2deg); }
-.label { font-size: 15px; color: #697386; display: flex; justify-content: space-between; }
-.value { font-size: 44px; letter-spacing: -1.8px; margin: 18px 0 7px; font-weight: 600; }
-.context { font-size: 13px; color: #697386; }
-.context strong { color: #268060; font-weight: 500; }
-svg.chart { width: 100%; height: 75px; margin-top: 28px; }
-footer { position: absolute; left: 64px; right: 64px; bottom: 38px; display: flex; justify-content: space-between; padding-top: 22px; border-top: 1px solid #e1e5eb; font-size: 15px; color: #697386; }
+body { position: relative; margin: 0; width: 1200px; height: 630px; overflow: hidden; font-family: "Mona Sans", sans-serif; color: #eef1f7; background: #07090f; padding: 56px 64px; }
+body::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgb(255 255 255 / .035) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / .035) 1px, transparent 1px); background-size: 32px 32px; }
+.glow { position: absolute; right: -120px; bottom: -160px; width: 820px; height: 520px; background: radial-gradient(50% 50% at 50% 50%, rgb(123 147 255 / .32), transparent 70%); filter: blur(30px); }
+.brand { position: relative; display: flex; align-items: center; gap: 12px; font-size: 28px; font-stretch: 108%; font-weight: 700; letter-spacing: -0.03em; }
+.brand em { font-style: normal; color: #7b93ff; }
+h1 { position: relative; margin: 44px 0 0; font-size: 76px; font-stretch: 112%; font-weight: 640; line-height: .98; letter-spacing: -0.04em; }
+.sub { position: relative; margin-top: 26px; font-size: 22px; color: #8b93a5; }
+.console { position: absolute; left: 600px; top: 304px; width: 576px; padding: 22px 24px; border: 1px solid #1d2330; border-radius: 22px; background: #0f131c; box-shadow: 0 40px 90px -30px #000; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #1d2330; border: 1px solid #1d2330; border-radius: 14px; overflow: hidden; }
+.kpis div { background: #0f131c; padding: 14px 16px; }
+.kpis span { display: block; font-size: 13px; color: #8b93a5; }
+.kpis strong { display: block; margin-top: 6px; font-size: 30px; font-weight: 640; letter-spacing: -0.03em; }
+.kpis small { font-size: 16px; color: #8b93a5; font-weight: 500; }
+.chart { display: block; width: 100%; margin-top: 18px; height: 120px; }
+.hosts { display: grid; grid-template-columns: repeat(24, 1fr); gap: 4px; margin-top: 14px; }
+.hosts i { aspect-ratio: 1; border-radius: 3px; background: #4e64c9; }
+.hosts i:nth-child(3n) { background: #7b93ff; }
+.hosts i:nth-child(5n) { background: #33427e; }
+.hosts i:nth-child(17) { background: #fbbf24; }
+.hosts i:nth-child(29) { background: #f87171; box-shadow: 0 0 0 3px rgb(248 113 113 / .25); }
+footer { position: absolute; left: 64px; bottom: 48px; display: flex; gap: 28px; font-family: "JetBrains Mono", monospace; font-size: 16px; color: #8b93a5; }
+footer b { color: #eef1f7; font-weight: 600; }
 </style>
-<div class="brand"><svg width="34" height="34" viewBox="0 0 32 32"><path d="M5 5h5v14a6 6 0 0 0 12 0v-6h5v6a11 11 0 0 1-22 0V5Z" fill="#19212d"/><rect x="22" y="4" width="5" height="5" rx="1" fill="#066fd1"/></svg><span>overtrue<em>/</em>ui</span></div>
-<main><div><h1>The details make<br>the dashboard.</h1><p>Editable interfaces for the work<br>behind the screen.</p></div><div class="card"><div class="label"><span>Monthly revenue</span><span>↗</span></div><div class="value">$36,800</div><div class="context"><strong>↑ 12.8%</strong> compared with last month</div><svg class="chart" viewBox="0 0 340 75" fill="none"><path d="M0 65L31 50L62 55L93 36L124 44L155 23L186 30L217 18L248 25L279 10L310 15L340 2V75H0Z" fill="#eef4fc"/><path d="M0 65L31 50L62 55L93 36L124 44L155 23L186 30L217 18L248 25L279 10L310 15L340 2" stroke="#066fd1" stroke-width="2.5"/></svg></div></main>
-<footer><span>React · Tailwind CSS · shadcn/ui</span><span>ui.overtrue.xyz</span></footer>
+<div class="glow"></div>
+<div class="brand"><svg width="32" height="32" viewBox="0 0 32 32"><path d="M5 5h5v14a6 6 0 0 0 12 0v-6h5v6a11 11 0 0 1-22 0V5Z" fill="#eef1f7"/><rect x="22" y="4" width="5" height="5" rx="1" fill="#7b93ff"/></svg><span>overtrue<em>/</em>ui</span></div>
+<h1>Interfaces for<br>the work behind<br>the screen.</h1>
+<p class="sub">Dashboard and console components for shadcn/ui.</p>
+<div class="console">
+  <div class="kpis">
+    <div><span>Requests / s</span><strong>1,342</strong></div>
+    <div><span>p95 latency</span><strong>187 <small>ms</small></strong></div>
+    <div><span>Error rate</span><strong>0.34%</strong></div>
+  </div>
+  <svg class="chart" viewBox="0 0 590 120" fill="none">
+    <defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7b93ff" stop-opacity=".35"/><stop offset="1" stop-color="#7b93ff" stop-opacity="0"/></linearGradient></defs>
+    <path d="M0 22H590" stroke="#f87171" stroke-dasharray="4 5" opacity=".7"/>
+    <path d="M0 70C40 62 70 58 110 66S180 86 220 78 300 50 340 56 410 82 450 74 520 44 568 40V120H0Z" fill="url(#a)"/>
+    <path d="M0 70C40 62 70 58 110 66S180 86 220 78 300 50 340 56 410 82 450 74 520 44 568 40" stroke="#7b93ff" stroke-width="2.5"/>
+    <circle cx="568" cy="40" r="10" fill="#7b93ff" opacity=".25"/><circle cx="568" cy="40" r="4.5" fill="#7b93ff"/>
+  </svg>
+  <div class="hosts">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+</div>
+<footer><span><b>67</b> components</span><span><b>16</b> blocks</span><span>ui.overtrue.xyz</span></footer>
 </html>

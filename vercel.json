@@ -135,6 +135,16 @@
       "permanent": true
     },
     {
+      "source": "/components/realtime-monitor",
+      "destination": "/blocks/realtime-monitor",
+      "permanent": true
+    },
+    {
+      "source": "/components/incident-review",
+      "destination": "/blocks/incident-review",
+      "permanent": true
+    },
+    {
       "source": "/components/team-access",
       "destination": "/blocks/team-access",
       "permanent": true

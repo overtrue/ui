@@ -150,7 +150,7 @@ export function Dashboard({
   return (
     <div
       data-slot="dashboard"
-      className="@container/dashboard overflow-hidden rounded-xl border border-border bg-muted/30 text-foreground shadow-none"
+      className="@container/dashboard overflow-hidden rounded-xl border border-border bg-background text-foreground shadow-none"
     >
       <div className="flex items-center justify-between gap-4 border-b bg-card px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
@@ -178,7 +178,7 @@ export function Dashboard({
         </div>
       </div>
       <div className="flex flex-col @min-[56rem]/dashboard:flex-row">
-        <aside className="shrink-0 border-b bg-card/60 p-2.5 @min-[56rem]/dashboard:w-44 @min-[56rem]/dashboard:border-r @min-[56rem]/dashboard:border-b-0 @min-[56rem]/dashboard:p-3">
+        <aside className="shrink-0 border-b bg-card p-2.5 @min-[56rem]/dashboard:w-44 @min-[56rem]/dashboard:border-r @min-[56rem]/dashboard:border-b-0 @min-[56rem]/dashboard:p-3">
           <p className="hidden px-3 pt-3 pb-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground @min-[56rem]/dashboard:block">
             Workspace
           </p>

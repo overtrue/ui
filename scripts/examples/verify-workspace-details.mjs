@@ -30,7 +30,7 @@ try {
       page.on("pageerror", (error) => errors.push(error.message));
       await page.addInitScript((scheme) => {
         localStorage.setItem(
-          "overtrue-workspace-theme-v2",
+          "overtrue-workspace-theme-v3",
           JSON.stringify({ scheme }),
         );
       }, scheme);

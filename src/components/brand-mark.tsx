@@ -21,7 +21,7 @@ export function BrandMark(props: ComponentProps<"svg">) {
         width="5"
         height="5"
         rx="1"
-        fill="var(--color-primary, #066fd1)"
+        fill="var(--color-primary, #2a5bff)"
       />
     </svg>
   );

@@ -1,4 +1,5 @@
 import { ProjectPortfolio } from "@/registry/overtrue/project-portfolio";
+import { GanttChart, type GanttTask } from "@/registry/overtrue/gantt-chart";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { IconChevronDown } from "@tabler/icons-react";
@@ -56,9 +57,29 @@ export function ProjectCards({
           href: "#/tasks-list",
         }))}
       />
+      <GanttChart
+        className="scene-delivery-plan"
+        title="Delivery plan"
+        description="Milestones across active projects, September to November"
+        today="2026-09-21"
+        defaultZoom="week"
+        tasks={deliveryPlan}
+      />
     </Scene>
   );
 }
+
+const deliveryPlan: GanttTask[] = [
+  { id: "ce-design", label: "Identity system", group: "Ceramics identity", owner: "June Park", start: "2026-08-31", end: "2026-09-18", progress: 1 },
+  { id: "ce-handover", label: "Handover package", group: "Ceramics identity", owner: "June Park", start: "2026-09-19", end: "2026-09-28", progress: 0.7, dependsOn: ["ce-design"] },
+  { id: "ce-done", label: "Client sign-off", group: "Ceramics identity", start: "2026-09-28", end: "2026-09-28", milestone: true, dependsOn: ["ce-handover"] },
+  { id: "ve-research", label: "Visitor research", group: "Visitor experience", owner: "Maya Okafor", start: "2026-09-01", end: "2026-09-16", progress: 1 },
+  { id: "ve-journey", label: "Arrival journey", group: "Visitor experience", owner: "Maya Okafor", start: "2026-09-17", end: "2026-09-25", progress: 0.6, dependsOn: ["ve-research"] },
+  { id: "ve-wayfinding", label: "Wayfinding concepts", group: "Visitor experience", owner: "Ines Duarte", start: "2026-09-28", end: "2026-10-09", progress: 0.1, dependsOn: ["ve-journey"] },
+  { id: "mp-permissions", label: "Permissions model", group: "Member portal", owner: "Leo Nakamura", start: "2026-09-10", end: "2026-09-25", progress: 0.5 },
+  { id: "mp-build", label: "Portal build", group: "Member portal", owner: "Leo Nakamura", start: "2026-09-28", end: "2026-10-16", progress: 0.15, dependsOn: ["mp-permissions"] },
+  { id: "mp-launch", label: "Member launch", group: "Member portal", start: "2026-10-16", end: "2026-10-16", milestone: true, dependsOn: ["mp-build"] },
+];
 export function TaskBoard({
   id = "tasks",
   list = false,

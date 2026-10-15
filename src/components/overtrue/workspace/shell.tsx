@@ -16,7 +16,13 @@ import {
   ThemeCustomizer,
   useThemeState,
 } from "@/components/overtrue/theme-customizer";
-import { Logo, MenuItems, Navigation, WorkspaceSidebar } from "./navigation";
+import {
+  Logo,
+  MenuItems,
+  Navigation,
+  WorkspaceSidebar,
+  navigationTrail,
+} from "./navigation";
 import { WorkspaceSearch } from "./page-search";
 import {
   SidebarProvider,
@@ -241,14 +247,30 @@ export function WorkspaceShell({
                 </Button>
               )}
               {vertical ? (
-                <div className="workspace-sidebar-breadcrumb">
-                  <span>Workspace</span>
-                  <IconChevronRight size={14} />
-                  <span>
-                    {pages.find((page) => page.path === pathname)?.title ??
-                      "Overview"}
-                  </span>
-                </div>
+                <nav
+                  aria-label="Breadcrumb"
+                  className="workspace-sidebar-breadcrumb"
+                >
+                  {(navigationTrail(pathname).length
+                    ? navigationTrail(pathname)
+                    : [
+                        "Workspace",
+                        pages.find((page) => page.path === pathname)?.title ??
+                          "Overview",
+                      ]
+                  ).map((crumb, index, trail) => (
+                    <React.Fragment key={`${crumb}-${index}`}>
+                      {index > 0 && <IconChevronRight size={14} />}
+                      <span
+                        aria-current={
+                          index === trail.length - 1 ? "page" : undefined
+                        }
+                      >
+                        {crumb}
+                      </span>
+                    </React.Fragment>
+                  ))}
+                </nav>
               ) : (
                 <Logo />
               )}

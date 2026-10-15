@@ -17,7 +17,7 @@ export default function Page() {
             {" "}
             <div className={"pn-col"}>
               {" "}
-              <h1 className={"pn-page-title"}>{"Driver Tour"}</h1>{" "}
+              <h1 className={"pn-page-title"}>{"Product tour"}</h1>{" "}
             </div>{" "}
           </div>{" "}
         </div>{" "}

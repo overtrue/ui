@@ -3,13 +3,14 @@ import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 import tsx from "shiki/langs/tsx.mjs";
 import json from "shiki/langs/json.mjs";
 import bash from "shiki/langs/bash.mjs";
+import css from "shiki/langs/css.mjs";
 import light from "shiki/themes/github-light.mjs";
 import dark from "shiki/themes/github-dark.mjs";
 
-export type CodeLanguage = "tsx" | "json" | "bash";
+export type CodeLanguage = "tsx" | "json" | "bash" | "css";
 
 const highlighter = createHighlighterCore({
-  langs: [tsx, json, bash],
+  langs: [tsx, json, bash, css],
   themes: [light, dark],
   engine: createJavaScriptRegexEngine(),
 });

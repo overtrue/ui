@@ -81,7 +81,7 @@ export function HighlightedCode({
     <pre
       className="highlighted-code"
       tabIndex={0}
-      aria-label={`${language === "tsx" ? "React" : language === "json" ? "JSON" : "Terminal"} code`}
+      aria-label={`${language === "tsx" ? "React" : language === "json" ? "JSON" : language === "css" ? "CSS" : "Terminal"} code`}
       data-highlighted={Boolean(tokens)}
     >
       <code data-language={language}>
@@ -126,7 +126,7 @@ export function Command({
   language?: CodeLanguage;
 }) {
   const Icon =
-    language === "tsx" ? Code : language === "json" ? Braces : Terminal;
+    language === "tsx" || language === "css" ? Code : language === "json" ? Braces : Terminal;
   return (
     <div className="code-box">
       <div className="code-label">

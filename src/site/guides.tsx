@@ -227,6 +227,91 @@ const content = {
       </p>
     </>
   ),
+  extending: (
+    <>
+      <h2>Four layers of control</h2>
+      <p>
+        Every component is installed as source, so you can always edit the
+        file. Before you do, reach for the layer that changes the least: tokens
+        for the whole product, data-slot hooks for one part, props and render
+        props for content, and composition for new screens.
+      </p>
+      <h2>Theme with tokens</h2>
+      <p>
+        Components only use shadcn’s semantic variables, never fixed colors.
+        Change <code>--primary</code>, <code>--radius</code>, or{" "}
+        <code>--chart-1</code> through <code>--chart-5</code> and every chart,
+        badge, and focus ring follows, in light and dark. The{" "}
+        <Link to="/docs#theming">theme studio</Link> derives a full set from one
+        accent and exports it for your <code>globals.css</code>.
+      </p>
+      <Command
+        label="globals.css"
+        language="css"
+        text={
+          ":root {\n  --primary: oklch(0.550 0.248 265.4);\n  --chart-2: oklch(0.600 0.130 161.4);\n  --radius: 0.75rem;\n}\n\n.dark {\n  --primary: oklch(0.720 0.203 265.4);\n}"
+        }
+      />
+      <h2>Restyle a part with data-slot</h2>
+      <p>
+        Each component marks its root and its important parts with a{" "}
+        <code>data-slot</code> attribute, and states with data attributes such
+        as <code>data-status</code> or <code>data-direction</code>. Target them
+        from your stylesheet without touching the component.
+      </p>
+      <Command
+        label="overrides.css"
+        language="css"
+        text={
+          '/* Square host cells and a louder critical state */\n[data-slot="host-map-cell"] {\n  border-radius: 2px;\n}\n[data-slot="host-map-cell"][data-status="critical"] {\n  outline: 2px solid var(--destructive);\n}\n\n/* Tabular numbers in every ticker */\n[data-slot="number-ticker"] {\n  font-variant-numeric: tabular-nums slashed-zero;\n}'
+        }
+      />
+      <p className="note">
+        The root of every component also accepts <code>className</code> and
+        forwards ordinary HTML attributes, so Tailwind classes work too.
+      </p>
+      <h2>Replace content with render props</h2>
+      <p>
+        Formatters change how values read; render props replace a piece of
+        markup entirely. Charts accept <code>valueFormatter</code>, and most
+        data components offer slots such as <code>renderLabel</code>,{" "}
+        <code>renderTooltip</code>, or <code>renderDetail</code>.
+      </p>
+      <Command
+        label="spend.tsx"
+        language="tsx"
+        text={
+          '<Treemap\n  data={spend}\n  valueFormatter={(value) => `$${(value / 1000).toFixed(1)}k`}\n  renderLabel={(node, { share }) => (\n    <span className="font-medium">\n      {node.label} <small>{Math.round(share * 100)}%</small>\n    </span>\n  )}\n/>'
+        }
+      />
+      <h2>Control state from outside</h2>
+      <p>
+        Interactive components work on their own, and also accept a controlled
+        value with a change callback. Use the controlled form to sync a
+        selection with the URL, another panel, or your store.
+      </p>
+      <Command
+        label="fleet.tsx"
+        language="tsx"
+        text={
+          'const [selected, setSelected] = useState<string | null>(null)\n\n<HostMap\n  hosts={hosts}\n  selectedId={selected}\n  onSelect={(host) => setSelected(host.id)}\n/>\n<LogStream entries={logs.filter((entry) => !selected || entry.source === selected)} />'
+        }
+      />
+      <h2>Feed live data into a block</h2>
+      <p>
+        Blocks are compositions you own. The realtime monitor reads one{" "}
+        <code>Telemetry</code> object; its simulator is only a stand-in. Keep
+        the same shape and connect your stream.
+      </p>
+      <Command
+        label="use-telemetry.ts"
+        language="tsx"
+        text={
+          'export function useTelemetry(): Telemetry {\n  const [data, setData] = useState<Telemetry>(initialTelemetry)\n  useEffect(() => {\n    const source = new EventSource("/api/telemetry")\n    source.onmessage = (event) => {\n      const sample = JSON.parse(event.data)\n      setData((current) => ({\n        ...sample,\n        // Keep the window length constant so the chart glides.\n        requests: [...current.requests.slice(1), sample.requestsPerSecond],\n        latency: [...current.latency.slice(1), sample.p95],\n      }))\n    }\n    return () => source.close()\n  }, [])\n  return data\n}'
+        }
+      />
+    </>
+  ),
   accessibility: (
     <>
       <h2>Start with the keyboard</h2>
@@ -366,10 +451,6 @@ export function GuidePage() {
           {guide.title}
         </div>
         <header className="documentation-intro">
-          <p className="overline">
-            THE OVERTRUE/UI HANDBOOK{" "}
-            <span>/ {String(index + 1).padStart(2, "0")}</span>
-          </p>
           <h1>{guide.title}</h1>
           <p className="lead">{guide.description}</p>
         </header>

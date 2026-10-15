@@ -35,7 +35,7 @@ try {
       await page.addInitScript(
         (theme) =>
           localStorage.setItem(
-            "overtrue-workspace-theme-v2",
+            "overtrue-workspace-theme-v3",
             JSON.stringify({ scheme: theme }),
           ),
         theme,

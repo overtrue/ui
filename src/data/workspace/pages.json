@@ -1,7 +1,7 @@
 [
   {
     "path": "/2-step-verification-code",
-    "title": "2-Step Verification",
+    "title": "Two-step code",
     "file": "2-step-verification-code.html",
     "bare": true,
     "layout": "default",
@@ -9,7 +9,7 @@
   },
   {
     "path": "/2-step-verification",
-    "title": "2-Step Verification",
+    "title": "Two-step verification",
     "file": "2-step-verification.html",
     "bare": true,
     "layout": "default",
@@ -273,7 +273,7 @@
   },
   {
     "path": "/faq",
-    "title": "Frequently Asked Questions",
+    "title": "FAQ",
     "file": "faq.html",
     "bare": false,
     "layout": "default",
@@ -337,7 +337,7 @@
   },
   {
     "path": "/illustrations",
-    "title": "SVG Illustrations",
+    "title": "Illustrations",
     "file": "illustrations.html",
     "bare": false,
     "layout": "default",
@@ -521,7 +521,7 @@
   },
   {
     "path": "/map-fullsize",
-    "title": "Full Size Map",
+    "title": "Full-size map",
     "file": "map-fullsize.html",
     "bare": false,
     "layout": "default",
@@ -529,7 +529,7 @@
   },
   {
     "path": "/maps-vector",
-    "title": "Vector Maps",
+    "title": "Vector maps",
     "file": "maps-vector.html",
     "bare": false,
     "layout": "default",
@@ -793,7 +793,7 @@
   },
   {
     "path": "/stars-rating",
-    "title": "Star Ratings",
+    "title": "Star ratings",
     "file": "stars-rating.html",
     "bare": false,
     "layout": "default",
@@ -873,7 +873,7 @@
   },
   {
     "path": "/tour",
-    "title": "Driver Tour",
+    "title": "Product tour",
     "file": "tour.html",
     "bare": false,
     "layout": "default",
@@ -937,7 +937,7 @@
   },
   {
     "path": "/wysiwyg",
-    "title": "HugeRTE",
+    "title": "Rich text editor",
     "file": "wysiwyg.html",
     "bare": false,
     "layout": "default",
