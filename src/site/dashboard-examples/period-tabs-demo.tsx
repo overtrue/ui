@@ -46,7 +46,7 @@ export default function PeriodTabsDemo() {
         <span className="text-3xl font-semibold tracking-[-0.035em] tabular-nums">
           {report.total}
         </span>
-        <span className="text-xs font-medium text-emerald-600 tabular-nums dark:text-emerald-400">
+        <span className="text-xs font-medium text-emerald-700 tabular-nums dark:text-emerald-400">
           {report.change}
         </span>
         <span className="ms-auto text-[13px] text-muted-foreground">

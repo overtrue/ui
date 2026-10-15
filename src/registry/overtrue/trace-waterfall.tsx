@@ -742,7 +742,7 @@ export function TraceSpanAttributes({
               "min-w-0 border-t border-dashed py-1.5 font-mono text-[11px] break-all tabular-nums first-of-type:border-t-0",
               typeof value === "boolean" &&
                 (value
-                  ? "text-emerald-600 dark:text-emerald-400"
+                  ? "text-emerald-700 dark:text-emerald-400"
                   : "text-muted-foreground"),
               typeof value === "number" && "text-foreground",
             )}

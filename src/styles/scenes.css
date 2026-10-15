@@ -163,7 +163,7 @@
   outline-offset: 2px;
 }
 
-.scene-attention-list {
+.overtrue-workspace .scene-attention-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: 16px;
@@ -440,13 +440,15 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 7px;
-  font-size: 10px;
-  line-height: 1.2;
-  border-radius: calc(var(--radius, 0.5rem) * 0.5);
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 550;
+  line-height: 1.3;
+  border-radius: 999px;
   white-space: nowrap;
   background: color-mix(in srgb, var(--scene-accent) 8%, var(--scene-surface));
-  color: var(--scene-accent);
+  color: color-mix(in srgb, var(--scene-accent) 82%, var(--scene-ink));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 16%, transparent);
 }
 .scene-pill i {
   width: 4px;
@@ -454,19 +456,20 @@
   border-radius: 50%;
   background: currentColor;
 }
+/* Text tones clear 4.5:1 on their own tint at 11px. */
 .scene-pill.is-success {
   background: #eaf4ef;
-  color: #398067;
+  color: #23694f;
 }
 .scene-pill.is-warning {
   background: #faf1e3;
-  color: #a77930;
+  color: #85571a;
 }
 .scene-pill.is-danger {
   background: #f9eae9;
-  color: #b96159;
+  color: #a23f37;
 }
-.scene-feed {
+.overtrue-workspace .scene-feed {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -555,37 +558,17 @@
   color: var(--scene-muted);
   margin: 26px 0 0;
 }
+/* FilterTabs paints its own buttons and sliding indicator; scenes only place it. */
 .scene-tabs {
-  display: flex;
-  gap: 3px;
-  flex-wrap: wrap;
   margin-bottom: 20px;
 }
 .scene-toolbar .scene-tabs {
   margin: 0;
 }
-.scene-tabs button {
-  border: 0;
-  border-radius: calc(var(--radius, 0.5rem) * 0.5);
-  background: transparent;
-  padding: 7px 11px;
-  font-size: 12px;
-  color: var(--scene-muted);
-  cursor: pointer;
-}
-.scene-tabs button:hover:not([aria-pressed="true"]) {
-  background: var(--pn-bg-surface-secondary);
-  color: var(--scene-ink);
-}
 .scene :is(a, button, summary, input, textarea, select):focus-visible,
 .scene-auth :is(a, button, input, select):focus-visible {
   outline: 2px solid var(--scene-accent);
   outline-offset: 3px;
-}
-.scene-tabs button[aria-pressed="true"] {
-  background: color-mix(in srgb, var(--scene-accent) 9%, transparent);
-  color: var(--scene-accent);
-  font-weight: 550;
 }
 .scene-search {
   display: flex;
@@ -656,7 +639,7 @@
   color: var(--scene-muted);
   margin-left: 8px;
 }
-.scene-checklist {
+.overtrue-workspace .scene-checklist {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -995,7 +978,7 @@
   color: var(--scene-muted);
   margin-left: 5px;
 }
-.scene-plan-features {
+.overtrue-workspace .scene-plan-features {
   padding: 25px 0;
   list-style: none;
   border-top: 1px solid var(--scene-line);
@@ -1066,7 +1049,19 @@
 .scene-inbox > aside > button.is-selected,
 .scene-chat aside > button.is-selected {
   background: color-mix(in srgb, var(--scene-accent) 7%, transparent);
-  box-shadow: inset 3px 0 var(--scene-accent);
+}
+.scene-inbox > aside > button.is-selected::before,
+.scene-chat aside > button.is-selected::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  width: 3px;
+  height: 24px;
+  border-radius: 3px;
+  background: var(--scene-accent);
+  translate: 0 -50%;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--scene-accent) 45%, transparent);
 }
 .scene-inbox aside button > div {
   display: flex;
@@ -1152,6 +1147,7 @@
   margin: 0 20px 20px;
 }
 .scene-chat aside button {
+  position: relative;
   display: block;
   text-align: left;
   border: 0;
@@ -1428,23 +1424,51 @@
   object-fit: cover;
 }
 .scene-media-row {
+  position: relative;
   display: flex;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
-  text-align: left;
-  padding: 15px 0;
+  width: calc(100% + 20px);
+  margin-inline: -10px;
+  padding: 10px;
   border: 0;
-  border-bottom: 1px solid var(--scene-line);
+  border-radius: calc(var(--radius, 0.5rem) * 1.5);
   background: none;
-  width: 100%;
   color: inherit;
+  text-align: left;
   cursor: pointer;
+  transition:
+    background-color 150ms,
+    box-shadow 150ms;
+}
+.scene-media-row + .scene-media-row {
+  margin-top: 1px;
+}
+.scene-media-row::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  bottom: -1px;
+  left: 10px;
+  height: 1px;
+  background: var(--scene-line);
+  transition: opacity 150ms;
+}
+.scene-media-row:last-child::after,
+.scene-media-row:is(:hover, [aria-pressed="true"])::after,
+.scene-media-row:has(+ .scene-media-row:is(:hover, [aria-pressed="true"]))::after {
+  opacity: 0;
+}
+.scene-media-row:hover {
+  background: color-mix(in srgb, var(--scene-ink) 4%, transparent);
 }
 .scene-media-row img {
+  flex-shrink: 0;
   width: 65px;
   height: 50px;
   object-fit: cover;
-  border-radius: calc(var(--radius, 0.5rem) * 0.5);
+  border-radius: calc(var(--radius, 0.5rem) * 0.875);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--scene-ink) 8%, transparent);
 }
 .scene-media-row strong {
   font-size: 12px;
@@ -1505,9 +1529,6 @@
 .scene .scene-search input {
   border: 0;
   padding: 0;
-}
-.scene [data-slot="search-field"] input[type="search"] {
-  padding-inline: 36px;
 }
 .scene-select {
   position: relative;
@@ -2647,12 +2668,6 @@
 .scene-auth.is-cover aside h2 {
   color: inherit;
 }
-.overtrue-workspace[data-bs-theme="dark"]
-  .scene-tabs
-  button[aria-pressed="true"] {
-  color: color-mix(in srgb, var(--scene-accent) 50%, white);
-  background: color-mix(in srgb, var(--scene-accent) 20%, transparent);
-}
 .overtrue-workspace[data-bs-theme="dark"] .scene-bars span:not(.is-current) {
   background: #667da9;
 }
@@ -2681,15 +2696,6 @@
     .scene-tabs
     button {
     color: var(--scene-muted);
-  }
-  .workspace-layout-navbar-overlap
-    .scene
-    > .pn-container-xl
-    > .scene-toolbar
-    .scene-tabs
-    button[aria-pressed="true"] {
-    background: #e7edfc;
-    color: var(--scene-accent);
   }
 }
 @media (max-width: 767px) {

@@ -1003,7 +1003,7 @@ export function LatencyHistogram({
                       "font-mono text-[10px] tabular-nums",
                       delta > 0
                         ? "text-destructive"
-                        : "text-emerald-600 dark:text-emerald-400",
+                        : "text-emerald-700 dark:text-emerald-400",
                     )}
                   >
                     {delta > 0 ? "▲" : "▼"}
@@ -1020,7 +1020,7 @@ export function LatencyHistogram({
                   "font-semibold tabular-nums",
                   over > 0
                     ? "text-destructive"
-                    : "text-emerald-600 dark:text-emerald-400",
+                    : "text-emerald-700 dark:text-emerald-400",
                 )}
               >
                 {percentLabel(overShare)}
@@ -1070,7 +1070,7 @@ export function LatencyHistogram({
                       "truncate font-mono text-[10px] leading-4 whitespace-nowrap tabular-nums @sm/histogram:text-[10.5px]",
                       delta > 0
                         ? "text-destructive"
-                        : "text-emerald-600 dark:text-emerald-400",
+                        : "text-emerald-700 dark:text-emerald-400",
                     )}
                     title={`${compareLabel}: ${format(previous!)}`}
                   >
@@ -1090,7 +1090,7 @@ export function LatencyHistogram({
                   "truncate text-sm leading-6 font-semibold tracking-tight tabular-nums @sm/histogram:text-base @md/histogram:text-lg",
                   over > 0
                     ? "text-destructive"
-                    : "text-emerald-600 dark:text-emerald-400",
+                    : "text-emerald-700 dark:text-emerald-400",
                 )}
               >
                 {percentLabel(overShare)}

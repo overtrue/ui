@@ -379,7 +379,7 @@ export function NumberTicker({
         data-slot="number-ticker-value"
         className={cn(
           "transition-colors motion-reduce:transition-none",
-          state.flash === "up" && "text-emerald-600 dark:text-emerald-400",
+          state.flash === "up" && "text-emerald-700 dark:text-emerald-400",
           state.flash === "down" && "text-red-600 dark:text-red-400",
         )}
         style={{ transitionDuration: state.flash ? "140ms" : "900ms" }}

@@ -1118,7 +1118,7 @@ function CodeBlock({
           )}
         >
           {copied ? (
-            <Check className="size-3.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+            <Check className="size-3.5 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
           ) : (
             <Copy className="size-3.5" aria-hidden="true" />
           )}
@@ -1369,7 +1369,7 @@ function StepRow({
           step.status === "error" && "border-destructive/35 bg-destructive/[0.06] text-destructive",
           step.status === "running" && "border-transparent text-primary",
           step.status === "done" &&
-            "border-emerald-600/25 bg-emerald-500/[0.08] text-emerald-600 dark:border-emerald-400/30 dark:text-emerald-400",
+            "border-emerald-600/25 bg-emerald-500/[0.08] text-emerald-700 dark:border-emerald-400/30 dark:text-emerald-400",
         )}
       >
         {step.status === "running" ? (
@@ -1774,7 +1774,7 @@ function AssistantAnswer({
               }
             >
               {copied ? (
-                <Check className="size-3.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                <Check className="size-3.5 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
               ) : (
                 <Copy className="size-3.5" aria-hidden="true" />
               )}

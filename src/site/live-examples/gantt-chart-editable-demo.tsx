@@ -101,7 +101,7 @@ export default function Demo() {
             <>
               <IconCircleCheck
                 aria-hidden="true"
-                className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400"
+                className="size-4 shrink-0 text-emerald-700 dark:text-emerald-400"
               />
               <span className="truncate text-foreground">{status}</span>
             </>

@@ -44,19 +44,20 @@ function typeset(text: string) {
   );
 }
 
+// Same tones as DeltaBadge, so a change reads the same everywhere.
 const toneText = {
   positive: "text-emerald-700 dark:text-emerald-400",
-  negative: "text-destructive",
+  negative: "text-rose-700 dark:text-rose-400",
   neutral: "text-muted-foreground",
 };
 const tonePill = {
   positive: "bg-emerald-500/10 dark:bg-emerald-400/10",
-  negative: "bg-destructive/10",
+  negative: "bg-rose-500/10 dark:bg-rose-400/10",
   neutral: "bg-muted",
 };
 const toneLine = {
   positive: "text-emerald-600 dark:text-emerald-400",
-  negative: "text-destructive",
+  negative: "text-rose-600 dark:text-rose-400",
   neutral: "text-muted-foreground",
 };
 

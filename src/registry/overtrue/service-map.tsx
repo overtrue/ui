@@ -210,7 +210,7 @@ interface PlacedEdge {
 
 const NODE_GAP = 18;
 const DUMMY_GAP = 12;
-const PAD = 14;
+const PAD = 22;
 const GAP_MIN = 28;
 const GAP_MAX = 136;
 const GAP_TB = 64;
@@ -1017,7 +1017,7 @@ function ServiceMap({
       : rate >= critical
         ? "text-destructive"
         : rate >= warn
-          ? "text-amber-600 dark:text-amber-400"
+          ? "text-amber-700 dark:text-amber-400"
           : "";
   const iconFor = (node: ServiceMapNode, size = 15) => {
     if (node.icon) return node.icon;
@@ -1332,7 +1332,7 @@ function ServiceMap({
                   const iconTint = cn(
                     "text-muted-foreground transition-colors duration-150 motion-reduce:transition-none",
                     (active || selected) && "text-foreground",
-                    status === "degraded" && "text-amber-600 dark:text-amber-400",
+                    status === "degraded" && "text-amber-700 dark:text-amber-400",
                     status === "down" && "text-destructive",
                   );
                   const shared = {
@@ -1845,7 +1845,7 @@ function ServiceDetail({
           aria-hidden="true"
           className={cn(
             "grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-foreground ring-1 ring-border/60 ring-inset [&>svg]:size-4",
-            status === "degraded" && "bg-amber-500/12 text-amber-600 ring-amber-500/25 dark:text-amber-400",
+            status === "degraded" && "bg-amber-500/12 text-amber-700 ring-amber-500/25 dark:text-amber-400",
             status === "down" && "bg-destructive/12 text-destructive ring-destructive/25",
           )}
         >

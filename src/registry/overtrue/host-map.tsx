@@ -77,8 +77,8 @@ const statusDot: Record<HostStatus, string> = {
 };
 
 const statusText: Record<HostStatus, string> = {
-  ok: "text-emerald-600 dark:text-emerald-400",
-  warn: "text-amber-600 dark:text-amber-400",
+  ok: "text-emerald-700 dark:text-emerald-400",
+  warn: "text-amber-700 dark:text-amber-400",
   critical: "text-destructive",
   offline: "text-muted-foreground",
 };
@@ -438,7 +438,7 @@ function HostMap({
                 counts.critical > 0
                   ? "text-destructive"
                   : attention > 0
-                    ? "text-amber-600 dark:text-amber-400"
+                    ? "text-amber-700 dark:text-amber-400"
                     : "text-foreground",
               )}
             >
@@ -563,7 +563,7 @@ function HostMap({
                             className={
                               group.counts.critical > 0
                                 ? "text-destructive"
-                                : "text-amber-600 dark:text-amber-400"
+                                : "text-amber-700 dark:text-amber-400"
                             }
                           >
                             {groupHot} hot

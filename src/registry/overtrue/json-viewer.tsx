@@ -1139,7 +1139,7 @@ export function JsonViewer({
                 className="inline-flex size-[18px] items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 {copiedPath ? (
-                  <Check className="size-3 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                  <Check className="size-3 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
                 ) : (
                   <Route className="size-3" aria-hidden="true" />
                 )}
@@ -1157,7 +1157,7 @@ export function JsonViewer({
               className="inline-flex size-[18px] items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               {copiedValue ? (
-                <Check className="size-3 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                <Check className="size-3 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
               ) : (
                 <Copy className="size-3" aria-hidden="true" />
               )}
@@ -1194,7 +1194,7 @@ export function JsonViewer({
               className={iconButton}
             >
               {copied === `json:${rootPath}` ? (
-                <Check className="size-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                <Check className="size-4 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
               ) : (
                 <Copy className="size-4" aria-hidden="true" stroke={1.75} />
               )}
@@ -1408,7 +1408,7 @@ export function JsonViewer({
                       className={iconButton}
                     >
                       {copied === `path:${status.path}` ? (
-                        <Check className="size-3.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                        <Check className="size-3.5 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
                       ) : (
                         <Route className="size-3.5" aria-hidden="true" />
                       )}
@@ -1422,7 +1422,7 @@ export function JsonViewer({
                     className={iconButton}
                   >
                     {copied === `value:${status.path}` ? (
-                      <Check className="size-3.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                      <Check className="size-3.5 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
                     ) : (
                       <Copy className="size-3.5" aria-hidden="true" />
                     )}

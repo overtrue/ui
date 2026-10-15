@@ -6,11 +6,12 @@ const variants = {
     "bg-emerald-500/10 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-400/10 dark:text-emerald-300 dark:ring-emerald-400/25",
   warning:
     "bg-amber-500/10 text-amber-700 ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-300 dark:ring-amber-400/25",
+  // Tinted text leans toward the foreground so it stays legible on its own tint.
   error:
-    "bg-destructive/10 text-destructive ring-destructive/20 dark:ring-destructive/30",
-  info: "bg-primary/10 text-primary ring-primary/20 dark:ring-primary/30",
+    "bg-destructive/10 text-[color-mix(in_oklab,var(--color-destructive)_85%,var(--color-foreground))] ring-destructive/20 dark:ring-destructive/30",
+  info: "bg-primary/10 text-[color-mix(in_oklab,var(--color-primary)_85%,var(--color-foreground))] ring-primary/20 dark:ring-primary/30",
   neutral:
-    "bg-muted/70 text-muted-foreground ring-border dark:bg-muted/50",
+    "bg-muted/70 text-[color-mix(in_oklab,var(--color-muted-foreground)_85%,var(--color-foreground))] ring-border dark:bg-muted/50",
 };
 const dots = {
   success: "bg-emerald-500 dark:bg-emerald-400",

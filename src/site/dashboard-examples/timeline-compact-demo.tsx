@@ -31,14 +31,14 @@ const events = [
     dateTime: "2026-03-06T10:34",
     description:
       "The client asked for a purchase order reference. Finance will confirm it before the next payment run.",
-    className: "text-amber-600 dark:text-amber-400",
+    className: "text-amber-700 dark:text-amber-400",
   },
   {
     icon: CreditCard,
     title: "Deposit received",
     time: "Mar 6, 10:21 AM",
     dateTime: "2026-03-06T10:21",
-    className: "text-emerald-600 dark:text-emerald-400",
+    className: "text-emerald-700 dark:text-emerald-400",
   },
   {
     icon: CircleCheck,

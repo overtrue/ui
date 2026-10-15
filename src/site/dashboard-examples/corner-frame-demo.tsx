@@ -48,7 +48,7 @@ export default function CornerFrameDemo() {
           <p className="mt-auto flex items-center gap-1.5 pt-5 text-xs font-medium">
             <IconCircleCheck
               aria-hidden="true"
-              className="size-4 text-emerald-600 dark:text-emerald-400"
+              className="size-4 text-emerald-700 dark:text-emerald-400"
             />
             3 of 3 approvals
           </p>

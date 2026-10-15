@@ -1197,7 +1197,7 @@ function GanttChart({
                     <span
                       title={m.task.owner}
                       data-slot="gantt-owner"
-                      className="hidden size-5 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold tracking-tight ring-1 ring-card @sm/gantt-chart:inline-flex"
+                      className="hidden size-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold tracking-tight ring-1 ring-card @sm/gantt-chart:inline-flex"
                       style={{
                         background: `color-mix(in oklab, ${PALETTE[hash(m.task.owner) % PALETTE.length]} 22%, var(--color-card))`,
                         color: `color-mix(in oklab, ${PALETTE[hash(m.task.owner) % PALETTE.length]} 75%, var(--color-foreground))`,

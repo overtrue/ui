@@ -116,7 +116,7 @@ export default function Demo() {
           className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-card px-2.5 text-xs font-medium shadow-[0_1px_2px_rgb(0_0_0/0.06)] ring-1 ring-border/70 transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/30"
         >
           {copied ? (
-            <IconCheck className="size-3.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+            <IconCheck className="size-3.5 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
           ) : (
             <IconCopy className="size-3.5" aria-hidden="true" />
           )}

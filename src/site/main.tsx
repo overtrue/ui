@@ -373,6 +373,26 @@ function ComponentTile({ name }: { name: ItemName }) {
     </article>
   );
 }
+/**
+ * A search box backed by the URL. The box keeps its own draft so typing stays
+ * instant even when the results take a moment to re-render, and it follows the
+ * URL whenever something else changes it (Clear filters, Back, a shared link).
+ */
+function useUrlDraft(value: string, commit: (value: string) => void) {
+  const [draft, setDraft] = useState(value);
+  const committed = useRef(value);
+  useEffect(() => {
+    if (value === committed.current) return;
+    committed.current = value;
+    setDraft(value);
+  }, [value]);
+  const change = (next: string) => {
+    committed.current = next;
+    setDraft(next);
+    commit(next);
+  };
+  return [draft, change] as const;
+}
 function Catalog({ blocks = false }: { blocks?: boolean }) {
   const [params, setParams] = useSearchParams();
   const search = useRef<HTMLInputElement>(null);
@@ -399,6 +419,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
     setParams(next, { replace: true });
   };
   const setQuery = (value: string) => updateFilter(queryKey, value);
+  const [queryDraft, setQueryDraft] = useUrlDraft(query, setQuery);
   const setCategory = (value: string) => updateFilter(categoryKey, value);
   const matchingQuery = catalog.filter(
     (item) =>
@@ -485,8 +506,8 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           containerClassName="catalog-search"
           label={blocks ? "Search composed blocks" : "Search components"}
           placeholder={blocks ? "Find a block…" : "Search components…"}
-          value={query}
-          onValueChange={setQuery}
+          value={queryDraft}
+          onValueChange={setQueryDraft}
           autoComplete="off"
           spellCheck={false}
           name={queryKey}
@@ -980,6 +1001,7 @@ function Examples() {
     else next.delete("q");
     setParams(next, { replace: true });
   };
+  const [queryDraft, setQueryDraft] = useUrlDraft(query, setQuery);
   const pages = workspacePages.filter((page) =>
     `${page.title} ${page.path}`
       .toLowerCase()
@@ -1043,8 +1065,8 @@ function Examples() {
           containerClassName="catalog-search"
           label="Search pages"
           placeholder="Find a page…"
-          value={query}
-          onValueChange={setQuery}
+          value={queryDraft}
+          onValueChange={setQueryDraft}
           autoComplete="off"
           spellCheck={false}
           name="q"

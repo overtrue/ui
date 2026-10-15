@@ -387,7 +387,7 @@ function HeatmapChart({
       <div
         ref={scrollRef}
         // The padding keeps the active outline clear of the scroll clip; the margin cancels it out.
-        className="-m-1 overflow-x-auto overscroll-x-contain p-1 [scrollbar-color:color-mix(in_oklab,var(--color-foreground)_18%,transparent)_transparent] [scrollbar-width:thin]"
+        className="-m-2 overflow-x-auto overscroll-x-contain p-2 [scrollbar-color:color-mix(in_oklab,var(--color-foreground)_18%,transparent)_transparent] [scrollbar-width:thin]"
         tabIndex={0}
         role="region"
         aria-label="Heatmap, scroll to see all columns"

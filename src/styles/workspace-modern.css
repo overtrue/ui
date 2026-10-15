@@ -37,7 +37,7 @@
 }
 
 /* Type ------------------------------------------------------------------- */
-.overtrue-workspace :is(h1, h2, h3, .pn-page-title, .pn-card-title) {
+.overtrue-workspace :is(h1, h2, h3, .pn-page-title, .pn-card-title):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
   letter-spacing: -0.015em;
 }
 .overtrue-workspace :is(.scene-heading h1, .pn-page-title) {
@@ -198,7 +198,7 @@ html[data-workspace-navbar-theme="primary"]
   background: transparent;
   border-bottom-color: var(--ws-hairline);
 }
-.overtrue-workspace :is(.scene-card h2, .pn-card-title) {
+.overtrue-workspace :is(.scene-card h2, .pn-card-title):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
   font-size: 15px;
   font-weight: 620;
 }
@@ -305,7 +305,7 @@ html[data-workspace-navbar-theme="primary"]
 /* Inputs ----------------------------------------------------------------- */
 /* :where() keeps the type exclusions at zero specificity so the focus and
    invalid rules below can still win on border-color. */
-.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"])), .scene select, .scene textarea) {
+.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"])), .scene select, .scene textarea):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
   border-radius: calc(var(--radius) * 1.25);
   border-color: var(--scene-control-line);
   box-shadow: 0 1px 1px rgb(13 20 36 / 0.03);
@@ -313,13 +313,13 @@ html[data-workspace-navbar-theme="primary"]
     border-color 160ms,
     box-shadow 160ms;
 }
-.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input, .scene select, .scene textarea):focus {
+.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input, .scene select, .scene textarea):focus:not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
   border-color: hsl(var(--primary));
   box-shadow: var(--ws-ring);
   outline: none;
 }
 /* Invalid fields keep their error border even while focused. */
-.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input, .scene select, .scene textarea):is([aria-invalid="true"], :user-invalid) {
+.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input, .scene select, .scene textarea):is([aria-invalid="true"], :user-invalid):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
   border-color: hsl(var(--destructive));
   box-shadow: 0 0 0 3px color-mix(in oklab, hsl(var(--destructive)) 15%, transparent);
 }
@@ -482,85 +482,66 @@ html[data-workspace-navbar-theme="primary"]
 }
 
 /*
- * Registry components are styled with Tailwind utilities (in cascade layers).
- * Let them win over the workspace base's unlayered element rules.
+ * Registry components are styled with Tailwind utilities, which live in cascade
+ * layers. The workspace base is an unlayered element reset (p margins, list
+ * indents, heading sizes, dt weights, table borders, link colors…), so it would
+ * beat those utilities everywhere. Its element rules stop at each component
+ * root instead: inside a component, every reset property falls back to the
+ * component's own utilities. Scene markup handed to a component as children
+ * (scene-*, showcase-*, pn-* classes) keeps the workspace styles.
  */
 .overtrue-workspace
-  :is(
-    [data-slot="realtime-monitor"],
-    [data-slot="live-chart"],
-    [data-slot="log-stream"],
-    [data-slot="host-map"],
-    [data-slot="bullet-chart"],
-    [data-slot="cohort-grid"],
-    [data-slot="number-ticker"],
-    [data-slot="spotlight-card"],
-    [data-slot="treemap"],
-    [data-slot="waterfall-chart"],
-    [data-slot="trace-waterfall"],
-    [data-slot="latency-histogram"],
-    [data-slot="geo-map"],
-    [data-slot="gantt-chart"],
-    [data-slot="deploy-pipeline"],
-    [data-slot="insight-card"],
-    [data-slot="incident-review"],
-    [data-slot="revenue-overview"],
-    [data-slot="model-usage"],
-    [data-slot="service-explorer"],
-    [data-slot="stacked-area-chart"],
-    [data-slot="experiment-result"],
-    [data-slot="service-map"],
-    [data-slot="flame-graph"],
-    [data-slot="json-viewer"],
-    [data-slot="assistant-panel"],
-    [data-slot="date-range-picker"],
-    [data-slot="filter-bar"]
-  )
-  :is(h1, h2, h3, h4, h5, h6, p, dl, dd, ul, ol, table, th, td, button, label, small) {
+  :where([data-slot]:not([data-slot^="sidebar"]))
+  :is(h1, h2, h3, h4, h5, h6, p, blockquote, figure, dl, dt, dd, ul, ol, table, caption, th, td, tr, thead, tbody, tfoot, label, small, b, strong, a, code, kbd, pre, hr, legend, fieldset, button, input, select, textarea):where(
+    :not(
+      [class*="scene-"],
+      [class*="showcase-"],
+      [class*="workspace-"],
+      [class*="pn-"],
+      :where([data-slot]:not([data-slot^="sidebar"])) :is([class*="scene-"], [class*="showcase-"], [class*="workspace-"], [class*="pn-"]) *
+    )
+  ) {
+  display: revert-layer;
   margin: revert-layer;
+  padding: revert-layer;
+  border-width: revert-layer;
+  border-style: revert-layer;
+  border-color: revert-layer;
+  border-radius: revert-layer;
+  background-color: revert-layer;
+  font-family: revert-layer;
   font-size: revert-layer;
   font-weight: revert-layer;
   line-height: revert-layer;
   letter-spacing: revert-layer;
+  text-align: revert-layer;
+  text-decoration: revert-layer;
+  text-transform: revert-layer;
   color: revert-layer;
+  list-style: revert-layer;
+  opacity: revert-layer;
+  height: revert-layer;
+  min-height: revert-layer;
+  box-shadow: revert-layer;
+  background-image: revert-layer;
+  outline: revert-layer;
+  outline-offset: revert-layer;
 }
 .overtrue-workspace
-  :is(
-    [data-slot="realtime-monitor"],
-    [data-slot="live-chart"],
-    [data-slot="log-stream"],
-    [data-slot="host-map"],
-    [data-slot="bullet-chart"],
-    [data-slot="cohort-grid"],
-    [data-slot="treemap"],
-    [data-slot="waterfall-chart"],
-    [data-slot="trace-waterfall"],
-    [data-slot="latency-histogram"],
-    [data-slot="geo-map"],
-    [data-slot="gantt-chart"],
-    [data-slot="deploy-pipeline"],
-    [data-slot="insight-card"],
-    [data-slot="incident-review"],
-    [data-slot="revenue-overview"],
-    [data-slot="model-usage"],
-    [data-slot="service-explorer"],
-    [data-slot="stacked-area-chart"],
-    [data-slot="experiment-result"],
-    [data-slot="service-map"],
-    [data-slot="flame-graph"],
-    [data-slot="json-viewer"],
-    [data-slot="assistant-panel"],
-    [data-slot="date-range-picker"],
-    [data-slot="filter-bar"]
-  )
-  :is(input, select, textarea) {
-  height: revert-layer;
-  padding: revert-layer;
-  border: revert-layer;
-  border-radius: revert-layer;
-  background: revert-layer;
+  :where([data-slot]:not([data-slot^="sidebar"]))
+  :is(a:hover, :is(input, select, textarea):is(:focus, :focus-visible, [aria-invalid="true"], :user-invalid), :is(a, button):focus-visible):where(
+    :not([class*="scene-"], [class*="showcase-"], [class*="workspace-"], [class*="pn-"])
+  ) {
+  border-color: revert-layer;
   box-shadow: revert-layer;
-  font-size: revert-layer;
+  outline: revert-layer;
+  outline-offset: revert-layer;
+  color: revert-layer;
+  text-decoration: revert-layer;
+}
+.overtrue-workspace :where([data-slot]:not([data-slot^="sidebar"])) :is(input, textarea)::placeholder {
+  color: revert-layer;
+  opacity: revert-layer;
 }
 
 /* Auth pages: the card sits under a soft light on a measured grid. */
