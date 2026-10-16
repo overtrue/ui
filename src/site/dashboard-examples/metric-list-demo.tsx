@@ -20,8 +20,7 @@ const items = [
   },
   {
     label: "Booked work",
-    value: 36_800,
-    format: "currency" as const,
+    value: "$36.8K",
     delta: 0.15,
     trend: [24200, 25800, 27900, 30400, 32100, 34500, 36800],
   },
@@ -42,7 +41,7 @@ const items = [
 
 export default function MetricListDemo() {
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md rounded-2xl border border-border/70 bg-card p-4 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
       <MetricList items={items} />
     </div>
   );

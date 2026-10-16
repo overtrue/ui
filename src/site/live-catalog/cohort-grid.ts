@@ -1,7 +1,7 @@
 export default {
   name: "cohort-grid",
   title: "Cohort grid",
-  category: "Data display",
+  category: "Charts",
   description:
     "A retention triangle that shows how each signup cohort holds on over time, with a crosshair readout for exact numbers.",
   dependencies: [],

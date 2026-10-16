@@ -105,7 +105,7 @@ export default function NumberTickerDemo() {
           />
 
           <p className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-0.5 font-medium text-emerald-600 dark:text-emerald-400">
+            <span className="inline-flex items-center gap-0.5 font-medium text-emerald-700 dark:text-emerald-400">
               <IconArrowUpRight aria-hidden="true" className="size-4" />
               <NumberTicker
                 value={live.latest}

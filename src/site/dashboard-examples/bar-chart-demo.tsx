@@ -32,6 +32,7 @@ export default function BarChartDemo() {
       highlight={(row) => row.month === "Mar"}
       yFormatter={(value) => formatNumber(value, { format: "currency" })}
       tooltipLabel={(row) => String(row.week).replace(/^\w+ /, "")}
+      className="h-60"
     />
   );
 }

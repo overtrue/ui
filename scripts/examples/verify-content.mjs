@@ -75,7 +75,7 @@ assert.equal(
 const pages = JSON.parse(
   fs.readFileSync("src/data/workspace/pages.json", "utf8"),
 );
-assert.equal(pages.length, 119);
+assert.equal(pages.length, 121);
 assert.equal(new Set(pages.map((p) => p.path)).size, pages.length);
 for (const page of pages)
   assert.ok(

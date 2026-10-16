@@ -21,6 +21,46 @@ export interface StatCardProps {
   description?: string;
   className?: string;
 }
+
+// Currency symbols and units sit quieter than the digits; "Q3 2026" stays untouched.
+const quiet = "font-medium tracking-normal text-current/50";
+const unitSize = "text-[0.6em]";
+const symbolSize = "mr-[0.04em] text-[0.62em] align-[0.4em]";
+function typeset(text: string) {
+  const match =
+    /^([+\-−]?)([^\d\s+\-−]{0,3})(\d(?:[\d.,  ]*\d)?[KkMBT]?)(%|\s+\S.*)?$/.exec(
+      text,
+    );
+  if (!match || /[a-z]/i.test(match[2].replace(/[A-Z]{1,2}(?=\$)/, "")))
+    return text;
+  const [, sign, symbol, digits, unit] = match;
+  return (
+    <>
+      {sign}
+      {symbol ? <span className={cn(quiet, symbolSize)}>{symbol}</span> : null}
+      {digits}
+      {unit ? <span className={cn(quiet, unitSize)}>{unit}</span> : null}
+    </>
+  );
+}
+
+// Same tones as DeltaBadge, so a change reads the same everywhere.
+const toneText = {
+  positive: "text-emerald-700 dark:text-emerald-400",
+  negative: "text-rose-700 dark:text-rose-400",
+  neutral: "text-muted-foreground",
+};
+const tonePill = {
+  positive: "bg-emerald-500/10 dark:bg-emerald-400/10",
+  negative: "bg-rose-500/10 dark:bg-rose-400/10",
+  neutral: "bg-muted",
+};
+const toneLine = {
+  positive: "text-emerald-600 dark:text-emerald-400",
+  negative: "text-rose-600 dark:text-rose-400",
+  neutral: "text-muted-foreground",
+};
+
 export function StatCard({
   title,
   value,
@@ -40,58 +80,62 @@ export function StatCard({
       : trend === positiveTrend
         ? "positive"
         : "negative";
-  const toneClass =
-    tone === "positive"
-      ? "text-emerald-700 dark:text-emerald-400"
-      : tone === "negative"
-        ? "text-destructive"
-        : "text-muted-foreground";
-  const pillClass =
-    tone === "positive"
-      ? "bg-emerald-500/10 dark:bg-emerald-400/10"
-      : tone === "negative"
-        ? "bg-destructive/10"
-        : "bg-muted";
   return (
     <Card
       data-slot="stat-card"
       data-trend={trend}
       data-tone={tone}
       className={cn(
-        "min-w-0 gap-0 rounded-lg border bg-card py-0 ring-0 shadow-sm shadow-black/[0.03] dark:shadow-black/10",
+        "min-w-0 gap-0 rounded-2xl border border-border/70 bg-card py-0 text-card-foreground ring-0 shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]",
         className,
       )}
     >
-      <CardContent className="p-6">
-        <p className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
+      <CardContent className="p-5">
+        <p
+          data-slot="stat-card-title"
+          className="flex min-h-7 items-center justify-between gap-3 text-sm leading-5 font-medium text-muted-foreground"
+        >
           {title}
           {icon && (
-            <span aria-hidden="true" className="shrink-0 [&>svg]:size-4">
+            <span
+              aria-hidden="true"
+              className="grid size-7 shrink-0 place-items-center rounded-lg bg-muted/60 text-muted-foreground ring-1 ring-border/60 ring-inset [&>svg]:size-4"
+            >
               {icon}
             </span>
           )}
         </p>
-        <p className="mt-3 wrap-anywhere text-3xl font-semibold tracking-tight tabular-nums text-card-foreground">
-          {typeof value === "number" ? value.toLocaleString("en-US") : value}
+        <p
+          data-slot="stat-card-value"
+          className="mt-2 text-3xl leading-9 font-semibold tracking-[-0.035em] wrap-anywhere text-card-foreground tabular-nums"
+        >
+          {typeset(
+            typeof value === "number" ? value.toLocaleString("en-US") : value,
+          )}
         </p>
         {sparkline && (
           <Sparkline
             data={sparkline}
             label={`${title} trend`}
-            className={cn("mt-4", toneClass)}
+            className={cn("mt-4", toneLine[tone])}
           />
         )}
         {(change || description) && (
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+          <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
             {change && (
               <span
+                data-slot="stat-card-change"
                 className={cn(
-                  "inline-flex h-5 items-center gap-0.5 rounded-full pr-1.5 pl-1 font-medium tabular-nums",
-                  toneClass,
-                  pillClass,
+                  "inline-flex h-5 items-center gap-0.5 rounded-full pr-1.5 pl-1 leading-none font-medium tracking-[-0.01em] tabular-nums",
+                  toneText[tone],
+                  tonePill[tone],
                 )}
               >
-                <Icon className="size-3" aria-hidden="true" stroke={2.25} />
+                <Icon
+                  className="size-3 shrink-0"
+                  aria-hidden="true"
+                  stroke={2.5}
+                />
                 <span className="sr-only">
                   {trend === "up"
                     ? "Increase"

@@ -42,6 +42,7 @@ export default function ComposedChartDemo() {
       yFormatter={(v) => formatNumber(v, { format: "compact" })}
       showYAxis
       showLegend
+      className="h-56"
     />
   );
 }

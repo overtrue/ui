@@ -781,7 +781,7 @@ function GeoMap({
     status === "critical"
       ? "text-destructive"
       : status === "warn"
-        ? "text-amber-600 dark:text-amber-400"
+        ? "text-amber-700 dark:text-amber-400"
         : "text-foreground/80";
 
   let readout: React.ReactNode;
@@ -861,7 +861,7 @@ function GeoMap({
               counts.critical
                 ? "text-destructive"
                 : attention
-                  ? "text-amber-600 dark:text-amber-400"
+                  ? "text-amber-700 dark:text-amber-400"
                   : "text-muted-foreground",
             )}
           >

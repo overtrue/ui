@@ -1,7 +1,7 @@
 export default {
   name: "bullet-chart",
   title: "Bullet chart",
-  category: "Data display",
+  category: "Metrics",
   description:
     "Stephen Few’s bullet graph: compare each KPI with its target against poor, satisfactory and good ranges in a single line.",
   dependencies: [],

@@ -31,9 +31,9 @@
  */
 import * as React from "react";
 import {
+  IconArrowDownRight as ArrowDownRight,
+  IconArrowUpRight as ArrowUpRight,
   IconMinus as Minus,
-  IconTrendingDown as TrendingDown,
-  IconTrendingUp as TrendingUp,
 } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
@@ -48,9 +48,31 @@ export function getDeltaDirection(delta: number | undefined): DeltaDirection {
 }
 
 const directionIcon: Record<DeltaDirection, React.ElementType> = {
-  up: TrendingUp,
-  down: TrendingDown,
+  up: ArrowUpRight,
+  down: ArrowDownRight,
   flat: Minus,
+};
+
+type Tone = "positive" | "negative" | "neutral";
+
+const toneText: Record<Tone, string> = {
+  positive: "text-emerald-700 dark:text-emerald-400",
+  negative: "text-rose-700 dark:text-rose-400",
+  neutral: "text-muted-foreground",
+};
+
+const toneSoft: Record<Tone, string> = {
+  positive: "bg-emerald-500/10 dark:bg-emerald-400/10",
+  negative: "bg-rose-500/10 dark:bg-rose-400/10",
+  neutral: "bg-muted dark:bg-muted/70",
+};
+
+const toneOutline: Record<Tone, string> = {
+  positive:
+    "bg-emerald-500/[0.06] ring-emerald-600/20 dark:bg-emerald-400/[0.07] dark:ring-emerald-400/25",
+  negative:
+    "bg-rose-500/[0.06] ring-rose-600/20 dark:bg-rose-400/[0.07] dark:ring-rose-400/25",
+  neutral: "bg-muted/40 ring-border",
 };
 
 export interface DeltaBadgeProps extends React.ComponentProps<"span"> {
@@ -62,6 +84,7 @@ export interface DeltaBadgeProps extends React.ComponentProps<"span"> {
   showIcon?: boolean;
 }
 
+/** A change chip: the arrow shows direction, the color shows whether it helps. */
 function DeltaBadge({
   delta,
   invert = false,
@@ -74,28 +97,40 @@ function DeltaBadge({
   const direction = getDeltaDirection(delta);
   const positive =
     direction === "flat" ? null : (direction === "up") !== invert;
+  const tone: Tone =
+    positive === true
+      ? "positive"
+      : positive === false
+        ? "negative"
+        : "neutral";
   const Icon = directionIcon[direction];
+  const pill = variant !== "text";
 
   return (
     <span
       data-slot="delta-badge"
       data-direction={direction}
       data-positive={positive}
+      data-variant={variant}
       className={cn(
-        "inline-flex items-center gap-1 text-xs font-medium tabular-nums",
-        variant === "outline" && "rounded-md border px-1.5 py-0.5",
-        variant === "soft" && "rounded-md px-1.5 py-0.5",
-        variant === "soft" && positive === true && "bg-emerald-500/10",
-        variant === "soft" && positive === false && "bg-red-500/10",
-        variant === "soft" && positive === null && "bg-muted",
-        positive === true && "text-emerald-600 dark:text-emerald-400",
-        positive === false && "text-red-600 dark:text-red-400",
-        positive === null && "text-muted-foreground",
+        "inline-flex shrink-0 items-center gap-0.5 text-xs leading-none font-medium tracking-[-0.01em] whitespace-nowrap tabular-nums",
+        pill && "h-5 rounded-full",
+        pill && (showIcon ? "pr-1.5 pl-1" : "px-1.5"),
+        variant === "outline" && ["ring-1 ring-inset", toneOutline[tone]],
+        variant === "soft" && toneSoft[tone],
+        toneText[tone],
         className,
       )}
       {...props}
     >
-      {showIcon ? <Icon className="size-3" aria-hidden="true" /> : null}
+      {showIcon ? (
+        <Icon
+          data-slot="delta-badge-icon"
+          className="size-3 shrink-0"
+          stroke={2.5}
+          aria-hidden="true"
+        />
+      ) : null}
       {children ?? formatDelta(delta)}
     </span>
   );

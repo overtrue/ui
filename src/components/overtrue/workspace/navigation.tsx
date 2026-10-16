@@ -15,6 +15,7 @@ import {
   IconPalette,
   IconBook,
   IconSettings,
+  IconSparkles,
   IconBrush,
   IconChevronDown,
   IconChevronRight,
@@ -63,6 +64,7 @@ const icons: Record<string, typeof IconHome> = {
   "credit-card": IconCreditCard,
   book: IconBook,
   settings: IconSettings,
+  sparkles: IconSparkles,
   puzzle: IconPuzzle,
   layout: IconLayoutSidebar,
 };

@@ -1426,3 +1426,184 @@ kbd {
     grid-template-columns: 1fr;
   }
 }
+
+/* Category filter: one line of tabs. Wide screens fit all ten beside the
+   search; narrower ones scroll the row sideways instead of wrapping it. */
+.catalog-page .catalog-toolbar .filter-tabs {
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  gap: 2px;
+}
+.catalog-page .catalog-toolbar .filter-tabs::-webkit-scrollbar {
+  display: none;
+}
+.catalog-page .catalog-toolbar .filter-tabs button {
+  flex: none;
+  padding-inline: 10px;
+  white-space: nowrap;
+}
+@media (min-width: 1180px) {
+  .catalog-page > .catalog-toolbar {
+    flex-wrap: nowrap;
+  }
+  .catalog-page .catalog-search {
+    width: 220px;
+  }
+}
+@media (max-width: 1179px) {
+  .catalog-page .catalog-toolbar .filter-tabs {
+    flex: 1 1 100%;
+    align-self: stretch;
+    max-width: 100%;
+    mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent);
+  }
+  .catalog-page .catalog-search {
+    width: 100%;
+  }
+}
+
+/* Full-screen preview stage --------------------------------------------- */
+.preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.stage-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.stage-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: color-mix(in oklab, var(--site-bg) 72%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.stage {
+  position: fixed;
+  inset: 12px;
+  z-index: 81;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--site-hairline);
+  border-radius: 16px;
+  background: var(--site-subtle);
+  box-shadow: var(--shadow-float);
+}
+.stage:focus {
+  outline: none;
+}
+.stage-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 18px;
+  border-bottom: 1px solid var(--site-hairline);
+  background: var(--card);
+}
+.stage-title {
+  margin: 0;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stage-sizes {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--site-subtle);
+}
+.stage-sizes button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 7px;
+  color: var(--site-graphite);
+  font-size: 13px;
+  font-weight: 520;
+}
+.stage-sizes button:hover {
+  color: var(--site-ink);
+}
+.stage-sizes button[aria-checked="true"] {
+  background: var(--card);
+  color: var(--site-ink);
+  box-shadow:
+    0 0 0 1px var(--border),
+    var(--shadow-raise);
+}
+.stage-sizes button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+.stage-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+}
+.stage-canvas {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  min-height: 0;
+  padding: 16px;
+  overflow: auto;
+  background-color: var(--site-subtle);
+  background-image: radial-gradient(var(--site-rule) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.stage-canvas[data-size="desktop"] {
+  padding: 0;
+}
+.stage-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--site-bg);
+  box-shadow: 0 0 0 1px var(--site-hairline), var(--shadow-float);
+  transition: width 320ms var(--ease-out);
+}
+.stage-canvas[data-size="desktop"] .stage-frame {
+  border-radius: 0;
+  box-shadow: none;
+}
+.stage-page {
+  min-height: 100vh;
+  padding: clamp(16px, 3vw, 40px);
+  background: var(--site-bg);
+}
+[data-stage] body {
+  background: var(--site-bg);
+}
+@media (max-width: 720px) {
+  .stage {
+    inset: 0;
+    border-radius: 0;
+  }
+  .stage-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .stage-sizes {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-frame {
+    transition: none;
+  }
+}

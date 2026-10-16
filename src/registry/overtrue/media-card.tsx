@@ -10,8 +10,10 @@ export function MediaCard({
   return (
     <Card
       data-slot="media-card"
+      data-layout={layout}
       className={cn(
-        "group/media min-w-0 gap-0 overflow-hidden rounded-lg border bg-card py-0 text-card-foreground shadow-none",
+        "group/media min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card py-0 text-card-foreground ring-0",
+        "shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]",
         layout === "split" ? "grid md:grid-cols-2" : "flex flex-col",
         className,
       )}
@@ -31,7 +33,10 @@ export function MediaCardImage({
       loading="lazy"
       {...props}
       alt={alt}
-      className={cn("aspect-[16/9] w-full object-cover", className)}
+      className={cn(
+        "aspect-[16/9] w-full bg-muted object-cover dark:brightness-[0.92]",
+        className,
+      )}
     />
   );
 }
@@ -64,7 +69,7 @@ export function MediaCardFooter({
   return (
     <CardFooter
       className={cn(
-        "flex flex-wrap items-center justify-between gap-3 border-t p-5",
+        "flex flex-wrap items-center justify-between gap-3 border-t border-border/60 px-5 py-4 [.border-t]:pt-4",
         className,
       )}
       {...props}

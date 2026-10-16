@@ -29,6 +29,7 @@ import {
   componentCount,
   blockCount,
   cardCount,
+  componentCategories,
   type ItemName,
 } from "./catalog";
 import { siteOwner, portfolioProjects } from "./demo-data";
@@ -97,14 +98,7 @@ const featured: { name: ItemName; span: string; width: number }[] = [
   { name: "deploy-pipeline", span: "", width: 640 },
   { name: "trace-waterfall", span: "wide", width: 760 },
 ];
-const categoryOrder = [
-  "Data display",
-  "Layout",
-  "Navigation",
-  "Feedback",
-  "Forms",
-  "Blocks",
-] as const;
+const categoryOrder = [...componentCategories, "Blocks"] as const;
 
 function LibraryIndex() {
   const bento = useRef<HTMLDivElement>(null);

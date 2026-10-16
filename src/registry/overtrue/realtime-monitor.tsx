@@ -72,8 +72,8 @@ function Delta({
         good === null
           ? "text-muted-foreground"
           : good
-            ? "text-emerald-600 dark:text-emerald-400"
-            : "text-destructive",
+            ? "text-emerald-700 dark:text-emerald-400"
+            : "text-rose-600 dark:text-rose-400",
       )}
     >
       {!flat && <Icon aria-hidden="true" className="size-3" stroke={2.25} />}

@@ -145,6 +145,21 @@
       "permanent": true
     },
     {
+      "source": "/components/revenue-overview",
+      "destination": "/blocks/revenue-overview",
+      "permanent": true
+    },
+    {
+      "source": "/components/model-usage",
+      "destination": "/blocks/model-usage",
+      "permanent": true
+    },
+    {
+      "source": "/components/service-explorer",
+      "destination": "/blocks/service-explorer",
+      "permanent": true
+    },
+    {
       "source": "/components/team-access",
       "destination": "/blocks/team-access",
       "permanent": true

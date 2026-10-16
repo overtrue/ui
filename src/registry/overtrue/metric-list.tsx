@@ -67,12 +67,27 @@ function MetricList({
   fill,
   showDivider = true,
   className,
+  style,
   ...props
 }: MetricListProps) {
+  // Rows share one grid, so sparklines, values, and deltas line up as columns.
+  const hasTrend = items.some((item) => item.trend && item.trend.length > 1);
+  const hasDelta = items.some((item) => item.delta !== undefined);
+  const columns = [
+    "minmax(0,1fr)",
+    hasTrend && "auto",
+    "auto",
+    hasDelta && "auto",
+  ].filter(Boolean);
   return (
     <div
       data-slot="metric-list"
-      className={cn("flex flex-col", showDivider && "divide-y", className)}
+      className={cn(
+        "@container/metric-list grid min-w-0 gap-x-3 @xs/metric-list:gap-x-4",
+        showDivider && "divide-y divide-border/60",
+        className,
+      )}
+      style={{ gridTemplateColumns: columns.join(" "), ...style }}
       {...props}
     >
       {items.map((item) => {
@@ -85,47 +100,55 @@ function MetricList({
           positive === true
             ? "var(--color-emerald-500)"
             : positive === false
-              ? "var(--color-red-500)"
+              ? "var(--color-rose-500)"
               : "var(--color-muted-foreground)";
         return (
           <div
             key={item.key ?? item.label}
             data-slot="metric-list-row"
-            className="flex items-center gap-4 py-2.5 text-sm first:pt-0 last:pb-0"
+            className="col-span-full grid min-h-10 grid-cols-subgrid items-center py-2 text-sm first:pt-0 last:pb-0"
           >
-            <div className="flex min-w-0 flex-1 items-center gap-2">
+            <div className="flex min-w-0 items-center gap-2.5">
               {item.icon ? (
-                <span className="text-muted-foreground shrink-0 [&>svg]:size-4">
+                <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-muted/60 text-muted-foreground ring-1 ring-border/60 ring-inset [&>svg]:size-4">
                   {item.icon}
                 </span>
               ) : null}
-              <span className="truncate">{item.label}</span>
+              <span className="truncate text-foreground/90">{item.label}</span>
             </div>
-            {item.trend && item.trend.length > 1 ? (
-              <Sparkline
-                data={item.trend}
-                variant={variant}
-                fill={fill}
-                color={color}
-                className="h-6 w-20 shrink-0"
-              />
+            {hasTrend ? (
+              item.trend && item.trend.length > 1 ? (
+                <Sparkline
+                  data={item.trend}
+                  variant={variant}
+                  fill={fill}
+                  color={color}
+                  strokeWidth={1.75}
+                  className="hidden h-6 w-14 @[17rem]/metric-list:block @xs/metric-list:w-20"
+                />
+              ) : (
+                <span />
+              )
             ) : null}
-            <div className="flex w-28 shrink-0 items-center justify-end gap-2 tabular-nums">
-              <MetricValue
-                value={item.value}
-                format={item.format}
-                currency={item.currency}
-                className="font-medium"
-              />
-              {item.delta !== undefined ? (
+            <MetricValue
+              value={item.value}
+              format={item.format}
+              currency={item.currency}
+              className="justify-self-end font-semibold whitespace-nowrap"
+            />
+            {hasDelta ? (
+              item.delta !== undefined ? (
                 <DeltaBadge
                   delta={item.delta}
                   invert={item.invertDelta}
                   variant="text"
                   showIcon={false}
+                  className="min-w-11 justify-end text-[11px]"
                 />
-              ) : null}
-            </div>
+              ) : (
+                <span />
+              )
+            ) : null}
           </div>
         );
       })}

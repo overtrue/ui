@@ -14,12 +14,13 @@ const browsers = [
 
 export default function DonutChartDemo() {
   return (
-    <div className="w-full max-w-xs">
+    <div className="w-full max-w-lg">
       <DonutChart
         data={browsers}
         centerLabel="Enquiries"
         showLegend
-        className="max-h-72"
+        legendPosition="right"
+        className="max-h-56"
       />
     </div>
   );

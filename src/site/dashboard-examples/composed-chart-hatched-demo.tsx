@@ -30,7 +30,7 @@ export default function ComposedChartHatchedDemo() {
           color: "var(--color-chart-4)",
         },
       ]}
-      yFormatter={(v) => `${formatNumber(v)} t`}
+      yFormatter={(v) => `${formatNumber(v, { format: "compact" })} t`}
       showYAxis
       showLegend
     />

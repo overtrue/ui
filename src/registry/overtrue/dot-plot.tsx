@@ -38,7 +38,7 @@ import { cn } from "@/lib/utils";
 export interface DotPlotProps extends React.ComponentProps<"div"> {
   /** One value per column, in order. */
   data: number[];
-  /** Optional label per column, shown in the tooltip and used for the accessible name. */
+  /** Optional label per column, shown under the column, in the tooltip, and in the accessible name. */
   labels?: string[];
   /** The value that fills a column. Defaults to the largest value in `data`. */
   max?: number;
@@ -55,6 +55,12 @@ export interface DotPlotProps extends React.ComponentProps<"div"> {
   fadedOpacity?: number;
   /** Show a tooltip with the column's label and value while it is hovered. */
   showTooltip?: boolean;
+  /** Show `labels` under the columns. */
+  showLabels?: boolean;
+  /** Show every nth label. Defaults to whatever keeps about 12 labels. */
+  labelEvery?: number;
+  /** Draw the empty slots of each column as faint dots, so every column reads against the same scale. */
+  showTrack?: boolean;
   /** Formats the value in the tooltip. Defaults to a plain grouped number. */
   valueFormatter?: (value: number) => string;
   /** Index of the hovered column, to control it from outside. */
@@ -64,10 +70,24 @@ export interface DotPlotProps extends React.ComponentProps<"div"> {
 }
 
 const defaultFormatter = (value: number) => value.toLocaleString("en-US");
+const TRACK = "color-mix(in oklab, var(--color-foreground) 7%, transparent)";
+
+function useReducedMotion() {
+  return React.useSyncExternalStore(
+    (onChange) => {
+      const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+      query.addEventListener("change", onChange);
+      return () => query.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false,
+  );
+}
 
 /**
- * A distribution drawn as columns of stacked dots, with the peak columns at full strength.
- * Hovering a column lights it up, fades the others, and shows its value.
+ * A distribution drawn as columns of stacked dots against a faint track, with the
+ * peak columns at full strength. Hovering a column lights it up, fades the others,
+ * and shows its value.
  */
 function DotPlot({
   data,
@@ -78,15 +98,24 @@ function DotPlot({
   emphasis = 0.5,
   fadedOpacity = 0.35,
   showTooltip = true,
+  showLabels = true,
+  labelEvery,
+  showTrack = true,
   valueFormatter = defaultFormatter,
   activeIndex,
   onActiveIndexChange,
   className,
+  style,
+  ref,
   ...props
 }: DotPlotProps) {
+  const reduced = useReducedMotion();
+  const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const [width, setWidth] = React.useState(0);
   const [internal, setInternal] = React.useState<number | null>(null);
   const active = activeIndex === undefined ? internal : activeIndex;
   const setActive = (index: number | null) => {
+    if (index === active) return;
     setInternal(index);
     onActiveIndexChange?.(index);
   };
@@ -94,9 +123,33 @@ function DotPlot({
   const top = max ?? Math.max(0, ...data);
   const peak = data.indexOf(Math.max(...data));
   const peakLabel = labels?.[peak];
+  const withLabels = showLabels && !!labels?.length;
+
+  // Thin the labels out when the columns get too narrow to hold them side by side.
+  React.useLayoutEffect(() => {
+    const node = rootRef.current;
+    if (!node || !withLabels) return;
+    const observer = new ResizeObserver(([entry]) =>
+      setWidth(entry?.contentRect.width ?? 0),
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [withLabels]);
+  const longest =
+    labels?.reduce((m, label) => Math.max(m, label.length), 0) ?? 0;
+  const columnWidth = width
+    ? Math.min(width / Math.max(1, data.length), 36)
+    : Infinity;
+  const fit = Math.max(1, Math.ceil((longest * 6.4 + 6) / columnWidth));
+  const every = labelEvery ?? Math.max(Math.ceil(data.length / 12), fit);
 
   return (
     <div
+      ref={(node) => {
+        rootRef.current = node;
+        if (typeof ref === "function") ref(node);
+        else if (ref) ref.current = node;
+      }}
       data-slot="dot-plot"
       role="img"
       aria-label={
@@ -110,8 +163,12 @@ function DotPlot({
         "flex w-full justify-center [--dot-gap:0.25rem] [--dot-size:0.625rem]",
         className,
       )}
+      style={style}
       {...props}
     >
+      <style href="overtrue-dot-plot" precedence="default">
+        {`@keyframes dot-plot-rise{from{opacity:0;transform:translateY(6px) scale(.5)}}`}
+      </style>
       {data.map((value, index) => {
         const fraction = Math.min(1, Math.max(0, value / (top || 1)));
         // Any non-zero value shows at least one dot so small values still register.
@@ -120,37 +177,79 @@ function DotPlot({
         const strong = emphasis <= 0 || fraction >= emphasis;
         // While a column is hovered it alone is lit; otherwise the emphasized columns are.
         const lit = active === null ? strong : active === index;
+        const isActive = active === index;
         const label = labels?.[index];
+        const slots = showTrack ? Math.max(rows, count) : count;
         return (
           <div
             key={index}
             data-slot="dot-plot-column"
             data-emphasis={strong}
-            data-active={active === index}
+            data-active={isActive}
             onPointerEnter={() => setActive(index)}
             // Columns stretch to the full height and carry the gap as padding, so the hover target has no dead zones.
             // They share the width equally and cap at the dot size, so dots shrink in narrow cards instead of overflowing.
-            className="relative flex min-w-0 flex-1 cursor-default flex-col-reverse justify-start gap-(--dot-gap) px-[calc(var(--dot-gap)/2)] max-w-[calc(var(--dot-size)+var(--dot-gap))]"
+            className={cn(
+              "relative flex min-w-0 flex-1 cursor-default flex-col items-center gap-1.5 px-[calc(var(--dot-gap)/2)]",
+              withLabels
+                ? "max-w-[max(calc(var(--dot-size)+var(--dot-gap)),2.25rem)]"
+                : "max-w-[calc(var(--dot-size)+var(--dot-gap))]",
+            )}
           >
-            {Array.from({ length: count }, (_, dot) => (
+            <div className="flex w-full flex-1 flex-col-reverse items-center justify-start gap-(--dot-gap)">
+              {Array.from({ length: slots }, (_, dot) => {
+                const filled = dot < count;
+                return (
+                  <span
+                    key={dot}
+                    data-filled={filled || undefined}
+                    className={cn(
+                      "aspect-square w-full max-w-(--dot-size) shrink-0 rounded-full transition-[opacity,background-color,box-shadow] duration-150 motion-reduce:transition-none",
+                      filled &&
+                        "shadow-[inset_0_1px_0_rgb(255_255_255/0.22)] dark:shadow-[0_0_8px_-1px_color-mix(in_oklab,var(--dot-plot-color)_70%,transparent)]",
+                      filled &&
+                        !reduced &&
+                        "motion-safe:animate-[dot-plot-rise_560ms_cubic-bezier(0.22,1,0.36,1)_backwards]",
+                    )}
+                    style={{
+                      backgroundColor: filled ? color : TRACK,
+                      opacity: filled ? (lit ? 1 : fadedOpacity) : 1,
+                      ["--dot-plot-color" as string]: color,
+                      animationDelay:
+                        filled && !reduced
+                          ? `${Math.round(index * Math.min(36, 420 / Math.max(1, data.length)) + dot * 28)}ms`
+                          : undefined,
+                    }}
+                  />
+                );
+              })}
+            </div>
+            {withLabels ? (
               <span
-                key={dot}
-                className="aspect-square w-full rounded-full transition-opacity"
-                style={{
-                  backgroundColor: color,
-                  opacity: lit ? 1 : fadedOpacity,
-                }}
-              />
-            ))}
-            {showTooltip && active === index ? (
+                aria-hidden="true"
+                className={cn(
+                  "max-w-none text-[11px] leading-none whitespace-nowrap text-muted-foreground tabular-nums transition-colors duration-150 motion-reduce:transition-none",
+                  isActive && "font-medium text-foreground",
+                )}
+              >
+                {index % every === 0 || isActive ? (label ?? "") : " "}
+              </span>
+            ) : null}
+            {showTooltip && isActive ? (
               <span
                 role="tooltip"
-                className="bg-popover text-popover-foreground pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 flex -translate-x-1/2 items-baseline gap-1.5 rounded-md border px-2 py-1 text-xs whitespace-nowrap shadow-md"
+                data-slot="dot-plot-tooltip"
+                className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 flex -translate-x-1/2 items-center gap-2 rounded-xl border border-border/70 bg-popover/90 px-2.5 py-1.5 text-xs whitespace-nowrap text-popover-foreground shadow-xl backdrop-blur-md"
               >
+                <span
+                  aria-hidden="true"
+                  className="size-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
                 {label !== undefined ? (
                   <span className="text-muted-foreground">{label}</span>
                 ) : null}
-                <span className="font-medium tabular-nums">
+                <span className="ml-auto pl-1 font-semibold text-foreground tabular-nums">
                   {valueFormatter(value)}
                 </span>
               </span>

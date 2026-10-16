@@ -1,0 +1,62 @@
+export default {
+  name: "assistant-panel",
+  title: "Assistant panel",
+  category: "AI",
+  description:
+    "A copilot conversation with tool activity, streamed markdown with metric chips and citations, feedback, and a model-aware composer.",
+  dependencies: [],
+  imports: "AssistantPanel, type AssistantMessage",
+  exampleImports: 'import { useState } from "react"',
+  usage:
+    'function Example() {\n  const [messages, setMessages] = useState<AssistantMessage[]>([\n    { id: "1", role: "user", content: "How did signups do last week?" },\n    {\n      id: "2",\n      role: "assistant",\n      steps: [{ id: "s1", kind: "query", label: "Queried signups", status: "done", duration: 420 }],\n      content: "Signups grew {{metric:Signups|+18%}} on the pricing launch {{cite:1}}.",\n      citations: [{ id: "growth", label: "Growth · weekly signups" }],\n    },\n  ])\n  return (\n    <div className="h-[480px]">\n      <AssistantPanel\n        title="Copilot"\n        messages={messages}\n        models={["Orion 2", "Orion 2 mini"]}\n        onSend={(text) => setMessages((list) => [...list, { id: String(list.length + 1), role: "user", content: text }])}\n        onFeedback={(id, value) => console.log(id, value)}\n        onNewChat={() => setMessages([])}\n      />\n    </div>\n  )\n}',
+  notes:
+    "The panel renders whatever `messages` you hold and never calls a model itself: append the user's text in `onSend`, then add an assistant message with `status: \"streaming\"` and grow its `content` and `steps` as your stream arrives, setting the panel `status` to \"streaming\" so Send becomes Stop. Steps open while the assistant works and fold into a one-line summary once the answer starts; any step with `detail` expands to show the query or output in monospace. Content is a safe markdown-lite (paragraphs, emphasis, inline and fenced code with copy, lists, quotes, tables, links) rendered as React elements, never HTML, plus `{{metric:Label|Value|tone}}` chips and `{{cite:n}}` markers linked to `citations`; the unfinished tail renders optimistically so markup never flickers mid-stream. The list follows new content only while the reader is at the bottom and otherwise offers Jump to latest. Enter sends, Shift+Enter adds a line, and Enter that confirms an IME composition is ignored. Give the parent a height to make it a full-height side panel, and use `renderMessage`, `renderStep` or `renderToken` to draw parts yourself. `AssistantMarkdown` is exported for rendering answers elsewhere.",
+  previewWidth: 640,
+  previewHeight: 560,
+  examples: [
+    {
+      name: "assistant-panel-demo",
+      title: "Workspace copilot",
+      description:
+        "Ask why checkout latency spiked: the copilot searches incidents, queries traces and reads the deploy log, then streams an answer with metric chips and citations. Stop, regenerate, rate, or start a new chat.",
+    },
+    {
+      name: "assistant-panel-compact-demo",
+      title: "Side panel",
+      description:
+        "Compact density at side-panel width with a finished billing conversation, an SQL answer with copy, controlled feedback, and a close action.",
+    },
+  ],
+  api: [
+    ["messages", "AssistantMessage[]", 'Oldest first: { id, role: "user" | "assistant", content, steps?, citations?, status?: "streaming" | "done" | "error", createdAt? }.'],
+    ["status?", '"idle" | "streaming"', "Streaming swaps Send for Stop and blocks sending. Defaults to idle."],
+    ["onSend?", "(text: string, options: { model?: string }) => void", "Called with the trimmed draft and the selected model. Focus returns to the composer."],
+    ["onStop?", "() => void", "Called by Stop while streaming."],
+    ["onRegenerate?", "(id: string) => void", "Shows Regenerate on the latest answer and Try again on failed ones."],
+    ["onFeedback?", '(id: string, value: "up" | "down") => void', "Shows thumbs up and down on finished answers."],
+    ["feedback?", 'Record<string, "up" | "down" | undefined>', "Controlled feedback by message id. Uncontrolled by default."],
+    ["onNewChat?", "() => void", "Shows the New chat action in the header."],
+    ["onCopy?", "(text: string, message: AssistantMessage) => void", "Receives the answer as plain text. Without it, Copy writes to the clipboard."],
+    ["suggestions?", "Array<string | { label, prompt?, icon? }>", "Prompts offered in the empty state; clicking one sends it."],
+    ["models?", "Array<string | { value, label?, disabled? }>", "Adds a model picker to the composer."],
+    ["model? / defaultModel? / onModelChange?", "string / string / (model: string) => void", "Selected model. Without models, model shows as a badge in the header."],
+    ["value? / defaultValue? / onValueChange?", "string / string / (value: string) => void", "The composer draft, controlled or not."],
+    ["title?", "React.ReactNode", 'Header title. Defaults to "Assistant".'],
+    ["placeholder?", "string", "Composer placeholder."],
+    ["composerActions?", "React.ReactNode", "Buttons at the start of the composer toolbar, such as attach."],
+    ["headerActions?", "React.ReactNode", "Buttons at the end of the header, such as close."],
+    ["footer?", "React.ReactNode", "Small print under the composer."],
+    ["emptyState?", "React.ReactNode", "Replaces the built-in empty state."],
+    ["density?", '"comfortable" | "compact"', "Compact tightens type and spacing for side panels. Defaults to comfortable."],
+    ["disabled? / autoFocus?", "boolean", "Disable the composer, or focus it on mount."],
+    ["maxComposerHeight?", "number", "Tallest the composer grows before scrolling, in pixels. Defaults to 200."],
+    ["composerRef?", "React.Ref<HTMLTextAreaElement>", "Ref to the composer textarea."],
+    ["renderMessage?", "(message, { index, isLast, children }) => React.ReactNode | undefined", "Draw a message yourself; children is the built-in rendering. Return undefined to keep it."],
+    ["renderStep?", "(step, message) => React.ReactNode | undefined", "Draw a step row yourself."],
+    ["renderToken?", "(token: AssistantToken, message) => React.ReactNode | undefined", "Draw a {{kind:…}} token yourself, including your own kinds."],
+    ["formatDuration?", "(ms: number) => string", "Formats step durations. Defaults to 0.4s, 12s, 1m 5s."],
+    ["formatTime?", "(date: Date) => string", "Formats message times shown with the actions."],
+    ["labels?", "Partial<AssistantPanelLabels>", "Override any visible or accessible text."],
+    ["className", "string", "The root is a flex column that fills its parent's height."],
+  ],
+} as const;

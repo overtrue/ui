@@ -34,16 +34,42 @@ function Avatar({ person }: { person: keyof typeof people }) {
   );
 }
 
+const entries = [
+  {
+    person: "orin" as const,
+    title: "Visitor route reviewed",
+    time: "10:27 AM",
+    dateTime: "2026-05-22T10:27",
+    description:
+      "The route is clear from the main entrance. Move the first directional sign closer to the ticket desk.",
+  },
+  {
+    person: "paz" as const,
+    title: "Signage copy agreed",
+    time: "10:43 AM",
+    dateTime: "2026-05-22T10:43",
+    description:
+      "Shortened the gallery labels and checked them against the venue accessibility guide.",
+  },
+  {
+    person: "mina" as const,
+    title: "Client review ready",
+    time: "11:06 AM",
+    dateTime: "2026-05-22T11:06",
+    description:
+      "Shared the updated map and signage set with the venue team for approval.",
+  },
+];
+
 export default function TimelineActivityDemo() {
   return (
-    <div className="flex w-full max-w-lg flex-col gap-4">
-      <div className="flex flex-col gap-0.5">
-        <span className="text-muted-foreground text-xs">
-          {" "}
-          Visitor experience{" "}
-        </span>
-        <span className="font-semibold"> Arrival signage review </span>
-      </div>
+    <section className="flex w-full max-w-lg flex-col gap-5 rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
+      <header className="space-y-1">
+        <p className="text-xs text-muted-foreground">Visitor experience</p>
+        <h3 className="text-sm font-semibold tracking-tight">
+          Arrival signage review
+        </h3>
+      </header>
       <Timeline>
         <TimelineItem>
           <TimelineRail>
@@ -54,7 +80,7 @@ export default function TimelineActivityDemo() {
           </TimelineRail>
           <TimelineContent>
             <TimelineHeader>
-              <TimelineTitle> Wayfinding draft shared </TimelineTitle>
+              <TimelineTitle>Wayfinding draft shared</TimelineTitle>
               <Badge
                 variant="secondary"
                 className="bg-sky-500/10 text-sky-700 dark:text-sky-400"
@@ -62,24 +88,26 @@ export default function TimelineActivityDemo() {
                 Review
               </Badge>
               <TimelineTime dateTime="2026-05-22T10:18">
-                <span className="text-foreground/80 font-medium">
-                  {" "}
-                  Maya Okafor{" "}
+                <span className="font-medium text-foreground/80">
+                  Maya Okafor
                 </span>{" "}
                 10:18 AM
               </TimelineTime>
             </TimelineHeader>
-            <div className="bg-card mt-1 flex gap-3 rounded-lg border p-3">
-              <div className="bg-muted size-20 shrink-0 rounded-md" />
-              <div className="flex flex-col gap-2">
+            <div className="mt-1.5 flex gap-3 rounded-xl bg-muted/40 p-3 ring-1 ring-border/60 ring-inset">
+              <div className="relative size-20 shrink-0 overflow-hidden rounded-lg bg-linear-to-br from-sky-100 to-indigo-200 ring-1 ring-border/60 ring-inset dark:from-sky-950 dark:to-indigo-900">
+                <span className="absolute inset-x-3 top-4 h-1.5 rounded-full bg-white/70 dark:bg-white/20" />
+                <span className="absolute inset-x-3 top-8 h-1.5 w-8 rounded-full bg-white/60 dark:bg-white/15" />
+                <span className="absolute right-3 bottom-3 size-5 rounded-full bg-indigo-500/70" />
+              </div>
+              <div className="flex min-w-0 flex-col gap-2">
                 <TimelineDescription>
                   The arrival map and first signage concepts are ready. Review
-                  the main entrance, ticket desk, and gallery route
-                  together.{" "}
+                  the main entrance, ticket desk, and gallery route together.
                 </TimelineDescription>
                 <div className="flex flex-wrap gap-1.5">
-                  <Badge variant="outline"> Arrival map </Badge>
-                  <Badge variant="outline"> 3 concepts </Badge>
+                  <Badge variant="outline">Arrival map</Badge>
+                  <Badge variant="outline">3 concepts</Badge>
                   <a href="#board">
                     <Badge variant="outline">
                       Open board <ArrowUpRight />
@@ -90,78 +118,29 @@ export default function TimelineActivityDemo() {
             </div>
           </TimelineContent>
         </TimelineItem>
-        <TimelineItem>
-          <TimelineRail>
-            <TimelineMarker className="border-0">
-              <Avatar person="orin" />
-            </TimelineMarker>
-            <TimelineConnector />
-          </TimelineRail>
-          <TimelineContent>
-            <TimelineHeader>
-              <TimelineTitle> Visitor route reviewed </TimelineTitle>
-              <TimelineTime dateTime="2026-05-22T10:27">
-                <span className="text-foreground/80 font-medium">
-                  June Park{" "}
-                </span>{" "}
-                10:27 AM
-              </TimelineTime>
-            </TimelineHeader>
-            <TimelineDescription>
-              The route is clear from the main entrance. Move the first
-              directional sign closer to the ticket desk.{" "}
-            </TimelineDescription>
-          </TimelineContent>
-        </TimelineItem>
-        <TimelineItem>
-          <TimelineRail>
-            <TimelineMarker className="border-0">
-              <Avatar person="paz" />
-            </TimelineMarker>
-            <TimelineConnector />
-          </TimelineRail>
-          <TimelineContent>
-            <TimelineHeader>
-              <TimelineTitle> Signage copy agreed </TimelineTitle>
-              <TimelineTime dateTime="2026-05-22T10:43">
-                <span className="text-foreground/80 font-medium">
-                  {" "}
-                  Ines Duarte{" "}
-                </span>{" "}
-                10:43 AM
-              </TimelineTime>
-            </TimelineHeader>
-            <TimelineDescription>
-              Shortened the gallery labels and checked them against the venue
-              accessibility guide.{" "}
-            </TimelineDescription>
-          </TimelineContent>
-        </TimelineItem>
-        <TimelineItem>
-          <TimelineRail>
-            <TimelineMarker className="border-0">
-              <Avatar person="mina" />
-            </TimelineMarker>
-            <TimelineConnector />
-          </TimelineRail>
-          <TimelineContent>
-            <TimelineHeader>
-              <TimelineTitle> Client review ready </TimelineTitle>
-              <TimelineTime dateTime="2026-05-22T11:06">
-                <span className="text-foreground/80 font-medium">
-                  {" "}
-                  Maya Okafor{" "}
-                </span>{" "}
-                11:06 AM
-              </TimelineTime>
-            </TimelineHeader>
-            <TimelineDescription>
-              Shared the updated map and signage set with the venue team for
-              approval.{" "}
-            </TimelineDescription>
-          </TimelineContent>
-        </TimelineItem>
+        {entries.map((entry) => (
+          <TimelineItem key={entry.title}>
+            <TimelineRail>
+              <TimelineMarker className="border-0">
+                <Avatar person={entry.person} />
+              </TimelineMarker>
+              <TimelineConnector />
+            </TimelineRail>
+            <TimelineContent>
+              <TimelineHeader>
+                <TimelineTitle>{entry.title}</TimelineTitle>
+                <TimelineTime dateTime={entry.dateTime}>
+                  <span className="font-medium text-foreground/80">
+                    {people[entry.person].name}
+                  </span>{" "}
+                  {entry.time}
+                </TimelineTime>
+              </TimelineHeader>
+              <TimelineDescription>{entry.description}</TimelineDescription>
+            </TimelineContent>
+          </TimelineItem>
+        ))}
       </Timeline>
-    </div>
+    </section>
   );
 }

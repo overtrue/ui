@@ -7,27 +7,37 @@
 import { RadarChart } from "@/registry/overtrue/radar-chart";
 
 const data = [
-  { month: "Scope", desktop: 92, mobile: 88 },
-  { month: "Research", desktop: 86, mobile: 81 },
-  { month: "Design", desktop: 78, mobile: 74 },
-  { month: "Build", desktop: 82, mobile: 76 },
-  { month: "Review", desktop: 71, mobile: 68 },
-  { month: "Handoff", desktop: 65, mobile: 60 },
+  { stage: "Scope", planned: 90, delivered: 88 },
+  { stage: "Research", planned: 84, delivered: 70 },
+  { stage: "Design", planned: 80, delivered: 86 },
+  { stage: "Build", planned: 86, delivered: 68 },
+  { stage: "Review", planned: 74, delivered: 80 },
+  { stage: "Handoff", planned: 70, delivered: 54 },
 ];
 
 export default function RadarChartMultiDemo() {
   return (
-    <div className="w-full max-w-lg">
+    <section className="w-full max-w-lg rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
+      <header className="space-y-1">
+        <h3 className="text-sm font-semibold tracking-tight">
+          Planned and delivered
+        </h3>
+        <p className="text-[13px] leading-5 text-muted-foreground">
+          Where the finished project matched the original brief.
+        </p>
+      </header>
       <RadarChart
         data={data}
-        angleKey="month"
+        angleKey="stage"
         series={[
-          { key: "desktop", label: "Planned" },
-          { key: "mobile", label: "Delivered" },
+          { key: "planned", label: "Planned" },
+          { key: "delivered", label: "Delivered" },
         ]}
+        domain={[0, 100]}
         variant="line"
         showLegend
+        className="h-72"
       />
-    </div>
+    </section>
   );
 }

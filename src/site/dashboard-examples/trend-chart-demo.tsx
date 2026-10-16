@@ -31,6 +31,7 @@ export default function TrendChartDemo() {
         { key: "mobile", label: "Deliveries" },
       ]}
       showLegend
+      className="h-52"
     />
   );
 }

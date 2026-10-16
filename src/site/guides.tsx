@@ -2,6 +2,7 @@ import { Link, NavLink, useParams } from "react-router-dom";
 import { IconArrowRight, IconArrowLeft } from "@tabler/icons-react";
 import { Command } from "./code";
 import { guides } from "./pages";
+import workspacePages from "@/data/workspace/pages.json";
 import { DocsSidebar, DocsMobileNavigation } from "./docs-navigation";
 
 export function GuideLinks() {
@@ -25,11 +26,11 @@ const content = {
       <h2>Quiet surfaces, clear priorities</h2>
       <p>
         Use the page background to separate sections, a card surface to group
-        related information, and a border only where it explains a boundary. Use
-        a subtle contact shadow on cards and controls; reserve deeper shadows
-        for menus, dialogs, and other surfaces that float above the page.
-        Reserve the accent color for the current selection, a primary action, or
-        one important data series.
+        related information, and a border only where it explains a boundary.
+        Cards are softly lit: a layered shadow in light mode and a faint top
+        highlight in dark mode. Menus, dialogs, and tooltips float on frosted
+        glass with a deeper shadow. Reserve the accent color for the current
+        selection, a primary action, or one important data series.
       </p>
       <div className="principle-specimen" aria-label="Example metric hierarchy">
         <span>Monthly recurring revenue</span>
@@ -41,6 +42,22 @@ const content = {
         </p>
         <small>Updated 4 minutes ago</small>
       </div>
+      <h2>Data is the light source</h2>
+      <p>
+        Surfaces stay calm so the data can glow. Lines are 2 px and, in dark
+        mode, carry a soft glow in their own color. Areas fade from the line to
+        the baseline, bars have rounded ends and dim their neighbors on hover,
+        and points sit inside a faint halo. Every chart answers a hover or an
+        arrow key with the same readout: a swatch, a label, and a right-aligned
+        value.
+      </p>
+      <h2>Motion that explains change</h2>
+      <p>
+        Lines draw in, bars and areas rise from the baseline, and numbers roll
+        to their new values. Live updates tween over a few hundred milliseconds,
+        so a moving window glides instead of jumping. With reduced motion
+        turned on, everything appears in its final state.
+      </p>
       <h2>One reading order</h2>
       <p>
         A page starts with its title and primary action, followed by the
@@ -220,8 +237,8 @@ const content = {
       </p>
       <h2>Understand the two collections</h2>
       <p>
-        The registry contains portable components and blocks. The 119-page
-        workspace is a separate example application with shared styles and demo
+        The registry contains portable components and blocks. The{" "}
+        {workspacePages.length}-page workspace is a separate example application with shared styles and demo
         data. Its pages are references for composition; they are not all
         separately installable registry items.
       </p>

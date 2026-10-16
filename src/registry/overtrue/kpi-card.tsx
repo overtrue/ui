@@ -66,6 +66,8 @@ export interface KpiCardProps extends Omit<
   format?: NumberFormat;
   /** ISO 4217 code, used when `format` is "currency". */
   currency?: string;
+  /** Caps the decimals shown, e.g. 0 for whole dollars. */
+  maximumFractionDigits?: number;
   /** Treat a decrease as good and an increase as bad (churn, latency, errors). */
   invertDelta?: boolean;
   /** Optional icon shown before the label. */
@@ -82,6 +84,7 @@ function KpiCard({
   trend,
   format = "number",
   currency,
+  maximumFractionDigits,
   invertDelta = false,
   icon,
   className,
@@ -96,37 +99,45 @@ function KpiCard({
     isPositive === true
       ? "var(--color-emerald-500)"
       : isPositive === false
-        ? "var(--color-red-500)"
+        ? "var(--color-rose-500)"
         : "var(--color-primary)";
 
   return (
     <Card
       data-slot="kpi-card"
       data-direction={direction}
-      className={cn("gap-4 py-5", className)}
+      className={cn(
+        "min-w-0 gap-4 rounded-2xl border border-border/70 bg-card py-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]",
+        className,
+      )}
       {...props}
     >
-      <CardHeader className="px-5">
-        <CardDescription className="row-start-1 flex items-center gap-1.5 [&>svg]:size-4">
+      <CardHeader className="gap-y-2 px-5">
+        <CardDescription className="row-start-1 flex min-h-5 min-w-0 items-center gap-1.5 text-[13px] font-medium [&>svg]:size-4 [&>svg]:shrink-0">
           {icon}
           {label}
         </CardDescription>
-        <CardTitle className="col-span-2 row-start-2 text-2xl font-semibold tabular-nums tracking-tight">
-          <MetricValue value={value} format={format} currency={currency} />
+        <CardTitle className="col-span-2 row-start-2 text-[1.75rem] leading-8 font-semibold tracking-[-0.035em] tabular-nums">
+          <MetricValue
+            value={value}
+            format={format}
+            currency={currency}
+            maximumFractionDigits={maximumFractionDigits}
+          />
         </CardTitle>
         {delta !== undefined ? (
           <CardAction className="row-span-1">
-            <DeltaBadge delta={delta} invert={invertDelta} />
+            <DeltaBadge delta={delta} invert={invertDelta} variant="soft" />
           </CardAction>
         ) : null}
       </CardHeader>
       {series && series.length > 1 ? (
         <CardContent className="px-5">
-          <Sparkline data={series} color={trendColor} />
+          <Sparkline data={series} color={trendColor} className="h-11" />
         </CardContent>
       ) : null}
       {deltaLabel || children ? (
-        <CardContent className="text-muted-foreground flex items-center gap-2 px-5 text-xs">
+        <CardContent className="flex min-w-0 items-center gap-2 px-5 text-xs text-muted-foreground">
           {deltaLabel ? <span>{deltaLabel}</span> : null}
           {children}
         </CardContent>

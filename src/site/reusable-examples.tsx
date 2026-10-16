@@ -122,9 +122,9 @@ export function ReusableExample({
             <p className="m-0 text-sm leading-6 text-muted-foreground">
               Room for every project, and everyone working on it.
             </p>
-            <p className="mb-0 mt-4 text-2xl font-semibold">
+            <p className="mb-0 mt-4 text-3xl font-semibold tracking-[-0.035em] tabular-nums">
               $29{" "}
-              <span className="text-xs font-normal text-muted-foreground">
+              <span className="text-sm font-medium tracking-normal text-muted-foreground">
                 per member / month
               </span>
             </p>
@@ -230,19 +230,21 @@ export function ReusableExample({
             value={filter}
             onValueChange={setFilter}
             items={[
-              { value: "all", label: "All tasks", count: 3 },
+              { value: "all", label: "All", count: 3 },
               { value: "active", label: "Active", count: 2 },
               { value: "complete", label: "Complete", count: 1 },
               { value: "archived", label: "Archived", disabled: true },
             ]}
           />
-          <ul className="m-0 grid list-none gap-3 p-0 text-sm">
+          <ul className="m-0 grid list-none gap-2 p-0 text-sm">
             {shown.map((task) => (
               <li
                 key={task.id}
-                className="flex items-center justify-between gap-3 rounded-md border border-border px-4 py-3"
+                className="flex min-w-0 items-center justify-between gap-3 rounded-xl border border-border/70 bg-card px-4 py-3 shadow-[0_1px_2px_rgb(0_0_0/0.04)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.04)]"
               >
-                <span>{task.title}</span>
+                <span className="min-w-0 font-medium tracking-tight">
+                  {task.title}
+                </span>
                 <StatusBadge variant={task.done ? "success" : "info"}>
                   {task.done ? "Complete" : "Active"}
                 </StatusBadge>
@@ -342,13 +344,18 @@ export function ReusableExample({
       );
     case "file-list":
       return (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4 rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
           <FileList
             items={visibleFiles.map((file) => ({
               ...file,
               actions: (
                 <>
-                  <Button asChild size="icon" variant="ghost">
+                  <Button
+                    asChild
+                    size="icon"
+                    variant="ghost"
+                    className="size-8 text-muted-foreground hover:text-foreground"
+                  >
                     <a
                       aria-label={`Download ${file.name}`}
                       download={file.name}
@@ -360,6 +367,7 @@ export function ReusableExample({
                   <Button
                     size="icon"
                     variant="ghost"
+                    className="size-8 text-muted-foreground hover:text-destructive"
                     aria-label={`Remove ${file.name}`}
                     onClick={() =>
                       setVisibleFiles((current) =>
@@ -373,7 +381,7 @@ export function ReusableExample({
               ),
             }))}
           />
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex min-h-8 items-center justify-between gap-3 border-t border-border/60 pt-4">
             <p role="status" className="m-0 text-xs text-muted-foreground">
               {visibleFiles.length}{" "}
               {visibleFiles.length === 1 ? "file" : "files"} attached

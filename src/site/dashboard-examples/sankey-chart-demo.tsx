@@ -41,14 +41,35 @@ const links = [
   { source: "Research", target: "Writing", value: 1 },
 ];
 
+const hours = links.reduce((sum, link) => sum + link.value, 0);
+
 export default function SankeyChartDemo() {
   return (
-    <div className="w-full max-w-lg">
+    <section className="w-full max-w-xl rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
+      <header className="mb-3 flex items-start justify-between gap-4">
+        <div className="min-w-0 space-y-1">
+          <h3 className="text-sm font-semibold tracking-tight">
+            Where the week went
+          </h3>
+          <p className="text-[13px] leading-5 text-muted-foreground">
+            Tracked time by source and activity.
+          </p>
+        </div>
+        <p className="shrink-0 text-right">
+          <span className="text-xl font-semibold tracking-[-0.02em] tabular-nums">
+            {hours}
+          </span>
+          <span className="ml-0.5 text-sm font-medium text-muted-foreground">
+            h
+          </span>
+        </p>
+      </header>
       <SankeyChart
         nodes={nodes}
         links={links}
         valueFormatter={(value) => `${value}h`}
+        className="h-64"
       />
-    </div>
+    </section>
   );
 }

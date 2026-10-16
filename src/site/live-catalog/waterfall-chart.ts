@@ -1,7 +1,7 @@
 export default {
   name: "waterfall-chart",
   title: "Waterfall chart",
-  category: "Data display",
+  category: "Charts",
   description:
     "A bridge chart that walks from an opening total through each increase and decrease to the closing total, with a crosshair readout per step.",
   dependencies: [],

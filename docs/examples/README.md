@@ -1,6 +1,6 @@
 # Workspace examples
 
-The `/workspace/` entry contains 119 routes for business workflows and reusable interface patterns. `/` serves the overtrue/ui website and `/examples` indexes the workspace pages.
+The `/workspace/` entry contains 121 routes for business workflows and reusable interface patterns. `/` serves the overtrue/ui website and `/examples` indexes the workspace pages.
 
 ## Organization
 

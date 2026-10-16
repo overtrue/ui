@@ -17,6 +17,17 @@ import ganttChart from "./live-catalog/gantt-chart.ts";
 import deployPipeline from "./live-catalog/deploy-pipeline.ts";
 import insightCard from "./live-catalog/insight-card.ts";
 import incidentReview from "./live-catalog/incident-review.ts";
+import revenueOverview from "./live-catalog/revenue-overview.ts";
+import modelUsage from "./live-catalog/model-usage.ts";
+import serviceExplorer from "./live-catalog/service-explorer.ts";
+import flameGraph from "./live-catalog/flame-graph.ts";
+import serviceMap from "./live-catalog/service-map.ts";
+import assistantPanel from "./live-catalog/assistant-panel.ts";
+import jsonViewer from "./live-catalog/json-viewer.ts";
+import stackedAreaChart from "./live-catalog/stacked-area-chart.ts";
+import experimentResult from "./live-catalog/experiment-result.ts";
+import dateRangePicker from "./live-catalog/date-range-picker.ts";
+import filterBar from "./live-catalog/filter-bar.ts";
 
 export const liveCatalog = [
   numberTicker,
@@ -36,4 +47,15 @@ export const liveCatalog = [
   deployPipeline,
   insightCard,
   incidentReview,
+  revenueOverview,
+  modelUsage,
+  serviceExplorer,
+  flameGraph,
+  serviceMap,
+  assistantPanel,
+  jsonViewer,
+  stackedAreaChart,
+  experimentResult,
+  dateRangePicker,
+  filterBar,
 ] as const;

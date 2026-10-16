@@ -10,12 +10,14 @@ Install the pieces you need through the shadcn CLI. The source goes into your ap
 
 ## What's included
 
-- **67 components:** metrics, charts, tables, navigation, form controls, and other building blocks for everyday admin work. Each has live examples, source, usage, and installation instructions.
-- **Live operations and observability:** an odometer-style number ticker, a streaming chart, a log stream, a fleet host map, a dot-matrix geo map with animated routes, a distributed trace waterfall, a latency histogram with percentiles, a CI/CD pipeline, a Gantt chart, a treemap, a waterfall bridge, a retention cohort grid, bullet charts, a streaming AI insight card, and pointer-lit spotlight cards. Pure SVG and CSS, no extra chart dependency.
-- **16 composed blocks:** a realtime monitor, an incident review, team access, notification preferences, integrations, invoices, workspace settings, pricing, members, tasks, activity, storage, dashboard, analytics overview, project portfolio, and service status.
+- **75 components in nine groups:** metrics, charts, operations, tables and lists, AI, layout, navigation, forms, and feedback. Each has live examples, source, usage, and installation instructions.
+- **Live operations and observability:** a service map with animated traffic, a profiler flame graph, a distributed trace waterfall, a latency histogram with percentiles, a log stream, a JSON viewer, a CI/CD pipeline, a fleet host map, and a dot-matrix geo map. Pure SVG and CSS, no extra chart dependency.
+- **Analytics and AI:** a stacked area chart with stream and 100% modes, an A/B experiment readout with confidence intervals, cohort retention, a treemap, a waterfall bridge, bullet charts, an odometer number ticker, a streaming insight card, and a copilot assistant panel.
+- **Forms for dashboards:** a date range picker with presets and period comparison, and a filter bar with field, operator, and value chips and saved views.
+- **19 composed blocks:** including an AI gateway (model usage), a revenue overview, a service explorer, a realtime monitor, an incident review, dashboard and analytics overviews, project portfolio, service status, team access, settings, invoices, and pricing.
 - **369 example card patterns:** extracted from the same source used by the workspace pages, including their sample data and local interactions.
-- **119 workspace examples:** projects, people, billing, inboxes, settings, authentication, layouts, and component demonstrations.
-- **Light and dark themes:** semantic colors, responsive layouts, and Tabler Icons throughout. The website's theme studio builds a theme from one accent, recolors every preview live, and exports oklch variables for your `globals.css`; the workspace also includes controls for accent, typography, radius, and navigation.
+- **121 workspace examples:** projects, people, billing, inboxes, settings, authentication, layouts, and component demonstrations.
+- **One visual language, light and dark:** luminous data marks, frosted tooltips, and motion that explains change, all built from semantic colors with responsive layouts and Tabler Icons throughout. Every preview opens in a full-screen stage with phone, tablet, and desktop widths. The website's theme studio builds a theme from one accent, recolors every preview live, and exports oklch variables for your `globals.css`; the workspace also includes controls for accent, typography, radius, and navigation.
 - **Built to extend:** components read only semantic theme tokens and accept `className`; the newer data components also expose `data-slot` hooks and state attributes, formatter and render props, and controlled or uncontrolled state. See the [extending guide](https://ui.overtrue.xyz/docs/extending).
 
 The [component catalog](src/site/catalog.ts) and generated card catalog are the source of truth. Counts change as examples are added or reorganized.

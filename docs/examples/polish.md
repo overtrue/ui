@@ -1,6 +1,6 @@
 # Page polish — 2026-09-21
 
-This pass covers overtrue/ui’s 119 workspace pages and 30 website routes. It preserves the existing admin layouts, Acme Studio sample content, theme tokens, and Tabler Icons.
+This pass covers overtrue/ui’s 121 workspace pages and 30 website routes. It preserves the existing admin layouts, Acme Studio sample content, theme tokens, and Tabler Icons.
 
 ## Changes
 

@@ -6,13 +6,44 @@ import {
   IconLayoutGrid,
   IconChartLine,
   IconActivity,
+  IconSparkles,
+  IconReceipt2,
+  IconTopologyStar3,
 } from "@tabler/icons-react";
 import { catalogPath, catalog, componentCount, blockCount } from "./catalog";
 import { Example } from "./examples";
+import workspacePages from "@/data/workspace/pages.json";
 import { ProjectPortfolio } from "@/registry/overtrue/project-portfolio";
 import { portfolioProjects, siteOwner } from "./demo-data";
 
 const featured = [
+  {
+    name: "model-usage",
+    title: "AI gateway",
+    label: "AI usage",
+    icon: IconSparkles,
+    description: "Know what every model costs you.",
+    detail:
+      "Requests, tokens, and spend by model, gateway latency, and a written summary. Select a model to isolate it.",
+  },
+  {
+    name: "service-explorer",
+    title: "Service explorer",
+    label: "Services",
+    icon: IconTopologyStar3,
+    description: "Follow a slow request to its cause.",
+    detail:
+      "A live service map drives the page: pick a service to see its latency, its slowest request, and a CPU profile.",
+  },
+  {
+    name: "revenue-overview",
+    title: "Revenue",
+    label: "Revenue",
+    icon: IconReceipt2,
+    description: "Read the month in one screen.",
+    detail:
+      "Recurring revenue, the MRR bridge, plan mix, cohort retention, and targets, all reconciled.",
+  },
   {
     name: "project-portfolio",
     title: "Project portfolio",
@@ -65,8 +96,8 @@ export function FeaturedBlocks() {
           <div>
             <p className="lede">
               Blocks combine components into complete interfaces you can
-              install and adapt: a project portfolio, an analytics report, a
-              status page.
+              install and adapt: an AI gateway, a revenue report, a project
+              portfolio, a status page.
             </p>
             <Link className="text-link" to="/blocks">
               Browse all blocks <IconArrowRight size={16} />
@@ -163,7 +194,7 @@ export function Questions() {
             <summary>What is included?</summary>
             <div className="question-answer">
               {componentCount} components, {blockCount} complete blocks, and an
-              optional theme. The workspace gallery adds 119 pages to explore;
+              optional theme. The workspace gallery adds {workspacePages.length} pages to explore;
               those example pages are separate from the installable registry.
             </div>
           </details>

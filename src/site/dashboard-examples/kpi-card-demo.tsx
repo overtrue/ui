@@ -14,11 +14,12 @@ const churn = [8.2, 7.9, 8.1, 7.4, 7.1, 7.3, 6.8, 6.2, 6.5, 5.9, 5.6, 5.2];
 export default function KpiCardDemo() {
   return (
     <div className="@container w-full">
-      <div className="grid gap-4 @lg:grid-cols-2 @3xl:grid-cols-4">
+      <div className="grid gap-4 @lg:grid-cols-2 @5xl:grid-cols-4">
         <KpiCard
           label="Booked revenue"
           value={36_800}
           format="currency"
+          maximumFractionDigits={0}
           delta={0.128}
           deltaLabel="vs. previous month"
           sparkline={revenue}

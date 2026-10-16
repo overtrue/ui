@@ -33,11 +33,31 @@ function sampleRows() {
 }
 
 const rows = sampleRows();
+const total = rows.reduce(
+  (sum, row) => sum + row.values.reduce((a, b) => a + b, 0),
+  0,
+);
 
 export default function HeatmapChartDemo() {
   return (
-    <div className="w-full max-w-lg">
+    <section className="w-full max-w-xl rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
+      <header className="mb-4 flex items-start justify-between gap-4">
+        <div className="min-w-0 space-y-1">
+          <h3 className="text-sm font-semibold tracking-tight">
+            Requests by hour
+          </h3>
+          <p className="text-[13px] leading-5 text-muted-foreground">
+            Last 7 days, in two-hour windows (UTC)
+          </p>
+        </div>
+        <p className="shrink-0 text-right">
+          <span className="block text-xl font-semibold tracking-[-0.02em] tabular-nums">
+            {total.toLocaleString("en-US")}
+          </span>
+          <span className="text-xs text-muted-foreground">requests</span>
+        </p>
+      </header>
       <HeatmapChart rows={rows} columns={hours} unit="requests" />
-    </div>
+    </section>
   );
 }

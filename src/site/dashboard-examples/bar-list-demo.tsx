@@ -16,9 +16,10 @@ const pages = [
 export default function BarListDemo() {
   return (
     <div className="w-full max-w-lg">
-      <div className="text-muted-foreground mb-2 flex justify-between text-xs">
-        <span>Page</span>
-        <span>Visitors</span>
+      <div className="text-muted-foreground mb-2 flex items-center gap-3 px-2.5 pr-0 text-xs">
+        <span className="flex-1">Page</span>
+        <span className="min-w-12 text-right">Visitors</span>
+        <span className="w-11 text-right">Share</span>
       </div>
       <BarList data={pages} showPercentage />
     </div>

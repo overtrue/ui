@@ -1,7 +1,7 @@
 export default {
   name: "host-map",
   title: "Host map",
-  category: "Data display",
+  category: "Operations",
   description:
     "A dense fleet map with one cell per host, coloured by load or health and grouped by region, so hot spots stand out at a glance.",
   dependencies: [],

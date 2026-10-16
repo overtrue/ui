@@ -27,7 +27,7 @@ export default function DonutChartHalfDemo() {
         }
         centerValue={formatNumber(56_400, { format: "compact" })}
         showLegend
-        className="max-h-56"
+        className="max-h-48"
       />
     </div>
   );

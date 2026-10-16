@@ -515,8 +515,8 @@ function WaterfallChart({
   const valueTone = (row: Row) => {
     if (row.info.direction === "total") return "text-foreground font-semibold";
     if (row.info.direction === "increase")
-      return colors?.increase ? "" : "text-emerald-600 dark:text-emerald-400";
-    return colors?.decrease ? "" : "text-destructive";
+      return colors?.increase ? "" : "text-emerald-700 dark:text-emerald-400";
+    return colors?.decrease ? "" : "text-rose-600 dark:text-rose-400";
   };
   const valueStyle = (row: Row): React.CSSProperties | undefined =>
     row.info.direction === "increase" && colors?.increase
@@ -1074,9 +1074,9 @@ function WaterfallChart({
                         className={cn(
                           "text-xs font-medium tabular-nums",
                           net > 0
-                            ? "text-emerald-600 dark:text-emerald-400"
+                            ? "text-emerald-700 dark:text-emerald-400"
                             : net < 0
-                              ? "text-destructive"
+                              ? "text-rose-600 dark:text-rose-400"
                               : "text-muted-foreground",
                         )}
                       >

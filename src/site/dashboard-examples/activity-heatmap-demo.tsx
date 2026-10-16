@@ -27,8 +27,16 @@ const data = sampleData(365, end);
 
 export default function ActivityHeatmapDemo() {
   return (
-    <div className="w-full">
+    <section className="w-full rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
+      <header className="mb-4 space-y-1">
+        <h3 className="text-sm font-semibold tracking-tight">
+          Delivery activity
+        </h3>
+        <p className="text-[13px] leading-5 text-muted-foreground">
+          Files, reviews, and handoffs shipped each day over the past year.
+        </p>
+      </header>
       <ActivityHeatmap data={data} endDate={end} unit="deliveries" />
-    </div>
+    </section>
   );
 }

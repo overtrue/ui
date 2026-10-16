@@ -1,6 +1,9 @@
 import { browserCli } from "../browser/cli.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { sitePages } from "../../src/site/pages.ts";
+import { catalog } from "../../src/site/catalog.ts";
+
+const formsCount = catalog.filter((item) => item.category === "Forms").length;
 const origin = process.env.SITE_URL || "http://127.0.0.1:4175";
 const session = "overtrue-verification";
 const cli = browserCli(session);
@@ -109,8 +112,8 @@ try {
     await page.locator('.component-tile').first().waitFor();
     await page.getByRole('button', { name: 'Forms', exact: true }).click();
     await page.getByRole('button', { name: 'Forms', exact: true, pressed: true }).waitFor();
-    await page.waitForFunction(() => document.querySelectorAll('.component-tile').length === 1);
-    check(await page.locator('.component-tile').count() === 1, 'category filtering');
+    await page.waitForFunction((count) => document.querySelectorAll('.component-tile').length === count, ${formsCount});
+    check(await page.locator('.component-tile').count() === ${formsCount}, 'category filtering');
     await page.goto(${JSON.stringify(origin)} + '/components/data-table');
     await page.getByRole('searchbox', { name: 'Search team members' }).fill('Maya');
     check(await page.locator('tbody tr').count() === 1 && (await page.locator('tbody tr').textContent()).includes('Maya Okafor'), 'table filtering');

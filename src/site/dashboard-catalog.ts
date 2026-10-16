@@ -28,6 +28,11 @@ export const dashboardCatalog = [
         "boolean",
         "Show a quiet hairline around the framed content.",
       ],
+      [
+        "marks?",
+        '"cross" | "bracket"',
+        "Crosshair registration marks, or brackets that hug each corner. Defaults to cross.",
+      ],
     ],
   },
   {
@@ -89,7 +94,11 @@ export const dashboardCatalog = [
       ["emptyLabel?", "React.ReactNode", ""],
       ["title?", "string", ""],
       ["description?", "string", ""],
-      ["footer?", "React.ReactNode", ""],
+      [
+        "footer?",
+        "React.ReactNode",
+        "Defaults to Select, Navigate, and (in the dialog) Close keyboard hints. Pass null to hide it.",
+      ],
       ["className?", "string", ""],
       ["onSelect?", "(item: CommandPaletteItem) => void", ""],
     ],
@@ -98,7 +107,7 @@ export const dashboardCatalog = [
   {
     name: "kpi-card",
     title: "KPI card",
-    category: "Data display",
+    category: "Metrics",
     description:
       "Keep the current value, comparison period, and direction together in one compact summary.",
     dependencies: [],
@@ -160,6 +169,11 @@ export const dashboardCatalog = [
         "boolean",
         "Treat a decrease as good and an increase as bad (churn, latency, errors).",
       ],
+      [
+        "maximumFractionDigits?",
+        "number",
+        "Caps the decimals shown, e.g. 0 for whole dollars.",
+      ],
       ["icon?", "React.ReactNode", "Optional icon shown before the label."],
       ["children?", "React.ReactNode", ""],
     ],
@@ -167,7 +181,7 @@ export const dashboardCatalog = [
   {
     name: "trend-chart",
     title: "Trend chart",
-    category: "Data display",
+    category: "Charts",
     description:
       "Compare changes over time with the chart style that fits the question.",
     dependencies: [],
@@ -266,7 +280,7 @@ export const dashboardCatalog = [
   {
     name: "bar-chart",
     title: "Grouped bars",
-    category: "Data display",
+    category: "Charts",
     description:
       "Organize related observations into periods and call out the group that needs attention.",
     dependencies: [],
@@ -352,7 +366,7 @@ export const dashboardCatalog = [
   {
     name: "advanced-data-table",
     title: "Interactive table",
-    category: "Data display",
+    category: "Tables & lists",
     description:
       "Build record views with filtering, selection, column controls, and actions close to the data.",
     dependencies: [],
@@ -495,7 +509,7 @@ export const dashboardCatalog = [
   {
     name: "funnel-chart",
     title: "Conversion stages",
-    category: "Data display",
+    category: "Charts",
     description:
       "Follow work through successive stages and see where the biggest drop occurs.",
     dependencies: [],
@@ -574,7 +588,7 @@ export const dashboardCatalog = [
   {
     name: "bar-list",
     title: "Ranked bars",
-    category: "Data display",
+    category: "Charts",
     description:
       "Compare the busiest destinations or highest-volume workstreams without a full chart.",
     dependencies: [],
@@ -607,7 +621,7 @@ export const dashboardCatalog = [
   {
     name: "distribution-bar",
     title: "Distribution bar",
-    category: "Data display",
+    category: "Charts",
     description:
       "Show how a total is divided among categories in a single horizontal strip.",
     dependencies: [],
@@ -639,7 +653,7 @@ export const dashboardCatalog = [
   {
     name: "activity-heatmap",
     title: "Activity calendar",
-    category: "Data display",
+    category: "Charts",
     description:
       "Reveal working-day patterns and quieter weeks across a year of activity.",
     dependencies: [],
@@ -669,7 +683,7 @@ export const dashboardCatalog = [
       [
         "color?",
         "string",
-        "Any CSS color. Levels are mixed from this and `--muted`. Defaults to chart-1.",
+        "Any CSS color. Levels are mixed from this and the card surface. Defaults to chart-1.",
       ],
       [
         "colors?",
@@ -693,6 +707,11 @@ export const dashboardCatalog = [
       ],
       ["showLegend?", "boolean", ""],
       [
+        "showSummary?",
+        "boolean",
+        "Show the total and the number of active days beside the legend. Follows `showLegend` by default.",
+      ],
+      [
         "scrollToEnd?",
         "boolean",
         "Scroll to the most recent weeks when the grid overflows.",
@@ -708,7 +727,7 @@ export const dashboardCatalog = [
   {
     name: "trend-sparkline",
     title: "Inline trend",
-    category: "Data display",
+    category: "Charts",
     description:
       "Add just enough history to a number without introducing a chart axis.",
     dependencies: [],
@@ -743,12 +762,23 @@ export const dashboardCatalog = [
         "Animate after hydration and when data changes. Respects reduced motion.",
       ],
       ["animationDuration?", "number", ""],
+      [
+        "endpoint?",
+        "boolean",
+        "Mark the most recent value with a haloed point. On by default.",
+      ],
+      ["tooltip?", "boolean", "Show a hover and keyboard readout of each value."],
+      [
+        "valueFormatter?",
+        "(value: number, index: number) => string",
+        "Formats values in the readout.",
+      ],
     ],
   },
   {
     name: "composed-chart",
     title: "Combined chart",
-    category: "Data display",
+    category: "Charts",
     description:
       "Put actuals, targets, and supporting measures on the same reporting surface.",
     dependencies: [],
@@ -806,7 +836,7 @@ export const dashboardCatalog = [
   {
     name: "donut-chart",
     title: "Share chart",
-    category: "Data display",
+    category: "Charts",
     description:
       "Explain the makeup of a total with a center summary and a readable legend.",
     dependencies: [],
@@ -848,6 +878,11 @@ export const dashboardCatalog = [
       ],
       ["valueFormatter?", "(value: number) => string", ""],
       ["showLegend?", "boolean", ""],
+      [
+        "legendPosition?",
+        '"bottom" | "right"',
+        '"bottom" wraps the legend under the ring; "right" lists each slice with its value and share beside it.',
+      ],
       ["showTooltip?", "boolean", ""],
       [
         "startAngle?",
@@ -867,7 +902,7 @@ export const dashboardCatalog = [
   {
     name: "radial-gauge",
     title: "Radial gauge",
-    category: "Data display",
+    category: "Metrics",
     description:
       "Use a compact dial to summarize a target, utilization level, or service measure.",
     dependencies: [],
@@ -913,12 +948,26 @@ export const dashboardCatalog = [
         "number",
         "Total sweep of the arc in degrees. 180 is a semicircle, 360 a ring.",
       ],
-      ["color?", "string", "Any CSS color. Defaults to chart-1."],
-      ["trackColor?", "string", ""],
+      [
+        "color?",
+        "string",
+        "Any CSS color. Defaults to chart-1, or to the zone that holds the value.",
+      ],
+      ["trackColor?", "string", "Defaults to a soft tint of the arc color."],
+      [
+        "zones?",
+        "RadialGaugeZone[]",
+        "Threshold bands drawn as a thin ring just outside the arc.",
+      ],
+      [
+        "gradient?",
+        "boolean",
+        "Fade the arc in from its start so the leading edge reads brightest. On by default.",
+      ],
       [
         "animate?",
         "boolean",
-        "Reveal filled segments in sequence when the gauge mounts.",
+        "Sweep the arc in, or reveal segments in sequence, when the gauge mounts.",
       ],
       ["animationDuration?", "number", "Total reveal time in milliseconds."],
       [
@@ -931,7 +980,7 @@ export const dashboardCatalog = [
   {
     name: "segmented-meter",
     title: "Capacity zones",
-    category: "Data display",
+    category: "Metrics",
     description:
       "Place a live value against named operating ranges and highlight its current zone.",
     dependencies: [],
@@ -972,7 +1021,7 @@ export const dashboardCatalog = [
   {
     name: "metric-list",
     title: "Metric list",
-    category: "Data display",
+    category: "Metrics",
     description:
       "Collect related operational measures in a scan-friendly list with compact trends.",
     dependencies: [],
@@ -1000,7 +1049,7 @@ export const dashboardCatalog = [
   {
     name: "delta-badge",
     title: "Change indicator",
-    category: "Data display",
+    category: "Metrics",
     description:
       "Show whether a change is helpful, harmful, or neutral in the context of the metric.",
     dependencies: [],
@@ -1032,7 +1081,7 @@ export const dashboardCatalog = [
   {
     name: "metric-value",
     title: "Metric value",
-    category: "Data display",
+    category: "Metrics",
     description:
       "Format large totals consistently while keeping the exact figure available on hover.",
     dependencies: [],
@@ -1066,7 +1115,7 @@ export const dashboardCatalog = [
   {
     name: "period-tabs",
     title: "Period selector",
-    category: "Data display",
+    category: "Navigation",
     description:
       "Give a report a clear time range without taking attention away from the numbers.",
     dependencies: [],
@@ -1104,7 +1153,7 @@ export const dashboardCatalog = [
   {
     name: "tick-bar",
     title: "Segmented progress",
-    category: "Data display",
+    category: "Metrics",
     description:
       "Make a count or capacity visible as a series of filled marks.",
     dependencies: [],
@@ -1134,7 +1183,7 @@ export const dashboardCatalog = [
       [
         "trackColor?",
         "string",
-        "Any CSS color for the unfilled ticks. Defaults to muted.",
+        "Any CSS color for the unfilled ticks. Defaults to a faint foreground.",
       ],
       [
         "shape?",
@@ -1147,12 +1196,18 @@ export const dashboardCatalog = [
         "Reveal filled ticks in sequence when the bar mounts.",
       ],
       ["animationDuration?", "number", "Total reveal time in milliseconds."],
+      ["showValue?", "boolean", "Show the current value at the end of the bar."],
+      [
+        "valueFormatter?",
+        "(value: number, max: number) => string",
+        "Formats the readout and the announced value. Defaults to a whole percentage.",
+      ],
     ],
   },
   {
     name: "dot-plot",
     title: "Dot comparison",
-    category: "Data display",
+    category: "Charts",
     description: "Compare observations using position rather than bar area.",
     dependencies: [],
     imports: "DotPlot",
@@ -1174,7 +1229,7 @@ export const dashboardCatalog = [
       [
         "labels?",
         "string[]",
-        "Optional label per column, shown in the tooltip and used for the accessible name.",
+        "Optional label per column, shown under the column, in the tooltip, and in the accessible name.",
       ],
       [
         "max?",
@@ -1189,6 +1244,17 @@ export const dashboardCatalog = [
         "Columns at or above this fraction of `max` are drawn at full strength and the\nrest are faded, so the peak stands out. Set to 0 to draw every column at full strength.",
       ],
       ["fadedOpacity?", "number", "Opacity of the faded columns."],
+      ["showLabels?", "boolean", "Show `labels` under the columns."],
+      [
+        "labelEvery?",
+        "number",
+        "Show every nth label. Defaults to whatever keeps about 12 labels.",
+      ],
+      [
+        "showTrack?",
+        "boolean",
+        "Draw the empty slots of each column as faint dots, so every column reads against the same scale.",
+      ],
       [
         "showTooltip?",
         "boolean",
@@ -1214,7 +1280,7 @@ export const dashboardCatalog = [
   {
     name: "event-timeline",
     title: "Event timeline",
-    category: "Data display",
+    category: "Tables & lists",
     description:
       "Tell the story of a project through decisions, reviews, and completed steps.",
     dependencies: [],
@@ -1257,7 +1323,7 @@ export const dashboardCatalog = [
   {
     name: "activity-rings",
     title: "Goal rings",
-    category: "Data display",
+    category: "Metrics",
     description:
       "Track several delivery goals together, each with its own target and progress.",
     dependencies: [],
@@ -1297,7 +1363,7 @@ export const dashboardCatalog = [
   {
     name: "heatmap-chart",
     title: "Heatmap matrix",
-    category: "Data display",
+    category: "Charts",
     description: "Find busy periods and uneven coverage across two dimensions.",
     dependencies: [],
     imports: "HeatmapChart",
@@ -1332,7 +1398,7 @@ export const dashboardCatalog = [
       [
         "color?",
         "string",
-        "Any CSS color. Cells mix this into `--muted` by value. Defaults to chart-1.",
+        "Any CSS color. Cells mix this into the card surface by value. Defaults to chart-1.",
       ],
       [
         "max?",
@@ -1353,6 +1419,11 @@ export const dashboardCatalog = [
         "gap?",
         "number",
         "Gap between cells in px. Cells themselves stretch to fill the container.",
+      ],
+      [
+        "maxCellHeight?",
+        "number",
+        "Cells stay square until they reach this height in px, then widen to fill the row. Defaults to 32.",
       ],
       ["valueFormatter?", "(value: number) => string", ""],
       [
@@ -1389,7 +1460,7 @@ export const dashboardCatalog = [
   {
     name: "radar-chart",
     title: "Profile comparison",
-    category: "Data display",
+    category: "Charts",
     description: "Compare the shape of multiple measures across categories.",
     dependencies: [],
     imports: "RadarChart",
@@ -1463,7 +1534,7 @@ export const dashboardCatalog = [
   {
     name: "scatter-chart",
     title: "Relationship chart",
-    category: "Data display",
+    category: "Charts",
     description:
       "Explore how two measures move together, with optional bubble size for a third.",
     dependencies: [],
@@ -1507,6 +1578,11 @@ export const dashboardCatalog = [
       ["showXAxis?", "boolean", ""],
       ["showYAxis?", "boolean", ""],
       ["showLegend?", "boolean", ""],
+      [
+        "showAxisLabels?",
+        "boolean",
+        "Print `xLabel` at the end of the x-axis and `yLabel` above the y-axis.",
+      ],
       ["showTooltip?", "boolean", ""],
       ["xFormatter?", "(value: number) => string", ""],
       ["yFormatter?", "(value: number) => string", ""],
@@ -1519,7 +1595,7 @@ export const dashboardCatalog = [
       [
         "sizeRange?",
         "[number, number]",
-        "Bubble area range in px² when sizeKey is set, smallest to largest.",
+        "Bubble area range in px² when sizeKey is set, smallest to largest. Areas grow in proportion to the value, measured from zero.",
       ],
       [
         "xDomain?",
@@ -1542,7 +1618,7 @@ export const dashboardCatalog = [
   {
     name: "sankey-chart",
     title: "Flow diagram",
-    category: "Data display",
+    category: "Charts",
     description:
       "Trace how time or budget moves from one category to the next.",
     dependencies: [],
@@ -1575,6 +1651,11 @@ export const dashboardCatalog = [
         'Append each node\'s share of the total flow to its label, e.g. "Writing · 18%".',
       ],
       ["showTooltip?", "boolean", ""],
+      [
+        "animate?",
+        "boolean",
+        "Draw the flow in from left to right on mount. Respects reduced motion.",
+      ],
       ["nodeWidth?", "number", ""],
       [
         "nodePadding?",

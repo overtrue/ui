@@ -1,7 +1,7 @@
 export default {
   name: "latency-histogram",
   title: "Latency histogram",
-  category: "Data display",
+  category: "Charts",
   description:
     "A request latency distribution with percentile markers, a shaded SLO tail, a comparison series, and brushing to measure any range.",
   dependencies: [],

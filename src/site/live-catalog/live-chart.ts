@@ -1,7 +1,7 @@
 export default {
   name: "live-chart",
   title: "Live chart",
-  category: "Data display",
+  category: "Charts",
   description:
     "Stream a rolling window of samples into an area, line, or bar chart that glides smoothly as each value arrives.",
   dependencies: [],

@@ -64,6 +64,10 @@ interface IndicatorRect {
   height: number;
 }
 
+// The raised pill shared by the static active tab and the sliding indicator.
+const pill =
+  "bg-card shadow-[0_1px_2px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.04),0_6px_16px_-10px_color-mix(in_oklab,var(--color-primary)_45%,transparent)] dark:bg-foreground/10 dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.07),0_1px_2px_rgb(0_0_0/0.5),0_6px_18px_-10px_color-mix(in_oklab,var(--color-primary)_70%,transparent)]";
+
 /** Small segmented control for switching a chart's time range. */
 function PeriodTabs({
   options = defaultPeriods,
@@ -81,18 +85,29 @@ function PeriodTabs({
   );
   const active = value ?? internalValue;
   const [rect, setRect] = React.useState<IndicatorRect | null>(null);
+  // The first placement snaps into place; later changes glide.
+  const [glide, setGlide] = React.useState(false);
 
   const measure = React.useCallback(() => {
     const list = listRef.current;
     if (!list) return;
     const trigger = list.querySelector<HTMLElement>('[data-state="active"]');
     if (!trigger) return;
-    setRect({
+    const next = {
       left: trigger.offsetLeft,
       top: trigger.offsetTop,
       width: trigger.offsetWidth,
       height: trigger.offsetHeight,
-    });
+    };
+    setRect((current) =>
+      current &&
+      current.left === next.left &&
+      current.top === next.top &&
+      current.width === next.width &&
+      current.height === next.height
+        ? current
+        : next,
+    );
   }, []);
 
   React.useLayoutEffect(() => {
@@ -104,7 +119,11 @@ function PeriodTabs({
     if (!animated || !listRef.current) return;
     const observer = new ResizeObserver(measure);
     observer.observe(listRef.current);
-    return () => observer.disconnect();
+    const frame = requestAnimationFrame(() => setGlide(true));
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
   }, [animated, measure]);
 
   return (
@@ -121,17 +140,29 @@ function PeriodTabs({
     >
       <div ref={listRef}>
         <TabsList
+          data-animated={animated || undefined}
           className={cn(
-            "relative",
-            size === "sm" && "group-data-[orientation=horizontal]/tabs:h-8 p-1",
+            "relative isolate h-9 gap-0.5 rounded-xl bg-muted/60 p-1 text-muted-foreground shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--color-border)_70%,transparent)] dark:bg-muted/40",
+            size === "sm" &&
+              "h-8 rounded-[10px] p-1 group-data-[orientation=horizontal]/tabs:h-8",
           )}
         >
           {animated && rect ? (
             <span
               aria-hidden
               data-slot="period-tabs-indicator"
-              className="pointer-events-none absolute rounded-md bg-background shadow-sm transition-[left,top,width,height] duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transition-none dark:border dark:border-input dark:bg-input/30"
-              style={rect}
+              className={cn(
+                "pointer-events-none absolute top-0 left-0 -z-10",
+                size === "sm" ? "rounded-md" : "rounded-lg",
+                pill,
+                glide &&
+                  "transition-[translate,width,height] duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+              )}
+              style={{
+                width: rect.width,
+                height: rect.height,
+                translate: `${rect.left}px ${rect.top}px`,
+              }}
             />
           ) : null}
           {options.map((option) => (
@@ -139,9 +170,14 @@ function PeriodTabs({
               key={option.value}
               value={option.value}
               className={cn(
-                size === "sm" && "h-6 px-2.5 text-xs",
-                animated &&
-                  "relative z-10 data-[state=active]:bg-transparent group-data-[variant=default]/tabs-list:data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent",
+                "h-7 rounded-lg border-0 px-3 text-[13px] font-medium text-muted-foreground tabular-nums transition-[color,background-color,box-shadow] duration-150 hover:text-foreground focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary/30 motion-reduce:transition-none data-[state=active]:text-foreground",
+                size === "sm" && "h-6 rounded-md px-2.5 text-xs",
+                animated
+                  ? "data-[state=active]:bg-transparent data-[state=active]:shadow-none group-data-[variant=default]/tabs-list:data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent"
+                  : cn(
+                      "data-[state=active]:bg-card data-[state=active]:shadow-[0_1px_2px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.04),0_6px_16px_-10px_color-mix(in_oklab,var(--color-primary)_45%,transparent)]",
+                      "dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-foreground/10 dark:data-[state=active]:shadow-[inset_0_1px_0_rgb(255_255_255/0.07),0_1px_2px_rgb(0_0_0/0.5),0_6px_18px_-10px_color-mix(in_oklab,var(--color-primary)_70%,transparent)]",
+                    ),
               )}
             >
               {option.label}

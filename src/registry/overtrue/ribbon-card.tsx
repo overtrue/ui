@@ -17,14 +17,21 @@ export function RibbonCard({
 }: RibbonCardProps) {
   const badge =
     ribbon != null ? (
-      <Badge className="max-w-full whitespace-normal rounded px-2 py-1">
+      <Badge className="h-auto max-w-full gap-1 rounded-full border-transparent bg-primary px-2.5 py-0.5 text-xs leading-5 font-medium whitespace-normal text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.22),0_1px_2px_rgb(0_0_0/0.08),0_4px_14px_-4px_color-mix(in_oklab,var(--color-primary)_60%,transparent)]">
         {ribbon}
       </Badge>
     ) : null;
   return (
     <SectionCard
       data-slot="ribbon-card"
-      className={cn("relative", className)}
+      data-ribbon-position={ribbonPosition}
+      className={cn(
+        "relative",
+        ribbon != null &&
+          ribbonPosition === "top" &&
+          "bg-[radial-gradient(55%_60%_at_100%_0%,color-mix(in_oklab,var(--color-primary)_9%,transparent),transparent_70%)]",
+        className,
+      )}
       actions={
         ribbonPosition === "top" ? (
           <>

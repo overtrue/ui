@@ -57,7 +57,16 @@ const rows = sampleRows();
 
 export default function HeatmapChartRegionsDemo() {
   return (
-    <div className="w-full max-w-lg">
+    <section className="w-full max-w-xl rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
+      <header className="mb-4 space-y-1">
+        <h3 className="text-sm font-semibold tracking-tight">
+          Orders by region
+        </h3>
+        <p className="text-[13px] leading-5 text-muted-foreground">
+          Thousands of orders per month. A square-root scale keeps smaller
+          regions readable.
+        </p>
+      </header>
       <HeatmapChart
         rows={rows}
         columns={months}
@@ -66,6 +75,6 @@ export default function HeatmapChartRegionsDemo() {
         unit="K orders"
         valueFormatter={(value) => value.toFixed(1)}
       />
-    </div>
+    </section>
   );
 }

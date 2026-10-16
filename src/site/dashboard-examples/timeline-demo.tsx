@@ -42,11 +42,10 @@ const events = [
     description: (
       <>
         Prepared{" "}
-        <code className="text-foreground font-medium">
-          {" "}
-          visitor-experience{" "}
+        <code className="rounded-[4px] bg-muted px-1 py-px font-mono text-xs text-foreground">
+          visitor-experience
         </code>{" "}
-        for the Culture venue team.{" "}
+        for the Culture venue team.
       </>
     ),
   },
@@ -59,11 +58,10 @@ const events = [
     description: (
       <>
         Shared with{" "}
-        <span className="text-foreground font-medium">
-          {" "}
-          the venue working group{" "}
+        <span className="font-medium text-foreground">
+          the venue working group
         </span>{" "}
-        alongside the research notes.{" "}
+        alongside the research notes.
       </>
     ),
   },
@@ -76,11 +74,8 @@ const events = [
     description: (
       <>
         A route needs another check at{" "}
-        <span className="text-foreground font-medium">
-          {" "}
-          the north entrance{" "}
-        </span>{" "}
-        ; the next draft will include an accessible alternative.{" "}
+        <span className="font-medium text-foreground">the north entrance</span>;
+        the next draft will include an accessible alternative.
       </>
     ),
   },
@@ -93,7 +88,7 @@ const events = [
     description: (
       <>
         Feedback and the revised scope are ready in{" "}
-        <span className="text-foreground font-medium"> Project notes </span>.
+        <span className="font-medium text-foreground">Project notes</span>.
       </>
     ),
   },
@@ -127,17 +122,16 @@ const events = [
 
 export default function TimelineDemo() {
   return (
-    <div className="flex w-full max-w-lg flex-col gap-4">
-      <div className="flex flex-col gap-0.5">
-        <span className="text-muted-foreground text-xs">
-          {" "}
-          Project decisions{" "}
-        </span>
-        <span className="font-semibold"> Visitor experience </span>
-      </div>
+    <section className="flex w-full max-w-lg flex-col gap-5 rounded-2xl border border-border/70 bg-card p-5 text-card-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]">
+      <header className="space-y-1">
+        <p className="text-xs text-muted-foreground">Project decisions</p>
+        <h3 className="text-sm font-semibold tracking-tight">
+          Visitor experience
+        </h3>
+      </header>
       <Timeline>
         {events.map((event) => (
-          <TimelineItem key={event.title} status={event.status}>
+          <TimelineItem key={event.title} status={event.status ?? "done"}>
             <TimelineRail>
               <TimelineMarker>
                 <event.icon />
@@ -159,6 +153,6 @@ export default function TimelineDemo() {
           </TimelineItem>
         ))}
       </Timeline>
-    </div>
+    </section>
   );
 }
