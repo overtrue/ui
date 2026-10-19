@@ -30,7 +30,7 @@ export default {
   );
 }`,
   notes:
-    'A `start` step sets the running total, each `delta` moves it by its signed value, and `subtotal` and `end` steps always draw the running total, so the bridge balances by construction (their own `value` is ignored). Increases paint emerald, decreases the destructive colour and totals the primary colour, with subtotals in a lighter tint; override any of them with `colors`. When every total sits far from zero, `baseline="auto"` starts the axis just below the lowest running total so the changes fill the plot, and marks the cut on total bars with two short strokes; pass `baseline="zero"` to always start at 0. `valueFormatter` always receives a non-negative amount and a context (label, axis or detail); the chart adds + and − itself. `orientation="auto"` uses columns when the card is wide enough for every step and rows below that, switched with a container query, so the same chart works in a wide panel and a phone. Bars rise in sequence on mount with CSS only and stay still with reduced motion. The plot is one tab stop: arrow keys move between steps and announce the change and running total, Enter calls `onSelect`, and an off-screen table lists every step for screen readers.',
+    'A `start` step sets the running total, each `delta` moves it by its signed value, and `subtotal` and `end` steps always draw the running total, so the bridge balances by construction (their own `value` is ignored). Increases paint emerald, decreases the destructive color and totals the primary color, with subtotals in a lighter tint; override any of them with `colors`. When every total sits far from zero, `baseline="auto"` starts the axis just below the lowest running total so the changes fill the plot, and marks the cut on total bars with two short strokes; pass `baseline="zero"` to always start at 0. `valueFormatter` always receives a non-negative amount and a context (label, axis or detail); the chart adds + and − itself. `orientation="auto"` uses columns when the card is wide enough for every step and rows below that, switched with a container query, so the same chart works in a wide panel and a phone. Bars rise in sequence on mount with CSS only and stay still with reduced motion. The plot is one tab stop: arrow keys move between steps and announce the change and running total, Enter calls `onSelect`, and an off-screen table lists every step for screen readers.',
   previewWidth: 640,
   examples: [
     {
@@ -77,7 +77,7 @@ export default {
     [
       "colors?",
       "{ increase?: string; decrease?: string; total?: string }",
-      "Any CSS colours. Default to emerald, var(--color-destructive) and var(--color-primary).",
+      "Any CSS colors. Default to emerald, var(--color-destructive) and var(--color-primary).",
     ],
     [
       "baseline?",

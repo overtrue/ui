@@ -179,7 +179,7 @@ export function Dashboard({
       </div>
       <div className="flex flex-col @min-[56rem]/dashboard:flex-row">
         <aside className="shrink-0 border-b bg-card p-2.5 @min-[56rem]/dashboard:w-44 @min-[56rem]/dashboard:border-r @min-[56rem]/dashboard:border-b-0 @min-[56rem]/dashboard:p-3">
-          <p className="hidden px-3 pt-3 pb-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground @min-[56rem]/dashboard:block">
+          <p className="hidden px-3 pt-3 pb-2 text-[11px] font-medium text-muted-foreground @min-[56rem]/dashboard:block">
             Workspace
           </p>
           <nav

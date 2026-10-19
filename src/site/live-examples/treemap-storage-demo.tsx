@@ -78,7 +78,7 @@ const bucket: Folder[] = [
   {
     id: "archive",
     label: "archive",
-    // Cold storage reads as neutral rather than taking the next palette colour.
+    // Cold storage reads as neutral rather than taking the next palette color.
     color: "var(--color-muted-foreground)",
     children: [
       { id: "archive/2024", label: "2024", value: 142, meta: { files: 18220 } },

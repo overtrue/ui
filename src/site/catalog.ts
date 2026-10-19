@@ -682,6 +682,7 @@ const displayOrder: readonly string[] = [
   "activity-feed",
   "storage-meter",
   "pricing-card",
+  "feature-flags",
   "stat-card",
   "kpi-card",
   "number-ticker",
@@ -738,6 +739,8 @@ const displayOrder: readonly string[] = [
   "timeline",
   "event-timeline",
   "avatar-stack",
+  "kanban-board",
+  "event-calendar",
   "insight-card",
   "assistant-panel",
   "page-header",
@@ -752,11 +755,16 @@ const displayOrder: readonly string[] = [
   "filter-tabs",
   "period-tabs",
   "steps",
+  "tree-view",
   "filter-bar",
   "date-range-picker",
   "search-field",
+  "multi-select",
+  "range-slider",
+  "file-upload",
   "status-badge",
   "empty-state",
+  "notification-center",
 ];
 export const catalog = [...items].sort((a, b) => {
   const rank = (name: string) => {
@@ -803,6 +811,7 @@ export const blockCollections: readonly {
   {
     label: "Workspace",
     names: [
+      "feature-flags",
       "team-access",
       "notification-preferences",
       "integration-list",

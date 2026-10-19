@@ -960,7 +960,7 @@ export function DateRangePicker({
                         outside && !unavailable && "hover:bg-muted/60",
                         !outside &&
                           solid &&
-                          "bg-primary font-medium text-primary-foreground shadow-[0_6px_16px_-6px_color-mix(in_oklab,var(--color-primary)_75%,transparent),inset_0_1px_0_rgb(255_255_255/0.18)] hover:bg-primary/90 focus-visible:ring-offset-1 focus-visible:ring-offset-popover",
+                          "bg-primary font-medium text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_1px_2px_rgb(0_0_0/0.12)] dark:shadow-[0_6px_16px_-6px_color-mix(in_oklab,var(--color-primary)_75%,transparent),inset_0_1px_0_rgb(255_255_255/0.18)] hover:bg-primary/90 focus-visible:ring-offset-1 focus-visible:ring-offset-popover",
                         !outside &&
                           isPreviewEnd &&
                           "bg-popover font-medium ring-1 ring-primary/60 ring-inset",

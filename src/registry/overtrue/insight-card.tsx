@@ -36,7 +36,7 @@ export interface InsightToken {
   value?: string;
   /** Third argument when it is positive, negative or neutral; otherwise inferred from the value's sign. */
   tone: InsightTone;
-  /** Which way the value moved, from its sign: drives the arrow, while tone drives the colour. */
+  /** Which way the value moved, from its sign: drives the arrow, while tone drives the color. */
   direction: "up" | "down" | "flat";
   /** Every argument after the colon, trimmed. */
   args: string[];

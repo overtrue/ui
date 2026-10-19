@@ -25,14 +25,14 @@ export default {
       name: "spotlight-card-demo",
       title: "Operations bento",
       description:
-        "Two metric cards and a wide capacity card in one group, with a resting light on the uptime card. Move the pointer across the gaps to see neighbouring borders pick up the light.",
+        "Two metric cards and a wide capacity card in one group, with a resting light on the uptime card. Move the pointer across the gaps to see neighboring borders pick up the light.",
     },
   ],
   api: [
     [
       "color?",
       "string",
-      "Any CSS colour for the glow. Defaults to var(--color-primary).",
+      "Any CSS color for the glow. Defaults to var(--color-primary).",
     ],
     ["intensity?", "number", "Glow strength from 0 to 2. Defaults to 1."],
     [

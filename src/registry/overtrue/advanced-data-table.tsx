@@ -869,7 +869,7 @@ function DataTableContent<TData extends RowData>({
   });
 
   // Pinned cells are painted opaque so rows scroll under them, which would
-  // otherwise hide the row's own hover and selected colours. Move both onto
+  // otherwise hide the row's own hover and selected colors. Move both onto
   // the cells so pinned and unpinned columns stay in step. They have to stay
   // opaque too: a translucent hover on a pinned cell lets the columns passing
   // underneath show through, so the row hover is `bg-muted/50` pre-mixed over

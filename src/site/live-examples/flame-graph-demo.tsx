@@ -15,7 +15,7 @@ function frame(
   };
 }
 
-// App code, Node built-ins and React components share a colour per group.
+// App code, Node built-ins and React components share a color per group.
 const app = (name: string, self: number, children: FlameNode[] = []) =>
   frame(name, self, children, "app");
 const node = (name: string, self: number, children: FlameNode[] = []) =>

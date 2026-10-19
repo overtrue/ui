@@ -2099,7 +2099,7 @@ export function AssistantPanel({
       aria-label={labels.send}
       title={labels.send}
       className={cn(
-        "inline-flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-[0_4px_14px_-4px_color-mix(in_oklab,var(--color-primary)_70%,transparent)] transition-[background-color,color,opacity,scale,box-shadow] duration-150 hover:opacity-90 active:scale-95 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none motion-reduce:transition-none",
+        "inline-flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_1px_2px_rgb(0_0_0/0.14)] dark:shadow-[0_4px_14px_-4px_color-mix(in_oklab,var(--color-primary)_70%,transparent)] transition-[background-color,color,opacity,scale,box-shadow] duration-150 hover:opacity-90 active:scale-95 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none motion-reduce:transition-none",
         focusRing,
       )}
     >
@@ -2143,7 +2143,7 @@ export function AssistantPanel({
         <span
           aria-hidden="true"
           className={cn(
-            "flex shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-card text-primary shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-primary)_6%,transparent),0_2px_10px_-2px_color-mix(in_oklab,var(--color-primary)_35%,transparent)]",
+            "flex shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-card text-primary shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-primary)_6%,transparent)] dark:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-primary)_6%,transparent),0_2px_10px_-2px_color-mix(in_oklab,var(--color-primary)_35%,transparent)]",
             compact ? "size-6" : "size-7",
           )}
         >
@@ -2221,7 +2221,7 @@ export function AssistantPanel({
                   >
                     <span
                       aria-hidden="true"
-                      className="flex size-11 items-center justify-center rounded-2xl border border-primary/20 bg-card text-primary shadow-[0_0_0_5px_color-mix(in_oklab,var(--color-primary)_5%,transparent),0_8px_24px_-8px_color-mix(in_oklab,var(--color-primary)_45%,transparent)]"
+                      className="flex size-11 items-center justify-center rounded-2xl border border-primary/20 bg-card text-primary shadow-[0_0_0_5px_color-mix(in_oklab,var(--color-primary)_5%,transparent),0_1px_2px_rgb(0_0_0/0.06)] dark:shadow-[0_0_0_5px_color-mix(in_oklab,var(--color-primary)_5%,transparent),0_8px_24px_-8px_color-mix(in_oklab,var(--color-primary)_45%,transparent)]"
                     >
                       <Sparkles className="size-5" stroke={1.6} />
                     </span>
@@ -2350,7 +2350,7 @@ export function AssistantPanel({
       >
         <div
           className={cn(
-            "rounded-2xl border border-border/80 bg-background/70 shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-[border-color,box-shadow] duration-150 focus-within:border-primary/40 focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-primary)_10%,transparent),0_10px_30px_-12px_color-mix(in_oklab,var(--color-primary)_45%,transparent)] motion-reduce:transition-none dark:bg-background/40",
+            "rounded-2xl border border-border/80 bg-background/70 shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-[border-color,box-shadow] duration-150 focus-within:border-primary/40 focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-primary)_10%,transparent)] dark:focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-primary)_10%,transparent),0_10px_30px_-12px_color-mix(in_oklab,var(--color-primary)_45%,transparent)] motion-reduce:transition-none dark:bg-background/40",
             disabled && "opacity-60",
           )}
         >

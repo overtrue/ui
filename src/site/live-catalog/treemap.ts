@@ -57,7 +57,7 @@ export default {
       name: "treemap-storage-demo",
       title: "Storage by folder",
       description:
-        "Custom tile labels with folder icons and file counts from each node's meta, archive pinned to a neutral colour, and a controlled path that drives the description and a Reset action.",
+        "Custom tile labels with folder icons and file counts from each node's meta, archive pinned to a neutral color, and a controlled path that drives the description and a Reset action.",
     },
   ],
   api: [
@@ -95,7 +95,7 @@ export default {
     [
       "colors?",
       "string[]",
-      "Colours for top-level groups in data order. Defaults to var(--color-chart-1) … var(--color-chart-5).",
+      "Colors for top-level groups in data order. Defaults to var(--color-chart-1) … var(--color-chart-5).",
     ],
     [
       "rootLabel?",

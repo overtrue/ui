@@ -41,16 +41,16 @@ export interface WaterfallStepInfo {
   formattedTotal: string;
   /** Change relative to the opening total, when there is one. */
   shareOfStart: number | null;
-  /** The bar colour. */
+  /** The bar color. */
   color: string;
 }
 
 export interface WaterfallChartColors {
-  /** Any CSS colour. Defaults to emerald. */
+  /** Any CSS color. Defaults to emerald. */
   increase?: string;
-  /** Any CSS colour. Defaults to the destructive colour. */
+  /** Any CSS color. Defaults to the destructive color. */
   decrease?: string;
-  /** Any CSS colour for start, subtotal and end bars. Defaults to the primary colour. */
+  /** Any CSS color for start, subtotal and end bars. Defaults to the primary color. */
   total?: string;
 }
 
@@ -251,7 +251,7 @@ const fadeUp =
 const draw =
   "motion-safe:animate-[waterfall-draw_360ms_cubic-bezier(0.22,1,0.36,1)_backwards]";
 
-/** Two short card-coloured strokes across a bar whose bottom is cut by a raised axis. */
+/** Two short card-colored strokes across a bar whose bottom is cut by a raised axis. */
 function CutMark({ horizontal }: { horizontal?: boolean }) {
   return (
     <svg
@@ -829,7 +829,7 @@ function WaterfallChart({
               const falling =
                 row.info.direction === "decrease" ||
                 (row.info.direction === "total" && row.info.to < 0);
-              const centre = (left + right) / 2;
+              const center = (left + right) / 2;
               return (
                 <li
                   key={row.step.id}
@@ -922,8 +922,8 @@ function WaterfallChart({
                         data-slot="waterfall-chart-tooltip"
                         className="pointer-events-none absolute bottom-[calc(50%+14px)] z-30 rounded-lg border bg-popover px-3 py-2 text-xs whitespace-nowrap text-popover-foreground shadow-lg shadow-black/5"
                         style={{
-                          left: `${centre}%`,
-                          transform: `translateX(-${Math.min(100, Math.max(0, centre))}%)`,
+                          left: `${center}%`,
+                          transform: `translateX(-${Math.min(100, Math.max(0, center))}%)`,
                         }}
                       >
                         {tooltip(row)}

@@ -20,7 +20,7 @@ export interface GeoMapPoint {
   value?: number;
   /** Health of the location. Defaults to ok. */
   status?: GeoMapStatus;
-  /** Any CSS colour. Overrides the status colour for this marker. */
+  /** Any CSS color. Overrides the status color for this marker. */
   color?: string;
   /** Force the sonar pulse on or off. Critical points pulse by default. */
   pulse?: boolean;
@@ -36,7 +36,7 @@ export interface GeoMapArc {
   to: GeoMapCoordinates | string;
   /** Weights the arc's stroke relative to the largest arc value. */
   value?: number;
-  /** Any CSS colour. Defaults to the arc colour. */
+  /** Any CSS color. Defaults to the arc color. */
   color?: string;
 }
 
@@ -142,7 +142,7 @@ export const GEO_MAP_HEIGHT =
 
 /**
  * Project latitude and longitude (decimal degrees) to GeoMap viewBox coordinates:
- * x runs 0–1000 from 169°W eastwards round to 169°W again (centred on 11°E), y runs
+ * x runs 0–1000 from 169°W eastwards round to 169°W again (centered on 11°E), y runs
  * 0–≈420 from 84°N to 56°S. Longitudes wrap; latitudes outside the crop are pinned.
  */
 export function projectGeo(lat: number, lng: number): [x: number, y: number] {
@@ -708,7 +708,7 @@ function GeoMap({
     ];
   });
 
-  // Land lit by nearby markers: one masked copy of the dots per marker colour.
+  // Land lit by nearby markers: one masked copy of the dots per marker color.
   const glowGroups = React.useMemo(() => {
     const groups = new Map<string, GeoMapPoint[]>();
     for (const point of points) {

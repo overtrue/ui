@@ -3,7 +3,7 @@ export default {
   title: "Geo map",
   category: "Operations",
   description:
-    "A dot-matrix world map with glowing markers sized by value, status colours, and animated arcs between locations.",
+    "A dot-matrix world map with glowing markers sized by value, status colors, and animated arcs between locations.",
   dependencies: [],
   imports: "GeoMap",
   usage: `<GeoMap
@@ -18,7 +18,7 @@ export default {
   onSelectedChange={(id) => console.log(id)}
 />`,
   notes:
-    'Pass plain latitude and longitude in decimal degrees. The map uses a Robinson projection centred on 11°E (so the seam falls in the Bering Strait) and cropped to 84°N–56°S; `projectGeo(lat, lng)` returns the same viewBox coordinates for layers you draw with `overlay`. The land is a 400 × 168 bitmap rasterised from Natural Earth outlines and embedded as a 3 KB run-length string, so nothing loads at runtime and all dots are a single path. With `density="auto"` the dot pitch stays between 2.9 and 3.8px at any width, and markers keep their pixel size while the land scales. Marker area follows `value`, nearby land glows in the marker colour, critical points pulse, and arcs take a point id or `[lat, lng]` at either end. Hover or focus a marker to light its arcs, draw a crosshair, and read it in the footer readout. The map is one tab stop: arrow keys move west to east, Enter toggles selection and Escape clears it. Arc pulses and sonar stop under reduced motion or with `animated={false}`.',
+    'Pass plain latitude and longitude in decimal degrees. The map uses a Robinson projection centered on 11°E (so the seam falls in the Bering Strait) and cropped to 84°N–56°S; `projectGeo(lat, lng)` returns the same viewBox coordinates for layers you draw with `overlay`. The land is a 400 × 168 bitmap rasterised from Natural Earth outlines and embedded as a 3 KB run-length string, so nothing loads at runtime and all dots are a single path. With `density="auto"` the dot pitch stays between 2.9 and 3.8px at any width, and markers keep their pixel size while the land scales. Marker area follows `value`, nearby land glows in the marker color, critical points pulse, and arcs take a point id or `[lat, lng]` at either end. Hover or focus a marker to light its arcs, draw a crosshair, and read it in the footer readout. The map is one tab stop: arrow keys move west to east, Enter toggles selection and Escape clears it. Arc pulses and sonar stop under reduced motion or with `animated={false}`.',
   previewWidth: 760,
   examples: [
     {
@@ -31,7 +31,7 @@ export default {
       name: "geo-map-regions-demo",
       title: "Customers by city",
       description:
-        "Status colours with custom labels and a side list in the aside slot. Selection is controlled, so the map and the list stay in sync.",
+        "Status colors with custom labels and a side list in the aside slot. Selection is controlled, so the map and the list stay in sync.",
     },
   ],
   api: [
@@ -69,7 +69,7 @@ export default {
     [
       "colors?",
       "{ land?: string; marker?: string; arc?: string; warn?: string; critical?: string }",
-      "CSS colours for each layer. The same values can come from the --geo-map-* CSS variables.",
+      "CSS colors for each layer. The same values can come from the --geo-map-* CSS variables.",
     ],
     [
       "valueLabel?",

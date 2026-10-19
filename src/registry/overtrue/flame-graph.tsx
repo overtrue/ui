@@ -17,7 +17,7 @@ export interface FlameNode {
   /** Total (inclusive) cost of the frame. When the children add up to more, their sum is used. */
   value: number;
   children?: FlameNode[];
-  /** Colour group. Defaults to the name's package prefix, e.g. "db" for "db.query". */
+  /** Color group. Defaults to the name's package prefix, e.g. "db" for "db.query". */
   group?: string;
   /** Anything else your tooltip or handlers need, such as a file and line. */
   meta?: Record<string, unknown>;
@@ -31,7 +31,7 @@ export interface FlameFrameInfo {
   node: FlameNode;
   /** 0 for the root. */
   depth: number;
-  /** Resolved colour group. */
+  /** Resolved color group. */
   group: string;
   /** Inclusive value: the frame and everything it called. */
   total: number;
@@ -86,7 +86,7 @@ export interface FlameGraphProps extends Omit<
   minFrameWidth?: number;
   /** Maximum height of the frame area in pixels; deeper profiles scroll. Defaults to fitting every row. */
   height?: number;
-  /** Colour by package group, by self time as a heat scale, or with your own function. Defaults to group. */
+  /** Color by package group, by self time as a heat scale, or with your own function. Defaults to group. */
   colorBy?: FlameGraphColorBy;
   /**
    * Group palette, hashed by group. With `colorBy="self"`, the stops of the heat
@@ -304,7 +304,7 @@ function interpolate(a: View, b: View, t: number): View {
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
 /* ------------------------------------------------------------------------ */
-/* Formatting and colour                                                     */
+/* Formatting and color                                                     */
 /* ------------------------------------------------------------------------ */
 
 function formatMs(ms: number) {
@@ -449,7 +449,7 @@ const FlameFrame = React.memo(function FlameFrame({
   reveal,
 }: FrameProps) {
   // Dimming mixes the fill toward the surface instead of fading it, so the ink is
-  // always picked against the colour that is actually on screen.
+  // always picked against the color that is actually on screen.
   const fill = active
     ? baseFill
     : dimmed
@@ -733,7 +733,7 @@ function FlameGraph({
     return () => cancelAnimationFrame(frame);
   }, [target.v0, target.vs, reduced]);
 
-  /* ---------------------------------------------------------- colours */
+  /* ---------------------------------------------------------- colors */
 
   const paletteKey = (colors ?? []).join("|");
   const colorMap = React.useMemo(() => {
@@ -763,7 +763,7 @@ function FlameGraph({
       map.set(frame.id, fill);
     }
     return map;
-    // paletteKey stands in for `colors`, so inline arrays do not recolour.
+    // paletteKey stands in for `colors`, so inline arrays do not recolor.
   }, [byId, root, colorBy, paletteKey]);
 
   /* ---------------------------------------------------------- search */

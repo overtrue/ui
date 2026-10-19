@@ -160,6 +160,11 @@
       "permanent": true
     },
     {
+      "source": "/components/feature-flags",
+      "destination": "/blocks/feature-flags",
+      "permanent": true
+    },
+    {
       "source": "/components/team-access",
       "destination": "/blocks/team-access",
       "permanent": true

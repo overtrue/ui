@@ -34,7 +34,7 @@ export default {
   );
 }`,
   notes:
-    "Pass one root frame, or an array of roots that are drawn under a single `rootName` frame. Each node's `value` is its total; when its children add up to more, their sum wins, and whatever is left over is self time. Frames are absolutely positioned HTML in rows of `rowHeight`, so labels stay sharp and truncate with an ellipsis; frames narrower than `minFrameWidth` pixels are skipped, which keeps profiles with thousands of frames fast. With `colorBy=\"group\"` the package prefix of each name (`db` for `db.query`, `react-dom` for `react-dom.renderToString`), or the node's own `group`, picks one of the chart colours and the function name picks one of three tints; `colorBy=\"self\"` switches to a heat scale of self time, and a function gives you full control. Text ink is chosen against the fill that is actually on screen, so it stays readable on every tint and in both themes. Click a frame or press Enter to zoom it to full width; ancestors stay full width and dim, and clicking one, Escape, or the reset button zooms back out. The zoom tweens about a fixed point over 300ms and is instant under reduced motion. Pass `zoomedId` and `onZoomChange` to control it, or `search` and `onSearchChange` to drive the highlight from your own field. The graph is one tab stop: Up and Down move to the parent or first child following the orientation, Left and Right move along the row, and Home returns to the zoomed frame. Hovering or focusing a frame shows its total, self time and share of the parent; `renderTooltip` replaces that readout. Every part has a `data-slot`, and frames carry `data-depth`, `data-match` and `data-dimmed`.",
+    "Pass one root frame, or an array of roots that are drawn under a single `rootName` frame. Each node's `value` is its total; when its children add up to more, their sum wins, and whatever is left over is self time. Frames are absolutely positioned HTML in rows of `rowHeight`, so labels stay sharp and truncate with an ellipsis; frames narrower than `minFrameWidth` pixels are skipped, which keeps profiles with thousands of frames fast. With `colorBy=\"group\"` the package prefix of each name (`db` for `db.query`, `react-dom` for `react-dom.renderToString`), or the node's own `group`, picks one of the chart colors and the function name picks one of three tints; `colorBy=\"self\"` switches to a heat scale of self time, and a function gives you full control. Text ink is chosen against the fill that is actually on screen, so it stays readable on every tint and in both themes. Click a frame or press Enter to zoom it to full width; ancestors stay full width and dim, and clicking one, Escape, or the reset button zooms back out. The zoom tweens about a fixed point over 300ms and is instant under reduced motion. Pass `zoomedId` and `onZoomChange` to control it, or `search` and `onSearchChange` to drive the highlight from your own field. The graph is one tab stop: Up and Down move to the parent or first child following the orientation, Left and Right move along the row, and Home returns to the zoomed frame. Hovering or focusing a frame shows its total, self time and share of the parent; `renderTooltip` replaces that readout. Every part has a `data-slot`, and frames carry `data-depth`, `data-match` and `data-dimmed`.",
   previewWidth: 720,
   examples: [
     {
@@ -47,7 +47,7 @@ export default {
       name: "flame-graph-search-demo",
       title: "Data layer hot spots",
       description:
-        "A background job in flame orientation, coloured by self time, with the search preset to db. and the heaviest functions listed below. Select a function to search for it.",
+        "A background job in flame orientation, colored by self time, with the search preset to db. and the heaviest functions listed below. Select a function to search for it.",
     },
   ],
   api: [
@@ -72,7 +72,7 @@ export default {
     [
       "colorBy?",
       '"group" | "self" | (node: FlameNode, context: FlameColorContext) => string',
-      "Hash the package group onto the palette, use a heat scale of self time, or return any CSS colour. Defaults to group.",
+      "Hash the package group onto the palette, use a heat scale of self time, or return any CSS color. Defaults to group.",
     ],
     [
       "colors?",

@@ -336,16 +336,18 @@
   letter-spacing: -0.01em;
   color: var(--site-ink);
 }
+/* Every cell captions the same way; only the measure widens with the cell. */
 .feature-caption small {
   display: block;
   max-width: 44ch;
-}
-.feature-cell.wide .feature-caption small {
-  max-width: 64ch;
   margin-top: 4px;
   font-size: 14px;
   line-height: 1.45;
   color: var(--site-graphite);
+  text-wrap: pretty;
+}
+.feature-cell.wide .feature-caption small {
+  max-width: 64ch;
 }
 .feature-caption svg {
   flex-shrink: 0;
@@ -359,26 +361,17 @@
   transform: translate(2px, -2px);
 }
 
+/* Groups flow through balanced columns, so long and short groups even out. */
 .library-index {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-auto-flow: dense;
-  gap: 40px 32px;
+  columns: 4;
+  column-gap: 32px;
   margin-top: 72px;
   padding-top: 32px;
   border-top: 1px solid var(--site-rule);
 }
-.index-group:first-child {
-  grid-column: span 2;
-  grid-row: span 4;
-}
-.index-group:first-child ul {
-  columns: 2;
-  column-gap: 32px;
-}
-.index-group:last-child {
-  grid-column: 4;
-  grid-row: 1 / span 4;
+.index-group {
+  break-inside: avoid;
+  padding-bottom: 36px;
 }
 .index-group h3 {
   display: flex;
@@ -924,11 +917,7 @@
     grid-row: span 1;
   }
   .library-index {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .index-group:last-child {
-    grid-column: auto;
-    grid-row: auto;
+    columns: 3;
   }
   .lab-shell {
     grid-template-columns: 1fr;
@@ -974,11 +963,7 @@
     grid-column: auto;
   }
   .library-index {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .index-group:first-child {
-    grid-column: 1 / -1;
-    grid-row: auto;
+    columns: 2;
   }
   .lab-grid {
     grid-template-columns: 1fr;
@@ -1006,11 +991,8 @@
     grid-auto-flow: row;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .index-group:first-child ul {
-    column-gap: 16px;
-  }
   .library-index {
-    grid-template-columns: 1fr;
+    columns: 1;
   }
   .index-group ul {
     columns: 2;

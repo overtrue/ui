@@ -177,7 +177,7 @@ export function AnalyticsOverview({
       data-slot="analytics-overview"
       aria-label="Acquisition analytics"
       className={cn(
-        "@container min-w-0 space-y-5 rounded-xl border bg-background p-4 text-foreground sm:p-6",
+        "@container min-w-0 space-y-5 text-foreground",
         className,
       )}
     >

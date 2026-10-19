@@ -20,6 +20,14 @@ import incidentReview from "./live-catalog/incident-review.ts";
 import revenueOverview from "./live-catalog/revenue-overview.ts";
 import modelUsage from "./live-catalog/model-usage.ts";
 import serviceExplorer from "./live-catalog/service-explorer.ts";
+import kanbanBoard from "./live-catalog/kanban-board.ts";
+import treeView from "./live-catalog/tree-view.ts";
+import eventCalendar from "./live-catalog/event-calendar.ts";
+import notificationCenter from "./live-catalog/notification-center.ts";
+import fileUpload from "./live-catalog/file-upload.ts";
+import multiSelect from "./live-catalog/multi-select.ts";
+import rangeSlider from "./live-catalog/range-slider.ts";
+import featureFlags from "./live-catalog/feature-flags.ts";
 import flameGraph from "./live-catalog/flame-graph.ts";
 import serviceMap from "./live-catalog/service-map.ts";
 import assistantPanel from "./live-catalog/assistant-panel.ts";
@@ -50,6 +58,14 @@ export const liveCatalog = [
   revenueOverview,
   modelUsage,
   serviceExplorer,
+  kanbanBoard,
+  treeView,
+  eventCalendar,
+  notificationCenter,
+  fileUpload,
+  multiSelect,
+  rangeSlider,
+  featureFlags,
   flameGraph,
   serviceMap,
   assistantPanel,

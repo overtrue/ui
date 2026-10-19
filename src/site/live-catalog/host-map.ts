@@ -3,7 +3,7 @@ export default {
   title: "Host map",
   category: "Operations",
   description:
-    "A dense fleet map with one cell per host, coloured by load or health and grouped by region, so hot spots stand out at a glance.",
+    "A dense fleet map with one cell per host, colored by load or health and grouped by region, so hot spots stand out at a glance.",
   dependencies: [],
   imports: "HostMap",
   usage: `<HostMap
@@ -18,7 +18,7 @@ export default {
   onSelect={(host) => console.log(host.name)}
 />`,
   notes:
-    "Pass the metric as a 0–1 fraction. Below the warn threshold cells ramp up the chart colour; above it they turn amber, and at the critical threshold they switch to the destructive colour with a soft pulse that stops under reduced motion. Status comes from `status` when you have real health checks, otherwise from `value` and `thresholds`; offline hosts always draw as an empty dashed cell. The readout sits in the card, so it never clips at the viewport edge. The map is a single tab stop: arrow keys follow the visual layout across groups, and Enter calls `onSelect`. For more than a few hundred hosts use `cellSize=\"sm\"`.",
+    "Pass the metric as a 0–1 fraction. Below the warn threshold cells ramp up the chart color; above it they turn amber, and at the critical threshold they switch to the destructive color with a soft pulse that stops under reduced motion. Status comes from `status` when you have real health checks, otherwise from `value` and `thresholds`; offline hosts always draw as an empty dashed cell. The readout sits in the card, so it never clips at the viewport edge. The map is a single tab stop: arrow keys follow the visual layout across groups, and Enter calls `onSelect`. For more than a few hundred hosts use `cellSize=\"sm\"`.",
   previewWidth: 640,
   previewHeight: 400,
   examples: [
@@ -32,7 +32,7 @@ export default {
       name: "host-map-status-demo",
       title: "Node health",
       description:
-        "Colour by status instead of load. The legend doubles as a summary; pick a status to isolate those nodes, and select a node to pin it.",
+        "Color by status instead of load. The legend doubles as a summary; pick a status to isolate those nodes, and select a node to pin it.",
     },
   ],
   api: [
@@ -44,7 +44,7 @@ export default {
     [
       "colorBy?",
       '"value" | "status"',
-      "Colour by the 0–1 metric or by health. Defaults to value.",
+      "Color by the 0–1 metric or by health. Defaults to value.",
     ],
     ["metricLabel?", "string", 'Name of the metric, e.g. "CPU". Default "Load".'],
     [

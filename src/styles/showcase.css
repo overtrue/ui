@@ -988,10 +988,9 @@
 }
 .form-workbench-heading .form-workbench-eyebrow {
   color: var(--pn-primary);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  letter-spacing: 0;
 }
 .form-workbench-docs {
   display: inline-flex;

@@ -95,7 +95,7 @@ function Hero() {
 const featured: { name: ItemName; span: string; width: number }[] = [
   { name: "geo-map", span: "wide", width: 760 },
   { name: "insight-card", span: "", width: 520 },
-  { name: "deploy-pipeline", span: "", width: 640 },
+  { name: "deploy-pipeline", span: "", width: 440 },
   { name: "trace-waterfall", span: "wide", width: 760 },
 ];
 const categoryOrder = [...componentCategories, "Blocks"] as const;
@@ -125,7 +125,7 @@ function LibraryIndex() {
           return (
             <article className={`feature-cell ${span}`} key={name}>
               <div className="feature-stage" inert aria-hidden="true">
-                <FitPreview width={width} height={320}>
+                <FitPreview width={width} height={380} maxAspect={1.1}>
                   <SpecimenBoundary>
                     <Example name={name} />
                   </SpecimenBoundary>

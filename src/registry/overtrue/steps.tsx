@@ -66,7 +66,7 @@ export function Steps({
                   state === "complete" &&
                     "bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.2),0_1px_2px_rgb(0_0_0/0.1)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.2),0_0_14px_-3px_color-mix(in_oklab,var(--color-primary)_80%,transparent)]",
                   state === "current" &&
-                    "bg-card text-primary shadow-[inset_0_0_0_1.5px_var(--color-primary),0_0_0_4px_color-mix(in_oklab,var(--color-primary)_16%,transparent),0_0_18px_-2px_color-mix(in_oklab,var(--color-primary)_45%,transparent)]",
+                    "bg-card text-primary shadow-[inset_0_0_0_1.5px_var(--color-primary),0_0_0_4px_color-mix(in_oklab,var(--color-primary)_16%,transparent)] dark:shadow-[inset_0_0_0_1.5px_var(--color-primary),0_0_0_4px_color-mix(in_oklab,var(--color-primary)_16%,transparent),0_0_18px_-2px_color-mix(in_oklab,var(--color-primary)_45%,transparent)]",
                   state === "upcoming" &&
                     "bg-muted/60 text-muted-foreground shadow-[inset_0_0_0_1px_var(--color-border)]",
                 )}
@@ -101,7 +101,7 @@ export function Steps({
                         ? "origin-top bg-linear-to-b"
                         : "origin-left bg-linear-to-r rtl:origin-right rtl:bg-linear-to-l",
                       state === "complete"
-                        ? "from-primary/80 to-primary shadow-[0_0_10px_color-mix(in_oklab,var(--color-primary)_45%,transparent)] dark:shadow-[0_0_12px_color-mix(in_oklab,var(--color-primary)_75%,transparent)]"
+                        ? "from-primary/80 to-primary dark:shadow-[0_0_12px_color-mix(in_oklab,var(--color-primary)_75%,transparent)]"
                         : "from-primary/70 to-transparent",
                       state === "complete"
                         ? "scale-100"

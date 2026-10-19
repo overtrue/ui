@@ -129,17 +129,17 @@ export function ModelUsage({
       data-slot="model-usage"
       aria-label={`${data.title}, ${data.period}`}
       className={cn(
-        "@container/usage overflow-hidden rounded-2xl border border-border/70 bg-background text-foreground",
+        "@container/usage flex min-w-0 flex-col gap-3 text-foreground sm:gap-4",
         className,
       )}
       {...props}
     >
       <header
         data-slot="model-usage-header"
-        className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-card px-4 py-3.5 sm:px-5"
+        className="flex flex-wrap items-end justify-between gap-3"
       >
         <div className="min-w-0">
-          <h2 className="truncate text-[15px] font-semibold tracking-tight">
+          <h2 className="truncate text-base font-semibold tracking-tight">
             {data.title}
           </h2>
           <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -152,7 +152,7 @@ export function ModelUsage({
         )}
       </header>
 
-      <div className="grid gap-3 p-3 sm:gap-4 sm:p-4">
+      <div className="grid gap-3 sm:gap-4">
         <dl
           data-slot="model-usage-metrics"
           className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border/70 bg-border/70 shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] @md/usage:grid-cols-2 @4xl/usage:grid-cols-4 dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]"

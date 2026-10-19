@@ -51,7 +51,7 @@ export default function Page() {
         <SceneCard title="A focused project sidebar">
           <div className="scene-nav-sidebar">
             <div>
-              <span className="scene-eyebrow">ACME STUDIO</span>
+              <span className="scene-eyebrow">Acme Studio</span>
               <strong>Visitor experience</strong>
               <Pill>In progress</Pill>
               {links.map(([name, to, Icon]) => (
@@ -62,7 +62,7 @@ export default function Page() {
               ))}
             </div>
             <section>
-              <span className="scene-eyebrow">PROJECT WORKSPACE</span>
+              <span className="scene-eyebrow">Project workspace</span>
               <h2>Everything in its place.</h2>
               <p>
                 Keep the brief, the work, and the people connected. Use the

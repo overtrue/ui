@@ -37,7 +37,7 @@ export interface PipelineStage {
 
 export type PipelineOrientation = "auto" | "horizontal" | "vertical";
 export type PipelineStatusLabels = Record<PipelineStatus, string>;
-/** Any CSS colour per status, e.g. `{ running: "var(--color-chart-4)" }`. */
+/** Any CSS color per status, e.g. `{ running: "var(--color-chart-4)" }`. */
 export type PipelineColors = Partial<Record<PipelineStatus, string>>;
 
 export interface DeployPipelineLabels {
@@ -146,7 +146,7 @@ export function summarizePipelineStatus(
 const tone = (status: PipelineStatus) =>
   ({ "--tone": `var(--pipeline-${status})` }) as React.CSSProperties;
 
-/** Status glyph used by the pipeline. Colour comes from the `--pipeline-<status>` variables. */
+/** Status glyph used by the pipeline. Color comes from the `--pipeline-<status>` variables. */
 export function PipelineStatusIcon({
   status,
   className,
@@ -421,7 +421,7 @@ export function DeployPipeline({
     .map((stage) => `${stage.id}:${stage.jobs.map((job) => job.id).join(",")}`)
     .join("|");
 
-  // Measure node edges and draw connectors between neighbouring stages.
+  // Measure node edges and draw connectors between neighboring stages.
   useIsoLayoutEffect(() => {
     const graph = graphRef.current;
     if (layout !== "horizontal" || !graph) {

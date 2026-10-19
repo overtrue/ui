@@ -49,7 +49,7 @@ export default function FlameGraphSearchDemo() {
   return (
     <FlameGraph
       title="reconcile-orders job"
-      description="Wall time, coloured by self time, with the data layer highlighted"
+      description="Wall time, colored by self time, with the data layer highlighted"
       data={profile}
       orientation="flame"
       colorBy="self"

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 /* Types                                                                     */
 /* ------------------------------------------------------------------------ */
 
-/** How the series combine: stacked, normalised to 100%, centred as a streamgraph, or overlapping. */
+/** How the series combine: stacked, normalised to 100%, centered as a streamgraph, or overlapping. */
 export type StackedAreaStack = "normal" | "expand" | "stream" | "none";
 export type StackedAreaCurve = "monotone" | "linear" | "step";
 /** An x value as it appears in the data: a number, an ISO date string, a Date, or a category label. */
@@ -19,7 +19,7 @@ export interface StackedAreaSeries {
   key: string;
   /** Name in the legend and tooltip. Defaults to `key`. */
   label?: string;
-  /** Any CSS colour. Defaults to the chart palette, cycling with softer tints past five. */
+  /** Any CSS color. Defaults to the chart palette, cycling with softer tints past five. */
   color?: string;
 }
 
@@ -621,7 +621,7 @@ const easeOut = (t: number) => 1 - (1 - t) ** 3;
 const easeInOut = (t: number) =>
   t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
 
-/** Default palette: the five chart colours, then softer tints of the same five. */
+/** Default palette: the five chart colors, then softer tints of the same five. */
 function paletteColor(i: number) {
   const base = `var(--color-chart-${(i % 5) + 1})`;
   const round = Math.floor(i / 5);

@@ -425,8 +425,8 @@ export function WorkspaceSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              tooltip="Customize"
-              aria-label="Customize"
+              tooltip="Customize theme"
+              aria-label="Customize theme"
               onClick={() => {
                 setOpenMobile(false);
                 onCustomize();
