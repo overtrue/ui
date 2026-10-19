@@ -376,12 +376,17 @@ kbd {
   border-color: color-mix(in oklab, var(--site-ink) 24%, var(--border));
 }
 .site-button.primary {
-  border-color: transparent;
+  border-color: color-mix(in oklab, var(--primary) 82%, black);
   background: var(--primary);
   color: var(--primary-foreground);
   box-shadow:
     0 1px 0 rgb(255 255 255 / 0.18) inset,
-    0 1px 2px rgb(13 20 36 / 0.16),
+    0 1px 2px rgb(13 20 36 / 0.16);
+}
+.dark .site-button.primary {
+  border-color: transparent;
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.18) inset,
     0 8px 20px -10px color-mix(in oklab, var(--primary) 70%, transparent);
 }
 .site-button.primary:hover {

@@ -42,11 +42,11 @@ export interface CohortGridProps extends Omit<
   cohorts: CohortGridCohort[];
   /** Column labels. Defaults to M0, M1, … for the longest cohort. */
   periods?: string[];
-  /** Show retention as a percentage or as retained people. Colour always follows retention. */
+  /** Show retention as a percentage or as retained people. Color always follows retention. */
   mode?: CohortGridMode;
   /** Add a size-weighted average row under the cohorts. */
   showAverage?: boolean;
-  /** Show the colour scale and the pending-period key. */
+  /** Show the color scale and the pending-period key. */
   showLegend?: boolean;
   title?: React.ReactNode;
   description?: React.ReactNode;
@@ -62,7 +62,7 @@ export interface CohortGridProps extends Omit<
    * size column from 10,000, while the readout and cell labels stay exact.
    */
   countFormatter?: (count: number) => string;
-  /** Any CSS colour. Cells mix it with transparency by retention. Defaults to chart-1. */
+  /** Any CSS color. Cells mix it with transparency by retention. Defaults to chart-1. */
   color?: string;
   /**
    * Retention mapped to the lightest and strongest fill. Defaults to the range of
@@ -134,8 +134,8 @@ function fillFor(color: string, t: number) {
 
 /**
  * Pick light or dark text from the fill's own lightness, tinted with its hue, so
- * strong cells stay readable whether the theme's chart colour is deep or pale.
- * Browsers without relative colour syntax keep the inherited foreground.
+ * strong cells stay readable whether the theme's chart color is deep or pale.
+ * Browsers without relative color syntax keep the inherited foreground.
  */
 function inkFor(fill: string) {
   return `oklch(from ${fill} clamp(0.2, (0.6 - l) * 1000, 0.985) min(c, 0.035) h)`;
@@ -150,7 +150,7 @@ const hatch =
 
 /**
  * A retention cohort matrix. Rows are cohorts, columns are periods since the cohort
- * started, and cell colour follows retention. Hover or focus a cell to light up its
+ * started, and cell color follows retention. Hover or focus a cell to light up its
  * row and column and read the exact numbers; arrow keys move between cells.
  */
 function CohortGrid({
@@ -510,7 +510,7 @@ function CohortGrid({
                   stickyFade,
                 )}
               >
-                <span className="flex items-baseline justify-between gap-3 font-mono text-[10.5px] tracking-wide text-muted-foreground uppercase">
+                <span className="flex items-baseline justify-between gap-3 text-[11px] font-medium text-muted-foreground">
                   <span>{cohortLabel}</span>
                   <span>{sizeLabel}</span>
                 </span>
@@ -524,7 +524,7 @@ function CohortGrid({
                     data-active={isActive || undefined}
                     style={{ width: `${100 / Math.max(1, periods.length)}%` }}
                     className={cn(
-                      "group/col px-0 pb-1.5 text-center align-bottom font-mono text-[10.5px] font-medium tracking-wide whitespace-nowrap text-muted-foreground uppercase transition-colors motion-reduce:transition-none",
+                      "group/col px-0 pb-1.5 text-center align-bottom text-[11px] font-medium whitespace-nowrap text-muted-foreground tabular-nums transition-colors motion-reduce:transition-none",
                       "data-[active]:text-foreground",
                       col === periods.length - 1 && "pr-4",
                     )}

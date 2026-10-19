@@ -17,7 +17,7 @@ export default {
   onSelectedChange={(id) => console.log(id)}
 />`,
   notes:
-    'Dates are calendar days: `end` is inclusive, date-only strings such as "2026-10-05" never shift with the time zone, and `onTaskChange` returns local-midnight Dates. Tasks without a `color` take a chart colour per group. A task is overdue when its end is before `today` and it is not finished; the slip shows as a hatched tail up to the today line. Arrows turn red and dashed when a task starts before its predecessor ends. The task list stays pinned while the grid scrolls, bar names stick to the visible edge, and switching zoom keeps today where it was on screen. With `editable`, drag a bar to move it or its edges to resize, snapped to whole days; focused bars move with the arrow keys and resize with Shift. The chart only previews a drag: update `tasks` in `onTaskChange` or the bar returns to its old dates. Pass `height` to cap the schedule and keep the time header sticky.',
+    'Dates are calendar days: `end` is inclusive, date-only strings such as "2026-10-05" never shift with the time zone, and `onTaskChange` returns local-midnight Dates. Tasks without a `color` take a chart color per group. A task is overdue when its end is before `today` and it is not finished; the slip shows as a hatched tail up to the today line. Arrows turn red and dashed when a task starts before its predecessor ends. The task list stays pinned while the grid scrolls, bar names stick to the visible edge, and switching zoom keeps today where it was on screen. With `editable`, drag a bar to move it or its edges to resize, snapped to whole days; focused bars move with the arrow keys and resize with Shift. The chart only previews a drag: update `tasks` in `onTaskChange` or the bar returns to its old dates. Pass `height` to cap the schedule and keep the time header sticky.',
   previewWidth: 760,
   examples: [
     {
@@ -83,7 +83,7 @@ export default {
     [
       "renderBar?",
       "(task: GanttTask, info: GanttBarInfo) => React.ReactNode",
-      "Replaces the inside of a bar. info carries dates, duration, width, colour, overdue and drag state.",
+      "Replaces the inside of a bar. info carries dates, duration, width, color, overdue and drag state.",
     ],
     [
       "editable?",

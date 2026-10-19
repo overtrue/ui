@@ -18,6 +18,10 @@ In arbitrary CSS values (`color-mix()`, gradients, SVG fills, inline styles), us
 
 Card padding is 20px (`p-5`) with 16px between header and body. Dense variants use 16px.
 
+Cards never sit inside cards. A block or dashboard is an unframed composition: a heading row, then its panels as cards directly on the page, so it drops into an application page without adding a second frame. Inside a card, group content with an inset panel, a divider or a tinted well, not another bordered card.
+
+Shadows are neutral in light mode. Colored glows (under a selected day, a primary chip, a live marker) are a dark-mode effect only: write them as `dark:shadow-[...]` and give light mode a quiet `0_1px_2px` shadow or none.
+
 ## Type
 
 | Role | Recipe |
@@ -52,6 +56,6 @@ Numbers are always tabular. Units and currency symbols are quieter than the digi
 ## Interaction
 
 - Every chart has a hover readout and the same readout from the keyboard.
-- Selected and focused items get `ring-2 ring-primary/30` with a faint primary glow.
+- Selected and focused items get `ring-2 ring-primary/30`; in dark mode they may add a faint primary glow.
 - Header actions are 28px ghost icon buttons with accessible names.
 - Root and key parts expose `data-slot` and state attributes so applications can restyle them.

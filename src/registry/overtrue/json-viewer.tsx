@@ -528,11 +528,11 @@ const PAD = 10;
 const INDENT = 16;
 
 const typeClass: Partial<Record<JsonValueType, string>> = {
-  string: "text-chart-2",
-  date: "text-chart-2",
+  string: "text-[color-mix(in_oklab,var(--color-chart-2)_70%,var(--color-foreground))]",
+  date: "text-[color-mix(in_oklab,var(--color-chart-2)_70%,var(--color-foreground))]",
   number: "text-chart-1",
   bigint: "text-chart-1",
-  boolean: "text-chart-4",
+  boolean: "text-[color-mix(in_oklab,var(--color-chart-4)_70%,var(--color-foreground))]",
   null: "text-muted-foreground italic",
   undefined: "text-muted-foreground italic",
   function: "text-muted-foreground italic",
@@ -560,7 +560,7 @@ function Guides({ row, activeContainer }: { row: Row; activeContainer: string | 
 
 /**
  * A collapsible, searchable JSON tree for payloads, logs and trace attributes, with indent guides,
- * typed colours, copyable paths and full tree keyboard support.
+ * typed colors, copyable paths and full tree keyboard support.
  */
 export function JsonViewer({
   data,
@@ -1096,7 +1096,7 @@ export function JsonViewer({
               <>
                 <span className="text-muted-foreground/70">{open}</span>
                 {row.type === "array" && (
-                  <span className="ml-2 font-sans text-[11px] text-muted-foreground/70 tabular-nums">{count}</span>
+                  <span className="ml-2 font-sans text-[11px] text-muted-foreground tabular-nums">{count}</span>
                 )}
               </>
             ) : (
@@ -1111,7 +1111,7 @@ export function JsonViewer({
                   {close}
                   {!row.last && ","}
                 </span>
-                <span className="ml-2 font-sans text-[11px] text-muted-foreground/75 tabular-nums">{count}</span>
+                <span className="ml-2 font-sans text-[11px] text-muted-foreground tabular-nums">{count}</span>
               </>
             )
           ) : (

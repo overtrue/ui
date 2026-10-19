@@ -6,12 +6,15 @@ export function FitPreview({
   width = 400,
   height = 300,
   fit = "contain",
+  maxAspect = 0.75,
 }: {
   children: ReactNode;
   width?: number;
   height?: number;
   /** "width" scales to the available width and crops tall content with a fade. */
   fit?: "contain" | "crop-tall" | "responsive" | "width";
+  /** Tallest the viewport may get, as a share of its width. */
+  maxAspect?: number;
 }) {
   const viewport = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
@@ -46,7 +49,7 @@ export function FitPreview({
     fit === "responsive" || fit === "width"
       ? height
       : size.available
-        ? Math.min(height, size.available * 0.75)
+        ? Math.min(height, size.available * maxAspect)
         : height;
   // "width" keeps type at its real size: content reflows to the column and crops.
   const fluid = fit === "responsive" || fit === "width";

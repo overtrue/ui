@@ -712,11 +712,11 @@ export function LiveChart({
                   ["Min", summary.min],
                   ["Avg", summary.avg],
                   ["Max", summary.max],
-                  ["P95", summary.p95],
+                  ["p95", summary.p95],
                 ] as const
               ).map(([name, value]) => (
                 <div key={name} className="min-w-0">
-                  <dt className="text-[10px] leading-4 font-medium tracking-wider text-muted-foreground uppercase">
+                  <dt className="text-[11px] leading-4 font-medium text-muted-foreground">
                     {name}
                   </dt>
                   <dd

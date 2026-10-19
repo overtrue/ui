@@ -62,7 +62,7 @@ export interface ServiceMapEdge {
   errorRate?: number;
   /** 95th percentile latency in milliseconds. */
   p95?: number;
-  /** Overrides the colour picked from the error rate. */
+  /** Overrides the color picked from the error rate. */
   status?: ServiceStatus;
 }
 
@@ -165,7 +165,7 @@ function formatLatency(ms: number) {
 interface Item {
   id: string;
   layer: number;
-  /** Centre on the cross axis, in world pixels. */
+  /** Center on the cross axis, in world pixels. */
   pos: number;
   size: number;
   dummy: boolean;
@@ -188,7 +188,7 @@ interface Structure {
   items: Map<string, Item>;
   routes: Route[];
   layerOf: Map<string, number>;
-  /** Extent on the cross axis, centre to centre plus the node size. */
+  /** Extent on the cross axis, center to center plus the node size. */
   span: number;
 }
 
@@ -366,7 +366,7 @@ function buildStructure(
   for (const item of items.values()) layers[item.layer].push(item);
   for (const layer of layers) layer.sort((a, b) => a.rank - b.rank);
 
-  // Order within layers: barycentre sweeps, keeping the arrangement with fewest crossings.
+  // Order within layers: barycenter sweeps, keeping the arrangement with fewest crossings.
   const index = new Map<string, number>();
   const reindex = () =>
     layers.forEach((layer) => layer.forEach((item, i) => index.set(item.id, i)));
@@ -395,10 +395,10 @@ function buildStructure(
       ? layers.map((_, i) => i).slice(1)
       : layers.map((_, i) => i).slice(0, -1).reverse();
     for (const l of order) {
-      const neighbours = downward ? up : down;
+      const neighbors = downward ? up : down;
       const weight = new Map<string, number>();
       layers[l].forEach((item, i) => {
-        const list = neighbours.get(item.id) ?? [];
+        const list = neighbors.get(item.id) ?? [];
         weight.set(
           item.id,
           list.length
@@ -420,7 +420,7 @@ function buildStructure(
   best.forEach((layer, l) => (layers[l] = layer));
   reindex();
 
-  // Cross-axis positions: pull each item toward its neighbours, keeping order and spacing.
+  // Cross-axis positions: pull each item toward its neighbors, keeping order and spacing.
   const gapBetween = (a: Item, b: Item) =>
     (a.size + b.size) / 2 +
     (a.dummy && b.dummy ? DUMMY_GAP : a.dummy || b.dummy ? DUMMY_GAP + 4 : nodeGap);
@@ -433,7 +433,7 @@ function buildStructure(
     const mid = cursor / 2;
     for (const item of layer) item.pos -= mid;
   }
-  const centre = (id: string) => items.get(id)!.pos;
+  const center = (id: string) => items.get(id)!.pos;
   for (let pass = 0; pass < 24; pass++) {
     const downward = pass % 2 === 0;
     const order = downward
@@ -445,7 +445,7 @@ function buildStructure(
       const desired = layer.map((item) => {
         const near = [...(up.get(item.id) ?? []), ...(down.get(item.id) ?? [])];
         if (!near.length) return item.pos;
-        return near.reduce((sum, id) => sum + centre(id), 0) / near.length;
+        return near.reduce((sum, id) => sum + center(id), 0) / near.length;
       });
       const separation = layer
         .slice(1)
@@ -589,7 +589,7 @@ function StatusDot({ status, className }: { status: ServiceStatus; className?: s
 /**
  * A live service dependency map. Nodes are laid out as a layered graph, left to
  * right by default; edges carry animated traffic whose width follows request rate
- * and whose colour follows error rate. Hover or focus a node to trace its upstream
+ * and whose color follows error rate. Hover or focus a node to trace its upstream
  * and downstream paths; select it to list its inbound and outbound traffic.
  */
 function ServiceMap({
@@ -740,7 +740,7 @@ function ServiceMap({
     const ports = new Map<string, number>();
     const sides = new Map<string, { key: string; toward: number }[]>();
     const sideKey = (nodeId: string, side: "in" | "out") => `${nodeId}|${side}`;
-    const neighbourCross = (route: Route, end: "source" | "target") => {
+    const neighborCross = (route: Route, end: "source" | "target") => {
       const chain = route.reversed ? [...route.chain].reverse() : route.chain;
       const id = end === "source" ? chain[1] : chain[chain.length - 2];
       return structure.items.get(id)!.pos;
@@ -752,8 +752,8 @@ function ServiceMap({
       const t = sideKey(route.edge.target, inSide);
       if (!sides.has(s)) sides.set(s, []);
       if (!sides.has(t)) sides.set(t, []);
-      sides.get(s)!.push({ key: `${route.key}|s`, toward: neighbourCross(route, "source") });
-      sides.get(t)!.push({ key: `${route.key}|t`, toward: neighbourCross(route, "target") });
+      sides.get(s)!.push({ key: `${route.key}|s`, toward: neighborCross(route, "source") });
+      sides.get(t)!.push({ key: `${route.key}|t`, toward: neighborCross(route, "target") });
     }
     for (const list of sides.values()) {
       list.sort((a, b) => a.toward - b.toward);
@@ -868,8 +868,8 @@ function ServiceMap({
     const viewport = viewportRef.current;
     const rect = selectedId ? placement.rects.get(selectedId) : undefined;
     if (!viewport || !rect || viewport.scrollWidth <= viewport.clientWidth) return;
-    const centre = (rect.x + cardW / 2) * scale;
-    viewport.scrollLeft = Math.max(0, centre - viewport.clientWidth / 2);
+    const center = (rect.x + cardW / 2) * scale;
+    viewport.scrollLeft = Math.max(0, center - viewport.clientWidth / 2);
   }, [selectedId, scale, compact]);
 
   React.useEffect(() => {

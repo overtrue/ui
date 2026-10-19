@@ -66,7 +66,7 @@ interface IndicatorRect {
 
 // The raised pill shared by the static active tab and the sliding indicator.
 const pill =
-  "bg-card shadow-[0_1px_2px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.04),0_6px_16px_-10px_color-mix(in_oklab,var(--color-primary)_45%,transparent)] dark:bg-foreground/10 dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.07),0_1px_2px_rgb(0_0_0/0.5),0_6px_18px_-10px_color-mix(in_oklab,var(--color-primary)_70%,transparent)]";
+  "bg-card shadow-[0_1px_2px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.04)] dark:bg-foreground/10 dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.07),0_1px_2px_rgb(0_0_0/0.5),0_6px_18px_-10px_color-mix(in_oklab,var(--color-primary)_70%,transparent)]";
 
 /** Small segmented control for switching a chart's time range. */
 function PeriodTabs({
@@ -175,7 +175,7 @@ function PeriodTabs({
                 animated
                   ? "data-[state=active]:bg-transparent data-[state=active]:shadow-none group-data-[variant=default]/tabs-list:data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent"
                   : cn(
-                      "data-[state=active]:bg-card data-[state=active]:shadow-[0_1px_2px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.04),0_6px_16px_-10px_color-mix(in_oklab,var(--color-primary)_45%,transparent)]",
+                      "data-[state=active]:bg-card data-[state=active]:shadow-[0_1px_2px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.04)]",
                       "dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-foreground/10 dark:data-[state=active]:shadow-[inset_0_1px_0_rgb(255_255_255/0.07),0_1px_2px_rgb(0_0_0/0.5),0_6px_18px_-10px_color-mix(in_oklab,var(--color-primary)_70%,transparent)]",
                     ),
               )}

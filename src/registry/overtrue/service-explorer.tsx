@@ -70,14 +70,14 @@ export function ServiceExplorer({
       data-slot="service-explorer"
       aria-label={data.title}
       className={cn(
-        "@container/explorer overflow-hidden rounded-2xl border border-border/70 bg-background text-foreground",
+        "@container/explorer flex min-w-0 flex-col gap-3 text-foreground sm:gap-4",
         className,
       )}
       {...props}
     >
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-card px-4 py-3.5 sm:px-5">
+      <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="truncate text-[15px] font-semibold tracking-tight">
+          <h2 className="truncate text-base font-semibold tracking-tight">
             {data.title}
           </h2>
           {data.description && (
@@ -91,7 +91,7 @@ export function ServiceExplorer({
         )}
       </header>
 
-      <div className="grid gap-3 p-3 sm:gap-4 sm:p-4">
+      <div className="grid gap-3 sm:gap-4">
         <ServiceMap
           title="Service map"
           description="Select a service to inspect it"

@@ -103,7 +103,7 @@ export function FilterTabs<T extends string>({
           aria-hidden="true"
           data-slot="filter-tabs-indicator"
           className={cn(
-            "pointer-events-none absolute top-0 left-0 -z-10 rounded-lg bg-primary/10 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--color-primary)_22%,transparent),0_4px_14px_-8px_color-mix(in_oklab,var(--color-primary)_70%,transparent)] dark:bg-primary/15",
+            "pointer-events-none absolute top-0 left-0 -z-10 rounded-lg bg-primary/10 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--color-primary)_22%,transparent)] dark:bg-primary/15",
             glide &&
               "transition-[translate,width,height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
           )}

@@ -21,7 +21,7 @@ export function SidebarNav({ sections, open = true, folded = false, className }:
     >
       {sections.map((section) => (
         <div key={section.title} className="mb-4">
-          <div className="px-2 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          <div className="px-2 pb-1 pt-2 text-xs font-medium text-muted-foreground">
             {section.title}
           </div>
           {section.items.map((item) =>

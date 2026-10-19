@@ -332,7 +332,7 @@ const spans: TraceSpan[] = rows.map(
   }),
 );
 
-// Pin colours so related services read as families; the card network is external, so it stays neutral.
+// Pin colors so related services read as families; the card network is external, so it stays neutral.
 const serviceColors = {
   gateway: "var(--color-chart-1)",
   auth: "var(--color-chart-5)",

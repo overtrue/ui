@@ -50,7 +50,7 @@ export interface FilterOption {
   value: string;
   label: string;
   icon?: React.ReactNode;
-  /** Any CSS colour, drawn as a dot when there is no icon. */
+  /** Any CSS color, drawn as a dot when there is no icon. */
   color?: string;
 }
 
@@ -655,7 +655,7 @@ function OptionList({
                   className={cn(
                     "flex size-4 shrink-0 items-center justify-center rounded-[5px] border transition-colors duration-150",
                     checked
-                      ? "border-primary bg-primary text-primary-foreground shadow-[0_2px_6px_-2px_color-mix(in_oklab,var(--color-primary)_70%,transparent)]"
+                      ? "border-primary bg-primary text-primary-foreground dark:shadow-[0_2px_6px_-2px_color-mix(in_oklab,var(--color-primary)_70%,transparent)]"
                       : "border-input bg-card",
                   )}
                 >

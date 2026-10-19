@@ -87,7 +87,7 @@ export interface LatencyHistogramProps extends Omit<
   domain?: LatencyRange;
   /** Plot height in pixels. Defaults to a third of the plot width, between 140 and 220. */
   height?: number;
-  /** Override any series colour with a CSS colour. */
+  /** Override any series color with a CSS color. */
   colors?: Partial<LatencyHistogramColors>;
   /** Replaces the hover tooltip content. */
   renderTooltip?: (bucket: LatencyHistogramBucket) => React.ReactNode;
@@ -1037,7 +1037,7 @@ export function LatencyHistogram({
         <dl
           data-slot="histogram-summary"
           className={cn(
-            "mx-4 hidden gap-px overflow-hidden rounded-lg border bg-border @md/histogram:grid",
+            "mx-4 hidden overflow-hidden rounded-lg bg-muted/50 @md/histogram:grid dark:bg-muted/30",
             hasHeader ? "mt-3" : "mt-4",
           )}
           style={{
@@ -1051,7 +1051,7 @@ export function LatencyHistogram({
             return (
               <div
                 key={mark.p}
-                className="min-w-0 bg-card px-2 py-1.5 @sm/histogram:px-2.5 @md/histogram:px-3 @md/histogram:py-2"
+                className="min-w-0 border-s border-border/60 px-2 py-1.5 first:border-s-0 @sm/histogram:px-2.5 @md/histogram:px-3 @md/histogram:py-2"
               >
                 <dt className="font-mono text-[11px] leading-4 text-muted-foreground">
                   {percentileName(mark.p)}
@@ -1067,7 +1067,7 @@ export function LatencyHistogram({
                 {delta != null && Math.abs(delta) > 0 && (
                   <dd
                     className={cn(
-                      "truncate font-mono text-[10px] leading-4 whitespace-nowrap tabular-nums @sm/histogram:text-[10.5px]",
+                      "truncate font-mono text-[11px] leading-4 whitespace-nowrap tabular-nums",
                       delta > 0
                         ? "text-destructive"
                         : "text-emerald-700 dark:text-emerald-400",
@@ -1081,7 +1081,7 @@ export function LatencyHistogram({
             );
           })}
           {hasThreshold && (
-            <div className="min-w-0 bg-card px-2 py-1.5 @sm/histogram:px-2.5 @md/histogram:px-3 @md/histogram:py-2">
+            <div className="min-w-0 border-s border-border/60 px-2 py-1.5 first:border-s-0 @sm/histogram:px-2.5 @md/histogram:px-3 @md/histogram:py-2">
               <dt className="truncate text-[11px] leading-4 text-muted-foreground">
                 Over {thresholdLabel}
               </dt>
@@ -1095,7 +1095,7 @@ export function LatencyHistogram({
               >
                 {percentLabel(overShare)}
               </dd>
-              <dd className="truncate font-mono text-[10px] leading-4 text-muted-foreground tabular-nums @sm/histogram:text-[10.5px]">
+              <dd className="truncate font-mono text-[11px] leading-4 text-muted-foreground tabular-nums">
                 {whole.format(Math.round(over))}
                 <span className="hidden @sm/histogram:inline">
                   {" "}

@@ -27,7 +27,7 @@ export interface ExperimentVariant extends ExperimentArm {
   name: string;
   /** Marks the baseline. Defaults to the first variant. */
   isControl?: boolean;
-  /** Any CSS colour for the variant's dot and history line. */
+  /** Any CSS color for the variant's dot and history line. */
   color?: string;
 }
 
@@ -478,7 +478,7 @@ function toTime(value: string | number | Date | undefined) {
 
 const DAY = 86_400_000;
 const controlColor = "var(--color-muted-foreground)";
-// Green is skipped so a variant's own colour never reads as "winning".
+// Green is skipped so a variant's own color never reads as "winning".
 const treatmentColors = [1, 4, 3, 5, 2].map((n) => `var(--color-chart-${n})`);
 
 /** Every number the readout shows, plus the plain-language decision. */

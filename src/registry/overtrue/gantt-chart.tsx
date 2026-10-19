@@ -28,7 +28,7 @@ export interface GanttTask {
   dependsOn?: string[];
   /** Draw as a diamond on its start date instead of a bar. */
   milestone?: boolean;
-  /** Any CSS colour. Defaults to a chart colour per group. */
+  /** Any CSS color. Defaults to a chart color per group. */
   color?: string;
 }
 
@@ -561,7 +561,7 @@ function GanttChart({
   }, []);
 
   // First paint: open on today (or the first task). Zoom changes keep today where it
-  // was on screen when it was visible, and the centre date otherwise.
+  // was on screen when it was visible, and the center date otherwise.
   React.useLayoutEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -1016,7 +1016,7 @@ function GanttChart({
           {/* Corner */}
           <div
             className={cn(
-              "sticky top-0 left-0 z-40 flex items-end justify-between border-r border-b bg-card px-3 pb-1.5 font-mono text-[10px] tracking-wide text-muted-foreground uppercase",
+              "sticky top-0 left-0 z-40 flex items-end justify-between border-r border-b bg-card px-3 pb-1.5 text-[11px] font-medium text-muted-foreground",
               scrolled && "shadow-[6px_0_12px_-8px_rgb(0_0_0/0.25)]",
             )}
             style={{ height: HEADER }}

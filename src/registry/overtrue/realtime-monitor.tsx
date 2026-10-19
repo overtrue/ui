@@ -143,18 +143,18 @@ export function RealtimeMonitor({
       data-slot="realtime-monitor"
       aria-label={`${title} monitor`}
       className={cn(
-        "@container/monitor overflow-hidden rounded-xl border bg-background text-foreground",
+        "@container/monitor flex min-w-0 flex-col gap-3 text-foreground sm:gap-4",
         className,
       )}
       {...props}
     >
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b bg-card px-4 py-3 sm:px-5">
+      <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <IconServer2 aria-hidden="true" className="size-[18px]" stroke={1.75} />
           </span>
           <div className="min-w-0">
-            <h2 className="truncate text-sm font-semibold tracking-tight">
+            <h2 className="truncate text-base font-semibold tracking-tight">
               {title}
             </h2>
             <p className="truncate text-xs text-muted-foreground">
@@ -169,7 +169,7 @@ export function RealtimeMonitor({
               "inline-flex h-7 items-center gap-2 rounded-full border px-2.5 text-xs font-medium",
               paused
                 ? "text-muted-foreground"
-                : "border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+                : "border-emerald-500/25 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300",
             )}
           >
             <span className="relative flex size-1.5">
@@ -203,7 +203,7 @@ export function RealtimeMonitor({
         </div>
       </header>
 
-      <div className="grid gap-3 p-3 sm:gap-4 sm:p-4">
+      <div className="grid gap-3 sm:gap-4">
         <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-border shadow-xs @3xl/monitor:grid-cols-4 [&>*]:bg-card">
           <Metric
             label="Requests / s"

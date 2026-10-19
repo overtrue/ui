@@ -29,7 +29,7 @@ export interface HostMapProps extends Omit<
   "title" | "onSelect"
 > {
   hosts: HostMapHost[];
-  /** Colour cells by metric value or by health status. */
+  /** Color cells by metric value or by health status. */
   colorBy?: "value" | "status";
   /** Name of the metric, e.g. "CPU". */
   metricLabel?: string;
@@ -98,8 +98,8 @@ function metricOf(host: HostMapHost) {
 }
 
 /**
- * Calm values ramp up the chart colour; warm values move from amber towards the
- * destructive colour so hot spots read before any label is checked.
+ * Calm values ramp up the chart color; warm values move from amber towards the
+ * destructive color so hot spots read before any label is checked.
  */
 function valueFill(value: number, warn: number, critical: number) {
   const v = clamp01(value);
@@ -125,7 +125,7 @@ function statusOf(host: HostMapHost, warn: number, critical: number): HostStatus
  * Find the cell to move to with the arrow keys, following the visual layout across
  * wrapped rows and groups. Offsets ignore the hover scale transform.
  */
-function neighbour(
+function neighbor(
   cells: HTMLElement[],
   from: HTMLElement,
   direction: "up" | "down",
@@ -220,7 +220,7 @@ const HostCell = React.memo(function HostCell({
 });
 
 /**
- * A fleet host map: one small cell per host, pod, or node, coloured by a metric or by
+ * A fleet host map: one small cell per host, pod, or node, colored by a metric or by
  * health and grouped by region. Hover or focus a cell to inspect it in a fixed readout;
  * arrow keys move through the map and Enter selects.
  */
@@ -333,8 +333,8 @@ function HostMap({
     const moves: Record<string, () => HTMLElement | null | undefined> = {
       ArrowRight: () => all[index + 1],
       ArrowLeft: () => all[index - 1],
-      ArrowDown: () => neighbour(all, target, "down"),
-      ArrowUp: () => neighbour(all, target, "up"),
+      ArrowDown: () => neighbor(all, target, "down"),
+      ArrowUp: () => neighbor(all, target, "up"),
       Home: () => all[0],
       End: () => all[all.length - 1],
     };
@@ -381,7 +381,7 @@ function HostMap({
           ) : null}
         </div>
         <div className="flex items-center gap-2.5">
-          <span className="font-mono text-[10.5px] tracking-wide text-muted-foreground uppercase">
+          <span className="text-[11px] text-muted-foreground">
             {metricLabel}
           </span>
           <span className="text-sm font-semibold tabular-nums">
@@ -408,7 +408,7 @@ function HostMap({
     readout = (
       <>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="font-mono text-[10.5px] tracking-wide uppercase">
+          <span className="text-[11px] font-medium">
             Fleet
           </span>
           <span className="ml-auto tabular-nums">
@@ -485,7 +485,7 @@ function HostMap({
           data-slot="host-map-readout"
           aria-hidden="true"
           data-active={activeHost ? true : undefined}
-          className="flex min-w-0 shrink-0 flex-col justify-center gap-1.5 rounded-lg border bg-muted/30 px-3 py-2 transition-colors data-[active]:bg-muted/60 motion-reduce:transition-none @md/host-map:w-56"
+          className="flex min-w-0 shrink-0 flex-col justify-center gap-1.5 rounded-lg bg-muted/50 px-3 py-2 transition-colors data-[active]:bg-muted motion-reduce:transition-none @md/host-map:w-56 dark:bg-muted/30 dark:data-[active]:bg-muted/60"
         >
           {readout}
         </div>
@@ -635,7 +635,7 @@ function HostMap({
         >
           {colorBy === "value" ? (
             <>
-              <span className="font-mono text-[10.5px] tracking-wide uppercase">
+              <span className="text-[11px] font-medium">
                 {metricLabel}
               </span>
               <span className="flex items-center gap-4">

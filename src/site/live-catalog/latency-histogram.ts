@@ -121,7 +121,7 @@ export default {
     [
       "colors?",
       "{ bar?; compare?; threshold?; marker?; selection? }",
-      "Any CSS colour per part. Defaults to chart-1, muted foreground, destructive, foreground, and primary.",
+      "Any CSS color per part. Defaults to chart-1, muted foreground, destructive, foreground, and primary.",
     ],
     [
       "renderTooltip?",

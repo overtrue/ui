@@ -5,10 +5,11 @@
  */
 .overtrue-workspace {
   --ws-hairline: color-mix(in oklab, hsl(var(--foreground)) 9%, transparent);
+  --ws-hover: color-mix(in oklab, hsl(var(--foreground)) 5%, transparent);
   --ws-raise:
-    0 1px 1px rgb(13 20 36 / 0.03), 0 2px 4px -2px rgb(13 20 36 / 0.06);
+    0 1px 1px rgb(13 20 36 / 0.03), 0 1px 3px -1px rgb(13 20 36 / 0.06);
   --ws-float:
-    0 1px 2px rgb(13 20 36 / 0.05), 0 16px 40px -16px rgb(13 20 36 / 0.22);
+    0 2px 4px -1px rgb(13 20 36 / 0.05), 0 12px 32px -8px rgb(13 20 36 / 0.18);
   --ws-ring: 0 0 0 3px color-mix(in oklab, hsl(var(--primary)) 24%, transparent);
   --ws-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --pn-card-shadow: var(--ws-raise);
@@ -41,27 +42,18 @@
   letter-spacing: -0.015em;
 }
 .overtrue-workspace :is(.scene-heading h1, .pn-page-title) {
-  font-size: clamp(26px, 2.6vw, 34px);
-  font-stretch: 108%;
-  font-weight: 640;
-  letter-spacing: -0.035em;
-  line-height: 1.08;
+  font-size: clamp(24px, 2.1vw, 28px);
+  font-stretch: 106%;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
 }
 .overtrue-workspace :is(.scene-eyebrow, .pn-page-pretitle) {
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 560;
   letter-spacing: 0;
   text-transform: none;
   color: var(--pn-secondary);
-}
-.overtrue-workspace .scene-heading .scene-eyebrow::before {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--scene-accent) 18%, transparent);
-}
-.overtrue-workspace .scene-heading {
-  border-bottom-color: var(--ws-hairline);
 }
 .overtrue-workspace :is(code, kbd, pre, .font-monospace) {
   font-family: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -76,30 +68,101 @@
   backdrop-filter: blur(14px) saturate(1.5);
   -webkit-backdrop-filter: blur(14px) saturate(1.5);
 }
-.overtrue-workspace .workspace-docs {
-  height: 34px;
-  border-radius: calc(var(--radius) * 1.25);
-  box-shadow: var(--ws-raise);
+/* Every header control shares one 32px row: quiet until hovered. */
+.overtrue-workspace .workspace-header-actions {
+  gap: 4px;
 }
-.overtrue-workspace .workspace-icon-button {
-  width: 36px;
-  height: 36px;
-  border-radius: calc(var(--radius) * 1.25);
+.overtrue-workspace .workspace-docs {
+  height: 32px;
+  min-height: 0;
+  margin-inline-end: 4px;
+  padding: 0 10px;
+  gap: 6px;
+  border: 0;
+  border-radius: calc(var(--radius) * 1.1);
+  background: transparent;
+  box-shadow: none !important;
+  color: var(--pn-secondary);
+  font-size: 13px;
+  font-weight: 540;
+}
+.overtrue-workspace .workspace-docs > svg {
+  width: 16px;
+  height: 16px;
+  color: inherit !important;
+}
+.overtrue-workspace .workspace-docs:hover {
+  background: var(--ws-hover);
+  color: var(--pn-body-color);
+}
+.overtrue-workspace .workspace-icon-button,
+.overtrue-workspace .workspace-header [data-slot="sidebar-trigger"] {
+  width: 32px;
+  height: 32px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--radius) * 1.1);
+  background: transparent;
   color: var(--pn-secondary);
   transition:
     background-color 160ms,
     color 160ms;
 }
-.overtrue-workspace .workspace-icon-button:hover {
+.overtrue-workspace .workspace-icon-button > svg,
+.overtrue-workspace .workspace-header [data-slot="sidebar-trigger"] > svg {
+  width: 18px;
+  height: 18px;
+}
+.overtrue-workspace .workspace-icon-button:hover,
+.overtrue-workspace .workspace-header [data-slot="sidebar-trigger"]:hover {
+  background: var(--ws-hover);
   color: var(--pn-body-color);
 }
 .overtrue-workspace .workspace-notifications > span {
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
   box-shadow: 0 0 0 2px hsl(var(--background));
 }
+/* The account is a single avatar; its name stays in the accessible label. */
+.overtrue-workspace .workspace-user {
+  width: 32px;
+  height: 32px;
+  min-height: 0;
+  margin-inline-start: 6px;
+  padding: 0;
+  border-radius: 999px;
+  background: transparent;
+  transition: box-shadow 160ms;
+}
+.overtrue-workspace .workspace-user img {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px var(--ws-hairline);
+}
+.overtrue-workspace .workspace-user > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.overtrue-workspace .workspace-user:hover img,
+.overtrue-workspace .workspace-user[data-state="open"] img {
+  box-shadow: 0 0 0 3px var(--ws-hover), 0 0 0 1px var(--ws-hairline);
+}
 
-/* Sidebar ---------------------------------------------------------------- */
+/* Sidebar ----------------------------------------------------------------
+ * The sidebar sits on the frame. Rows are quiet text; the current page is a
+ * small raised tab, and nested pages light a segment of their guide line.
+ */
 .workspace-app-sidebar {
-  --workspace-sidebar-selected: color-mix(in oklab, hsl(var(--primary)) 10%, transparent);
+  --workspace-sidebar-selected: hsl(var(--card));
+  --workspace-sidebar-ink: color-mix(in oklab, hsl(var(--sidebar-foreground)) 80%, transparent);
 }
 .workspace-app-sidebar [data-slot="sidebar-inner"] {
   background: hsl(var(--sidebar));
@@ -108,85 +171,152 @@
 .dark .workspace-app-sidebar [data-slot="sidebar-inner"] {
   background: color-mix(in srgb, hsl(var(--sidebar)) 55%, hsl(var(--background)));
 }
+.workspace-app-sidebar .workspace-sidebar-heading {
+  height: 56px;
+  margin-top: 8px;
+  padding: 0 18px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
 .workspace-app-sidebar .workspace-sidebar-brand {
-  font-size: 19px;
+  font-size: 17px;
   font-stretch: 108%;
   font-weight: 700;
   letter-spacing: -0.03em;
 }
 .workspace-app-sidebar .workspace-sidebar-brand svg {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
+}
+.workspace-app-sidebar [data-sidebar="group"] {
+  padding: 4px 10px;
+}
+.workspace-app-sidebar [data-sidebar="group"] + [data-sidebar="group"] {
+  margin-top: 6px;
 }
 .workspace-app-sidebar [data-sidebar="group-label"] {
+  height: 28px;
+  padding: 0 10px;
   font-size: 12px;
   font-weight: 560;
   letter-spacing: 0;
   text-transform: none;
   color: hsl(var(--muted-foreground));
 }
+.workspace-app-sidebar [data-sidebar="menu"] {
+  gap: 1px;
+}
 .workspace-app-sidebar [data-sidebar="menu-button"] {
   position: relative;
-  height: 34px;
+  height: 32px;
+  gap: 10px;
+  padding: 0 10px;
   font-size: 13.5px;
   font-weight: 500;
-  border-radius: calc(var(--radius) * 1.25);
+  color: var(--workspace-sidebar-ink);
+  border-radius: calc(var(--radius) * 1.1);
   transition:
     background-color 160ms,
+    box-shadow 160ms,
     color 160ms;
 }
+.workspace-app-sidebar [data-sidebar="menu-button"]:hover {
+  background: var(--ws-hover);
+  color: hsl(var(--sidebar-foreground));
+}
 .workspace-app-sidebar [data-sidebar="menu-button"] > svg {
-  opacity: 0.65;
+  width: 17px;
+  height: 17px;
+  opacity: 0.7;
   stroke-width: 1.75;
+  transition:
+    opacity 160ms,
+    color 160ms;
+}
+.workspace-app-sidebar [data-sidebar="menu-button"]:hover > svg {
+  opacity: 1;
+}
+.workspace-app-sidebar .workspace-sidebar-chevron {
+  width: 14px !important;
+  height: 14px !important;
+  margin-inline-start: auto;
+  opacity: 0.4 !important;
+}
+.workspace-app-sidebar [data-sidebar="menu-button"]:hover > .workspace-sidebar-chevron {
+  opacity: 0.75 !important;
+}
+.workspace-app-sidebar .workspace-sidebar-section[data-current-group="true"] {
+  color: hsl(var(--sidebar-foreground));
+}
+.workspace-app-sidebar .workspace-sidebar-section[data-current-group="true"] > svg:first-child {
+  opacity: 1;
 }
 .workspace-app-sidebar [data-sidebar="menu-sub"] {
-  margin-inline-start: 19px;
+  margin-block: 2px 4px;
+  margin-inline-start: 17px;
+  padding-inline-start: 10px;
   border-color: var(--ws-hairline);
 }
 .workspace-app-sidebar [data-sidebar="menu-sub-button"] {
   position: relative;
   height: 30px;
+  padding: 0 10px;
   font-size: 13px;
   border-radius: calc(var(--radius) * 1);
-  color: hsl(var(--sidebar-foreground) / 0.72);
+  color: color-mix(in oklab, hsl(var(--sidebar-foreground)) 68%, transparent);
   transition:
     background-color 160ms,
     color 160ms;
 }
 .workspace-app-sidebar [data-sidebar="menu-sub-button"]:hover {
+  background: var(--ws-hover);
   color: hsl(var(--sidebar-foreground));
 }
-/* Selection reads as a lit row with an edge marker, not a solid block. */
 .workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"],
 html[data-workspace-navbar-theme="primary"]
   .workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"] {
-  background: var(--workspace-sidebar-selected);
-  color: hsl(var(--primary));
-  font-weight: 600;
+  background: var(--ws-hover);
+  color: hsl(var(--sidebar-foreground));
+  font-weight: 560;
 }
-.workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"]::before {
+/* The guide line carries the marker, so the row itself stays a clean pill.
+   It hangs off the item because the button clips its own overflow. */
+.workspace-app-sidebar [data-sidebar="menu-sub-item"]:has(> [data-active="true"])::before {
   content: "";
   position: absolute;
-  inset-inline-start: 0;
-  top: 8px;
-  bottom: 8px;
+  z-index: 1;
+  inset-inline-start: -11.5px;
+  top: 7px;
+  bottom: 7px;
   width: 2px;
   border-radius: 2px;
   background: hsl(var(--primary));
-  box-shadow: 0 0 10px color-mix(in oklab, hsl(var(--primary)) 70%, transparent);
+}
+/* Long trees scroll under a soft fade instead of a hard cut at the footer. */
+.workspace-app-sidebar [data-sidebar="content"] {
+  padding-bottom: 20px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
 }
 .workspace-app-sidebar [data-sidebar="footer"] {
+  gap: 4px;
+  padding: 8px 10px 10px;
   border-top-color: var(--ws-hairline);
 }
 .workspace-app-sidebar .workspace-sidebar-account {
-  border-color: var(--ws-hairline);
-  box-shadow: var(--ws-raise);
-  transition: border-color 160ms;
+  height: 48px;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  transition:
+    background-color 160ms,
+    border-color 160ms;
 }
 .workspace-app-sidebar .workspace-sidebar-account:hover {
-  border-color: color-mix(in oklab, hsl(var(--foreground)) 20%, transparent);
+  background: var(--ws-hover);
+  border-color: transparent;
 }
-
 /* Cards ------------------------------------------------------------------ */
 .overtrue-workspace :is(.pn-card, .scene-card) {
   border-color: var(--ws-hairline);
@@ -286,13 +416,30 @@ html[data-workspace-navbar-theme="primary"]
 .overtrue-workspace .pn-btn:not([class*="pn-btn-ghost"]):not(.pn-btn-link):not(.pn-btn-action):not(.pn-btn-close) {
   box-shadow: var(--ws-raise);
 }
+/* Primary actions are lit from above and edged a shade darker; no colored glow. */
 .overtrue-workspace :is(.pn-btn-primary, .scene-button.is-primary) {
-  background-image: linear-gradient(rgb(255 255 255 / 0.14), rgb(255 255 255 / 0));
-  border-color: transparent;
+  background-image: linear-gradient(rgb(255 255 255 / 0.12), rgb(255 255 255 / 0));
+  border-color: color-mix(in oklab, hsl(var(--primary)) 80%, black);
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 0.2) inset,
-    0 1px 2px rgb(13 20 36 / 0.18),
-    0 6px 16px -8px color-mix(in oklab, hsl(var(--primary)) 80%, transparent) !important;
+    0 1px 0 rgb(255 255 255 / 0.18) inset,
+    0 1px 2px rgb(13 20 36 / 0.16) !important;
+}
+.dark .overtrue-workspace :is(.pn-btn-primary, .scene-button.is-primary) {
+  border-color: color-mix(in oklab, hsl(var(--primary)) 85%, white);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.22) inset,
+    0 1px 2px rgb(0 0 0 / 0.5) !important;
+}
+/* One size for every scene action, whether it is a link or a button (the
+   workspace reset otherwise lets buttons inherit the 14px body size). */
+.overtrue-workspace .scene-button {
+  font-size: 13px;
+  font-weight: 550;
+}
+/* Secondary actions read as ink whether they are links or buttons. */
+.overtrue-workspace .scene-button:not(.is-primary):not(.scene-table *),
+.overtrue-workspace .scene-button:not(.is-primary):not(.scene-table *):hover {
+  color: var(--pn-body-color);
 }
 .overtrue-workspace :is(.pn-btn, .scene-button):focus-visible {
   outline: none;
@@ -347,6 +494,27 @@ html[data-workspace-navbar-theme="primary"]
 }
 
 /* Tables ----------------------------------------------------------------- */
+/* Inline status pickers are compact, so rows and cards read as data rather
+   than a form. */
+.overtrue-workspace .scene-select select {
+  min-height: 30px;
+  height: 30px;
+  padding-block: 0;
+  padding-inline: 10px 30px;
+  font-size: 13px;
+  border-color: var(--ws-hairline);
+  background-color: transparent;
+  box-shadow: none;
+}
+.overtrue-workspace .scene-select select:hover {
+  border-color: var(--scene-control-line);
+  background-color: var(--ws-hover);
+}
+.overtrue-workspace .scene-select > svg {
+  inset-inline-end: 9px;
+  width: 14px;
+  height: 14px;
+}
 .overtrue-workspace :is(.pn-table, .scene-table) thead th {
   background: transparent;
   color: var(--pn-secondary);
@@ -441,18 +609,38 @@ html[data-workspace-navbar-theme="primary"]
   stroke: var(--ws-hairline);
 }
 
-/* Floating customize button ------------------------------------------------ */
+/* Floating customize button ------------------------------------------------
+ * Sidebar layouts already offer Customize in the sidebar footer. Elsewhere the
+ * button is a quiet frosted disc rather than a glowing accent.
+ */
+.overtrue-workspace.workspace-sidebar-shell > .workspace-floating-customize {
+  display: none;
+}
 .overtrue-workspace .workspace-floating-customize {
-  border-radius: 14px;
-  box-shadow:
-    0 1px 0 rgb(255 255 255 / 0.2) inset,
-    0 10px 30px -10px color-mix(in oklab, hsl(var(--primary)) 80%, transparent) !important;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--ws-hairline) !important;
+  border-radius: 999px;
+  background: color-mix(in srgb, hsl(var(--card)) 82%, transparent) !important;
+  background-image: none !important;
+  color: var(--pn-body-color) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--ws-float) !important;
+}
+.overtrue-workspace .workspace-floating-customize:hover {
+  background: hsl(var(--card)) !important;
 }
 
 /* Footer ----------------------------------------------------------------- */
 .overtrue-workspace .workspace-footer {
+  padding: 20px 0;
   border-top: 1px solid var(--ws-hairline);
   color: var(--pn-secondary);
+  font-size: 12.5px;
+}
+.overtrue-workspace .workspace-footer-links {
+  gap: 4px 18px;
 }
 .overtrue-workspace .workspace-footer a {
   color: var(--pn-secondary);
@@ -473,8 +661,12 @@ html[data-workspace-navbar-theme="primary"]
   }
 }
 
-/* Live monitor inside the operations page. */
-.overtrue-workspace :is(.scene-live-monitor, .scene-release, .scene-brief, .scene-delivery-plan) {
+/* Live monitor inside the operations page: its panels are the cards, so the
+   monitor itself is unframed. */
+.overtrue-workspace .scene-live-monitor {
+  margin-bottom: 24px;
+}
+.overtrue-workspace :is(.scene-release, .scene-brief, .scene-delivery-plan) {
   margin-bottom: 24px;
   border-color: var(--ws-hairline);
   border-radius: calc(var(--radius) * 1.75);
@@ -762,11 +954,116 @@ html[data-workspace-navbar-theme="primary"]
   opacity: 0.45;
 }
 /* Direct links in the sidebar share the section buttons' rhythm. */
-.workspace-app-sidebar .workspace-sidebar-link[data-active="true"] {
+.workspace-app-sidebar .workspace-sidebar-link[data-active="true"],
+.workspace-app-sidebar .workspace-sidebar-link[data-active="true"]:hover {
   background: var(--workspace-sidebar-selected);
-  color: hsl(var(--primary));
-  font-weight: 600;
+  color: hsl(var(--sidebar-foreground));
+  font-weight: 560;
+  box-shadow:
+    0 0 0 1px var(--ws-hairline),
+    0 1px 2px rgb(13 20 36 / 0.06);
+}
+.dark .workspace-app-sidebar .workspace-sidebar-link[data-active="true"],
+.dark .workspace-app-sidebar .workspace-sidebar-link[data-active="true"]:hover {
+  background: color-mix(in oklab, hsl(var(--foreground)) 8%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, hsl(var(--foreground)) 7%, transparent);
 }
 .workspace-app-sidebar .workspace-sidebar-link[data-active="true"] > svg {
+  color: hsl(var(--primary));
   opacity: 1;
+}
+
+/* Navbar overlap: the dark band runs behind the page heading, so the canvas
+   light must not paint over it. */
+@media (min-width: 992px) {
+  .overtrue-workspace.workspace-layout-navbar-overlap #workspace-content {
+    background: transparent;
+  }
+}
+
+/* Third-level groups in the sidebar stretch like their sibling links, so the
+   chevron sits at the edge instead of trailing the label. */
+.workspace-app-sidebar .workspace-sidebar-branch {
+  width: 100%;
+}
+.workspace-app-sidebar .workspace-sidebar-branch > svg {
+  width: 14px;
+  height: 14px;
+  margin-inline-start: auto;
+  opacity: 0.4;
+}
+.workspace-app-sidebar .workspace-sidebar-branch:hover > svg {
+  opacity: 0.75;
+}
+
+/* Labels are sentence case everywhere; the legacy base shouted section and
+   header labels in tracked capitals. */
+.overtrue-workspace :is(.pn-datagrid-title, .pn-dropdown-header, .pn-hr-text, .pn-list-group-header, .pn-nav-section-title, .pn-page-item-subtitle, .pn-subheader, .fc-col-header-cell),
+.overtrue-workspace .pn-prose > table thead th {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* High-order showcase: each section's previews are the framed surfaces, so the
+   section itself is a heading and a stack, not another card around them. */
+.overtrue-workspace [data-workspace-page="high-order"] [data-slot="section-card"]:not([data-slot="section-card"] *) {
+  margin-bottom: 36px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.overtrue-workspace [data-workspace-page="high-order"] [data-slot="section-card"]:not([data-slot="section-card"] *) > :first-child:not(:only-child) {
+  padding: 0 0 12px;
+  border-bottom: 0;
+}
+.overtrue-workspace [data-workspace-page="high-order"] [data-slot="section-card"]:not([data-slot="section-card"] *) > :last-child {
+  padding: 0;
+}
+
+/* Alerts: ink text on a faint tint; the variant color marks the icon, the
+   edge and the action, so warning and success copy stays readable. */
+.overtrue-workspace .pn-alert:not(.pn-alert-important) {
+  --pn-alert-bg: color-mix(in oklab, var(--pn-alert-variant-color) 7%, var(--pn-bg-surface));
+  --pn-alert-border-color: color-mix(in oklab, var(--pn-alert-variant-color) 26%, var(--pn-bg-surface));
+  color: var(--pn-body-color);
+}
+.overtrue-workspace .pn-alert:not(.pn-alert-important) :is(.pn-alert-action, .pn-alert-link) {
+  color: color-mix(in oklab, var(--pn-alert-variant-color) 70%, var(--pn-body-color));
+}
+.overtrue-workspace .pn-alert:not(.pn-alert-important) .pn-alert-heading {
+  color: var(--pn-body-color);
+  font-weight: 600;
+}
+/* Solid alerts keep white text only on colors dark enough to carry it. */
+.overtrue-workspace .pn-alert-important:is(.pn-alert-warning, .pn-alert-success, .pn-alert-info) {
+  --pn-alert-color: #10141f;
+}
+
+/* Swatch foregrounds: the base defined each gray's foreground as the gray
+   itself, so labels vanished, and put white text on bright fills. */
+.overtrue-workspace {
+  --pn-gray-50-fg: #1f2937;
+  --pn-gray-100-fg: #1f2937;
+  --pn-gray-200-fg: #1f2937;
+  --pn-gray-300-fg: #1f2937;
+  --pn-gray-400-fg: #111827;
+  --pn-gray-500-fg: #ffffff;
+  --pn-gray-600-fg: #ffffff;
+  --pn-gray-700-fg: #ffffff;
+  --pn-gray-800-fg: #ffffff;
+  --pn-gray-900-fg: #ffffff;
+  --pn-gray-950-fg: #ffffff;
+  /* Bright fills are too light to carry white text. */
+  --pn-yellow-fg: #10141f;
+  --pn-lime-fg: #10141f;
+  --pn-orange-fg: #10141f;
+  --pn-green-fg: #10141f;
+  --pn-teal-fg: #10141f;
+  --pn-cyan-fg: #10141f;
+  --pn-azure-fg: #10141f;
+  --pn-warning-fg: #10141f;
+  --pn-success-fg: #10141f;
+  --pn-info-fg: #10141f;
 }

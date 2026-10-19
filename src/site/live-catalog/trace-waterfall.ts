@@ -78,7 +78,7 @@ export default {
     [
       "serviceColors?",
       "Record<string, string>",
-      "Any CSS colour per service. Unlisted services take the chart palette.",
+      "Any CSS color per service. Unlisted services take the chart palette.",
     ],
     [
       "durationFormatter?",
@@ -88,7 +88,7 @@ export default {
     [
       "renderDetail?",
       "(span: TraceSpan, info: TraceSpanInfo) => React.ReactNode",
-      "Replaces the attribute table. info carries the parent, children, self time, share of trace, critical flag, and colour.",
+      "Replaces the attribute table. info carries the parent, children, self time, share of trace, critical flag, and color.",
     ],
     ["rowHeight?", "number", "Row height in pixels. Defaults to 28."],
     [

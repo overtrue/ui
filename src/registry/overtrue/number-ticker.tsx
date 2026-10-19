@@ -525,7 +525,7 @@ function DigitWheel({
 
   // Cells carry --ticker-gap of padding above and below, and the clipping window
   // reaches that far past the line box. At rest only padding shows in the
-  // overhang; while rolling, neighbours fade through it like a real wheel.
+  // overhang; while rolling, neighbors fade through it like a real wheel.
   return (
     <span className="relative inline-block [--ticker-gap:0.2em]">
       <span className="invisible">{formatter.glyphs[digit]}</span>

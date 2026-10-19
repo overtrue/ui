@@ -54,9 +54,9 @@ const severityStyle: Record<IncidentSeverity, string> = {
 const stateStyle: Record<IncidentState, string> = {
   investigating: "border-destructive/30 bg-destructive/10 text-destructive",
   mitigated:
-    "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+    "border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-300",
   resolved:
-    "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+    "border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300",
 };
 const stateLabel: Record<IncidentState, string> = {
   investigating: "Investigating",
@@ -77,14 +77,14 @@ export function IncidentReview({
       data-slot="incident-review"
       aria-label={`${incident.id}: ${incident.title}`}
       className={cn(
-        "@container/incident overflow-hidden rounded-xl border bg-background text-foreground",
+        "@container/incident flex min-w-0 flex-col gap-3 text-foreground sm:gap-4",
         className,
       )}
       {...props}
     >
       <header
         data-slot="incident-review-header"
-        className="flex flex-wrap items-center justify-between gap-3 border-b bg-card px-4 py-3 sm:px-5"
+        className="flex flex-wrap items-end justify-between gap-3"
       >
         <div className="flex min-w-0 items-center gap-3">
           <span
@@ -97,7 +97,7 @@ export function IncidentReview({
             {incident.severity}
           </span>
           <div className="min-w-0">
-            <h2 className="truncate text-sm font-semibold tracking-tight">
+            <h2 className="truncate text-base font-semibold tracking-tight">
               {incident.title}
             </h2>
             <p className="truncate font-mono text-xs text-muted-foreground">
@@ -121,7 +121,7 @@ export function IncidentReview({
         </div>
       </header>
 
-      <div className="grid gap-3 p-3 sm:gap-4 sm:p-4">
+      <div className="grid gap-3 sm:gap-4">
         <div className="grid gap-3 sm:gap-4 @4xl/incident:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
           <InsightCard
             title="What happened"

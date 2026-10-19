@@ -166,7 +166,7 @@ function useSpotlight(
 }
 
 export interface SpotlightCardProps extends React.ComponentProps<"div"> {
-  /** Any CSS colour for the glow. Defaults to the theme's primary colour. */
+  /** Any CSS color for the glow. Defaults to the theme's primary color. */
   color?: string;
   /** Glow strength from 0 to 2. Defaults to 1. */
   intensity?: number;
@@ -193,7 +193,7 @@ const borderMask: React.CSSProperties = {
 
 /**
  * A card whose surface and 1px border catch a soft light that follows the pointer.
- * Wrap several in `SpotlightGroup` so neighbouring cards light up together.
+ * Wrap several in `SpotlightGroup` so neighboring cards light up together.
  * Touch input and reduced motion keep the light still.
  */
 function SpotlightCard({
@@ -281,7 +281,7 @@ export interface SpotlightGroupProps extends React.ComponentProps<"div"> {
 
 /**
  * Shares one pointer listener between the spotlight cards inside it, so the light
- * spills onto neighbouring borders as the pointer crosses the gaps. Lay the cards
+ * spills onto neighboring borders as the pointer crosses the gaps. Lay the cards
  * out with your own grid classes on this element.
  */
 function SpotlightGroup({

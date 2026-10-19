@@ -23,7 +23,7 @@ export interface TraceSpan {
   parentId?: string | null;
   /** Operation name, e.g. "POST /api/checkout" or "SELECT orders". */
   name: string;
-  /** Emitting service. Spans of one service share a colour. */
+  /** Emitting service. Spans of one service share a color. */
   service: string;
   /** Milliseconds from the start of the trace. */
   start: number;
@@ -47,7 +47,7 @@ export interface TraceSpanInfo {
   share: number;
   /** Whether the span is on the trace's critical path. */
   critical: boolean;
-  /** The resolved service colour. */
+  /** The resolved service color. */
   color: string;
   /** Start and end of the whole trace, in milliseconds. */
   trace: { start: number; end: number; duration: number };
@@ -74,7 +74,7 @@ export interface TraceWaterfallProps extends Omit<
   onHighlightCriticalPathChange?: (highlight: boolean) => void;
   /** Spans that start collapsed. */
   defaultCollapsedIds?: string[];
-  /** Colours by service name. Unlisted services take the chart palette in order of appearance. */
+  /** Colors by service name. Unlisted services take the chart palette in order of appearance. */
   serviceColors?: Record<string, string>;
   /** Formats every duration and offset except axis ticks. */
   durationFormatter?: (ms: number) => string;
@@ -129,7 +129,7 @@ function niceStep(span: number, count: number) {
   );
 }
 
-/** Tick labels carry exactly the precision of the step, so neighbours never read alike. */
+/** Tick labels carry exactly the precision of the step, so neighbors never read alike. */
 function tickLabel(value: number, step: number) {
   if (value === 0) return "0";
   if (step >= 1000 || (Math.abs(value) >= 1000 && step >= 100)) {
@@ -175,7 +175,7 @@ const PALETTE = [
   "var(--color-chart-3)",
   "var(--color-chart-4)",
   "var(--color-chart-5)",
-  // Blends of the theme's own chart colours keep extra services on-palette.
+  // Blends of the theme's own chart colors keep extra services on-palette.
   "color-mix(in oklab, var(--color-chart-1) 50%, var(--color-chart-2))",
   "color-mix(in oklab, var(--color-chart-2) 50%, var(--color-chart-3))",
   "color-mix(in oklab, var(--color-chart-4) 55%, var(--color-chart-5))",
@@ -1823,7 +1823,7 @@ const TraceOverview = React.memo(function TraceOverview({
             if (Math.abs(b - a) > total / 5000)
               onRange([Math.min(a, b), Math.max(a, b)]);
           } else if (zoomed) {
-            // A click recentres the zoom window on that moment.
+            // A click recenters the zoom window on that moment.
             const width = viewEnd - viewStart;
             const center = timeAt(event.clientX);
             const lo = Math.min(

@@ -74,7 +74,7 @@ const levelStyle: Record<LogLevel, { label: string; pill: string; dot: string }>
   },
   error: {
     label: "Error",
-    pill: "bg-destructive/12 text-destructive",
+    pill: "bg-destructive/12 text-rose-700 dark:text-rose-400",
     dot: "bg-destructive",
   },
 };
@@ -165,7 +165,7 @@ const LogRow = React.memo(function LogRow({
       </time>
       <span
         className={cn(
-          "mt-px inline-flex h-4 w-12 shrink-0 items-center justify-center rounded-[4px] text-[10px] leading-none font-semibold tracking-wide uppercase",
+          "mt-px inline-flex h-4 w-12 shrink-0 items-center justify-center rounded-[4px] text-[10.5px] leading-none font-semibold tracking-wide uppercase",
           level.pill,
         )}
       >

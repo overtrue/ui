@@ -12,7 +12,7 @@ export interface TreemapNode<TMeta = unknown> {
   /** Amount for a leaf. Nodes with children always show the sum of their children. */
   value?: number;
   children?: TreemapNode<TMeta>[];
-  /** Any CSS colour. Applies to this node and everything under it. */
+  /** Any CSS color. Applies to this node and everything under it. */
   color?: string;
   /** Anything else your labels or handlers need, such as a file count or an owner. */
   meta?: TMeta;
@@ -41,7 +41,7 @@ export interface TreemapTileInfo<TMeta = unknown> {
   width: number;
   height: number;
   size: TreemapLabelSize;
-  /** Resolved fill and a readable text colour for it. */
+  /** Resolved fill and a readable text color for it. */
   fill: string;
   ink: string;
   /** Leaves under this node, or 1 for a leaf. */
@@ -75,7 +75,7 @@ export interface TreemapProps<TMeta = unknown> extends Omit<
   height?: number | string;
   /** Levels drawn at once. Deeper levels appear as outlined groups. Defaults to 1. */
   maxDepth?: number;
-  /** Colours for top-level groups, cycled in data order. Defaults to chart-1 … chart-5. */
+  /** Colors for top-level groups, cycled in data order. Defaults to chart-1 … chart-5. */
   colors?: string[];
   /** Name of the top of the hierarchy in the breadcrumb. Defaults to "All". */
   rootLabel?: string;
@@ -183,7 +183,7 @@ function useReducedMotion() {
   );
 }
 
-/** Normalise the data: sum parents, drop empty nodes, sort by size and resolve colours. */
+/** Normalise the data: sum parents, drop empty nodes, sort by size and resolve colors. */
 function buildTree<TMeta>(
   data: TreemapNode<TMeta>[],
   colors: string[],
@@ -218,7 +218,7 @@ function buildTree<TMeta>(
         label: node.label,
         value: 0,
         depth,
-        // Colours follow data order, so they stay put when values change.
+        // Colors follow data order, so they stay put when values change.
         color:
           node.color ??
           (depth === 0 ? palette[position % palette.length] : parent.color),
@@ -435,7 +435,7 @@ function lineage<TMeta>(item: Item<TMeta>) {
   return chain;
 }
 
-/** Deeper levels and smaller siblings get lighter, so neighbours of one hue stay distinct. */
+/** Deeper levels and smaller siblings get lighter, so neighbors of one hue stay distinct. */
 function fillFor<TMeta>(item: Item<TMeta>) {
   const base = [0.9, 0.82, 0.72, 0.64][Math.min(Math.max(item.depth, 0), 3)];
   const strength = base * (0.42 + 0.58 * Math.pow(item.rank, 0.7));
@@ -444,7 +444,7 @@ function fillFor<TMeta>(item: Item<TMeta>) {
 
 /**
  * Light or dark text picked from the fill's own lightness and tinted with its hue.
- * Browsers without relative colour syntax keep the inherited foreground.
+ * Browsers without relative color syntax keep the inherited foreground.
  */
 function inkFor(fill: string) {
   return `oklch(from ${fill} clamp(0.2, (0.64 - l) * 1000, 0.985) min(c, 0.04) h)`;
@@ -539,8 +539,8 @@ function DefaultLabel({
   );
 }
 
-/** Pick the tile whose centre lies closest in the arrow's direction. */
-function neighbourIn<TMeta>(
+/** Pick the tile whose center lies closest in the arrow's direction. */
+function neighborIn<TMeta>(
   tiles: Placement<TMeta>[],
   from: Placement<TMeta>,
   key: string,
@@ -867,7 +867,7 @@ function Treemap<TMeta = unknown>({
     }
     let next: Placement<TMeta> | null | undefined = null;
     if (event.key.startsWith("Arrow"))
-      next = neighbourIn(tiles, current, event.key);
+      next = neighborIn(tiles, current, event.key);
     else if (event.key === "Home") next = tiles[0];
     else if (event.key === "End") next = tiles[tiles.length - 1];
     else return;

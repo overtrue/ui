@@ -29,7 +29,7 @@ export default {
       name: "bullet-chart-compact-demo",
       title: "Compact utilization report",
       description:
-        "A denser layout for longer lists, with the measure coloured by whether each person meets their role’s target.",
+        "A denser layout for longer lists, with the measure colored by whether each person meets their role’s target.",
     },
   ],
   api: [

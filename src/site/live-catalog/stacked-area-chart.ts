@@ -38,7 +38,7 @@ export default {
   );
 }`,
   notes:
-    "Pass one row per x value and name the series to stack, bottom first. The index can hold numbers, ISO date strings, Dates, or category labels; date-only strings such as 2026-10-03 are read as local calendar days, so they never shift a day in other time zones, and axis labels and tooltips pick Intl formats that match the spacing (hours label midnight with the date). Missing and negative values count as zero. `stack` switches between normal, expand (100% shares), stream (a centred streamgraph without a value axis), and none (overlapping translucent areas, largest at the back). The monotone curve uses Steffen tangents, so it never overshoots a point and stacked edges never cross. Clicking a legend item hides it, Alt or Option-click shows only that one (again to show all), and hovering one dims the rest; pass `hiddenSeries` with `onHiddenSeriesChange` to control it. Every change re-stacks by tweening the computed geometry with requestAnimationFrame over about 300ms, and a data update of the same shape glides: points are matched by their x value, so a sliding window moves left instead of morphing. On mount, bands rise from the baseline and lines draw in, bottom series first; all motion is skipped under reduced motion. The plot is one tab stop: Left and Right move the crosshair, Home and End jump, and each step is announced. `header` accepts a function that receives totals for the visible series, so a headline figure follows the legend. Colours default to the five chart tokens, then softer tints of them. Parts expose `data-slot` such as `stacked-area-series` (with `data-key` and `data-hidden`), `stacked-area-tooltip`, `stacked-area-legend-item`, and `stacked-area-annotation`.",
+    "Pass one row per x value and name the series to stack, bottom first. The index can hold numbers, ISO date strings, Dates, or category labels; date-only strings such as 2026-10-03 are read as local calendar days, so they never shift a day in other time zones, and axis labels and tooltips pick Intl formats that match the spacing (hours label midnight with the date). Missing and negative values count as zero. `stack` switches between normal, expand (100% shares), stream (a centered streamgraph without a value axis), and none (overlapping translucent areas, largest at the back). The monotone curve uses Steffen tangents, so it never overshoots a point and stacked edges never cross. Clicking a legend item hides it, Alt or Option-click shows only that one (again to show all), and hovering one dims the rest; pass `hiddenSeries` with `onHiddenSeriesChange` to control it. Every change re-stacks by tweening the computed geometry with requestAnimationFrame over about 300ms, and a data update of the same shape glides: points are matched by their x value, so a sliding window moves left instead of morphing. On mount, bands rise from the baseline and lines draw in, bottom series first; all motion is skipped under reduced motion. The plot is one tab stop: Left and Right move the crosshair, Home and End jump, and each step is announced. `header` accepts a function that receives totals for the visible series, so a headline figure follows the legend. Colors default to the five chart tokens, then softer tints of them. Parts expose `data-slot` such as `stacked-area-series` (with `data-key` and `data-hidden`), `stacked-area-tooltip`, `stacked-area-legend-item`, and `stacked-area-annotation`.",
   previewWidth: 720,
   examples: [
     {
@@ -68,17 +68,17 @@ export default {
     [
       "series",
       "{ key: string; label?: string; color?: string }[]",
-      "Series to stack, bottom first. Colours default to var(--color-chart-1) to 5, then softer tints.",
+      "Series to stack, bottom first. Colors default to var(--color-chart-1) to 5, then softer tints.",
     ],
     [
       "stack?",
       '"normal" | "expand" | "stream" | "none"',
-      "Stacked values, 100% shares, a centred streamgraph, or overlapping areas. Defaults to normal.",
+      "Stacked values, 100% shares, a centered streamgraph, or overlapping areas. Defaults to normal.",
     ],
     [
       "curve?",
       '"monotone" | "linear" | "step"',
-      "Monotone cubic without overshoot, straight segments, or centred steps. Defaults to monotone.",
+      "Monotone cubic without overshoot, straight segments, or centered steps. Defaults to monotone.",
     ],
     ["height?", "number", "Plot height in pixels. Defaults to 280."],
     [
