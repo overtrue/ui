@@ -176,7 +176,7 @@ export function Inbox() {
             </>
           ) : (
             <div className="scene-empty">
-              <img src="/assets/overtrue/illustration-files.svg" alt="" />
+              <img src="/assets/overtrue/illustration-files.webp" alt="" />
               <h2>{query ? "No matching conversation" : "All caught up"}</h2>
               <p>
                 {query

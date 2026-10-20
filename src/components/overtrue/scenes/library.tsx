@@ -24,7 +24,7 @@ const assets = [
       "Research notes",
     ][i],
     category: "Design",
-    image: `/assets/overtrue/project-${String(i + 7).padStart(2, "0")}.svg`,
+    image: `/assets/overtrue/project-${String(i + 7).padStart(2, "0")}.webp`,
   })),
 ];
 export function Library({
@@ -221,7 +221,7 @@ export function Illustrations() {
     <Scene
       id="illustrations"
       title="Small stories, clearly told"
-      description="A family of original line illustrations for everyday workspace moments."
+      description="A family of sculptural illustrations for everyday workspace moments."
     >
       <div className="scene-grid-three">
         {["start", "search", "team", "files", "secure", "connected"].map(
@@ -241,7 +241,7 @@ export function Illustrations() {
             >
               <img
                 className="scene-illustration"
-                src={`/assets/overtrue/illustration-${name}.svg`}
+                src={`/assets/overtrue/illustration-${name}.webp`}
                 alt={`${name} workspace illustration`}
               />
               <p>

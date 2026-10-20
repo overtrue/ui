@@ -7,7 +7,7 @@ export function CollectionIntro({ blocks = false }: { blocks?: boolean }) {
     <header className="collection-intro">
       <h1>
         {blocks ? "Blocks" : "Components"}
-        {!blocks && <span className="collection-title-dot" aria-hidden="true">.</span>}
+        <span className="collection-title-dot" aria-hidden="true">.</span>
       </h1>
       <div className="collection-intro-aside">
         <p>

@@ -3448,7 +3448,7 @@ export default function Page() {
                                 {" "}
                                 <img
                                   src={
-                                    "/assets/overtrue/project-08.svg"
+                                    "/assets/overtrue/project-08.webp"
                                   }
                                   className={"pn-rounded"}
                                   alt={
@@ -3460,7 +3460,7 @@ export default function Page() {
                                 {" "}
                                 <img
                                   src={
-                                    "/assets/overtrue/project-12.svg"
+                                    "/assets/overtrue/project-12.webp"
                                   }
                                   className={"pn-rounded"}
                                   alt={

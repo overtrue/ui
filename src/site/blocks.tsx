@@ -32,13 +32,11 @@ function CardPreview({
   title,
   expanded = false,
   mobile = false,
-  previewWidth = 640,
 }: {
   id: string;
   title: string;
   expanded?: boolean;
   mobile?: boolean;
-  previewWidth?: number;
 }) {
   const frame = useRef<HTMLIFrameElement>(null);
   const [theme, setTheme] = useState(
@@ -88,7 +86,7 @@ function CardPreview({
       {expanded ? (
         preview
       ) : (
-        <FitPreview width={previewWidth} height={320} fit="crop-tall">
+        <FitPreview height={320} fit="width">
           {preview}
         </FitPreview>
       )}
@@ -132,13 +130,11 @@ export function CardCollection() {
       aria-labelledby="card-collection-title"
     >
       <div className="section-heading">
-        <div>
-          <h2 id="card-collection-title">Cards</h2>
-          <p>
-            {cards.length} cards extracted from the workspace examples, each
-            with its sample data and local interactions.
-          </p>
-        </div>
+        <h2 id="card-collection-title">Card patterns</h2>
+        <p>
+          {cards.length} focused pieces from the workspace. Charts, forms, and
+          lists with sample data and local interactions.
+        </p>
       </div>
       <div className="card-filters">
         <SearchField
@@ -153,7 +149,7 @@ export function CardCollection() {
           name="q"
         />
         <label className="card-category">
-          Category
+          <span className="sr-only">Category</span>
           <select
             className="native-select"
             aria-label="Card category"
@@ -165,10 +161,10 @@ export function CardCollection() {
             ))}
           </select>
         </label>
-        <span className="card-result-count" role="status">
-          {matches.length} cards
-        </span>
       </div>
+      <p className="card-result-count" role="status">
+        <strong>{matches.length}</strong> of {cards.length} card patterns
+      </p>
       <div className="card-library-grid">
         {matches
           .slice((current - 1) * pageSize, current * pageSize)
@@ -179,12 +175,11 @@ export function CardCollection() {
                   <CardPreview
                     id={card.id}
                     title={card.title}
-                    previewWidth={card.previewWidth}
                   />
                 </div>
                 <div className="tile-caption">
                   <span>
-                    {card.title}
+                    <strong>{card.title}</strong>
                     <small>
                       {card.category}
                       {card.collection ? " · Collection" : ""}
@@ -285,7 +280,13 @@ export function CardBlockPage() {
           and interactions.
         </p>
       </div>
-      <div className="workspace-toolbar">
+      <nav className="component-sections" aria-label="On this page">
+        <a href="#component-preview">Preview</a>
+        <a href="#installation">Installation</a>
+        <a href="#usage">Usage</a>
+        <a href="#card-examples">Examples</a>
+      </nav>
+      <div className="workspace-toolbar" id="component-preview">
         <div className="filter-tabs" role="group" aria-label="Block view">
           {["Preview", "Source"].map((value) => (
             <button
@@ -359,7 +360,7 @@ export function CardBlockPage() {
       )}
       <div className="card-install-grid">
         <section>
-          <h2 id="installation">Make it yours.</h2>
+          <h2 id="installation">Installation</h2>
           <p>
             Install the card and its shared styling and interaction primitives.
           </p>
@@ -371,6 +372,7 @@ export function CardBlockPage() {
             ui.overtrue.xyz; replace it and the sample links with your own
             content.
           </p>
+          <h2 id="usage">Usage</h2>
           <Command
             label="React"
             language="tsx"
@@ -378,7 +380,7 @@ export function CardBlockPage() {
           />
         </section>
         <aside>
-          <h2>From the examples</h2>
+          <h2 id="card-examples">From the examples</h2>
           {card.pages.map((page) => (
             <a
               className="card-source-link"

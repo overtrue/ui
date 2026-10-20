@@ -681,63 +681,88 @@ kbd {
   -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent);
   mask-image: linear-gradient(to bottom, #000 72%, transparent);
 }
-.component-grid .tile-preview {
-  height: 302px;
+.catalog-page .tile-preview {
   padding: 24px;
   flex: none;
   justify-content: center;
   border: 1px solid var(--border);
   border-radius: var(--site-radius-frame);
+  overflow: hidden;
   transition: border-color 200ms, box-shadow 240ms var(--ease-out);
 }
-.component-grid {
+.component-grid .tile-preview {
+  height: 302px;
+}
+.block-grid .tile-preview {
+  height: 370px;
+}
+.component-grid,
+.block-grid,
+.card-library-grid {
   gap: 40px 24px;
 }
-.component-grid .component-tile {
+:is(.component-grid, .block-grid) .component-tile,
+.card-library-grid .card-library-tile {
   border: 0;
   border-radius: var(--site-radius-frame);
   overflow: visible;
   background: transparent;
   box-shadow: none;
 }
-.component-grid .component-tile::after,
-.component-grid .tile-preview::before,
-.component-grid .tile-preview::after {
+:is(.component-grid, .block-grid) .component-tile::after,
+.catalog-page .tile-preview::before,
+.catalog-page .tile-preview::after {
   content: none;
 }
-.component-grid .component-tile:is(:hover, :focus-within) .tile-preview {
+:is(.component-grid, .block-grid) .component-tile:is(:hover, :focus-within) .tile-preview,
+.card-library-tile:is(:hover, :focus-within) .card-live-preview {
   border-color: color-mix(in oklab, var(--site-ink) 18%, var(--border));
   box-shadow: var(--shadow-float);
 }
-.component-grid .tile-caption {
+:is(.component-grid, .block-grid, .card-library-grid) .tile-caption {
   align-items: flex-start;
   min-height: 0;
   padding: 20px 4px 4px;
   border: 0;
   gap: 16px;
 }
-.component-grid .tile-caption > span {
+:is(.component-grid, .block-grid, .card-library-grid) .tile-caption > span {
   min-width: 0;
 }
-.component-grid .tile-caption strong {
+:is(.component-grid, .block-grid, .card-library-grid) .tile-caption strong {
   display: block;
   font-size: 20px;
   font-weight: 580;
   line-height: 1.3;
   letter-spacing: -0.025em;
 }
-.component-grid .tile-caption small {
+:is(.component-grid, .block-grid, .card-library-grid) .tile-caption small {
   margin-top: 6px;
   font-size: 14px;
   line-height: 1.55;
 }
-.component-grid .tile-caption > svg {
+:is(.component-grid, .block-grid, .card-library-grid) .tile-caption > svg {
   width: 18px;
   height: 18px;
   padding: 0;
   margin-top: 4px;
   border: 0;
   border-radius: 0;
+}
+.card-library-link {
+  border-radius: var(--site-radius-frame);
+}
+.card-library-link:focus-visible {
+  outline-offset: 3px;
+}
+.card-library-tile .card-live-preview {
+  border: 1px solid var(--border);
+  border-radius: var(--site-radius-frame);
+  transition: border-color 200ms, box-shadow 240ms var(--ease-out);
+}
+.card-library-link:hover .tile-caption > svg {
+  color: var(--primary);
+  transform: translate(2px, -2px);
 }
 /* Keep this desktop demo readable inside a narrow thumbnail. */
 .component-grid .tile-spotlight-card [data-slot="spotlight-group"] {
@@ -845,13 +870,13 @@ kbd {
   color: var(--site-graphite);
   text-wrap-style: pretty;
 }
-.component-catalog .collection-intro {
+.catalog-page .collection-intro {
   grid-template-columns: minmax(0, 1fr) 340px;
   align-items: end;
   gap: 32px 40px;
   padding-bottom: 48px;
 }
-.component-catalog .collection-intro h1 {
+.catalog-page .collection-intro h1 {
   font-size: clamp(48px, 6vw, 80px);
   font-weight: 580;
   line-height: 1.04;
@@ -860,12 +885,12 @@ kbd {
 .collection-title-dot {
   color: var(--primary);
 }
-.component-catalog .collection-intro-aside p {
+.catalog-page .collection-intro-aside p {
   font-size: 15px;
   line-height: 1.75;
   margin-bottom: 20px;
 }
-.component-catalog > .catalog-toolbar {
+.catalog-page > .catalog-toolbar {
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -873,34 +898,34 @@ kbd {
   gap: 20px;
   margin-bottom: 0;
 }
-.component-catalog .catalog-toolbar .filter-tabs {
+.catalog-page .catalog-toolbar .filter-tabs {
   padding: 4px;
   margin-left: -4px;
   gap: 4px;
 }
-.component-catalog .catalog-toolbar .filter-tabs button {
+.catalog-page .catalog-toolbar .filter-tabs button {
   position: relative;
   min-height: 44px;
   color: var(--site-graphite);
   font-size: 13px;
 }
-.component-catalog .catalog-toolbar .filter-tabs button[aria-pressed="true"] {
+.catalog-page .catalog-toolbar .filter-tabs button[aria-pressed="true"] {
   color: var(--primary);
   background: var(--accent);
   box-shadow: none;
 }
-.component-catalog .filter-count {
+.catalog-page .filter-count {
   min-width: 0;
   padding: 0;
   font-size: 11px;
   background: transparent;
 }
-.component-catalog .catalog-search input {
+.catalog-page .catalog-search input {
   height: 44px;
   font-size: 14px;
   border-radius: var(--site-radius-control);
 }
-.component-catalog .catalog-results {
+.catalog-page .catalog-results {
   margin: 16px 0 24px;
 }
 .catalog-page > .catalog-toolbar {
@@ -918,63 +943,199 @@ kbd {
   font-weight: 620;
 }
 .collection-shortcuts {
-  margin-top: 28px;
-  gap: 8px;
+  margin-top: 20px;
+  padding-bottom: 0;
+  border: 0;
+  gap: 8px 28px;
 }
 .collection-shortcuts a {
-  min-height: 40px;
-  padding: 0 14px;
-  border-radius: 10px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
   font-size: 14px;
   font-weight: 560;
-  background: var(--card);
-  box-shadow: var(--shadow-raise);
+  background: transparent;
+  box-shadow: none;
+}
+.collection-shortcuts a:hover {
+  background: transparent;
+  color: var(--primary);
+}
+.complete-block-heading,
+.card-collection > .section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  align-items: end;
+  gap: 24px 40px;
+  margin: 40px 0 28px;
 }
 .complete-block-heading h2,
 .card-collection h2 {
-  font-size: clamp(28px, 3vw, 36px);
-  font-stretch: 108%;
-  font-weight: 620;
-  letter-spacing: -0.03em;
+  margin: 0;
+  font-size: clamp(30px, 3.5vw, 42px);
+  font-stretch: var(--display-stretch);
+  font-weight: 580;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
   color: var(--site-ink);
 }
-.complete-block-heading p {
-  font-size: 16px;
+.complete-block-heading p,
+.card-collection > .section-heading p {
+  font-size: 15px;
+  line-height: 1.7;
   color: var(--site-graphite);
+}
+.catalog-page > .card-collection {
+  margin-top: 80px;
+  padding-top: 64px;
+  border-top: 1px solid var(--border);
+}
+.card-collection > .section-heading {
+  margin-top: 0;
+}
+.card-collection > .card-filters {
+  padding: 0;
+  margin: 32px 0 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  gap: 16px;
+}
+.card-filters .catalog-search {
+  max-width: 480px;
+}
+.card-category {
+  margin-left: auto;
+}
+.card-category select {
+  min-width: 220px;
+  min-height: 44px;
+  padding-inline: 12px 36px;
+  border-color: var(--input);
+  border-radius: var(--site-radius-control);
+  font-size: 14px;
+}
+.card-result-count {
+  margin: 0 0 24px;
+  font-size: 13px;
+  color: var(--site-graphite);
+}
+.card-result-count strong {
+  font-weight: 620;
+  color: var(--site-ink);
+}
+.card-pagination {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.card-pagination .site-button {
+  min-height: 44px;
+}
+.card-pagination > span {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
 }
 @media (max-width: 899px) {
   .collection-intro,
-  .component-catalog .collection-intro {
+  .catalog-page .collection-intro {
     grid-template-columns: 1fr;
   }
-  .component-catalog .collection-intro {
+  .catalog-page .collection-intro {
     padding-bottom: 32px;
     gap: 24px;
   }
-  .component-catalog .collection-intro-aside {
+  .catalog-page .collection-intro-aside {
+    max-width: 40em;
+  }
+  .complete-block-heading,
+  .card-collection > .section-heading {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .complete-block-heading p,
+  .card-collection > .section-heading p {
     max-width: 40em;
   }
 }
 @media (max-width: 767px) {
-  .component-catalog > .catalog-toolbar {
+  .catalog-page > .catalog-toolbar {
     margin-top: 24px;
     gap: 12px;
   }
-  .component-catalog .catalog-search input {
+  .catalog-page .catalog-search input {
     font-size: 16px;
   }
-  .component-catalog .catalog-results {
+  .catalog-page .catalog-results {
     margin: 8px 0 20px;
   }
-  .component-grid {
+  .component-grid,
+  .block-grid,
+  .card-library-grid {
     gap: 32px 20px;
   }
-  .component-grid .tile-preview {
+  .catalog-page .tile-preview {
     padding: 20px;
+  }
+  .component-grid .tile-preview {
     height: 294px;
   }
-  .component-grid .tile-caption {
+  .block-grid .tile-preview {
+    height: 362px;
+  }
+  :is(.component-grid, .block-grid, .card-library-grid) .tile-caption {
     padding-top: 16px;
+  }
+  .collection-shortcuts {
+    gap: 8px 20px;
+  }
+  .collection-shortcuts a {
+    gap: 6px;
+    font-size: 13px;
+  }
+  .complete-block-heading {
+    margin-top: 32px;
+  }
+  .catalog-page > .card-collection {
+    margin-top: 56px;
+    padding-top: 40px;
+  }
+  .card-filters .catalog-search {
+    max-width: none;
+  }
+  .card-category,
+  .card-category select {
+    width: 100%;
+  }
+  .card-category select {
+    min-width: 0;
+    font-size: 16px;
+  }
+}
+@media (max-width: 480px) {
+  .collection-shortcuts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .collection-shortcuts a {
+    flex-wrap: wrap;
+    align-content: center;
+    column-gap: 6px;
+  }
+  .collection-shortcuts a svg {
+    display: none;
+  }
+  .card-pagination {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .card-pagination > span {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    text-align: center;
   }
 }
 
@@ -1114,19 +1275,21 @@ kbd {
   border-radius: var(--site-radius-surface);
   font-size: 15px;
 }
-.component-docs .component-sections {
+:is(.component-docs, .card-block-page) .component-sections {
   margin: 0 0 24px;
   padding-bottom: 0;
   gap: 24px;
   border-bottom: 1px solid var(--site-rule);
 }
-.component-docs .component-sections a {
+:is(.component-docs, .card-block-page) .component-sections a {
   min-height: 44px;
+  padding-inline: 0;
+  border-radius: 0;
   margin-inline-end: 0;
   font-size: 13px;
   color: var(--site-graphite);
 }
-.component-docs .documentation-intro {
+:is(.component-docs, .card-block-page) .documentation-intro {
   border: 0;
   padding-bottom: 28px;
   margin-bottom: 0;
@@ -1134,7 +1297,7 @@ kbd {
 .component-docs .docs-content {
   max-width: none;
 }
-.component-docs .documentation-intro h1 {
+:is(.component-docs, .card-block-page) .documentation-intro h1 {
   font-size: clamp(36px, 4.2vw, 58px);
   font-weight: 580;
   line-height: 1.1;
@@ -1167,6 +1330,66 @@ kbd {
 }
 .component-docs .component-sidebar-links h2 {
   font-size: 12px;
+}
+.card-block-page {
+  padding-top: 48px;
+}
+.card-block-page .back-link {
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--site-graphite);
+}
+.card-block-page .documentation-intro > .overline {
+  margin-bottom: 16px;
+}
+.card-block-page .documentation-intro h1 {
+  max-width: 24ch;
+  text-wrap: balance;
+}
+.card-install-grid {
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 48px;
+  margin-top: 56px;
+}
+.card-install-grid > * {
+  min-width: 0;
+}
+.card-install-grid h2 {
+  margin-bottom: 16px;
+  font-size: 28px;
+  font-stretch: var(--display-stretch);
+  font-weight: 580;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+}
+.card-install-grid #usage {
+  margin-top: 48px;
+}
+.card-install-grid p {
+  max-width: 68ch;
+  font-size: 15px;
+}
+.card-install-grid .card-install-note {
+  font-size: 13px;
+}
+.card-install-grid > aside {
+  align-self: start;
+  padding-left: 24px;
+  border-left: 1px solid var(--border);
+}
+.card-install-grid aside h2 {
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+.card-source-link {
+  min-height: 44px;
+  font-size: 14px;
+}
+.card-source-link svg {
+  flex-shrink: 0;
+}
+.card-source-link:hover {
+  color: var(--primary);
 }
 :is(.component-docs, .card-block-page) > .workspace-toolbar,
 .component-docs .docs-content > .workspace-toolbar {
@@ -1256,6 +1479,15 @@ kbd {
     font-size: 12px;
     color: var(--site-graphite);
   }
+  .card-install-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .card-install-grid > aside {
+    padding: 24px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
 }
 @media (max-width: 767px) {
   .lede {
@@ -1270,10 +1502,10 @@ kbd {
     gap: 6px 10px;
     margin-bottom: 20px;
   }
-  .component-docs .documentation-intro {
+  :is(.component-docs, .card-block-page) .documentation-intro {
     padding-bottom: 24px;
   }
-  .component-docs .component-sections {
+  :is(.component-docs, .card-block-page) .component-sections {
     gap: 20px;
     margin-bottom: 20px;
   }
@@ -1285,26 +1517,44 @@ kbd {
     font-size: 15px;
     line-height: 1.7;
   }
+  .card-block-page {
+    padding-top: 24px;
+  }
+  .card-install-grid {
+    margin-top: 40px;
+  }
+  .card-install-grid h2 {
+    font-size: 26px;
+  }
+  .card-install-grid #usage {
+    margin-top: 40px;
+  }
 }
 @media (max-width: 380px) {
-  .component-catalog .collection-intro h1 {
+  .catalog-page .collection-intro h1 {
     font-size: 42px;
   }
-  .component-grid .tile-preview {
+  .catalog-page .tile-preview {
     padding: 16px;
+  }
+  .component-grid .tile-preview {
     height: 286px;
   }
-  .component-docs .docs-content > .workspace-toolbar {
+  .block-grid .tile-preview {
+    height: 354px;
+  }
+  .component-docs .docs-content > .workspace-toolbar,
+  .card-block-page > .workspace-toolbar {
     gap: 8px;
   }
-  .component-docs .workspace-toolbar > .filter-tabs {
+  :is(.component-docs, .card-block-page) .workspace-toolbar > .filter-tabs {
     width: 100%;
   }
-  .component-docs .workspace-toolbar .filter-tabs button {
+  :is(.component-docs, .card-block-page) .workspace-toolbar > .filter-tabs button {
     flex: 1;
     justify-content: center;
   }
-  .component-docs .preview-actions {
+  :is(.component-docs, .card-block-page) .preview-actions {
     width: 100%;
     justify-content: space-between;
     padding-inline: 8px;
@@ -1794,8 +2044,6 @@ kbd {
   }
   .catalog-page .catalog-search {
     width: 100%;
-  }
-  .component-catalog .catalog-search {
     order: -1;
   }
 }

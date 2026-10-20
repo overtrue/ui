@@ -46,7 +46,7 @@ export function Knowledge({ id = "search-results" }: { id?: string }) {
     >
       <div className="scene-knowledge-hero">
         <img
-          src="/assets/overtrue/illustration-search.svg"
+          src="/assets/overtrue/illustration-search.webp"
           alt="Finding a useful answer"
         />
         <div>

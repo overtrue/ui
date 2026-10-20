@@ -402,15 +402,26 @@ try {
       .locator(".overtrue-block")
       .waitFor();
     await page.waitForFunction(() => {
-      const content = document.querySelector(
-        ".card-library-link .fit-preview-content",
-      );
+      const viewport = document.querySelector(".card-library-link .fit-preview");
+      const content = viewport?.querySelector(".fit-preview-content");
       return (
+        viewport &&
         content &&
         content.offsetHeight > 0 &&
-        content.getBoundingClientRect().height <= 321
+        viewport.getBoundingClientRect().height <= 321
       );
     });
+    const chartLayout = await chartLink.locator(".fit-preview").evaluate(
+      (viewport) => {
+        const content = viewport.querySelector(".fit-preview-content");
+        return {
+          scale: new DOMMatrix(getComputedStyle(content).transform).a,
+          overflow: content.scrollWidth - viewport.clientWidth,
+        };
+      },
+    );
+    assert.equal(chartLayout.scale, 1, "Card thumbnails should keep readable type");
+    assert.ok(chartLayout.overflow <= 1, "Card thumbnails should reflow to their frame");
     await page.goto(origin + "/blocks?q=Facebook#card-collection-title");
     const socialCard = page.getByRole("link", {
       name: "Facebook shares Charts & metrics",

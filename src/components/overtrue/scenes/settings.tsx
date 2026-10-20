@@ -261,7 +261,7 @@ export function Wizard({ id = "wizard" }: { id?: string }) {
       <div className="scene-wizard">
         <aside>
           <img
-            src="/assets/overtrue/illustration-start.svg"
+            src="/assets/overtrue/illustration-start.webp"
             alt="A new project taking shape"
           />
           {["The brief", "The team", "Ready to begin"].map((s, i) => (
@@ -285,7 +285,7 @@ export function Wizard({ id = "wizard" }: { id?: string }) {
           {done ? (
             <div className="scene-empty">
               <img
-                src="/assets/overtrue/illustration-connected.svg"
+                src="/assets/overtrue/illustration-connected.webp"
                 alt="Project ready"
               />
               <h2>{name}</h2>

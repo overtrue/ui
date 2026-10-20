@@ -60,7 +60,7 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
           />
         ) : (
           <img
-            src="/assets/overtrue/illustration-team.svg"
+            src="/assets/overtrue/illustration-team.webp"
             alt="People and projects connected"
           />
         )}
@@ -94,7 +94,7 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
           {done ? (
             <div role="status" className="scene-auth-result">
               <img
-                src="/assets/overtrue/illustration-connected.svg"
+                src="/assets/overtrue/illustration-connected.webp"
                 alt="Ready to continue"
               />
               <h2>
@@ -273,7 +273,7 @@ export function Empty({ id = "empty" }: { id?: string }) {
         overtrue/ui
       </a>
       <img
-        src={`/assets/overtrue/illustration-${missing ? "search" : failed ? "connected" : maintenance ? "secure" : "start"}.svg`}
+        src={`/assets/overtrue/illustration-${missing ? "search" : failed ? "connected" : maintenance ? "secure" : "start"}.webp`}
         alt="Workspace illustration"
       />
       <span className="scene-eyebrow">

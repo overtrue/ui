@@ -1787,7 +1787,7 @@ export default function Page() {
                             <span className={"pn-form-imagecheck-figure"}>
                               {" "}
                               <img
-                                src={"/assets/overtrue/project-12.svg"}
+                                src={"/assets/overtrue/project-12.webp"}
                                 alt={
                                   "Brainstorming session with creative designers"
                                 }
@@ -1854,7 +1854,7 @@ export default function Page() {
                             <span className={"pn-form-imagecheck-figure"}>
                               {" "}
                               <img
-                                src={"/assets/overtrue/project-08.svg"}
+                                src={"/assets/overtrue/project-08.webp"}
                                 alt={
                                   "Blue sofa with pillows in a designer living room interior"
                                 }
@@ -1876,7 +1876,7 @@ export default function Page() {
                             <span className={"pn-form-imagecheck-figure"}>
                               {" "}
                               <img
-                                src={"/assets/overtrue/project-12.svg"}
+                                src={"/assets/overtrue/project-12.webp"}
                                 alt={
                                   "Home office desk with Macbook, iPhone, calendar, watch & organizer"
                                 }
@@ -1978,7 +1978,7 @@ export default function Page() {
                             <span className={"pn-form-imagecheck-figure"}>
                               {" "}
                               <img
-                                src={"/assets/overtrue/project-08.svg"}
+                                src={"/assets/overtrue/project-08.webp"}
                                 alt={"Pink desk in the home office"}
                                 className={"pn-form-imagecheck-image"}
                               />{" "}
@@ -2020,7 +2020,7 @@ export default function Page() {
                             <span className={"pn-form-imagecheck-figure"}>
                               {" "}
                               <img
-                                src={"/assets/overtrue/project-04.svg"}
+                                src={"/assets/overtrue/project-04.webp"}
                                 alt={"Coffee on a table with other items"}
                                 className={"pn-form-imagecheck-image"}
                               />{" "}

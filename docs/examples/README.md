@@ -11,7 +11,7 @@ The `/workspace/` entry contains 121 routes for business workflows and reusable 
 - `src/styles/workspace-base.css`: namespaced utility styles with retained third-party notices.
 - `src/styles/workspace-theme.css`: theme integration, navigation, responsive behavior, and adapters.
 - `src/styles/scenes.css`: overtrue/ui’s business page compositions.
-- `public/assets/overtrue/`: original generated photographs, SVG project covers, illustrations, and initial avatars.
+- `public/assets/overtrue/`: generated photographs, WebP project covers, transparent illustrations, and initial avatars. Generation prompts are recorded in [artwork-prompts.md](artwork-prompts.md).
 - `public/assets/examples/`: generic flags, payment-provider symbols, and integration logos.
 
 Acme Studio is the sample workspace name. People, client records, contact addresses, and amounts demonstrate an interface; they do not describe actual business activity. Interactions are local demos and do not send mail, charge cards, or create accounts.

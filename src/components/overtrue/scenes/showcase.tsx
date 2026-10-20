@@ -956,7 +956,7 @@ export function Onboarding() {
       <div className="scene-wizard">
         <aside>
           <img
-            src="/assets/overtrue/illustration-team.svg"
+            src="/assets/overtrue/illustration-team.webp"
             alt="A team coming together"
           />
           {["Your workspace", "Your workflow", "Ready to begin"].map(
@@ -982,7 +982,7 @@ export function Onboarding() {
           {done ? (
             <div className="scene-empty">
               <img
-                src="/assets/overtrue/illustration-connected.svg"
+                src="/assets/overtrue/illustration-connected.webp"
                 alt="Workspace ready"
               />
               <h2 className="text-xl font-semibold leading-snug">

@@ -340,26 +340,13 @@ function ComponentTile({ name }: { name: ItemName }) {
   const item = catalog.find((item) => item.name === name)!;
   return (
     <article
-      className={`component-tile tile-${name}${item.category === "Blocks" && !("previewHeight" in item) ? " tile-wide" : ""}`}
+      className={`component-tile tile-${name}`}
       data-category={item.category}
     >
       <div className="tile-preview" inert aria-hidden="true">
         <FitPreview
-          fit={item.category === "Blocks" ? "contain" : "width"}
-          width={
-            item.category === "Blocks"
-              ? "previewWidth" in item
-                ? item.previewWidth
-                : 1024
-              : Math.min("previewWidth" in item ? item.previewWidth : 400, 480)
-          }
-          height={
-            item.category === "Blocks"
-              ? "previewHeight" in item
-                ? item.previewHeight
-                : 480
-              : 252
-          }
+          fit="width"
+          height={item.category === "Blocks" ? 320 : 252}
         >
           <Example name={name} />
         </FitPreview>
@@ -460,7 +447,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
     search.current?.focus();
   };
   return (
-    <main className={`section catalog-page${blocks ? "" : " component-catalog"}`}>
+    <main className="section catalog-page">
       <CollectionIntro blocks={blocks} />
       {blocks && (
         <>
@@ -476,6 +463,10 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           </nav>
           <div className="complete-block-heading">
             <h2 id="composed-blocks">Composed blocks</h2>
+            <p>
+              Dashboards, settings, and everyday workflows.
+              A complete interface to start from.
+            </p>
           </div>
         </>
       )}

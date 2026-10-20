@@ -103,7 +103,7 @@ export const projects = [
     budget: 12600,
     due: "Oct 16",
     status: "In progress",
-    image: "/assets/overtrue/project-02.svg",
+    image: "/assets/overtrue/project-02.webp",
   },
   {
     id: "PRJ-243",
@@ -127,7 +127,7 @@ export const projects = [
     budget: 9700,
     due: "Oct 23",
     status: "In progress",
-    image: "/assets/overtrue/project-04.svg",
+    image: "/assets/overtrue/project-04.webp",
   },
   {
     id: "PRJ-245",
@@ -151,7 +151,7 @@ export const projects = [
     budget: 15300,
     due: "Nov 06",
     status: "Planned",
-    image: "/assets/overtrue/project-06.svg",
+    image: "/assets/overtrue/project-06.webp",
   },
 ];
 export const clients = projects.map((project, i) => ({

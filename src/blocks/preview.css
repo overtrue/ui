@@ -7,4 +7,10 @@ html.dark { color-scheme: dark; background: #181818; }
 .overtrue-block > .scene-card { margin-bottom: 0; }
 .overtrue-block .pn-table-responsive { max-width: 100%; overflow-x: auto; }
 .overtrue-block .scene-note { margin: 0; }
+/* Four metrics should form two balanced rows in a narrow preview. */
+@media (min-width: 360px) and (max-width: 720px) {
+  .overtrue-block [data-slot="metric-group"]:has(> :nth-child(4):last-child) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 @media (max-width: 480px) { #root { padding: 12px; } }

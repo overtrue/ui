@@ -83,8 +83,8 @@ export function CompositionExample({ name }: { name: ItemName }) {
         <div className="grid gap-5">
           <MediaCard>
             <MediaCardImage
-              src="/assets/overtrue/project-01.svg"
-              alt="Geometric wayfinding concept"
+              src="/assets/overtrue/project-01.webp"
+              alt="Sculptural wayfinding in a contemporary cultural center"
               className="max-h-52"
             />
             <MediaCardBody>
