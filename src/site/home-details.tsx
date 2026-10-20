@@ -18,6 +18,15 @@ import { portfolioProjects, siteOwner } from "./demo-data";
 
 const featured = [
   {
+    name: "project-portfolio",
+    title: "Project portfolio",
+    label: "Projects",
+    icon: IconLayoutGrid,
+    description: "Give every project a clear next step.",
+    detail:
+      "Cover images, owners, progress, and search. A working collection, ready for your own projects.",
+  },
+  {
     name: "model-usage",
     title: "AI gateway",
     label: "AI usage",
@@ -43,15 +52,6 @@ const featured = [
     description: "Read the month in one screen.",
     detail:
       "Recurring revenue, the MRR bridge, plan mix, cohort retention, and targets, all reconciled.",
-  },
-  {
-    name: "project-portfolio",
-    title: "Project portfolio",
-    label: "Projects",
-    icon: IconLayoutGrid,
-    description: "Give every project a clear next step.",
-    detail:
-      "Cover images, owners, progress, and search. A working collection, ready for your own projects.",
   },
   {
     name: "analytics-overview",
@@ -91,7 +91,7 @@ export function FeaturedBlocks() {
       >
         <div className="home-heading">
           <h2 className="headline" id="assembled-title">
-            Start from a finished screen.
+            From components<br />to the complete picture.
           </h2>
           <div>
             <p className="lede">
@@ -117,6 +117,7 @@ export function FeaturedBlocks() {
                     key={name}
                     type="button"
                     aria-label={title}
+                    title={description}
                     aria-controls="assembled-preview"
                     aria-pressed={selected === name}
                     onClick={() => setSelected(name)}
@@ -124,20 +125,10 @@ export function FeaturedBlocks() {
                     <span className="showcase-option-heading">
                       <Icon size={17} stroke={1.6} />
                       <strong>{title}</strong>
-                      
-                    </span>
-                    <span className="showcase-option-description">
-                      {description}
                     </span>
                   </button>
                 ),
               )}
-            </div>
-            <div className="showcase-detail">
-              <p>{active.detail}</p>
-              <Link className="text-link" to={catalogPath(item)}>
-                Source & installation <IconArrowUpRight size={15} />
-              </Link>
             </div>
           </div>
           <div className="showcase-canvas">
@@ -168,6 +159,12 @@ export function FeaturedBlocks() {
                 <Example name={selected} expanded />
               )}
             </div>
+          </div>
+          <div className="showcase-detail">
+            <p>{active.detail}</p>
+            <Link className="text-link" to={catalogPath(item)}>
+              Source & installation <IconArrowUpRight size={15} />
+            </Link>
           </div>
         </div>
       </section>

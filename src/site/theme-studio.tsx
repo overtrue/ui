@@ -14,6 +14,7 @@ import {
   exportCss,
   isDefaultStudio,
   loadStudio,
+  onColor,
   saveStudio,
   type NeutralName,
   type StudioTheme,
@@ -71,7 +72,7 @@ export function ThemeStudioPanel({ compact = false }: { compact?: boolean }) {
                 aria-label={preset.name}
                 title={preset.name}
                 className="studio-swatch"
-                style={{ background: preset.value }}
+                style={{ background: preset.value, color: onColor(preset.value) }}
                 onClick={() => set("accent", preset.value)}
               >
                 {active && <IconCheck size={13} stroke={3} aria-hidden="true" />}

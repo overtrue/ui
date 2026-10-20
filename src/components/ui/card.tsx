@@ -51,7 +51,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
         className,
       )}
       style={{
-        borderTop: "1px solid rgba(31, 41, 55, 0.08)",
+        borderTop: "1px solid var(--pn-card-border, var(--color-border))",
         ...props.style,
       }}
       {...props}

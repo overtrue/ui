@@ -100,9 +100,9 @@ function Metric({
       <div className="text-2xl font-semibold tracking-tight text-card-foreground tabular-nums @3xl/monitor:text-[1.75rem]">
         {children}
       </div>
-      <div className="flex min-w-0 items-center gap-1.5 text-xs whitespace-nowrap text-muted-foreground">
+      <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-muted-foreground">
         {delta}
-        <span className="truncate">vs. 1 min ago</span>
+        <span className="whitespace-nowrap">vs. 1 min ago</span>
       </div>
     </div>
   );

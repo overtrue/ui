@@ -3300,7 +3300,7 @@ export default function Page() {
                     <div className={"pn-input-group pn-input-group-flat"}>
                       {" "}
                       <span className={"pn-input-group-text"}>
-                        {"/docs"}
+                        {"/docs/"}
                       </span>{" "}
                       <WorkspaceInput
                         type={"text"}

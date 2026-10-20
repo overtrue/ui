@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils";
 
 function HeaderActions() {
   const { resolvedScheme, setTheme } = useThemeState();
+  const [openMenu, setOpenMenu] = React.useState<"notifications" | "account" | null>(null);
   return (
     <div className="workspace-header-actions">
       <a
@@ -69,7 +70,10 @@ function HeaderActions() {
           <IconMoon size={20} stroke={1.5} />
         )}
       </Button>
-      <Dropdown.Root>
+      <Dropdown.Root
+        open={openMenu === "notifications"}
+        onOpenChange={(open) => setOpenMenu(open ? "notifications" : null)}
+      >
         <Dropdown.Trigger asChild>
           <Button
             variant="workspace"
@@ -81,7 +85,7 @@ function HeaderActions() {
           </Button>
         </Dropdown.Trigger>
         <Dropdown.Portal>
-          <div className="overtrue-workspace workspace-portal">
+          <div className="overtrue-workspace workspace-portal" data-state={openMenu === "notifications" ? "open" : "closed"}>
             <Dropdown.Content
               className="pn-dropdown-menu pn-show workspace-dropdown-content workspace-notification-menu"
               align="end"
@@ -117,7 +121,10 @@ function HeaderActions() {
         </Dropdown.Portal>
       </Dropdown.Root>
       <WorkspaceSearch />
-      <Dropdown.Root>
+      <Dropdown.Root
+        open={openMenu === "account"}
+        onOpenChange={(open) => setOpenMenu(open ? "account" : null)}
+      >
         <Dropdown.Trigger asChild>
           <Button
             variant="workspace"
@@ -137,7 +144,7 @@ function HeaderActions() {
           </Button>
         </Dropdown.Trigger>
         <Dropdown.Portal>
-          <div className="overtrue-workspace workspace-portal">
+          <div className="overtrue-workspace workspace-portal" data-state={openMenu === "account" ? "open" : "closed"}>
             <Dropdown.Content
               className="pn-dropdown-menu pn-show workspace-dropdown-content"
               align="end"
@@ -213,12 +220,12 @@ export function WorkspaceShell({
   const resolvedLayout = bare
     ? "default"
     : theme.nav === "sidebar"
-      ? theme.sidebar === "folded"
-        ? layout === "folded-hover"
-          ? "folded-hover"
-          : "folded"
-        : ["vertical-right", "vertical-transparent"].includes(layout)
-          ? layout
+      ? ["vertical-right", "vertical-transparent"].includes(layout)
+        ? layout
+        : theme.sidebar === "folded"
+          ? layout === "folded-hover"
+            ? "folded-hover"
+            : "folded"
           : "vertical"
       : ["condensed", "navbar-overlap", "rtl"].includes(layout)
         ? layout

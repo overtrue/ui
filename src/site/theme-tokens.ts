@@ -146,8 +146,8 @@ export const NEUTRALS: Record<
 > = {
   ink: {
     label: "Ink",
-    light: { bg: "#fbfbfc", subtle: "#f3f4f7", ink: "#0d1424", graphite: "#5d6678", card: "#ffffff", muted: "#eef0f4", border: "#e4e7ec", input: "#d5dae2" },
-    dark: { bg: "#07090f", subtle: "#0c0f17", ink: "#eef1f7", graphite: "#8b93a5", card: "#0f131c", muted: "#171c28", border: "#1d2330", input: "#2a3242" },
+    light: { bg: "#ffffff", subtle: "#fafafa", ink: "#202020", graphite: "#666666", card: "#ffffff", muted: "#f5f5f5", border: "#e5e5e5", input: "#d4d4d4" },
+    dark: { bg: "#121212", subtle: "#181818", ink: "#eeeeee", graphite: "#a3a3a3", card: "#1b1b1b", muted: "#242424", border: "#303030", input: "#454545" },
   },
   slate: {
     label: "Slate",

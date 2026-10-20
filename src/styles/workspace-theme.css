@@ -14,9 +14,16 @@
   --pn-border-radius-xxl: calc(var(--radius) * 2);
   --pn-body-bg: hsl(var(--background));
   --pn-body-color: hsl(var(--foreground));
+  --pn-heading-color: var(--pn-body-color);
+  --pn-link-color: var(--pn-primary);
+  --pn-link-hover-color: color-mix(in srgb, var(--pn-primary) 80%, var(--pn-body-color));
   --pn-bg-surface: hsl(var(--card));
   --pn-bg-surface-secondary: hsl(var(--muted));
+  --pn-bg-surface-tertiary: hsl(var(--muted));
+  --pn-bg-forms: hsl(var(--card));
+  --pn-bg-forms-disabled: hsl(var(--muted));
   --pn-border-color: hsl(var(--border));
+  --pn-border-color-translucent: hsl(var(--border));
   --pn-secondary: hsl(var(--muted-foreground));
   color-scheme: light;
   min-height: 100svh;
@@ -39,10 +46,7 @@
 .overtrue-workspace #workspace-content {
   flex: 1;
   min-width: 0;
-  background: linear-gradient(
-    color-mix(in srgb, hsl(var(--primary)) 3%, hsl(var(--background))),
-    hsl(var(--background)) 400px
-  );
+  background: hsl(var(--background));
 }
 .overtrue-workspace .pn-container-xl {
   max-width: 1392px;
@@ -440,12 +444,12 @@
 }
 .overtrue-workspace.workspace-layout-navbar-dark .workspace-header,
 .overtrue-workspace.workspace-layout-navbar-dark .workspace-navbar {
-  color: #e5e7eb;
-  --pn-bg-surface: #1f2937;
-  --pn-bg-surface-secondary: #374151;
-  --pn-body-color: #e5e7eb;
-  --pn-secondary: #9ca3af;
-  --pn-border-color: #374151;
+  color: #eeeeee;
+  --pn-bg-surface: #1b1b1b;
+  --pn-bg-surface-secondary: #303030;
+  --pn-body-color: #eeeeee;
+  --pn-secondary: #a3a3a3;
+  --pn-border-color: #303030;
 }
 .overtrue-workspace.workspace-layout-navbar-dark .workspace-logo img {
   filter: brightness(0) invert(1);
@@ -842,14 +846,31 @@
   --fc-today-bg-color: var(--pn-primary-lt);
   --fc-button-bg-color: var(--pn-primary);
   --fc-button-border-color: var(--pn-primary);
+  --fc-button-text-color: var(--pn-primary-fg);
+  --fc-button-hover-bg-color: var(--pn-link-hover-color);
+  --fc-button-hover-border-color: var(--pn-link-hover-color);
+  --fc-button-active-bg-color: var(--pn-link-hover-color);
+  --fc-button-active-border-color: var(--pn-link-hover-color);
   --fc-event-bg-color: var(--pn-primary);
   --fc-event-border-color: var(--pn-primary);
+  --fc-event-text-color: var(--pn-primary-fg);
   --fc-neutral-bg-color: var(--pn-bg-surface-secondary);
   --fc-page-bg-color: var(--pn-bg-surface);
+}
+/* Restore the plugin grid after the workspace's element-level table reset. */
+.overtrue-workspace .fc-theme-standard :is(td, th) {
+  border: 1px solid var(--fc-border-color);
+}
+.overtrue-workspace .fc .fc-col-header-cell-cushion {
+  padding-block: 10px;
+  color: var(--pn-secondary);
+  font-size: 12px;
+  font-weight: 600;
 }
 .overtrue-workspace .fc .fc-button {
   font-size: 0.875rem;
   padding: 8px 12px;
+  border-radius: var(--pn-border-radius);
 }
 .overtrue-workspace .fc .fc-toolbar-title {
   font-size: 1.5rem;
@@ -865,7 +886,7 @@
 }
 .overtrue-workspace .fc .fc-h-event .fc-event-main,
 .overtrue-workspace .fc .fc-h-event .fc-event-title {
-  color: #fff;
+  color: var(--fc-event-text-color);
 }
 .overtrue-workspace .fc .fc-event-title {
   min-width: 0;
@@ -1086,11 +1107,11 @@ html[data-navbar="sticky"] .overtrue-workspace .workspace-navbar {
 html[data-workspace-navbar-theme="dark"] .workspace-header,
 html[data-workspace-navbar-theme="dark"] .workspace-navbar,
 html[data-workspace-navbar-theme="dark"] .workspace-sidebar {
-  --pn-bg-surface: #1f2937;
-  --pn-bg-surface-secondary: #374151;
-  --pn-body-color: #e5e7eb;
-  --pn-secondary: #9ca3af;
-  --pn-border-color: #374151;
+  --pn-bg-surface: #1b1b1b;
+  --pn-bg-surface-secondary: #303030;
+  --pn-body-color: #eeeeee;
+  --pn-secondary: #a3a3a3;
+  --pn-border-color: #303030;
 }
 html[data-workspace-navbar-theme="primary"] .workspace-header,
 html[data-workspace-navbar-theme="primary"] .workspace-navbar,
@@ -1503,11 +1524,11 @@ html[data-container="boxed"] .workspace-layout-vertical-right [data-slot="sideba
   right: max(0px, calc((100vw - 1320px) / 2));
 }
 html[data-workspace-navbar-theme="dark"] .workspace-app-sidebar {
-  --sidebar: 215 28% 17%;
-  --sidebar-foreground: 220 13% 91%;
-  --sidebar-border: 215 19% 27%;
-  --sidebar-accent: 215 19% 27%;
-  --sidebar-accent-foreground: 220 13% 91%;
+  --sidebar: 0 0% 10.5%;
+  --sidebar-foreground: 0 0% 93.3%;
+  --sidebar-border: 0 0% 18.8%;
+  --sidebar-accent: 0 0% 18.8%;
+  --sidebar-accent-foreground: 0 0% 93.3%;
   --workspace-sidebar-selected-foreground: color-mix(in srgb, hsl(var(--primary)) 50%, white);
 }
 html[data-workspace-navbar-theme="primary"] .workspace-app-sidebar {
@@ -1565,4 +1586,50 @@ html.dark:not([data-workspace-navbar-theme="primary"]) .workspace-app-sidebar {
   --page-search-muted-foreground: hsl(var(--muted-foreground));
   --page-search-border: hsl(var(--border));
   --page-search-ring: hsl(var(--ring));
+}
+
+/* Loading feedback also ships with installable workspace blocks. */
+.overtrue-workspace .workspace-button-feedback {
+  position: relative;
+}
+.overtrue-workspace .workspace-button-label {
+  display: inline-flex;
+  align-items: center;
+  gap: inherit;
+}
+.overtrue-workspace .workspace-button-feedback[aria-busy="true"] {
+  opacity: 1;
+}
+.overtrue-workspace .workspace-button-feedback[aria-busy="true"] .workspace-button-label {
+  opacity: 0;
+}
+.overtrue-workspace .workspace-button-spinner {
+  position: absolute;
+  inset: 0;
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  animation: ws-button-spin 700ms linear infinite;
+}
+.overtrue-workspace .workspace-button-demo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ws-hairline, var(--pn-border-color));
+  font-size: 12px;
+  line-height: 1.5;
+}
+@keyframes ws-button-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overtrue-workspace .workspace-button-spinner {
+    animation: none;
+  }
 }

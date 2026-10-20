@@ -54,7 +54,7 @@ export function ServiceStatus({
       )}
     >
       <CardHeader className="flex flex-wrap items-start justify-between gap-4 border-0 p-5 pb-0">
-        <div className="space-y-1">
+        <div className="grid gap-1">
           <CardTitle className="m-0 text-sm font-semibold">{title}</CardTitle>
           {description && (
             <CardDescription className="m-0 text-xs text-muted-foreground">

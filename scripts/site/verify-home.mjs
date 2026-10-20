@@ -260,6 +260,17 @@ try {
         ),
       color,
     );
+    assert.deepEqual(
+      await console_.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          accent: style.getPropertyValue("--primary").trim(),
+          chart: style.getPropertyValue("--color-chart-1").trim(),
+          scheme: style.colorScheme,
+        };
+      }),
+      { accent: "#9698fc", chart: "#9698fc", scheme: "dark" },
+    );
   }
   await lab.getByRole("button", { name: "Round", exact: true }).click();
   assert.equal(
@@ -356,6 +367,11 @@ try {
   await showcase
     .getByText("Observed over the last 7 days", { exact: true })
     .waitFor();
+  const directory = page.locator(".library-directory");
+  assert.equal(await directory.getAttribute("open"), null);
+  await directory.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  assert.notEqual(await directory.getAttribute("open"), null);
   const indexLinks = await page
     .getByRole("navigation", { name: "All components and blocks" })
     .getByRole("link")
@@ -366,8 +382,11 @@ try {
       (href) => href.startsWith("/components/") || href.startsWith("/blocks/"),
     ),
   );
+  await directory.locator("summary").focus();
+  await page.keyboard.press("Space");
+  assert.equal(await directory.getAttribute("open"), null);
   checks.push(
-    "period selection, CSV export, member search, settings save, project search/empty state, keyboard switching, analytics and service periods, complete library index",
+    "period selection, CSV export, member search, settings save, project search/empty state, keyboard switching, analytics and service periods, complete library index and keyboard disclosure",
   );
   assert.deepEqual(errors, []);
   writeFileSync(

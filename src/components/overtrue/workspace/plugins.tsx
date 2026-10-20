@@ -572,7 +572,10 @@ export function WorkspaceEditor({
     import("hugerte").then(async ({ default: hugeRTE }) => {
       if (disposed || !input.current) return;
       const dark = document.documentElement.classList.contains("dark");
-      const fontFamily = getComputedStyle(input.current).fontFamily;
+      const styles = getComputedStyle(input.current);
+      const fontFamily = styles.fontFamily;
+      const surface = styles.getPropertyValue("--card");
+      const foreground = styles.getPropertyValue("--foreground");
       const instances = await hugeRTE.init({
         target: input.current,
         base_url: import.meta.env.DEV
@@ -589,7 +592,7 @@ export function WorkspaceEditor({
         skin: dark ? "oxide-dark" : "oxide",
         content_css: dark ? "dark" : "default",
         content_style:
-          `body { font-family: ${fontFamily}; font-size: 14px; -webkit-font-smoothing: antialiased; }`,
+          `body { background: hsl(${surface}); color: hsl(${foreground}); font-family: ${fontFamily}; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }`,
         setup: (instance) => {
           editor = instance;
           instance.on("init", () => instance.setContent(content.current));
@@ -604,7 +607,7 @@ export function WorkspaceEditor({
         editor.remove();
       }
     };
-  }, [resolvedScheme, theme.font]);
+  }, [resolvedScheme, theme.font, theme.base]);
   return (
     <textarea
       ref={input}

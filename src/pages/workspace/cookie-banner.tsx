@@ -58,16 +58,17 @@ export default function Page() {
                     {" "}
                     <div className={"pn-col"}>
                       {" "}
-                      <strong>{"Your privacy preferences"}</strong>
-                      {
-                        " Essential cookies keep the workspace running. Optional cookies help us understand how it is used. "
-                      }
-                      <WorkspaceLink
-                        href={"/#/terms-of-service"}
-                        target={"_blank"}
-                      >
-                        {"Learn more"}
-                      </WorkspaceLink>{" "}
+                      <h2 className="pn-h3 pn-mb-2">Your privacy preferences</h2>
+                      <p className="pn-text-secondary pn-mb-0">
+                        Essential cookies keep the workspace running. Optional
+                        cookies help us understand how it is used.{" "}
+                        <WorkspaceLink
+                          href={"/#/terms-of-service"}
+                          target={"_blank"}
+                        >
+                          Learn more
+                        </WorkspaceLink>
+                      </p>{" "}
                     </div>{" "}
                     <div className={"pn-col-auto"}>
                       {" "}

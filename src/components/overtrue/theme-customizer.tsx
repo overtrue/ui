@@ -145,7 +145,7 @@ export function persistTheme(theme: ThemeState) {
 
 // Each palette uses the same semantic tokens for shadcn and workspace surfaces.
 const BASE_PALETTES: Record<ThemeBase, { light: string[]; dark: string[] }> = {
-  ink: { light: ["#f7f8fa", "#0d1424", "#ffffff", "#eef0f4", "#5d6678", "#e4e7ec", "#d5dae2"], dark: ["#07090f", "#eef1f7", "#0f131c", "#171c28", "#8b93a5", "#1d2330", "#2a3242"] },
+  ink: { light: ["#fafafa", "#202020", "#ffffff", "#f5f5f5", "#666666", "#e5e5e5", "#d4d4d4"], dark: ["#121212", "#eeeeee", "#1b1b1b", "#242424", "#a3a3a3", "#303030", "#454545"] },
   gray: { light: ["#f9fafb", "#111827", "#ffffff", "#f3f4f6", "#6b7280", "#e5e7eb", "#d1d5db"], dark: ["#030712", "#f9fafb", "#111827", "#1f2937", "#9ca3af", "#1f2937", "#374151"] },
   slate: { light: ["#f8fafc", "#334155", "#ffffff", "#f1f5f9", "#64748b", "#e2e8f0", "#cbd5e1"], dark: ["#0f172a", "#e2e8f0", "#1e293b", "#334155", "#94a3b8", "#334155", "#475569"] },
   zinc: { light: ["#fafafa", "#3f3f46", "#ffffff", "#f4f4f5", "#71717a", "#e4e4e7", "#d4d4d8"], dark: ["#18181b", "#e4e4e7", "#27272a", "#27272a", "#a1a1aa", "#3f3f46", "#52525b"] },

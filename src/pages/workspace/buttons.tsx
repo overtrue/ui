@@ -1,4 +1,5 @@
 // Keep page composition editable; interaction belongs in the shared components.
+import { useEffect, useState } from "react"
 import {
   Card,
   CardContent,
@@ -9,6 +10,30 @@ import {
   WorkspaceButton,
   WorkspaceLink,
 } from "@/components/overtrue/workspace/primitives"
+
+function ButtonFeedback() {
+  const [state, setState] = useState<"idle" | "saving" | "saved">("idle")
+  useEffect(() => {
+    if (state !== "saving") return
+    const timer = window.setTimeout(() => setState("saved"), 1000)
+    return () => window.clearTimeout(timer)
+  }, [state])
+  return (
+    <div className="workspace-button-demo">
+      <WorkspaceButton
+        className="pn-btn pn-btn-primary"
+        loading={state === "saving"}
+        onClick={() => setState("saving")}
+      >
+        Save changes
+      </WorkspaceButton>
+      <span role="status" className="pn-text-secondary">
+        {state === "saving" ? "Saving…" : state === "saved" ? "Saved in this preview." : "Try the loading state."}
+      </span>
+    </div>
+  )
+}
+
 export default function Page() {
   return (
     <div data-workspace-page="buttons" className="pn-page-wrapper">
@@ -169,6 +194,7 @@ export default function Page() {
                       {"Disabled"}
                     </WorkspaceButton>{" "}
                   </div>{" "}
+                  <ButtonFeedback />
                 </CardContent>{" "}
               </Card>{" "}
             </div>{" "}

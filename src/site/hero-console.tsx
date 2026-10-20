@@ -107,12 +107,13 @@ export function HeroConsole() {
         <p>
           {inspecting ? (
             <>
-              <strong>{names.size} components</strong> in this view. Select one
-              to open its page.
+              <strong>{names.size} components</strong>
+              <span> in this view. Select one to open its page.</span>
             </>
           ) : (
             <>
-              Live sample data. Everything inside is an installable component.
+              <strong>Live preview</strong>
+              <span> · Sample data. Inspect any part to explore the source.</span>
             </>
           )}
         </p>

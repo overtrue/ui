@@ -198,9 +198,9 @@
   flex: 1;
 }
 .catalog-page .catalog-toolbar .filter-tabs button[aria-pressed="true"] {
-  background: var(--foreground);
-  color: var(--site-bg);
-  box-shadow: 0 1px 2px #00000014;
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: 0 0 0 1px var(--border), var(--shadow-raise);
 }
 @media (max-width: 767px) {
   .catalog-search {
@@ -317,13 +317,13 @@
   padding: 40px 40px 0;
   gap: 28px 40px;
   border-radius: 16px;
-  border-color: #263348;
-  background: #101b2e;
-  color: #f8fafc;
+  border-color: #303030;
+  background: #181818;
+  color: #eeeeee;
   overflow: hidden;
 }
 .example-feature-copy h2 {
-  color: #f8fafc;
+  color: #eeeeee;
   font-size: 38px;
   font-weight: 500;
   line-height: 1.2;
@@ -331,24 +331,24 @@
   margin-top: 24px;
 }
 .example-feature-copy h2 em {
-  color: #a9bfff;
+  color: #a9b8ff;
 }
 .example-feature-copy p,
 .example-feature-note {
-  color: #aebcd0;
+  color: #a3a3a3;
 }
 .example-feature-copy .overline {
-  color: #bccaff;
+  color: #a9b8ff;
   font-size: 9px;
   letter-spacing: 1.6px;
 }
 .example-feature-copy .site-button.primary {
-  background: #dce6ff;
-  color: #172554;
-  border-color: #dce6ff;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
 }
 .example-feature-copy .site-button.primary:hover {
-  background: #fff;
+  background: color-mix(in oklab, var(--primary) 86%, white);
 }
 .example-feature-note {
   display: block;
@@ -358,7 +358,7 @@
 .example-feature-preview {
   overflow: hidden;
   align-self: end;
-  border: 1px solid #50617a;
+  border: 1px solid #454545;
   border-radius: 10px;
   background: var(--site-bg);
   color: var(--foreground);
@@ -394,7 +394,7 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0;
   margin-inline: -40px;
-  border-top: 1px solid #334158;
+  border-top: 1px solid #303030;
   min-height: 0;
 }
 .example-feature-links a {
@@ -403,7 +403,7 @@
   gap: 12px;
   padding: 22px 24px;
   border: 0;
-  border-inline-end: 1px solid #334158;
+  border-inline-end: 1px solid #303030;
   border-radius: 0;
   background: transparent;
 }
@@ -411,7 +411,7 @@
   border-inline-end: 0;
 }
 .example-feature-links a:hover {
-  background: #1a2940;
+  background: #242424;
   color: #fff;
 }
 .example-feature-links a svg {
@@ -548,7 +548,7 @@
     border-inline-end: 0;
   }
   .example-feature-links a:nth-child(-n + 2) {
-    border-bottom: 1px solid #334158;
+    border-bottom: 1px solid #303030;
   }
   .example-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));

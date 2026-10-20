@@ -846,20 +846,17 @@
   z-index: 3;
 }
 .overtrue-workspace[data-bs-theme="dark"] .scene-note {
-  background: color-mix(in srgb, #8eab99 8%, var(--scene-surface));
+  background: color-mix(in oklab, var(--scene-ink) 3.5%, var(--scene-surface));
 }
 .overtrue-workspace[data-bs-theme="dark"] {
   --workspace-chart-color-weight: 72%;
 }
-.overtrue-workspace[data-bs-theme="dark"]
-  .scene
-  a:not(.is-primary):where(:not([data-slot="button"])),
 .overtrue-workspace[data-bs-theme="dark"] .scene-wizard aside .is-current,
 .overtrue-workspace[data-bs-theme="dark"]
   .scene-auth
   .scene-form
   a:where(:not([data-slot="button"])) {
-  color: color-mix(in srgb, var(--scene-accent) 50%, white);
+  color: var(--scene-accent);
 }
 .overtrue-workspace[data-bs-theme="dark"] .jvm-marker-label {
   fill: var(--pn-body-color);
@@ -1097,6 +1094,9 @@
 }
 .form-workbench-composition .pn-table-responsive {
   overflow-x: auto;
+}
+.form-workbench-composition .pn-table-responsive :is(th, td) {
+  min-width: 200px;
 }
 .form-workbench-note {
   margin-top: 20px;

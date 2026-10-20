@@ -260,8 +260,9 @@ function Header() {
   );
 }
 function Footer() {
+  const isHome = useLocation().pathname === "/";
   return (
-    <footer className="site-footer">
+    <footer className={`site-footer${isHome ? " home-footer" : ""}`}>
       <div>
         <Link to="/">
           <Logo />
@@ -302,6 +303,11 @@ function Footer() {
           <a href="/LICENSE.txt">MIT license</a>
         </div>
       </nav>
+      {isHome && (
+        <div className="footer-signature" aria-hidden="true">
+          overtrue<span>/</span>ui
+        </div>
+      )}
       <div className="footer-note">
         <span>
           An independent project by{" "}

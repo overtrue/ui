@@ -44,8 +44,26 @@ export function WorkspaceSurface({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function WorkspaceButton({ href, children, ...props }: Props) {
+export function WorkspaceButton({
+  href,
+  children,
+  loading,
+  ...rest
+}: Props & { loading?: boolean }) {
   const [passwordVisible, setPasswordVisible] = React.useState(false)
+  const props: Props = {
+    ...rest,
+    disabled: Boolean(rest.disabled) || rest["aria-disabled"] === true ||
+      rest["aria-disabled"] === "true" || rest.className?.split(" ").includes("pn-disabled") || loading,
+    "aria-busy": loading || rest["aria-busy"],
+    className: cn(rest.className, loading !== undefined && "workspace-button-feedback"),
+  }
+  const content = loading === undefined ? children : (
+    <>
+      <span className="workspace-button-label">{children}</span>
+      {loading && <span className="workspace-button-spinner" aria-hidden="true" />}
+    </>
+  )
   if (typeof props["data-password-toggle"] === "string") {
     const target = props["data-password-toggle"]
     return (
@@ -64,7 +82,7 @@ export function WorkspaceButton({ href, children, ...props }: Props) {
           }
         }}
       >
-        {children}
+        {content}
       </Button>
     )
   }
@@ -108,14 +126,14 @@ export function WorkspaceButton({ href, children, ...props }: Props) {
           }).drive()
         }}
       >
-        {children}
+        {content}
       </Button>
     )
   if (href)
     return (
       <Button variant="workspace" asChild>
         <WorkspaceLink href={href} {...props}>
-          {children}
+          {content}
         </WorkspaceLink>
       </Button>
     )
@@ -125,17 +143,26 @@ export function WorkspaceButton({ href, children, ...props }: Props) {
       type="button"
       {...(props as React.ComponentProps<typeof Button>)}
     >
-      {children}
+      {content}
     </Button>
   )
 }
-export function WorkspaceLink({ href = "#", onClick, ...props }: Props) {
+export function WorkspaceLink({ href = "#", onClick, disabled, ...props }: Props) {
   const { setTheme } = useThemeState()
+  const blocked = Boolean(disabled) || props.className?.split(" ").includes("pn-disabled") ||
+    props["aria-disabled"] === true || props["aria-disabled"] === "true"
   return (
     <a
       href={href.startsWith("/#/") ? `/workspace${href}` : href}
       {...props}
+      aria-disabled={blocked || undefined}
+      tabIndex={blocked ? -1 : props.tabIndex}
       onClick={(event) => {
+        if (blocked) {
+          event.preventDefault()
+          event.stopPropagation()
+          return
+        }
         if (/^\?theme=(light|dark)$/.test(href)) {
           event.preventDefault()
           setTheme((theme) => ({
@@ -369,7 +396,7 @@ export function WorkspaceModal({ id = "", title, className, children }: Props) {
       }
     >
       <DialogPrimitive.Portal>
-        <div className="overtrue-workspace workspace-portal">
+        <div className="overtrue-workspace workspace-portal" data-state={state.open === id ? "open" : "closed"}>
           <DialogPrimitive.Overlay className="workspace-dialog-overlay" />
           <DialogPrimitive.Content
             aria-describedby={undefined}
@@ -468,11 +495,12 @@ export function WorkspaceAlert({ children, ...props }: Props) {
 export function WorkspaceToast({ className, ...props }: Props) {
   return <WorkspaceAlert {...props} className={cn(className, "pn-show")} />
 }
-const DropdownContext = React.createContext(false)
+const DropdownContext = React.createContext<{ open: boolean } | null>(null)
 export function WorkspaceDropdown({ children, ...props }: Props) {
+  const [open, setOpen] = React.useState(false)
   return (
-    <DropdownContext.Provider value={true}>
-      <DropdownPrimitive.Root>
+    <DropdownContext.Provider value={{ open }}>
+      <DropdownPrimitive.Root open={open} onOpenChange={setOpen}>
         <div {...props}>{children}</div>
       </DropdownPrimitive.Root>
     </DropdownContext.Provider>
@@ -516,10 +544,11 @@ export function WorkspaceDropdownContent({
     )
   return (
     <DropdownPrimitive.Portal>
-      <div className="overtrue-workspace workspace-portal">
+      <div className="overtrue-workspace workspace-portal" data-state={inside.open ? "open" : "closed"}>
         <DropdownPrimitive.Content
           {...props}
-          sideOffset={4}
+          sideOffset={8}
+          collisionPadding={8}
           align={className?.includes("pn-dropdown-menu-end") ? "end" : "start"}
           className={cn(className, "pn-show workspace-dropdown-content")}
         >
@@ -533,23 +562,26 @@ export function WorkspaceDropdownItem({
   href,
   className,
   children,
+  disabled,
   ...props
 }: Props) {
   const inside = React.useContext(DropdownContext)
+  const blocked = Boolean(disabled) || className?.split(" ").includes("pn-disabled") ||
+    props["aria-disabled"] === true || props["aria-disabled"] === "true"
   if (!inside)
     return (
-      <WorkspaceLink href={href} className={className} {...props}>
+      <WorkspaceLink href={href} className={className} {...props} disabled={blocked}>
         {children}
       </WorkspaceLink>
     )
   return (
-    <DropdownPrimitive.Item className={className} asChild>
+    <DropdownPrimitive.Item className={className} disabled={blocked} asChild>
       {href ? (
-        <WorkspaceLink href={href} {...props}>
+        <WorkspaceLink href={href} {...props} disabled={blocked}>
           {children}
         </WorkspaceLink>
       ) : (
-        <button type="button" {...props}>
+        <button type="button" {...props} disabled={blocked}>
           {children}
         </button>
       )}

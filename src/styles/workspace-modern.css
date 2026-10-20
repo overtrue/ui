@@ -4,19 +4,19 @@
  * every accent, base palette, radius and font choice still applies.
  */
 .overtrue-workspace {
-  --ws-hairline: color-mix(in oklab, hsl(var(--foreground)) 9%, transparent);
+  --ws-hairline: hsl(var(--border));
   --ws-hover: color-mix(in oklab, hsl(var(--foreground)) 5%, transparent);
   --ws-raise:
-    0 1px 1px rgb(13 20 36 / 0.03), 0 1px 3px -1px rgb(13 20 36 / 0.06);
+    0 1px 2px rgb(0 0 0 / 0.025);
   --ws-float:
-    0 2px 4px -1px rgb(13 20 36 / 0.05), 0 12px 32px -8px rgb(13 20 36 / 0.18);
+    0 2px 4px -1px rgb(0 0 0 / 0.04), 0 12px 32px -8px rgb(0 0 0 / 0.14);
   --ws-ring: 0 0 0 3px color-mix(in oklab, hsl(var(--primary)) 24%, transparent);
   --ws-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --pn-card-shadow: var(--ws-raise);
   --pn-box-shadow: var(--ws-float);
   --pn-border-radius: calc(var(--radius) * 1.25);
   --pn-border-radius-lg: calc(var(--radius) * 1.5);
-  --scene-control-line: color-mix(in oklab, hsl(var(--foreground)) 14%, transparent);
+  --scene-control-line: hsl(var(--input));
   font-size: 14px;
   font-feature-settings: "cv11" 1;
   -webkit-font-smoothing: antialiased;
@@ -26,27 +26,36 @@
   --ws-float: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 50px -20px rgb(0 0 0 / 0.8);
 }
 
-/* Canvas: a faint light source above the content instead of a flat wash. */
+/* A quiet canvas keeps emphasis on the content and primary action. */
 .overtrue-workspace #workspace-content {
-  background:
-    radial-gradient(
-      1200px 420px at 50% -120px,
-      color-mix(in oklab, hsl(var(--primary)) 9%, transparent),
-      transparent 70%
-    ),
-    hsl(var(--background));
+  background: hsl(var(--background));
+}
+@media (min-width: 768px) {
+  .overtrue-workspace .pn-container-xl {
+    padding-inline: clamp(24px, 2.2vw, 36px);
+  }
 }
 
 /* Type ------------------------------------------------------------------- */
 .overtrue-workspace :is(h1, h2, h3, .pn-page-title, .pn-card-title):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
   letter-spacing: -0.015em;
 }
-.overtrue-workspace :is(.scene-heading h1, .pn-page-title) {
-  font-size: clamp(24px, 2.1vw, 28px);
-  font-stretch: 106%;
-  font-weight: 650;
-  letter-spacing: -0.03em;
-  line-height: 1.12;
+.overtrue-workspace :is(.scene-heading h1, .form-workbench-heading h1, .pn-page-title) {
+  font-size: clamp(24px, 2.2vw, 30px);
+  font-stretch: 104%;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+.overtrue-workspace .scene-heading {
+  margin-bottom: 32px;
+}
+.overtrue-workspace .scene-heading h1 {
+  margin-block: 8px;
+}
+.overtrue-workspace .scene-heading p:not(.scene-eyebrow) {
+  font-size: 14px;
+  line-height: 1.65;
 }
 .overtrue-workspace :is(.scene-eyebrow, .pn-page-pretitle) {
   font-size: 12px;
@@ -63,10 +72,11 @@
 .overtrue-workspace .workspace-header {
   position: sticky;
   top: 0;
-  background: color-mix(in srgb, hsl(var(--background)) 78%, transparent);
-  border-bottom-color: var(--ws-hairline);
-  backdrop-filter: blur(14px) saturate(1.5);
-  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  --ws-hover: color-mix(in oklab, var(--pn-body-color) 6%, transparent);
+  background: color-mix(in srgb, var(--pn-bg-surface) 92%, transparent);
+  border-bottom-color: var(--pn-border-color);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 /* Every header control shares one 32px row: quiet until hovered. */
 .overtrue-workspace .workspace-header-actions {
@@ -318,10 +328,29 @@ html[data-workspace-navbar-theme="primary"]
   border-color: transparent;
 }
 /* Cards ------------------------------------------------------------------ */
+.overtrue-workspace .pn-row-cards {
+  --pn-gutter-x: 20px;
+  --pn-gutter-y: 20px;
+}
 .overtrue-workspace :is(.pn-card, .scene-card) {
   border-color: var(--ws-hairline);
   border-radius: calc(var(--radius) * 1.5);
   box-shadow: var(--ws-raise);
+}
+.overtrue-workspace .pn-card {
+  --pn-card-spacer-x: 24px;
+  --pn-card-cap-padding-x: 24px;
+}
+.overtrue-workspace .pn-card-header:first-child {
+  border-start-start-radius: var(--pn-card-inner-border-radius);
+  border-start-end-radius: var(--pn-card-inner-border-radius);
+}
+.overtrue-workspace .pn-card-footer {
+  display: block;
+}
+.overtrue-workspace .pn-card-footer:last-child {
+  border-end-start-radius: var(--pn-card-inner-border-radius);
+  border-end-end-radius: var(--pn-card-inner-border-radius);
 }
 .overtrue-workspace .scene-card > header,
 .overtrue-workspace .pn-card-header {
@@ -329,8 +358,33 @@ html[data-workspace-navbar-theme="primary"]
   border-bottom-color: var(--ws-hairline);
 }
 .overtrue-workspace :is(.scene-card h2, .pn-card-title):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
-  font-size: 15px;
-  font-weight: 620;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.overtrue-workspace .scene-card > header h2 {
+  margin: 0;
+}
+.overtrue-workspace .scene-card > header p {
+  margin-top: 6px;
+  line-height: 1.6;
+}
+.overtrue-workspace .scene-card-content > :first-child {
+  margin-top: 0;
+}
+.overtrue-workspace .scene-card-content > :last-child:not(.scene-table-wrap, .scene-table-summary) {
+  margin-bottom: 0;
+}
+.overtrue-workspace :is(.scene-people-grid, [data-slot="portfolio-grid"]) {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+.overtrue-workspace :is([data-slot="member-card"], [data-slot="portfolio-grid"] > [data-slot="media-card"]) {
+  border-color: var(--ws-hairline);
+  border-radius: calc(var(--radius) * 1.5);
+  box-shadow: var(--ws-raise);
+}
+.overtrue-workspace [data-slot="member-card"] [data-slot="detail-list"] {
+  font-size: 13px;
 }
 .overtrue-workspace :is(a.pn-card, .pn-card-link) {
   transition:
@@ -344,55 +398,21 @@ html[data-workspace-navbar-theme="primary"]
   transform: translateY(-1px);
 }
 
-/* Metric groups: the featured figure glows instead of sitting on navy. */
+/* Emphasize the figure while keeping the metric group on one quiet surface. */
 .overtrue-workspace [data-slot="metric-group"] {
   border-color: var(--ws-hairline);
   border-radius: calc(var(--radius) * 1.5);
   box-shadow: var(--ws-raise);
 }
 .overtrue-workspace .scene-overview-metrics > :first-child {
-  position: relative;
-  background:
-    radial-gradient(
-      120% 140% at 0% 0%,
-      color-mix(in oklab, hsl(var(--primary)) 85%, white 0%) 0%,
-      color-mix(in oklab, hsl(var(--primary)) 70%, black) 100%
-    );
-  color: hsl(var(--primary-foreground));
-  overflow: hidden;
-}
-.overtrue-workspace .scene-overview-metrics > :first-child::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 0.07) 1px, transparent 1px);
-  background-size: 18px 18px;
-  -webkit-mask-image: linear-gradient(to left, #000, transparent 70%);
-  mask-image: linear-gradient(to left, #000, transparent 70%);
-  pointer-events: none;
-}
-.dark .overtrue-workspace .scene-overview-metrics > :first-child {
-  background:
-    radial-gradient(
-      120% 140% at 0% 0%,
-      color-mix(in oklab, hsl(var(--primary)) 42%, hsl(var(--card))) 0%,
-      color-mix(in oklab, hsl(var(--primary)) 14%, hsl(var(--card))) 100%
-    );
-  color: #fff;
-}
-.dark .overtrue-workspace .scene-overview-metrics > :first-child > p:nth-child(2) {
-  color: #fff;
-}
-.dark .overtrue-workspace .scene-overview-metrics > :first-child > :is(p:first-child, div) {
-  color: rgb(255 255 255 / 0.68);
+  background: hsl(var(--card));
+  color: var(--pn-body-color);
 }
 .overtrue-workspace .scene-overview-metrics > :first-child > :is(p:first-child, div) {
-  color: color-mix(in srgb, hsl(var(--primary-foreground)) 72%, transparent);
+  color: var(--pn-secondary);
 }
 .overtrue-workspace .scene-overview-metrics > :first-child > p:nth-child(2) {
-  color: hsl(var(--primary-foreground));
+  color: hsl(var(--primary));
 }
 .overtrue-workspace [data-slot="metric-group"] p:nth-child(2) {
   font-stretch: 106%;
@@ -402,7 +422,8 @@ html[data-workspace-navbar-theme="primary"]
 
 /* Buttons ---------------------------------------------------------------- */
 .overtrue-workspace :is(.pn-btn, .scene-button) {
-  border-radius: calc(var(--radius) * 1.25);
+  --pn-btn-border-radius: calc(var(--radius) * 1.25);
+  border-radius: var(--pn-btn-border-radius);
   font-weight: 560;
   transition:
     background-color 160ms,
@@ -410,8 +431,40 @@ html[data-workspace-navbar-theme="primary"]
     box-shadow 200ms,
     transform 120ms;
 }
-.overtrue-workspace :is(.pn-btn, .scene-button):active:not(:disabled) {
+.overtrue-workspace :is(.pn-btn, .scene-button):active:not(:disabled, [aria-disabled="true"], [aria-busy="true"]) {
   transform: translateY(1px);
+}
+.overtrue-workspace .pn-btn-pill {
+  --pn-btn-border-radius: 999px;
+}
+.overtrue-workspace .pn-btn-square {
+  --pn-btn-border-radius: 0;
+}
+.dark .overtrue-workspace .pn-btn-dark:is(.pn-btn-outline, .pn-btn-ghost) {
+  --pn-dark: hsl(var(--foreground));
+  --pn-dark-fg: hsl(var(--background));
+}
+html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-ghost) {
+  --pn-light: hsl(var(--muted-foreground));
+  --pn-light-fg: hsl(var(--card));
+}
+.overtrue-workspace .pn-btn-sm {
+  --pn-btn-padding-y: 7px;
+  --pn-btn-padding-x: 10px;
+}
+.overtrue-workspace .pn-btn-lg {
+  --pn-btn-font-size: 14px;
+  --pn-btn-line-height: 20px;
+  --pn-btn-icon-size: 20px;
+  --pn-btn-padding-y: 11px;
+  --pn-btn-padding-x: 18px;
+}
+.overtrue-workspace .pn-btn-xl {
+  --pn-btn-font-size: 16px;
+  --pn-btn-line-height: 24px;
+  --pn-btn-icon-size: 22px;
+  --pn-btn-padding-y: 11px;
+  --pn-btn-padding-x: 20px;
 }
 .overtrue-workspace .pn-btn:not([class*="pn-btn-ghost"]):not(.pn-btn-link):not(.pn-btn-action):not(.pn-btn-close) {
   box-shadow: var(--ws-raise);
@@ -433,6 +486,7 @@ html[data-workspace-navbar-theme="primary"]
 /* One size for every scene action, whether it is a link or a button (the
    workspace reset otherwise lets buttons inherit the 14px body size). */
 .overtrue-workspace .scene-button {
+  min-height: 36px;
   font-size: 13px;
   font-weight: 550;
 }
@@ -441,12 +495,22 @@ html[data-workspace-navbar-theme="primary"]
 .overtrue-workspace .scene-button:not(.is-primary):not(.scene-table *):hover {
   color: var(--pn-body-color);
 }
-.overtrue-workspace :is(.pn-btn, .scene-button):focus-visible {
-  outline: none;
-  box-shadow: var(--ws-ring) !important;
+.overtrue-workspace :is(.pn-btn, .scene-button, .pn-btn-close, .workspace-icon-button, .workspace-user):focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  box-shadow: none !important;
 }
 .overtrue-workspace .scene-button:not(.is-primary) {
   border-color: var(--scene-control-line);
+}
+.overtrue-workspace :is(.pn-btn, .scene-button):is(:disabled, [aria-disabled="true"], .pn-disabled) {
+  opacity: 0.5;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none !important;
+}
+.overtrue-workspace [data-workspace-page="buttons"] .pn-row-cards > [class*="pn-col"] > .pn-card {
+  height: 100%;
 }
 
 /* Inputs ----------------------------------------------------------------- */
@@ -471,11 +535,97 @@ html[data-workspace-navbar-theme="primary"]
   box-shadow: 0 0 0 3px color-mix(in oklab, hsl(var(--destructive)) 15%, transparent);
 }
 .overtrue-workspace .pn-form-label {
+  font-size: 13px;
   font-weight: 560;
+  line-height: 1.5;
+}
+.overtrue-workspace .pn-form-control.pn-form-control-rounded {
+  border-radius: var(--pn-border-radius-pill);
+}
+.overtrue-workspace .pn-form-check-input[type="checkbox"]:not(.pn-form-switch *) {
+  border-radius: min(5px, calc(var(--radius) * 0.625));
+}
+.overtrue-workspace .form-workbench-note {
+  margin-top: 20px;
+}
+.overtrue-workspace .scene-form label:not(.scene-toggle-row) {
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 560;
+  line-height: 1.5;
+}
+.overtrue-workspace .scene-form :is(input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"])), select, textarea) {
+  min-height: 40px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.overtrue-workspace .scene-form textarea {
+  padding-block: 10px;
+  line-height: 1.6;
+}
+.overtrue-workspace .scene-form-hint {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.overtrue-workspace .scene-form-footer {
+  margin-top: 0;
+  padding-top: 24px;
 }
 .overtrue-workspace .pn-form-check-input:checked {
   background-color: hsl(var(--primary));
   border-color: hsl(var(--primary));
+}
+/* Joined fields have one continuous outline, including in RTL layouts. */
+.overtrue-workspace .pn-input-group > :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn) {
+  border-color: var(--scene-control-line);
+  box-shadow: none;
+}
+.overtrue-workspace .pn-input-group > :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn):has(~ :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn)) {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.overtrue-workspace .pn-input-group > :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn) ~ :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn) {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  margin-inline-start: -1px;
+}
+.overtrue-workspace .pn-input-group-text {
+  color: var(--pn-secondary);
+}
+.overtrue-workspace .pn-input-group > .pn-btn {
+  box-shadow: none !important;
+}
+.overtrue-workspace .pn-input-group.pn-input-group-flat > :is(.pn-form-control, .pn-input-group-text) {
+  margin-inline-start: 0;
+}
+.overtrue-workspace .pn-input-group-flat:focus-within {
+  box-shadow: var(--ws-ring);
+}
+.overtrue-workspace .pn-input-group-flat:focus-within > :is(.pn-form-control, .pn-input-group-text) {
+  border-color: hsl(var(--primary)) !important;
+  box-shadow: none;
+}
+.overtrue-workspace .pn-input-group:not(.pn-input-group-flat) > :is(.pn-form-control, .pn-form-select):focus {
+  border-color: hsl(var(--primary));
+  box-shadow: var(--ws-ring);
+}
+.overtrue-workspace .pn-input-group > :is(.pn-form-control, .pn-form-select):is([aria-invalid="true"], :user-invalid) {
+  border-color: hsl(var(--destructive)) !important;
+}
+.overtrue-workspace .tox-hugerte {
+  border: 1px solid var(--scene-control-line);
+  border-radius: calc(var(--radius) * 1.25);
+}
+.overtrue-workspace [data-workspace-page="maps"] .pn-ratio {
+  min-height: 240px;
+  overflow: hidden;
+  border-radius: calc(var(--radius) * 1.25);
+}
+.overtrue-workspace [data-workspace-page="maps"] .pn-card > .pn-ratio {
+  border-radius: var(--pn-card-inner-border-radius);
+}
+.overtrue-workspace .maplibregl-ctrl-attrib a {
+  color: rgb(0 0 0 / 0.75);
 }
 
 /* Badges, tags, status ----------------------------------------------------- */
@@ -488,6 +638,10 @@ html[data-workspace-navbar-theme="primary"]
 .overtrue-workspace .pn-badge:not(.pn-badge-notification):not(.pn-badge-blink) {
   box-shadow: inset 0 0 0 1px color-mix(in oklab, currentColor 18%, transparent);
 }
+.overtrue-workspace .scene-pill {
+  font-size: 12px;
+  line-height: 1.4;
+}
 .overtrue-workspace .pn-tag {
   border-radius: calc(var(--radius) * 1.25);
   border-color: var(--ws-hairline);
@@ -497,8 +651,8 @@ html[data-workspace-navbar-theme="primary"]
 /* Inline status pickers are compact, so rows and cards read as data rather
    than a form. */
 .overtrue-workspace .scene-select select {
-  min-height: 30px;
-  height: 30px;
+  min-height: 32px;
+  height: 32px;
   padding-block: 0;
   padding-inline: 10px 30px;
   font-size: 13px;
@@ -516,10 +670,11 @@ html[data-workspace-navbar-theme="primary"]
   height: 14px;
 }
 .overtrue-workspace :is(.pn-table, .scene-table) thead th {
-  background: transparent;
+  background: color-mix(in oklab, hsl(var(--foreground)) 2%, hsl(var(--card)));
   color: var(--pn-secondary);
-  font-size: 12.5px;
-  font-weight: 560;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
   letter-spacing: 0;
   text-transform: none;
   border-bottom-color: var(--ws-hairline);
@@ -535,6 +690,96 @@ html[data-workspace-navbar-theme="primary"]
 }
 .overtrue-workspace :is(.pn-table, .scene-table) td {
   font-variant-numeric: tabular-nums;
+}
+.overtrue-workspace .scene-table {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.overtrue-workspace .scene-table td {
+  padding-block: 14px;
+}
+.overtrue-workspace [data-workspace-page="pay"] .scene-table :is(th, td):nth-child(3) {
+  white-space: nowrap;
+}
+.overtrue-workspace .scene-table td > small,
+.overtrue-workspace .scene-person small {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.overtrue-workspace .scene-person {
+  font-size: 13px;
+}
+.overtrue-workspace .scene-table-summary {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Leave room for the persistent sidebar before switching dense layouts. */
+@media (max-width: 1199px) {
+  .overtrue-workspace .scene-grid-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 1023px) {
+  .overtrue-workspace :is(.scene-settings-layout, .scene-wizard) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .overtrue-workspace .scene-settings-layout > aside .scene-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .overtrue-workspace .scene-settings-layout > aside > p,
+  .overtrue-workspace .scene-wizard > aside > img {
+    display: none;
+  }
+  .overtrue-workspace .scene-wizard > aside {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .overtrue-workspace .scene-wizard > aside > div {
+    padding: 8px 12px;
+  }
+  .overtrue-workspace :is([data-workspace-page="tasks-list"], [data-workspace-page="datatables"], [data-workspace-page="tables"]) .scene-table {
+    min-width: 740px;
+  }
+}
+@media (max-width: 899px) {
+  .overtrue-workspace .scene-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .overtrue-workspace .scene-toolbar {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 767px) {
+  .overtrue-workspace .pn-card {
+    --pn-card-spacer-x: 20px;
+    --pn-card-cap-padding-x: 20px;
+  }
+  .overtrue-workspace .pn-page-header .pn-row:has(.pn-page-title) {
+    align-items: flex-start !important;
+  }
+  .overtrue-workspace .scene-heading {
+    margin-bottom: 24px;
+  }
+  .overtrue-workspace .scene-card > header {
+    padding: 20px 18px;
+  }
+  .overtrue-workspace .scene-form :is(input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"])), select, textarea) {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .overtrue-workspace .scene-button {
+    min-height: 44px;
+  }
+  .overtrue-workspace .scene-select select {
+    min-height: 40px;
+    height: 40px;
+  }
 }
 
 /* Progress --------------------------------------------------------------- */
@@ -559,6 +804,18 @@ html[data-workspace-navbar-theme="primary"]
 }
 
 /* Navigation inside pages -------------------------------------------------- */
+.overtrue-workspace .pn-accordion-button {
+  border-radius: inherit;
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1.6;
+}
+.overtrue-workspace .pn-accordion-button:hover {
+  background: var(--ws-hover);
+}
+.overtrue-workspace .pn-accordion-body {
+  line-height: 1.65;
+}
 .overtrue-workspace .pn-nav-tabs {
   border-bottom-color: var(--ws-hairline);
 }
@@ -586,18 +843,195 @@ html[data-workspace-navbar-theme="primary"]
 
 /* Overlays --------------------------------------------------------------- */
 .overtrue-workspace :is(.pn-dropdown-menu, .workspace-dropdown-content) {
-  border-color: var(--ws-hairline);
-  border-radius: calc(var(--radius) * 1.75);
+  --pn-dropdown-item-icon-size: 16px;
+  border: 1px solid var(--ws-hairline);
+  border-radius: calc(var(--radius) * 1.5);
   box-shadow: var(--ws-float);
   padding: 6px;
 }
+.overtrue-workspace .workspace-dropdown-content {
+  max-width: calc(100vw - 16px);
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+}
+.overtrue-workspace .pn-dropdown-menu-demo {
+  box-shadow: var(--ws-raise);
+}
 .overtrue-workspace .pn-dropdown-item {
-  border-radius: calc(var(--radius) * 1.1);
+  min-height: 36px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  line-height: 20px;
+  transition: background-color 120ms, color 120ms;
+}
+.overtrue-workspace .pn-dropdown-item:is(:hover, [data-highlighted]):not(:disabled, [data-disabled], [aria-disabled="true"], .pn-disabled) {
+  background: var(--ws-hover);
+  color: var(--pn-body-color);
+}
+.overtrue-workspace .pn-dropdown-item:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+.overtrue-workspace .pn-dropdown-item:is([data-disabled], [aria-disabled="true"], .pn-disabled) {
+  opacity: 0.5;
+  color: var(--pn-secondary);
+  background: transparent;
+  pointer-events: none;
+}
+.overtrue-workspace .pn-dropdown-header {
+  padding: 8px 10px 6px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 560;
+}
+.overtrue-workspace .pn-dropdown-divider {
+  margin: 6px 4px;
+  border-color: var(--ws-hairline);
 }
 .overtrue-workspace .pn-modal-content,
 .overtrue-workspace .workspace-settings-panel {
   border-color: var(--ws-hairline);
   box-shadow: var(--ws-float);
+}
+.overtrue-workspace .pn-modal-content {
+  border-radius: calc(var(--radius) * 2);
+}
+.overtrue-workspace .scene-asset-dialog {
+  border-color: var(--ws-hairline);
+  border-radius: calc(var(--radius) * 2);
+  box-shadow: var(--ws-float);
+}
+.overtrue-workspace .scene-asset-dialog h2 {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.overtrue-workspace .pn-modal-header {
+  min-height: 64px;
+  padding: 20px 24px;
+  padding-inline-end: 64px;
+  border-bottom-color: var(--ws-hairline);
+}
+.overtrue-workspace .pn-modal-title {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.overtrue-workspace .pn-modal-body {
+  padding: 24px;
+  line-height: 1.65;
+}
+.overtrue-workspace .pn-modal-body > :last-child {
+  margin-bottom: 0;
+}
+.overtrue-workspace .pn-modal-footer {
+  gap: 8px;
+  padding: 16px 24px;
+  border-top-color: var(--ws-hairline);
+  background: color-mix(in oklab, hsl(var(--foreground)) 2%, hsl(var(--card)));
+}
+.overtrue-workspace .pn-modal-footer > * {
+  margin: 0;
+}
+/* Keep the icon mask off the button so its focus ring is not clipped. */
+.overtrue-workspace .pn-btn-close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  mask: none;
+  background: transparent;
+  color: var(--pn-secondary);
+  opacity: 1;
+  border-radius: var(--radius);
+  transition: background-color 120ms, color 120ms;
+}
+.overtrue-workspace .pn-btn-close::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  mask: var(--pn-btn-close-bg) center / contain no-repeat;
+}
+.overtrue-workspace .pn-btn-close:hover {
+  background: var(--ws-hover);
+  color: var(--pn-body-color);
+  opacity: 1;
+}
+.overtrue-workspace :is(.pn-modal-content, .pn-modal-header) > .pn-btn-close {
+  width: 32px;
+  height: 32px;
+  top: 16px;
+  inset-inline-end: 16px;
+}
+@media (max-width: 767px) {
+  .overtrue-workspace .pn-dropdown-item {
+    min-height: 44px;
+    padding-block: 12px;
+  }
+  .overtrue-workspace .workspace-modal {
+    --pn-modal-margin: 16px;
+  }
+  .overtrue-workspace :is(.pn-modal-header, .pn-modal-body, .pn-modal-footer) {
+    padding-inline: 20px;
+  }
+  .overtrue-workspace .pn-modal-header {
+    padding-inline-end: 68px;
+  }
+  .overtrue-workspace :is(.pn-modal-content, .pn-modal-header) > .pn-btn-close {
+    width: 44px;
+    height: 44px;
+    top: 10px;
+    inset-inline-end: 10px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Keep the theme wrapper mounted until its portaled children finish exiting. */
+  .workspace-portal[data-state="closed"] {
+    animation: ws-portal-exit 120ms linear;
+  }
+  .overtrue-workspace .workspace-dialog-overlay[data-state="open"],
+  .overtrue-workspace .workspace-modal[data-state="open"] {
+    animation: ws-overlay-in 180ms ease-out;
+  }
+  .overtrue-workspace .workspace-modal[data-state="open"] > .pn-modal-dialog {
+    animation: ws-dialog-in 220ms var(--ws-ease);
+  }
+  .overtrue-workspace .workspace-dialog-overlay[data-state="closed"],
+  .overtrue-workspace .workspace-modal[data-state="closed"] {
+    animation: ws-overlay-out 120ms ease-in;
+  }
+  .overtrue-workspace .workspace-dropdown-content[data-state="open"] {
+    animation: ws-menu-in 160ms var(--ws-ease);
+  }
+  .overtrue-workspace .workspace-dropdown-content[data-state="closed"] {
+    animation: ws-menu-out 100ms ease-in;
+  }
+}
+@keyframes ws-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes ws-portal-exit {
+  from { opacity: 1; }
+  to { opacity: 1; }
+}
+@keyframes ws-overlay-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes ws-dialog-in {
+  from { transform: translateY(8px); }
+  to { transform: translateY(0); }
+}
+@keyframes ws-menu-in {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes ws-menu-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.98); }
 }
 .overtrue-workspace .pn-alert {
   border-radius: calc(var(--radius) * 1.5);
@@ -678,13 +1112,15 @@ html[data-workspace-navbar-theme="primary"]
  * layers. The workspace base is an unlayered element reset (p margins, list
  * indents, heading sizes, dt weights, table borders, link colors…), so it would
  * beat those utilities everywhere. Its element rules stop at each component
- * root instead: inside a component, every reset property falls back to the
- * component's own utilities. Scene markup handed to a component as children
+ * root instead: on a component and its descendants, every reset property falls
+ * back to the component's own utilities. Scene markup handed in as children
  * (scene-*, showcase-*, pn-* classes) keeps the workspace styles.
  */
 .overtrue-workspace
-  :where([data-slot]:not([data-slot^="sidebar"]))
   :is(h1, h2, h3, h4, h5, h6, p, blockquote, figure, dl, dt, dd, ul, ol, table, caption, th, td, tr, thead, tbody, tfoot, label, small, b, strong, a, code, kbd, pre, hr, legend, fieldset, button, input, select, textarea):where(
+    [data-slot]:not([data-slot^="sidebar"]),
+    [data-slot]:not([data-slot^="sidebar"]) *
+  ):where(
     :not(
       [class*="scene-"],
       [class*="showcase-"],
@@ -720,8 +1156,10 @@ html[data-workspace-navbar-theme="primary"]
   outline-offset: revert-layer;
 }
 .overtrue-workspace
-  :where([data-slot]:not([data-slot^="sidebar"]))
   :is(a:hover, :is(input, select, textarea):is(:focus, :focus-visible, [aria-invalid="true"], :user-invalid), :is(a, button):focus-visible):where(
+    [data-slot]:not([data-slot^="sidebar"]),
+    [data-slot]:not([data-slot^="sidebar"]) *
+  ):where(
     :not([class*="scene-"], [class*="showcase-"], [class*="workspace-"], [class*="pn-"])
   ) {
   border-color: revert-layer;
@@ -731,7 +1169,7 @@ html[data-workspace-navbar-theme="primary"]
   color: revert-layer;
   text-decoration: revert-layer;
 }
-.overtrue-workspace :where([data-slot]:not([data-slot^="sidebar"])) :is(input, textarea)::placeholder {
+.overtrue-workspace :is(input, textarea):where([data-slot]:not([data-slot^="sidebar"]), [data-slot]:not([data-slot^="sidebar"]) *)::placeholder {
   color: revert-layer;
   opacity: revert-layer;
 }
@@ -803,47 +1241,52 @@ html[data-workspace-navbar-theme="primary"]
 /* App frame ------------------------------------------------------------------
  * The sidebar sits on the frame; each page floats in a raised panel.
  */
-.overtrue-workspace.workspace-layout-vertical {
-  --ws-frame: color-mix(in oklab, hsl(var(--background)) 94%, hsl(var(--foreground)));
+.overtrue-workspace.workspace-sidebar-shell {
+  --ws-frame: hsl(var(--muted));
   background: var(--ws-frame);
 }
-.dark .overtrue-workspace.workspace-layout-vertical {
-  --ws-frame: color-mix(in oklab, hsl(var(--background)) 70%, black);
+.dark .overtrue-workspace.workspace-sidebar-shell {
+  --ws-frame: hsl(var(--background));
 }
-.workspace-layout-vertical .workspace-app-sidebar [data-slot="sidebar-inner"],
-.dark .workspace-layout-vertical .workspace-app-sidebar [data-slot="sidebar-inner"] {
+.workspace-sidebar-shell .workspace-app-sidebar [data-slot="sidebar-inner"],
+.dark .workspace-sidebar-shell .workspace-app-sidebar [data-slot="sidebar-inner"] {
   background: var(--ws-frame);
 }
-.workspace-layout-vertical .workspace-app-sidebar [data-slot="sidebar-container"] {
-  border-inline-end: 0;
+.workspace-sidebar-shell .workspace-app-sidebar[data-slot="sidebar-container"],
+.workspace-sidebar-shell .workspace-app-sidebar [data-slot="sidebar-inner"] {
+  border: 0;
 }
-.overtrue-workspace.workspace-layout-vertical .workspace-sidebar-inset {
+.overtrue-workspace.workspace-sidebar-shell .workspace-sidebar-inset {
   margin: 8px 8px 8px 0;
   min-height: calc(100svh - 16px);
   border: 1px solid var(--ws-hairline);
   border-radius: 16px;
   background: hsl(var(--background));
   box-shadow:
-    0 1px 2px rgb(13 20 36 / 0.04),
-    0 8px 30px -12px rgb(13 20 36 / 0.12);
+    0 1px 2px rgb(0 0 0 / 0.025);
   overflow: clip;
 }
-.dark .overtrue-workspace.workspace-layout-vertical .workspace-sidebar-inset {
+.dark .overtrue-workspace.workspace-sidebar-shell .workspace-sidebar-inset {
   box-shadow:
     0 1px 0 rgb(255 255 255 / 0.04) inset,
     0 20px 60px -30px rgb(0 0 0 / 0.9);
 }
-.overtrue-workspace.workspace-layout-vertical .workspace-header {
-  border-radius: 16px 16px 0 0;
+.overtrue-workspace.workspace-layout-vertical-right .workspace-sidebar-inset {
+  margin: 8px 0 8px 8px;
+}
+/* Keep the collapse affordance away from the panel's rounded corners. */
+.workspace-sidebar-shell .workspace-app-sidebar [data-sidebar="rail"]::after {
+  top: 50%;
+  bottom: auto;
+  height: 32px;
+  border-radius: 999px;
+  transform: translateY(-50%);
 }
 @media (max-width: 767px) {
-  .overtrue-workspace.workspace-layout-vertical .workspace-sidebar-inset {
+  .overtrue-workspace.workspace-sidebar-shell .workspace-sidebar-inset {
     margin: 0;
     min-height: 100svh;
     border: 0;
-    border-radius: 0;
-  }
-  .overtrue-workspace.workspace-layout-vertical .workspace-header {
     border-radius: 0;
   }
 }
@@ -857,9 +1300,9 @@ html[data-workspace-navbar-theme="primary"]
   padding: 0 6px 0 11px;
   justify-content: flex-start;
   gap: 8px;
-  border: 1px solid var(--ws-hairline);
+  border: 1px solid var(--pn-border-color);
   border-radius: 10px;
-  background: hsl(var(--card));
+  background: var(--pn-bg-surface);
   color: var(--pn-secondary);
   font-size: 13px;
   box-shadow: var(--ws-raise);
@@ -868,9 +1311,9 @@ html[data-workspace-navbar-theme="primary"]
     color 160ms;
 }
 .overtrue-workspace .workspace-search-trigger:hover {
-  border-color: color-mix(in oklab, hsl(var(--foreground)) 22%, transparent);
+  border-color: color-mix(in oklab, var(--pn-body-color) 22%, transparent);
   color: var(--pn-body-color);
-  background: hsl(var(--card));
+  background: var(--pn-bg-surface);
 }
 .overtrue-workspace .workspace-search-trigger .page-search-trigger-text {
   display: inline;
@@ -887,7 +1330,7 @@ html[data-workspace-navbar-theme="primary"]
   padding: 0 6px;
   border: 0;
   border-radius: 6px;
-  background: hsl(var(--muted));
+  background: var(--pn-bg-surface-secondary);
   color: var(--pn-secondary);
   font-family: inherit;
   font-size: 11px;
@@ -923,9 +1366,6 @@ html[data-workspace-navbar-theme="primary"]
 .overtrue-workspace .workspace-header-actions > .workspace-search-trigger {
   order: -1;
 }
-.workspace-layout-vertical .workspace-app-sidebar :is([data-slot="sidebar-container"], [data-slot="sidebar-inner"]) {
-  border: 0;
-}
 .overtrue-workspace .scene-brief {
   margin-bottom: 24px;
 }
@@ -938,20 +1378,34 @@ html[data-workspace-navbar-theme="primary"]
 
 /* Breadcrumb follows the navigation trail; earlier steps recede. */
 .overtrue-workspace .workspace-sidebar-breadcrumb {
+  flex: 1;
+  overflow: hidden;
   font-size: 13px;
   gap: 8px;
 }
 .overtrue-workspace .workspace-sidebar-breadcrumb > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--pn-secondary);
 }
 .overtrue-workspace .workspace-sidebar-breadcrumb > span[aria-current="page"] {
+  flex-shrink: 0;
+  max-width: 100%;
   color: var(--pn-body-color);
   font-weight: 560;
 }
 .overtrue-workspace .workspace-sidebar-breadcrumb > svg {
+  flex-shrink: 0;
   width: 13px;
   height: 13px;
   opacity: 0.45;
+}
+@media (max-width: 1199px) {
+  .overtrue-workspace .workspace-sidebar-breadcrumb > span:not([aria-current="page"]),
+  .overtrue-workspace .workspace-sidebar-breadcrumb > svg {
+    display: none;
+  }
 }
 /* Direct links in the sidebar share the section buttons' rhythm. */
 .workspace-app-sidebar .workspace-sidebar-link[data-active="true"],

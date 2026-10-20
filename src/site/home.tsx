@@ -10,6 +10,7 @@ import {
   IconArrowRight,
   IconArrowUpRight,
   IconCheck,
+  IconPlus,
 } from "@tabler/icons-react";
 import { Dashboard } from "@/registry/overtrue/dashboard";
 import { StatCard } from "@/registry/overtrue/stat-card";
@@ -38,9 +39,14 @@ import { Example } from "./examples";
 import { FitPreview } from "./fit-preview";
 import { FeaturedBlocks, Questions } from "./home-details";
 import { HeroConsole } from "./hero-console";
-import { usePointerGlow } from "./pointer-glow";
 import { useStudio } from "./theme-studio";
-import { ACCENT_PRESETS, exportCss } from "./theme-tokens";
+import {
+  ACCENT_PRESETS,
+  exportCss,
+  isDefaultStudio,
+  onColor,
+  themeVariables,
+} from "./theme-tokens";
 
 const origin = window.location.origin;
 const installCommand = (name: string) =>
@@ -61,48 +67,65 @@ class SpecimenBoundary extends Component<
 }
 
 function Hero() {
+  const { theme } = useStudio();
   return (
     <section className="home-hero" aria-labelledby="home-title">
+      <div className="hero-intro">
+        <p>Interfaces for the work behind the screen.</p>
+        <a href="https://github.com/overtrue/ui" target="_blank" rel="noreferrer">
+          Open source, by design <IconArrowUpRight size={14} aria-hidden="true" />
+        </a>
+      </div>
       <div className="home-hero-copy">
         <h1 id="home-title" className="display">
-          <span className="hero-line">Interfaces for the work</span>{" "}
-          <span className="hero-line">behind the screen.</span>
+          <span className="hero-line">Serious tools.</span>{" "}
+          <span className="hero-line hero-line-accent">Beautifully built.</span>
         </h1>
         <div className="home-hero-aside">
           <p className="lede">
-            {componentCount} dashboard and console components for shadcn/ui.
-            Install one with the CLI, then read and change the source like any
-            other file in your project.
+            Bring a little craft to everyday work. {componentCount} components
+            for dashboards and consoles, built on shadcn/ui. Every detail is
+            yours to shape.
           </p>
           <div className="home-hero-actions">
             <Link className="site-button primary" to="/components">
-              Browse components
+              Explore components <IconArrowRight size={16} aria-hidden="true" />
             </Link>
-            <Link className="site-button" to="/docs">
-              Installation
+            <Link className="hero-docs-link" to="/docs">
+              Get started <IconArrowUpRight size={16} aria-hidden="true" />
             </Link>
           </div>
         </div>
       </div>
       <div className="hero-console-wrap">
-        <div className="hero-glow" aria-hidden="true" />
-        <HeroConsole />
+        <div
+          className="hero-console-theme dark"
+          style={isDefaultStudio(theme) ? undefined : themeVariables(theme, "dark")}
+        >
+          <HeroConsole />
+        </div>
+        <div className="hero-console-caption">
+          <p>
+            <span className="live-dot" aria-hidden="true" />
+            Real components. A working canvas.
+          </p>
+          <span>Pause the feed. Inspect the details.</span>
+        </div>
       </div>
     </section>
   );
 }
 
-const featured: { name: ItemName; span: string; width: number }[] = [
-  { name: "geo-map", span: "wide", width: 760 },
-  { name: "insight-card", span: "", width: 520 },
-  { name: "deploy-pipeline", span: "", width: 440 },
-  { name: "trace-waterfall", span: "wide", width: 760 },
+const featured: { name: ItemName; span: string; width: number; description: string }[] = [
+  { name: "geo-map", span: "wide", width: 760, description: "A world of activity, in a single view." },
+  { name: "insight-card", span: "", width: 520, description: "Turn live data into a useful summary." },
+  { name: "deploy-pipeline", span: "", width: 440, description: "Every stage. Every step. In sync." },
+  { name: "trace-waterfall", span: "wide", width: 760, description: "Find the detail behind every millisecond." },
 ];
 const categoryOrder = [...componentCategories, "Blocks"] as const;
 
 function LibraryIndex() {
-  const bento = useRef<HTMLDivElement>(null);
-  usePointerGlow(bento, ".feature-cell");
+  const { theme } = useStudio();
   const groups = categoryOrder.map((category) => ({
     category,
     items: catalog.filter((item) => item.category === category),
@@ -111,21 +134,31 @@ function LibraryIndex() {
     <section className="home-band" aria-labelledby="index-title">
       <div className="home-heading">
         <h2 id="index-title" className="headline">
-          The whole library, on one page.
+          Small parts.<br />Big possibilities.
         </h2>
         <p className="lede">
           {componentCount} components and {blockCount} blocks. Each has a live
           preview, its full source, and a one-line install.
         </p>
       </div>
-      <div className="feature-bento" ref={bento}>
-        {featured.map(({ name, span, width }) => {
+      <div className="feature-bento">
+        {featured.map(({ name, span, width, description }) => {
           const item = catalog.find((entry) => entry.name === name);
           if (!item) return null;
           return (
             <article className={`feature-cell ${span}`} key={name}>
-              <div className="feature-stage" inert aria-hidden="true">
-                <FitPreview width={width} height={380} maxAspect={1.1}>
+              <div
+                className={`feature-stage${name === "trace-waterfall" ? " home-inverse dark" : ""}`}
+                style={name === "trace-waterfall" && !isDefaultStudio(theme) ? themeVariables(theme, "dark") : undefined}
+                inert
+                aria-hidden="true"
+              >
+                <FitPreview
+                  fit={name === "geo-map" ? "contain" : "width"}
+                  width={width}
+                  height={380}
+                  maxAspect={0.72}
+                >
                   <SpecimenBoundary>
                     <Example name={name} />
                   </SpecimenBoundary>
@@ -134,7 +167,7 @@ function LibraryIndex() {
               <Link className="feature-caption" to={catalogPath(item)}>
                 <span>
                   <strong>{item.title}</strong>
-                  <small>{item.description}</small>
+                  <small>{description}</small>
                 </span>
                 <IconArrowUpRight size={18} aria-hidden="true" />
               </Link>
@@ -142,23 +175,32 @@ function LibraryIndex() {
           );
         })}
       </div>
-      <nav className="library-index" aria-label="All components and blocks">
-        {groups.map(({ category, items }) => (
-          <div key={category} className="index-group">
-            <h3>
-              {category === "Blocks" ? "Blocks" : category}
-              <span>{items.length}</span>
-            </h3>
-            <ul>
-              {items.map((item) => (
-                <li key={item.name}>
-                  <Link to={catalogPath(item)}>{item.title}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </nav>
+      <details className="library-directory">
+        <summary>
+          <span>
+            Explore the full collection
+            <small>{componentCount + blockCount} components &amp; blocks</small>
+          </span>
+          <IconPlus size={20} aria-hidden="true" />
+        </summary>
+        <nav className="library-index" aria-label="All components and blocks">
+          {groups.map(({ category, items }) => (
+            <div key={category} className="index-group">
+              <h3>
+                {category === "Blocks" ? "Blocks" : category}
+                <span>{items.length}</span>
+              </h3>
+              <ul>
+                {items.map((item) => (
+                  <li key={item.name}>
+                    <Link to={catalogPath(item)}>{item.title}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </details>
     </section>
   );
 }
@@ -187,12 +229,12 @@ function ThemeLab() {
     <section className="home-band theme-lab" aria-labelledby="theme-title">
       <div className="home-heading">
         <h2 id="theme-title" className="headline">
-          Your tokens, not ours.
+          Your palette.<br />
+          <span className="home-accent">Your signature.</span>
         </h2>
         <p className="lede">
-          Components read shadcn’s semantic variables, so they take on your
-          accent, radius, and type without edits. Pick one here and the whole
-          site follows.
+          Make it feel like you. Choose an accent and a corner radius.
+          The preview, and the rest of the site, follow your lead.
         </p>
       </div>
       <div className="lab-shell">
@@ -212,7 +254,7 @@ function ThemeLab() {
                     aria-label={item.name}
                     title={item.name}
                     className="lab-swatch"
-                    style={{ background: item.value }}
+                    style={{ background: item.value, color: onColor(item.value) }}
                     onClick={() =>
                       setTheme((current) => ({ ...current, accent: item.value }))
                     }
@@ -248,7 +290,7 @@ function ThemeLab() {
             </div>
           </fieldset>
           <div className="lab-export">
-            <span>Theme CSS</span>
+            <span>Export theme<small>Ready for your project</small></span>
             <CopyButton text={exportCss(theme)} label="Copy theme CSS" />
           </div>
           <p className="lab-note">
@@ -258,6 +300,10 @@ function ThemeLab() {
           </p>
         </div>
         <div className="lab-canvas">
+          <div className="lab-canvas-bar">
+            <span><span className="live-dot" aria-hidden="true" /> Live preview</span>
+            <span>{theme.radius}px corners</span>
+          </div>
           <div className="lab-app">
             <div className="lab-app-heading">
               <div className="lab-app-brand">
@@ -369,12 +415,13 @@ function useRunningTotal() {
 }
 
 function Install() {
+  const { theme } = useStudio();
   const total = useRunningTotal();
   return (
     <section className="home-band install-band" aria-labelledby="install-title">
       <div className="home-heading">
         <h2 id="install-title" className="headline">
-          One command. Then it’s your code.
+          One command.<br />All yours.
         </h2>
         <p className="lede">
           The shadcn CLI copies the source into your project and installs what
@@ -413,7 +460,10 @@ function Install() {
             </p>
           </li>
         </ol>
-        <figure className="install-editor">
+        <figure
+          className="install-editor home-inverse dark"
+          style={isDefaultStudio(theme) ? undefined : themeVariables(theme, "dark")}
+        >
           <div className="install-editor-bar">
             <span>revenue.tsx</span>
           </div>
@@ -443,12 +493,13 @@ function Workspace() {
       <div className="workspace-inner">
         <div className="home-heading">
           <h2 id="workspace-title" className="headline">
-            {workspacePages.length} pages of a working studio app.
+            Every part.<br />Working together.
           </h2>
           <div>
             <p className="lede">
-              Projects, clients, billing, inbox, and settings. The Acme Studio
-              workspace shows the components in real flows with sample data.
+              Explore {workspacePages.length} pages of Acme Studio. Projects,
+              clients, billing, and settings, connected in real flows with
+              sample data.
             </p>
             <a className="text-link" href="/workspace/">
               Open the workspace <IconArrowUpRight size={16} />
@@ -502,21 +553,31 @@ function Closing() {
   return (
     <section className="closing-band" aria-labelledby="closing-title">
       <div className="closing-copy">
-        <h2 id="closing-title" className="display">
-          Start with one component.
-        </h2>
-        <div className="closing-actions">
-          <Link className="site-button primary" to="/components">
-            Browse components <IconArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <a
-            className="site-button"
-            href="https://github.com/overtrue/ui"
-            target="_blank"
-            rel="noreferrer"
-          >
-            View on GitHub
-          </a>
+        <div>
+          <p className="closing-eyebrow">Open source. Yours to shape.</p>
+          <h2 id="closing-title" className="display">
+            Start with one.<br />
+            <span className="home-accent">Make it yours.</span>
+          </h2>
+        </div>
+        <div className="closing-aside">
+          <p className="lede">
+            A better starting point for your next interface.
+            Pick a component, take the source, and make something good.
+          </p>
+          <div className="closing-actions">
+            <Link className="site-button primary" to="/components">
+              Browse components <IconArrowRight size={16} aria-hidden="true" />
+            </Link>
+            <a
+              className="hero-docs-link"
+              href="https://github.com/overtrue/ui"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub <IconArrowUpRight size={16} aria-hidden="true" />
+            </a>
+          </div>
         </div>
       </div>
       <dl className="closing-ledger" ref={ledger}>

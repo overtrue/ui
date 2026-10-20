@@ -679,8 +679,8 @@ export function InsightCard({
         className="pointer-events-none absolute inset-x-0 top-0 h-24 rounded-t-[inherit] bg-[radial-gradient(120%_100%_at_0%_0%,color-mix(in_oklab,var(--insight-accent)_9%,transparent),transparent_60%)]"
       />
 
-      <div className="relative flex flex-wrap items-center gap-x-3 gap-y-1 px-4 pt-3.5 @sm/insight:px-5 @sm/insight:pt-4">
-        <div className="flex min-w-0 flex-1 basis-44 items-center gap-2.5">
+      <div className="relative flex flex-wrap items-center gap-x-3 gap-y-2 px-4 pt-3.5 @sm/insight:px-5 @sm/insight:pt-4">
+        <div className="flex min-w-0 flex-1 basis-full items-center gap-2.5 @lg/insight:basis-44">
           <span
             aria-hidden="true"
             className="relative flex size-7 shrink-0 items-center justify-center rounded-lg border border-(--insight-accent)/20 bg-[linear-gradient(135deg,color-mix(in_oklab,var(--insight-accent)_16%,var(--color-card)),color-mix(in_oklab,var(--insight-glow)_14%,var(--color-card)))] text-(--insight-accent)"
@@ -692,8 +692,8 @@ export function InsightCard({
               />
             )}
           </span>
-          <div className="flex min-w-0 items-baseline gap-2">
-            <div className="truncate text-sm leading-5 font-semibold tracking-tight">
+          <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <div className="text-sm leading-5 font-semibold tracking-tight [overflow-wrap:anywhere]">
               {title}
             </div>
             {busy && (
@@ -709,7 +709,7 @@ export function InsightCard({
         {source && (
           <div
             data-slot="insight-source-label"
-            className="flex min-w-0 items-center gap-1.5 font-mono text-[11px] leading-5 text-muted-foreground"
+            className="flex min-w-0 items-center gap-1.5 pl-9.5 text-xs leading-5 text-muted-foreground [overflow-wrap:anywhere] @lg/insight:pl-0"
           >
             {source}
           </div>

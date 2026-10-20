@@ -77,6 +77,7 @@ export function AnalyticsExample({
       type="button"
       size="sm"
       variant="outline"
+      className="justify-self-start"
       onClick={() => setEmpty(!empty)}
     >
       {empty ? "Restore sample data" : "Preview empty state"}
@@ -84,7 +85,7 @@ export function AnalyticsExample({
   );
   if (name === "ranked-list")
     return (
-      <div className="space-y-4">
+      <div className="grid gap-4">
         <RankedList
           label="Traffic sources"
           items={
@@ -101,7 +102,7 @@ export function AnalyticsExample({
     );
   if (name === "conversion-funnel")
     return (
-      <div className="space-y-5">
+      <div className="grid gap-5">
         <ConversionFunnel
           label="Trial conversion"
           stages={empty ? [] : report.stages}
