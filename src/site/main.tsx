@@ -56,7 +56,6 @@ import { Home } from "./home";
 import { CardCollection, CardBlockPage } from "./blocks";
 import { CollectionIntro } from "./collection-intro";
 import { SearchField } from "@/registry/overtrue/search-field";
-import { usePointerGlow } from "./pointer-glow";
 import { PreviewStage, StageFrame, STAGE_PARAM } from "./preview-stage";
 import {
   ThemeStudioButton,
@@ -371,7 +370,7 @@ function ComponentTile({ name }: { name: ItemName }) {
         aria-label={`${item.title}, open full preview`}
       >
         <span>
-          {item.title}
+          <strong>{item.title}</strong>
           <small>{item.description}</small>
         </span>
         <ArrowUpRight size={16} />
@@ -402,8 +401,6 @@ function useUrlDraft(value: string, commit: (value: string) => void) {
 function Catalog({ blocks = false }: { blocks?: boolean }) {
   const [params, setParams] = useSearchParams();
   const search = useRef<HTMLInputElement>(null);
-  const grid = useRef<HTMLDivElement>(null);
-  usePointerGlow(grid, ".component-tile");
   const collection = blockCollections.find(
     (group) => group.label === params.get("blockCategory"),
   );
@@ -463,7 +460,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
     search.current?.focus();
   };
   return (
-    <main className="section catalog-page">
+    <main className={`section catalog-page${blocks ? "" : " component-catalog"}`}>
       <CollectionIntro blocks={blocks} />
       {blocks && (
         <>
@@ -536,7 +533,7 @@ function Catalog({ blocks = false }: { blocks?: boolean }) {
           </button>
         )}
       </div>
-      <div ref={grid} className={blocks ? "block-grid" : "component-grid"}>
+      <div className={blocks ? "block-grid" : "component-grid"}>
         {items.map((item) => (
           <ComponentTile key={item.name} name={item.name} />
         ))}
@@ -631,6 +628,7 @@ function ComponentPage() {
         </div>
         <div className="page-intro documentation-intro">
           <h1>{item.title}</h1>
+          <p>{inlineCode(item.description)}</p>
           {dashboardCatalog.some((entry) => entry.name === item.name) && (
             <p className="component-credit" data-component-credit>
               This component is adapted from{" "}
@@ -644,7 +642,6 @@ function ComponentPage() {
               , with styling and examples tailored for overtrue/ui.
             </p>
           )}
-          <p>{inlineCode(item.description)}</p>
         </div>
         <nav className="component-sections" aria-label="On this page">
           <a href="#component-preview">Preview</a>

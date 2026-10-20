@@ -650,6 +650,9 @@ kbd {
   letter-spacing: 0;
   color: var(--site-graphite);
 }
+.tile-caption strong {
+  font-weight: inherit;
+}
 .tile-caption > svg {
   box-sizing: border-box;
   width: 32px;
@@ -679,8 +682,69 @@ kbd {
   mask-image: linear-gradient(to bottom, #000 72%, transparent);
 }
 .component-grid .tile-preview {
-  padding: 24px 24px 0;
-  justify-content: flex-start;
+  height: 302px;
+  padding: 24px;
+  flex: none;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--site-radius-frame);
+  transition: border-color 200ms, box-shadow 240ms var(--ease-out);
+}
+.component-grid {
+  gap: 40px 24px;
+}
+.component-grid .component-tile {
+  border: 0;
+  border-radius: var(--site-radius-frame);
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+.component-grid .component-tile::after,
+.component-grid .tile-preview::before,
+.component-grid .tile-preview::after {
+  content: none;
+}
+.component-grid .component-tile:is(:hover, :focus-within) .tile-preview {
+  border-color: color-mix(in oklab, var(--site-ink) 18%, var(--border));
+  box-shadow: var(--shadow-float);
+}
+.component-grid .tile-caption {
+  align-items: flex-start;
+  min-height: 0;
+  padding: 20px 4px 4px;
+  border: 0;
+  gap: 16px;
+}
+.component-grid .tile-caption > span {
+  min-width: 0;
+}
+.component-grid .tile-caption strong {
+  display: block;
+  font-size: 20px;
+  font-weight: 580;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+.component-grid .tile-caption small {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.component-grid .tile-caption > svg {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 0;
+}
+/* Keep this desktop demo readable inside a narrow thumbnail. */
+.component-grid .tile-spotlight-card [data-slot="spotlight-group"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.component-grid .tile-spotlight-card [data-slot="spotlight-card"] {
+  grid-column: auto;
 }
 
 
@@ -781,6 +845,64 @@ kbd {
   color: var(--site-graphite);
   text-wrap-style: pretty;
 }
+.component-catalog .collection-intro {
+  grid-template-columns: minmax(0, 1fr) 340px;
+  align-items: end;
+  gap: 32px 40px;
+  padding-bottom: 48px;
+}
+.component-catalog .collection-intro h1 {
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 580;
+  line-height: 1.04;
+  letter-spacing: -0.05em;
+}
+.collection-title-dot {
+  color: var(--primary);
+}
+.component-catalog .collection-intro-aside p {
+  font-size: 15px;
+  line-height: 1.75;
+  margin-bottom: 20px;
+}
+.component-catalog > .catalog-toolbar {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  gap: 20px;
+  margin-bottom: 0;
+}
+.component-catalog .catalog-toolbar .filter-tabs {
+  padding: 4px;
+  margin-left: -4px;
+  gap: 4px;
+}
+.component-catalog .catalog-toolbar .filter-tabs button {
+  position: relative;
+  min-height: 44px;
+  color: var(--site-graphite);
+  font-size: 13px;
+}
+.component-catalog .catalog-toolbar .filter-tabs button[aria-pressed="true"] {
+  color: var(--primary);
+  background: var(--accent);
+  box-shadow: none;
+}
+.component-catalog .filter-count {
+  min-width: 0;
+  padding: 0;
+  font-size: 11px;
+  background: transparent;
+}
+.component-catalog .catalog-search input {
+  height: 44px;
+  font-size: 14px;
+  border-radius: var(--site-radius-control);
+}
+.component-catalog .catalog-results {
+  margin: 16px 0 24px;
+}
 .catalog-page > .catalog-toolbar {
   margin-top: 32px;
 }
@@ -821,8 +943,38 @@ kbd {
   color: var(--site-graphite);
 }
 @media (max-width: 899px) {
-  .collection-intro {
+  .collection-intro,
+  .component-catalog .collection-intro {
     grid-template-columns: 1fr;
+  }
+  .component-catalog .collection-intro {
+    padding-bottom: 32px;
+    gap: 24px;
+  }
+  .component-catalog .collection-intro-aside {
+    max-width: 40em;
+  }
+}
+@media (max-width: 767px) {
+  .component-catalog > .catalog-toolbar {
+    margin-top: 24px;
+    gap: 12px;
+  }
+  .component-catalog .catalog-search input {
+    font-size: 16px;
+  }
+  .component-catalog .catalog-results {
+    margin: 8px 0 20px;
+  }
+  .component-grid {
+    gap: 32px 20px;
+  }
+  .component-grid .tile-preview {
+    padding: 20px;
+    height: 294px;
+  }
+  .component-grid .tile-caption {
+    padding-top: 16px;
   }
 }
 
@@ -963,14 +1115,58 @@ kbd {
   font-size: 15px;
 }
 .component-docs .component-sections {
-  margin: 16px 0;
-  gap: 0;
+  margin: 0 0 24px;
+  padding-bottom: 0;
+  gap: 24px;
+  border-bottom: 1px solid var(--site-rule);
 }
 .component-docs .component-sections a {
-  min-height: 32px;
-  margin-inline-end: 24px;
-  font-size: 14px;
+  min-height: 44px;
+  margin-inline-end: 0;
+  font-size: 13px;
   color: var(--site-graphite);
+}
+.component-docs .documentation-intro {
+  border: 0;
+  padding-bottom: 28px;
+  margin-bottom: 0;
+}
+.component-docs .docs-content {
+  max-width: none;
+}
+.component-docs .documentation-intro h1 {
+  font-size: clamp(36px, 4.2vw, 58px);
+  font-weight: 580;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+.component-docs .documentation-intro > .component-credit {
+  max-width: 60em;
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.component-docs .docs-content > h2 {
+  margin-top: 56px;
+  font-size: 28px;
+  font-weight: 580;
+  letter-spacing: -0.03em;
+}
+.component-docs .docs-content > p.note {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--site-graphite);
+}
+.component-docs .component-sidebar {
+  padding-right: 20px;
+  border-right: 1px solid var(--border);
+}
+.component-docs .component-sidebar-links a {
+  min-height: 36px;
+  font-size: 13px;
+}
+.component-docs .component-sidebar-links h2 {
+  font-size: 12px;
 }
 :is(.component-docs, .card-block-page) > .workspace-toolbar,
 .component-docs .docs-content > .workspace-toolbar {
@@ -986,9 +1182,18 @@ kbd {
   background-image: none;
   box-shadow: none;
 }
+.component-docs .detail-preview:not(.detail-realtime-monitor, .detail-incident-review, .detail-dashboard, .detail-analytics-overview) {
+  padding: clamp(20px, 3vw, 40px);
+}
 .component-docs .component-picker select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--input);
   border-radius: var(--site-radius-control);
-  border-color: var(--input);
+  background: var(--card);
+  color: var(--foreground);
+  font-size: 16px;
 }
 .workspace-toolbar .text-link {
   margin-right: 8px;
@@ -1036,6 +1241,22 @@ kbd {
     gap: 40px;
   }
 }
+@media (max-width: 1023px) {
+  .component-docs {
+    display: block;
+    padding-top: 32px;
+  }
+  .component-docs .component-sidebar {
+    display: none;
+  }
+  .component-docs .component-picker {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 24px;
+    font-size: 12px;
+    color: var(--site-graphite);
+  }
+}
 @media (max-width: 767px) {
   .lede {
     font-size: 16px;
@@ -1043,6 +1264,53 @@ kbd {
   .docs-layout {
     display: block;
     padding-top: 24px;
+  }
+  .component-docs .breadcrumbs {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    margin-bottom: 20px;
+  }
+  .component-docs .documentation-intro {
+    padding-bottom: 24px;
+  }
+  .component-docs .component-sections {
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .component-docs .docs-content > h2 {
+    margin-top: 40px;
+    font-size: 26px;
+  }
+  .component-docs .docs-content > p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+}
+@media (max-width: 380px) {
+  .component-catalog .collection-intro h1 {
+    font-size: 42px;
+  }
+  .component-grid .tile-preview {
+    padding: 16px;
+    height: 286px;
+  }
+  .component-docs .docs-content > .workspace-toolbar {
+    gap: 8px;
+  }
+  .component-docs .workspace-toolbar > .filter-tabs {
+    width: 100%;
+  }
+  .component-docs .workspace-toolbar .filter-tabs button {
+    flex: 1;
+    justify-content: center;
+  }
+  .component-docs .preview-actions {
+    width: 100%;
+    justify-content: space-between;
+    padding-inline: 8px;
+  }
+  .component-docs .detail-preview:not(.detail-realtime-monitor, .detail-incident-review, .detail-dashboard, .detail-analytics-overview) {
+    padding: 16px;
   }
 }
 .detail-preview > .live-examples {
@@ -1526,6 +1794,9 @@ kbd {
   }
   .catalog-page .catalog-search {
     width: 100%;
+  }
+  .component-catalog .catalog-search {
+    order: -1;
   }
 }
 
