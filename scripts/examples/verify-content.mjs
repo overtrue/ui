@@ -63,7 +63,7 @@ for (const file of entries) {
   );
   assert.equal(
     $("link[rel='icon']").attr("href"),
-    "/overtrue.svg",
+    "/favicon.svg",
     `${file}: favicon`,
   );
 }
