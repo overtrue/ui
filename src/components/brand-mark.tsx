@@ -1,28 +1,25 @@
 import type { ComponentProps } from "react";
 
-/** An open u with the detached dot of an i. */
+/** The shared overtrue open-ring mark. */
 export function BrandMark(props: ComponentProps<"svg">) {
   return (
     <svg
-      viewBox="0 0 32 32"
+      viewBox="0 0 64 64"
       width="28"
       height="28"
       fill="none"
+      color="#244cff"
+      data-brand-mark=""
       aria-hidden="true"
       {...props}
     >
       <path
-        d="M5 5h5v14a6 6 0 0 0 12 0v-6h5v6a11 11 0 0 1-22 0V5Z"
-        fill="currentColor"
+        d="M44 26a15 15 0 1 1-7-8"
+        stroke="currentColor"
+        strokeWidth="9"
+        strokeLinecap="round"
       />
-      <rect
-        x="22"
-        y="4"
-        width="5"
-        height="5"
-        rx="1"
-        fill="var(--color-primary, #2a5bff)"
-      />
+      <circle cx="47" cy="16" r="5" fill="var(--brand-dot, #8da5ff)" />
     </svg>
   );
 }

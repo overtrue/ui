@@ -3,6 +3,11 @@
  * One typeface (Mona Sans, using its width axis for display type), one accent,
  * and status colors that only appear where they mean something.
  */
+.dark [data-brand-mark] {
+  color: #ffffff;
+  --brand-dot: #ffffff;
+}
+
 :root {
   --site-bg: #ffffff;
   --site-subtle: #fafafa;

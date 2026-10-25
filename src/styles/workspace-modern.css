@@ -3,6 +3,13 @@
  * scene compositions through the same shadcn tokens the customizer controls, so
  * every accent, base palette, radius and font choice still applies.
  */
+.dark [data-brand-mark],
+html:is([data-workspace-navbar-theme="dark"], [data-workspace-navbar-theme="primary"])
+  :is(.workspace-logo, .workspace-sidebar-brand) [data-brand-mark] {
+  color: #ffffff;
+  --brand-dot: #ffffff;
+}
+
 .overtrue-workspace {
   --ws-hairline: hsl(var(--border));
   --ws-hover: color-mix(in oklab, hsl(var(--foreground)) 5%, transparent);

@@ -701,12 +701,11 @@
     background-color 240ms,
     border-radius 240ms var(--ease-out);
 }
-.lab-app-brand > span svg {
+.lab-app-brand > span svg[data-brand-mark] {
   width: 24px;
   height: 24px;
-}
-.lab-app-brand > span svg rect {
-  fill: currentColor;
+  color: inherit;
+  --brand-dot: currentColor;
 }
 .lab-app-brand strong {
   display: block;
