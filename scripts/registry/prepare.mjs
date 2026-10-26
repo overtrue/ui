@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { catalog, catalogPath } from "../../src/site/catalog.ts";
+import { DEFAULT_STUDIO, themeVariables } from "../../src/site/theme-tokens.ts";
 import { prepareCardRegistry } from "../blocks/registry.mjs";
 
 const origin = (
@@ -63,61 +64,16 @@ items.push({
   title: "overtrue/ui theme",
   description:
     "The overtrue/ui Ultramarine accent, Ink neutrals, a matched chart palette, and dark mode. Optional: updates your global CSS variables.",
-  cssVars: {
-    light: {
-      radius: "0.5rem",
-      background: "#fafafa",
-      foreground: "#202020",
-      card: "#ffffff",
-      "card-foreground": "#202020",
-      popover: "#ffffff",
-      "popover-foreground": "#202020",
-      primary: "#2a5bff",
-      "primary-foreground": "#ffffff",
-      secondary: "#f5f5f5",
-      "secondary-foreground": "#202020",
-      muted: "#f5f5f5",
-      "muted-foreground": "#666666",
-      accent: "#edf1ff",
-      "accent-foreground": "#1f47d6",
-      destructive: "#dc2626",
-      "destructive-foreground": "#ffffff",
-      border: "#e5e5e5",
-      input: "#d4d4d4",
-      ring: "#2a5bff",
-      "chart-1": "#2a5bff",
-      "chart-2": "#0f9f6e",
-      "chart-3": "#e19a0b",
-      "chart-4": "#8b5cf6",
-      "chart-5": "#e5487d",
-    },
-    dark: {
-      background: "#121212",
-      foreground: "#eeeeee",
-      card: "#1b1b1b",
-      "card-foreground": "#eeeeee",
-      popover: "#1b1b1b",
-      "popover-foreground": "#eeeeee",
-      primary: "#7b93ff",
-      "primary-foreground": "#121212",
-      secondary: "#242424",
-      "secondary-foreground": "#eeeeee",
-      muted: "#242424",
-      "muted-foreground": "#a3a3a3",
-      accent: "#141c3a",
-      "accent-foreground": "#a9b8ff",
-      destructive: "#f87171",
-      "destructive-foreground": "#030712",
-      border: "#303030",
-      input: "#454545",
-      ring: "#7b93ff",
-      "chart-1": "#7b93ff",
-      "chart-2": "#34d399",
-      "chart-3": "#fbbf24",
-      "chart-4": "#a78bfa",
-      "chart-5": "#f472b6",
-    },
-  },
+  cssVars: Object.fromEntries(
+    ["light", "dark"].map((mode) => [
+      mode,
+      Object.fromEntries(
+        Object.entries(themeVariables(DEFAULT_STUDIO, mode, false))
+          .filter(([name]) => !name.startsWith("--site-"))
+          .map(([name, value]) => [name.slice(2), value]),
+      ),
+    ]),
+  ),
 });
 writeFileSync(
   "registry.json",

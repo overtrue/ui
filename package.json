@@ -15,6 +15,7 @@
     "usage:check": "node scripts/registry/verify-usage.mjs",
     "catalog:check": "node scripts/registry/verify-catalog-browser.mjs",
     "site:check": "node scripts/registry/verify-browser.mjs",
+    "theme:check": "node scripts/site/verify-theme-tokens.mjs && node scripts/site/verify-theme.mjs",
     "home:check": "node scripts/site/verify-home.mjs",
     "content:check": "node scripts/examples/verify-content.mjs"
   },

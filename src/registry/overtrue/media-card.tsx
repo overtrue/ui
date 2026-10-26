@@ -14,7 +14,7 @@ export function MediaCard({
       className={cn(
         "group/media min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card py-0 text-card-foreground ring-0",
         "shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-12px_rgb(0_0_0/0.10)] dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_1px_2px_rgb(0_0_0/0.5)]",
-        layout === "split" ? "grid md:grid-cols-2" : "flex flex-col",
+        layout === "split" ? "grid grid-cols-1 md:grid-cols-2" : "flex flex-col",
         className,
       )}
       {...props}

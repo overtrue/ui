@@ -163,6 +163,7 @@ export function prepareCardRegistry(origin) {
     "src/styles/scenes.css",
     "src/styles/showcase.css",
     "src/styles/native-select.css",
+    "src/styles/workspace-modern.css",
   ];
   const styles = cssFiles
     .map((file) => {

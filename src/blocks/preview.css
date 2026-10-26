@@ -1,16 +1,54 @@
-html, body { margin: 0; min-height: 0; background: transparent; }
+html,
+body {
+  margin: 0;
+  min-height: 0;
+  background: transparent;
+}
 /* Match the site's preview surface without relying on iframe transparency. */
-html { color-scheme: light; background: #fafafa; }
-html.dark { color-scheme: dark; background: #181818; }
-#root { padding: 20px; }
-.overtrue-block.overtrue-workspace { min-height: 0; padding: 0; display: block; background: transparent; }
-.overtrue-block > .scene-card { margin-bottom: 0; }
-.overtrue-block .pn-table-responsive { max-width: 100%; overflow-x: auto; }
-.overtrue-block .scene-note { margin: 0; }
+html {
+  color-scheme: light;
+  background: var(--background);
+}
+html.dark {
+  color-scheme: dark;
+}
+#root {
+  padding: 20px;
+}
+.overtrue-block.overtrue-workspace {
+  min-height: 0;
+  padding: 0;
+  display: block;
+  background: transparent;
+}
+.overtrue-block > .scene-card {
+  margin-bottom: 0;
+}
+.overtrue-block .pn-table-responsive {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.overtrue-block .scene-note {
+  margin: 0;
+}
 /* Four metrics should form two balanced rows in a narrow preview. */
 @media (min-width: 360px) and (max-width: 720px) {
   .overtrue-block [data-slot="metric-group"]:has(> :nth-child(4):last-child) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 480px) { #root { padding: 12px; } }
+@media (max-width: 480px) {
+  #root {
+    padding: 12px;
+  }
+}
+
+html[data-contrast="high"] .overtrue-block :focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+html[data-contrast="high"]
+  .overtrue-block
+  :is([class*="text-muted-foreground/"], [class*="text-foreground/"]) {
+  color: var(--muted-foreground);
+}

@@ -378,6 +378,14 @@ const content = {
         reduced-motion preferences; animation should never be required to
         understand a result.
       </p>
+      <h2>Offer more contrast</h2>
+      <p>
+        Open Customize theme to choose Standard, High, or System contrast. High
+        strengthens text, input boundaries, and chart colors in both light and
+        dark modes. System follows <code>prefers-contrast: more</code>. Your
+        choice carries between the gallery and workspace, and the theme export
+        includes the system media query when selected.
+      </p>
       <h2>Verify the finished application</h2>
       <p>
         The components provide useful foundations, but your data, custom styles,

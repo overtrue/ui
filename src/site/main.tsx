@@ -91,30 +91,51 @@ function Logo() {
   );
 }
 function ThemeToggle() {
-  const [dark, setDark] = useState(() => {
+  const readPreference = () => {
     try {
       const stored = localStorage.getItem("overtrue-site-theme");
-      return stored
-        ? stored === "dark"
-        : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      return stored === "light" || stored === "dark" ? stored : "system";
     } catch {
-      return false;
+      return "system";
     }
-  });
+  };
+  const [preference, setPreference] = useState(readPreference);
+  const [systemDark, setSystemDark] = useState(
+    () => window.matchMedia("(prefers-color-scheme: dark)").matches,
+  );
+  const dark = preference === "dark" || (preference === "system" && systemDark);
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const refresh = () => setSystemDark(media.matches);
+    const storage = (event: StorageEvent) => {
+      if (event.key === "overtrue-site-theme" || event.key === null)
+        setPreference(readPreference());
+    };
+    media.addEventListener("change", refresh);
+    window.addEventListener("storage", storage);
+    return () => {
+      media.removeEventListener("change", refresh);
+      window.removeEventListener("storage", storage);
+    };
+  }, []);
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
+  const toggle = () => {
+    const next = dark ? "light" : "dark";
+    setPreference(next);
     try {
-      localStorage.setItem("overtrue-site-theme", dark ? "dark" : "light");
+      localStorage.setItem("overtrue-site-theme", next);
     } catch {
       /* Storage is optional. */
     }
-  }, [dark]);
+  };
   return (
     <button
       type="button"
       className="icon-button"
       aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
-      onClick={() => setDark(!dark)}
+      onClick={toggle}
     >
       {dark ? <Sun size={17} /> : <Moon size={17} />}
     </button>
@@ -206,7 +227,7 @@ function Header() {
   }, [location.pathname, location.hash]);
   return (
     <header
-      className={`site-header${location.pathname === "/" ? " site-header-home" : ""}`}
+      className={`site-header${location.pathname === "/" ? " site-header-home is-home" : ""}`}
     >
       <div className="site-header-inner">
         <Link to="/" aria-label="overtrue/ui home">
@@ -261,7 +282,7 @@ function Header() {
 function Footer() {
   const isHome = useLocation().pathname === "/";
   return (
-    <footer className={`site-footer${isHome ? " home-footer" : ""}`}>
+    <footer className={`site-footer${isHome ? " home-footer is-home" : ""}`}>
       <div>
         <Link to="/">
           <Logo />
@@ -912,6 +933,9 @@ function Docs() {
           Or build a theme here. The studio recolors this site and every preview
           as you go, derives a chart palette and dark variants from your accent,
           and exports the variables in the oklch() notation shadcn/ui uses.
+          Color scheme, accent, neutrals, radius, and contrast carry into the
+          workspace. Choose Standard, High, or System contrast; System follows
+          your device and the exported CSS includes that preference.
         </p>
         <div className="docs-studio">
           <ThemeStudioPanel />

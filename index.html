@@ -38,7 +38,7 @@
         const theme = localStorage.getItem("overtrue-site-theme");
         document.documentElement.classList.toggle(
           "dark",
-          theme
+          theme === "light" || theme === "dark"
             ? theme === "dark"
             : matchMedia("(prefers-color-scheme: dark)").matches,
         );

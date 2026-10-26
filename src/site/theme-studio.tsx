@@ -1,10 +1,13 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import * as Popover from "@radix-ui/react-popover";
 import {
-  IconCheck,
-  IconColorSwatch,
-  IconRefresh,
-} from "@tabler/icons-react";
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useId,
+  type ReactNode,
+} from "react";
+import * as Popover from "@radix-ui/react-popover";
+import { IconCheck, IconColorSwatch, IconRefresh } from "@tabler/icons-react";
 import {
   ACCENT_PRESETS,
   DEFAULT_STUDIO,
@@ -19,6 +22,7 @@ import {
   type NeutralName,
   type StudioTheme,
 } from "./theme-tokens";
+import { CONTRAST_OPTIONS, systemContrast } from "@/lib/theme-colors";
 import { CopyButton } from "./code";
 
 // Apply before the first paint so a saved theme never flashes the default.
@@ -35,22 +39,71 @@ export function useStudio() {
 
 export function ThemeStudioProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState(loadStudio);
+  const [moreContrast, setMoreContrast] = useState(systemContrast);
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-contrast: more)");
+    const refresh = () => setMoreContrast(media.matches);
+    const storage = (event: StorageEvent) => {
+      if (event.key === "overtrue-theme-studio" || event.key === null)
+        setThemeState(loadStudio());
+    };
+    media.addEventListener("change", refresh);
+    window.addEventListener("storage", storage);
+    return () => {
+      media.removeEventListener("change", refresh);
+      window.removeEventListener("storage", storage);
+    };
+  }, []);
   useEffect(() => {
     applyStudio(theme);
     saveStudio(theme);
-  }, [theme]);
+  }, [theme, moreContrast]);
   return (
     <StudioContext.Provider
-      value={{ theme, setTheme: (update) => setThemeState(update) }}
+      value={{
+        theme: { ...theme },
+        setTheme: (update) => setThemeState(update),
+      }}
     >
       {children}
     </StudioContext.Provider>
   );
 }
 
+export function ContrastControl() {
+  const { theme, setTheme } = useStudio();
+  const name = useId();
+  return (
+    <fieldset className="studio-contrast">
+      <legend>Contrast</legend>
+      <div className="studio-contrast-options">
+        {CONTRAST_OPTIONS.map(({ value, label }) => (
+          <label key={value}>
+            <input
+              type="radio"
+              name={name}
+              value={value}
+              checked={theme.contrast === value}
+              onChange={() =>
+                setTheme((current) => ({ ...current, contrast: value }))
+              }
+            />
+            <span>{label}</span>
+          </label>
+        ))}
+      </div>
+      <p>
+        Stronger text and boundaries. Tones adjust for readability. System
+        follows your device.
+      </p>
+    </fieldset>
+  );
+}
+
 /** The controls, usable in the header popover and inline in the docs. */
 export function ThemeStudioPanel({ compact = false }: { compact?: boolean }) {
   const { theme, setTheme } = useStudio();
+  const group = useId();
   const set = <K extends keyof StudioTheme>(key: K, value: StudioTheme[K]) =>
     setTheme((current) => ({ ...current, [key]: value }));
   const light = chartPalette(theme, "light");
@@ -64,19 +117,27 @@ export function ThemeStudioPanel({ compact = false }: { compact?: boolean }) {
           {ACCENT_PRESETS.map((preset) => {
             const active = theme.accent.toLowerCase() === preset.value;
             return (
-              <button
+              <label
                 key={preset.value}
-                type="button"
-                role="radio"
-                aria-checked={active}
-                aria-label={preset.name}
+                data-checked={active || undefined}
                 title={preset.name}
                 className="studio-swatch"
-                style={{ background: preset.value, color: onColor(preset.value) }}
-                onClick={() => set("accent", preset.value)}
+                style={{
+                  background: preset.value,
+                  color: onColor(preset.value),
+                }}
               >
-                {active && <IconCheck size={13} stroke={3} aria-hidden="true" />}
-              </button>
+                <input
+                  type="radio"
+                  name={`${group}-accent`}
+                  aria-label={preset.name}
+                  checked={active}
+                  onChange={() => set("accent", preset.value)}
+                />
+                {active && (
+                  <IconCheck size={13} stroke={3} aria-hidden="true" />
+                )}
+              </label>
             );
           })}
           <label className="studio-swatch studio-custom" title="Custom color">
@@ -105,7 +166,10 @@ export function ThemeStudioPanel({ compact = false }: { compact?: boolean }) {
             Harmonize with accent
           </label>
         </legend>
-        <div className="studio-palette" aria-label="Chart colors, light and dark">
+        <div
+          className="studio-palette"
+          aria-label="Chart colors, light and dark"
+        >
           {light.map((color, index) => (
             <span key={index} title={`chart-${index + 1}`}>
               <i style={{ background: color }} />
@@ -122,7 +186,7 @@ export function ThemeStudioPanel({ compact = false }: { compact?: boolean }) {
           className="studio-range"
           type="range"
           min={0}
-          max={16}
+          max={32}
           step={1}
           value={theme.radius}
           aria-label="Corner radius"
@@ -133,13 +197,16 @@ export function ThemeStudioPanel({ compact = false }: { compact?: boolean }) {
         <legend>Neutral</legend>
         <div className="studio-neutrals" role="radiogroup" aria-label="Neutral">
           {(Object.keys(NEUTRALS) as NeutralName[]).map((name) => (
-            <button
+            <label
               key={name}
-              type="button"
-              role="radio"
-              aria-checked={theme.neutral === name}
-              onClick={() => set("neutral", name)}
+              data-checked={theme.neutral === name || undefined}
             >
+              <input
+                type="radio"
+                name={`${group}-neutral`}
+                checked={theme.neutral === name}
+                onChange={() => set("neutral", name)}
+              />
               <span
                 aria-hidden="true"
                 style={{
@@ -147,10 +214,11 @@ export function ThemeStudioPanel({ compact = false }: { compact?: boolean }) {
                 }}
               />
               {NEUTRALS[name].label}
-            </button>
+            </label>
           ))}
         </div>
       </fieldset>
+      <ContrastControl />
       <div className="studio-export">
         <div>
           <strong>globals.css</strong>

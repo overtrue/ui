@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
+import { DEFAULT_STUDIO, themeVariables } from "../../src/site/theme-tokens.ts";
 import { catalog, catalogPath } from "../../src/site/catalog.ts";
 const index = JSON.parse(readFileSync("public/r/registry.json", "utf8"));
 const cards = JSON.parse(readFileSync("src/blocks/catalog.json", "utf8"));
@@ -116,3 +117,11 @@ for (const entry of index.items) {
 console.log(
   `Verified ${index.items.length} registry items: current sources, complete local and external dependencies, unique installation targets, Tabler Icons.`,
 );
+
+const installedTheme = JSON.parse(readFileSync("public/r/overtrue-theme.json", "utf8"));
+for (const mode of ["light", "dark"]) {
+  const expected = Object.fromEntries(Object.entries(themeVariables(DEFAULT_STUDIO, mode, false))
+    .filter(([name]) => !name.startsWith("--site-"))
+    .map(([name, value]) => [name.slice(2), value]));
+  assert.deepEqual(installedTheme.cssVars[mode], expected, `Installed ${mode} theme must match the gallery`);
+}

@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { CONTRAST_OPTIONS, NEUTRALS, chartColors, ensureContrast, highContrast, isContrastPreference, onColor, semanticPalette, systemContrast, type ContrastPreference } from "@/lib/theme-colors"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 
 export type ColorScheme = "light" | "dark" | "auto"
@@ -13,11 +14,13 @@ export interface ThemeState {
   /** Last layout example opened; keeps saved edits when that page reloads. */
   layoutPreset?: string
   navbarTheme?: "default" | "dark" | "primary"
+  harmonize: boolean
+  contrast: ContrastPreference
   scheme: ColorScheme
   accent: string
   font: "sans" | "serif" | "mono" | "comic"
   base: ThemeBase
-  radius: 0 | 0.5 | 1 | 1.5 | 2
+  radius: number
   nav: NavMode
   container: ContainerWidth
   navbar: NavbarBehavior
@@ -25,7 +28,9 @@ export interface ThemeState {
 }
 
 export const DEFAULT_THEME: ThemeState = {
-  scheme: "light",
+  harmonize: true,
+  contrast: "system",
+  scheme: "auto",
   accent: "#2a5bff",
   font: "sans",
   base: "ink",
@@ -87,36 +92,34 @@ export function hexToHsl(hex: string): string {
   return `${+(h * 360).toFixed(2)} ${+(s * 100).toFixed(2)}% ${+(l * 100).toFixed(2)}%`
 }
 
-/** First visit: start from the theme built in the site's theme studio, if any. */
-function themeFromStudio(): ThemeState {
+/** Appearance is shared with the gallery; layout and font stay workspace-specific. */
+function themeFromStudio(theme: ThemeState): ThemeState {
   try {
+    const scheme = window.localStorage.getItem("overtrue-site-theme")
+    if (scheme === "light" || scheme === "dark") theme.scheme = scheme
+    if (scheme === "system") theme.scheme = "auto"
     const studio = JSON.parse(window.localStorage.getItem("overtrue-theme-studio") ?? "null")
-    if (!studio || typeof studio !== "object") return DEFAULT_THEME
-    const theme = { ...DEFAULT_THEME }
+    if (!studio || typeof studio !== "object") return theme
     if (typeof studio.accent === "string" && /^#[\da-f]{6}$/i.test(studio.accent)) theme.accent = studio.accent.toLowerCase()
-    if (["ink", "slate", "zinc", "stone"].includes(studio.neutral)) theme.base = studio.neutral
-    if (typeof studio.radius === "number") {
-      const steps = [0, 0.5, 1, 1.5, 2] as const
-      const rem = studio.radius / 16
-      theme.radius = steps.reduce((best, step) => (Math.abs(step - rem) < Math.abs(best - rem) ? step : best), steps[0])
-    }
-    return theme
-  } catch {
-    return DEFAULT_THEME
-  }
+    if (Object.hasOwn(NEUTRALS, studio.neutral)) theme.base = studio.neutral
+    if (typeof studio.radius === "number" && studio.radius >= 0 && studio.radius <= 32) theme.radius = studio.radius / 16
+    if (typeof studio.harmonize === "boolean") theme.harmonize = studio.harmonize
+    if (isContrastPreference(studio.contrast)) theme.contrast = studio.contrast
+  } catch { /* Storage is optional. */ }
+  return theme
 }
 
 export function loadTheme(): ThemeState {
   if (typeof window === "undefined") return DEFAULT_THEME
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
-    if (!raw) return themeFromStudio()
+    if (!raw) return themeFromStudio({ ...DEFAULT_THEME })
     const saved: unknown = JSON.parse(raw)
-    if (!saved || typeof saved !== "object" || Array.isArray(saved)) return DEFAULT_THEME
+    if (!saved || typeof saved !== "object" || Array.isArray(saved)) return themeFromStudio({ ...DEFAULT_THEME })
     const theme = { ...DEFAULT_THEME }
     const choices = {
-      scheme: ["light", "dark", "auto"], font: ["sans", "serif", "mono", "comic"],
-      base: ["ink", "slate", "gray", "zinc", "neutral", "stone"], radius: [0, 0.5, 1, 1.5, 2],
+      contrast: ["system", "standard", "high"], scheme: ["light", "dark", "auto"], font: ["sans", "serif", "mono", "comic"],
+      base: ["ink", "slate", "gray", "zinc", "neutral", "stone"],
       nav: ["navbar", "sidebar", "horizontal"], container: ["default", "fluid", "boxed"],
       navbar: ["default", "sticky"], sidebar: ["expanded", "folded"],
       navbarTheme: ["default", "dark", "primary"],
@@ -128,40 +131,34 @@ export function loadTheme(): ThemeState {
     }
     const accent = (saved as Record<string, unknown>).accent
     if (typeof accent === "string" && /^#[\da-f]{6}$/i.test(accent)) theme.accent = accent
-    return theme
+    const harmonize = (saved as Record<string, unknown>).harmonize
+    if (typeof harmonize === "boolean") theme.harmonize = harmonize
+    const radius = (saved as Record<string, unknown>).radius
+    if (typeof radius === "number" && radius >= 0 && radius <= 2) theme.radius = radius
+    return themeFromStudio(theme)
   } catch {
-    return DEFAULT_THEME
+    return themeFromStudio({ ...DEFAULT_THEME })
   }
 }
 
 export function persistTheme(theme: ThemeState) {
   if (typeof window === "undefined") return
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(theme))
+    const local = JSON.stringify(theme)
+    if (window.localStorage.getItem(STORAGE_KEY) !== local) window.localStorage.setItem(STORAGE_KEY, local)
+    const scheme = theme.scheme === "auto" ? "system" : theme.scheme
+    if (window.localStorage.getItem("overtrue-site-theme") !== scheme) window.localStorage.setItem("overtrue-site-theme", scheme)
+    let studio: Record<string, unknown> = {}
+    try { studio = JSON.parse(window.localStorage.getItem("overtrue-theme-studio") ?? "{}") ?? {} } catch { /* Repair invalid storage. */ }
+    const shared = JSON.stringify({ ...studio, accent: theme.accent, neutral: theme.base, radius: theme.radius * 16, contrast: theme.contrast, harmonize: theme.harmonize })
+    if (window.localStorage.getItem("overtrue-theme-studio") !== shared) window.localStorage.setItem("overtrue-theme-studio", shared)
   } catch {
     /* ignore quota */
   }
 }
 
-// Each palette uses the same semantic tokens for shadcn and workspace surfaces.
-const BASE_PALETTES: Record<ThemeBase, { light: string[]; dark: string[] }> = {
-  ink: { light: ["#fafafa", "#202020", "#ffffff", "#f5f5f5", "#666666", "#e5e5e5", "#d4d4d4"], dark: ["#121212", "#eeeeee", "#1b1b1b", "#242424", "#a3a3a3", "#303030", "#454545"] },
-  gray: { light: ["#f9fafb", "#111827", "#ffffff", "#f3f4f6", "#6b7280", "#e5e7eb", "#d1d5db"], dark: ["#030712", "#f9fafb", "#111827", "#1f2937", "#9ca3af", "#1f2937", "#374151"] },
-  slate: { light: ["#f8fafc", "#334155", "#ffffff", "#f1f5f9", "#64748b", "#e2e8f0", "#cbd5e1"], dark: ["#0f172a", "#e2e8f0", "#1e293b", "#334155", "#94a3b8", "#334155", "#475569"] },
-  zinc: { light: ["#fafafa", "#3f3f46", "#ffffff", "#f4f4f5", "#71717a", "#e4e4e7", "#d4d4d8"], dark: ["#18181b", "#e4e4e7", "#27272a", "#27272a", "#a1a1aa", "#3f3f46", "#52525b"] },
-  neutral: { light: ["#fafafa", "#404040", "#ffffff", "#f5f5f5", "#737373", "#e5e5e5", "#d4d4d4"], dark: ["#171717", "#e5e5e5", "#262626", "#262626", "#a3a3a3", "#404040", "#525252"] },
-  stone: { light: ["#fafaf9", "#44403c", "#ffffff", "#f5f5f4", "#78716c", "#e7e5e4", "#d6d3d1"], dark: ["#1c1917", "#e7e5e4", "#292524", "#292524", "#a8a29e", "#44403c", "#57534e"] },
-}
-
-/** Choose the stronger contrast, including for custom yellow and lime accents. */
-export function accentForeground(hex: string): string {
-  const channels = [1, 3, 5].map((offset) => {
-    const channel = parseInt(hex.slice(offset, offset + 2), 16) / 255
-    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
-  })
-  const luminance = channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722
-  return 1.05 / (luminance + 0.05) >= (luminance + 0.05) / 0.05 ? "#ffffff" : "#000000"
-}
+/** White or black, whichever reads better on the selected swatch. */
+export const accentForeground = onColor
 
 export function applyTheme(t: ThemeState) {
   const root = document.documentElement
@@ -172,8 +169,10 @@ export function applyTheme(t: ThemeState) {
         window.matchMedia("(prefers-color-scheme: dark)").matches),
   )
   const dark = root.classList.contains("dark")
-  const palette = BASE_PALETTES[t.base][dark ? "dark" : "light"]
-  const [background, foreground, card, muted, mutedForeground, border, input] = palette.map(hexToHsl)
+  const high = highContrast(t.contrast)
+  root.dataset.contrast = high ? "high" : "standard"
+  const palette = semanticPalette(t.base, t.accent, dark ? "dark" : "light", high)
+  const [background, foreground, card, muted, mutedForeground, border, input] = [palette.subtle, palette.ink, palette.card, palette.muted, palette.graphite, palette.border, palette.input].map(hexToHsl)
   for (const [name, value] of Object.entries({ background, foreground, card, "card-foreground": foreground, popover: card, "popover-foreground": foreground, muted, "muted-foreground": mutedForeground, border, input, sidebar: card, "sidebar-foreground": foreground, "sidebar-border": border })) {
     root.style.setProperty("--" + name, value)
   }
@@ -185,7 +184,7 @@ export function applyTheme(t: ThemeState) {
   root.style.setProperty("--sidebar-accent-foreground", foreground)
   root.dataset.workspaceNavbarTheme = t.navbarTheme ?? "default"
   root.dataset.workspaceBase = t.base
-  const accent = dark && t.accent === DEFAULT_THEME.accent ? "#7b93ff" : t.accent
+  const accent = palette.primary
   const primaryForeground = hexToHsl(accentForeground(accent))
   root.style.setProperty(
     "--workspace-primary-rgb",
@@ -194,7 +193,10 @@ export function applyTheme(t: ThemeState) {
   root.style.setProperty("--primary", hexToHsl(accent))
   root.style.setProperty("--primary-foreground", primaryForeground)
   root.style.setProperty("--ring", hexToHsl(accent))
-  root.style.setProperty("--chart-1", hexToHsl(accent))
+  chartColors({ ...t, neutral: t.base }, dark ? "dark" : "light").forEach((color, index) => root.style.setProperty(`--chart-${index + 1}`, hexToHsl(color)))
+  const destructive = ensureContrast(dark ? "#f87171" : "#dc2626", [palette.bg, palette.subtle, palette.card, palette.muted], high ? 7.05 : 4.55)
+  root.style.setProperty("--destructive", hexToHsl(destructive))
+  root.style.setProperty("--destructive-foreground", hexToHsl(onColor(destructive)))
   root.style.setProperty("--sidebar-ring", hexToHsl(accent))
   root.style.setProperty("--sidebar-primary", hexToHsl(accent))
   root.style.setProperty("--sidebar-primary-foreground", primaryForeground)
@@ -220,19 +222,31 @@ export function useThemeState() {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = React.useState<ThemeState>(() => loadTheme())
 
+  const [moreContrast, setMoreContrast] = React.useState(systemContrast)
   const [systemDark, setSystemDark] = React.useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches)
   React.useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)")
+    const contrast = window.matchMedia("(prefers-contrast: more)")
+    const refreshContrast = () => setMoreContrast(contrast.matches)
+    const refreshStorage = (event: StorageEvent) => {
+      if (event.key === "overtrue-theme-studio" || event.key === STORAGE_KEY || event.key === "overtrue-site-theme" || event.key === null) setTheme(loadTheme())
+    }
+    contrast.addEventListener("change", refreshContrast)
+    window.addEventListener("storage", refreshStorage)
     const refresh = () => setSystemDark(media.matches)
     media.addEventListener("change", refresh)
-    return () => media.removeEventListener("change", refresh)
+    return () => {
+      media.removeEventListener("change", refresh)
+      contrast.removeEventListener("change", refreshContrast)
+      window.removeEventListener("storage", refreshStorage)
+    }
   }, [])
   const resolvedScheme = theme.scheme === "dark" || (theme.scheme === "auto" && systemDark) ? "dark" : "light"
 
   React.useLayoutEffect(() => {
     applyTheme(theme)
     persistTheme(theme)
-  }, [theme, resolvedScheme])
+  }, [theme, resolvedScheme, moreContrast])
 
   return (
     <ThemeStateContext.Provider value={{ theme, setTheme, resolvedScheme }}>
@@ -353,6 +367,11 @@ export function ThemeCustomizer({
                           : "default",
                   })),
               )}
+              {choices(
+                "contrast", "Contrast", "Stronger text and boundaries, or follow your device.", theme.contrast,
+                CONTRAST_OPTIONS.map(({ value, label }) => [value, label] as const),
+                (value) => set("contrast", value),
+              )}
               <fieldset className="workspace-setting">
                 <legend>Accent color</legend>
                 <p>The accent color used across the app.</p>
@@ -374,7 +393,16 @@ export function ThemeCustomizer({
                     </label>
                   ))}
                 </div>
+                <label className="workspace-custom-color">
+                  Custom accent
+                  <input type="color" aria-label="Custom accent" value={theme.accent} onChange={(event) => set("accent", event.target.value)} />
+                  <code>{theme.accent.toUpperCase()}</code>
+                </label>
               </fieldset>
+              <label className="workspace-custom-color">
+                <input type="checkbox" checked={theme.harmonize} onChange={(event) => set("harmonize", event.target.checked)} />
+                Harmonize chart colors
+              </label>
               {choices(
                 "font",
                 "Font family",
@@ -403,20 +431,10 @@ export function ThemeCustomizer({
                 ] as const,
                 (value) => set("base", value),
               )}
-              {choices(
-                "radius",
-                "Corner radius",
-                "How round corners are drawn.",
-                theme.radius,
-                [
-                  [0, "0"],
-                  [0.5, "0.5"],
-                  [1, "1"],
-                  [1.5, "1.5"],
-                  [2, "2"],
-                ] as const,
-                (value) => set("radius", value),
-              )}
+              <fieldset className="workspace-setting">
+                <legend>Corner radius <output>{Math.round(theme.radius * 16)}px</output></legend>
+                <input type="range" min={0} max={32} step={1} value={theme.radius * 16} aria-label="Corner radius" onChange={(event) => set("radius", Number(event.target.value) / 16)} />
+              </fieldset>
               <h3>Layout</h3>
               {choices(
                 "navigation",

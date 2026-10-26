@@ -698,6 +698,34 @@ try {
       ),
     );
   }
+  for (const width of [1440, 768, 390, 320]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto(origin + "/blocks/roles-room-to-do-your-best-work-1");
+    const frame = page.locator(".card-live-preview iframe").contentFrame();
+    const card = frame.locator('[data-slot="media-card"]');
+    await card.waitFor();
+    const fits = await card.evaluate(async (element) => {
+      await element.ownerDocument.fonts.ready;
+      const image = element.querySelector("img");
+      image.loading = "eager";
+      await image.decode();
+      const bounds = element.getBoundingClientRect();
+      const children = [...element.children].map((child) =>
+        child.getBoundingClientRect(),
+      );
+      const text = [...element.querySelectorAll("h2, p")].flatMap((node) => {
+        const range = element.ownerDocument.createRange();
+        range.selectNodeContents(node);
+        return [...range.getClientRects()];
+      });
+      return [...children, ...text].every(
+        (rect) => rect.left >= bounds.left && rect.right <= bounds.right,
+      );
+    });
+    assert.ok(fits, `Split media card clips its content at ${width}px`);
+    await card.screenshot({ path: `${output}/split-media-card-${width}.png` });
+    results.push({ name: "split-media-card", width });
+  }
   // Unknown routes must never invoke a loader inherited from Object.prototype.
   await page.addInitScript(() => {
     Object.defineProperty(

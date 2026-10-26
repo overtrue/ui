@@ -156,7 +156,7 @@ export function FeaturedBlocks() {
                   description="Selected projects · overtrue"
                 />
               ) : (
-                <Example name={selected} expanded />
+                <Example name={selected} />
               )}
             </div>
           </div>
