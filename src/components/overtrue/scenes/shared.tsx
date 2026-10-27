@@ -4,7 +4,7 @@ import { MetricGroupItem } from "@/registry/overtrue/metric-group";
 import { useState, type ReactNode, type Ref } from "react";
 import { Link } from "react-router-dom";
 import {
-  IconArrowUpRight,
+  IconArrowRight,
   IconPlus,
   IconCheck,
   IconDownload,
@@ -15,7 +15,7 @@ export function Scene({
   id,
   title,
   description,
-  eyebrow = "Acme Studio",
+  eyebrow,
   actions,
   children,
 }: {
@@ -27,21 +27,27 @@ export function Scene({
   children: ReactNode;
 }) {
   return (
-    <div data-workspace-page={id} className="pn-page-wrapper scene">
+    <div
+      data-workspace-page={id}
+      className="pn-page-wrapper scene"
+      onFocus={(event) => {
+        event.target
+          .closest<HTMLElement>(
+            ".scene-page-tabs > a, .scene-page-tabs > button",
+          )
+          ?.scrollIntoView({ block: "nearest", inline: "nearest" });
+      }}
+    >
       <div className="pn-container-xl">
         <header className="scene-heading">
           <div>
-            <p className="scene-eyebrow">{eyebrow}</p>
+            {eyebrow && <p className="scene-eyebrow">{eyebrow}</p>}
             <h1>{title}</h1>
             {description && <p>{description}</p>}
           </div>
           {actions && <div className="scene-actions">{actions}</div>}
         </header>
         {children}
-        <p className="scene-demo-note">
-          Acme Studio · Sample people, clients, and records. Interactions use
-          local demo data.
-        </p>
       </div>
     </div>
   );
@@ -110,7 +116,7 @@ export function Go({
   return (
     <Link to={to} className={cn("scene-button", primary && "is-primary")}>
       {children}
-      <IconArrowUpRight size={15} />
+      <IconArrowRight size={15} />
     </Link>
   );
 }

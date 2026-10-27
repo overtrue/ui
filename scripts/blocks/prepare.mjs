@@ -266,6 +266,38 @@ for (const file of files) {
           throw new Error("Gallery collection must have a Scene parent");
         rendered = scene.children.map((child) => child.getFullText()).join("");
       }
+      // A card's actions can open a sibling dialog. Keep dialogs backed by the
+      // card's state so the exported trigger remains functional.
+      const cardState = identifiers(
+        parse(
+          "card-state.tsx",
+          rendered + closure(rendered, declarations(owner.body.statements)),
+        ),
+      );
+      const companionDialogs = [];
+      const findDialogs = (child) => {
+        if (
+          ts.isJsxElement(child) &&
+          child.openingElement.tagName.getText() === "WorkflowDialog"
+        ) {
+          const open = attr(child, "open");
+          const change = attr(child, "onOpenChange");
+          const controls = [open, change]
+            .filter(Boolean)
+            .flatMap((prop) => [...identifiers(prop)]);
+          if (
+            open &&
+            controls.some((name) => cardState.has(name)) &&
+            !(child.pos >= expression.pos && child.end <= expression.end)
+          ) {
+            companionDialogs.push(child.getText());
+          }
+          return;
+        }
+        ts.forEachChild(child, findDialogs);
+      };
+      findDialogs(owner.body);
+      rendered += companionDialogs.join("\n");
       // Keep page-scoped chart variables and typography in installed blocks too,
       // without copying the page shell, heading, or unrelated siblings.
       for (

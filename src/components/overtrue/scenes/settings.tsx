@@ -1,14 +1,12 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { SettingsSection } from "@/registry/overtrue/settings-section";
+import { TeamAccess, type AccessMember } from "@/registry/overtrue/team-access";
+import { AuditTrail, type AuditEvent } from "@/registry/overtrue/audit-trail";
+import { team } from "@/data/workspace/studio";
+import { useWorkData } from "../workspace/work-data";
 import { IconCheck } from "@tabler/icons-react";
-import {
-  Scene,
-  SceneCard,
-  Action,
-  Avatar,
-  FilterTabs,
-  Go,
-  Pill,
-} from "./shared";
+import { Scene, SceneCard, Action, Go, Pill } from "./shared";
 export function Settings({
   id = "settings",
   client = false,
@@ -16,21 +14,51 @@ export function Settings({
   id?: string;
   client?: boolean;
 }) {
-  const [tab, setTab] = useState("General"),
-    [saved, setSaved] = useState(false),
-    [fields, setFields] = useState({
-      name: client ? "" : "Acme Studio",
-      email: client ? "" : "hello@acme.example",
-      industry: "Design & creative",
-      currency: "USD — US Dollar",
-      about: client
-        ? ""
-        : "We help thoughtful organizations turn complex questions into useful experiences.",
-      timezone: "Europe / London",
-      role: "Member",
-    }),
-    [notifications, setNotifications] = useState([true, false, true, true]),
-    [twoStep, setTwoStep] = useState(true);
+  const { setClients } = useWorkData();
+  const defaults = {
+    name: client ? "" : "Acme Studio",
+    email: client ? "" : "hello@acme.example",
+    contact: client ? "" : "Maya Okafor",
+    industry: "Design & creative",
+    currency: "USD — US Dollar",
+    about: client
+      ? ""
+      : "We help thoughtful organizations turn complex questions into useful experiences.",
+    timezone: "Europe / London",
+    role: "Member",
+  };
+  const [tab, setTab] = useState("General");
+  const [fields, setFields] = useState(defaults);
+  const [notifications, setNotifications] = useState([true, false, true, true]);
+  const [twoStep, setTwoStep] = useState(true);
+  const [snapshot, setSnapshot] = useState({
+    fields: defaults,
+    notifications: [true, false, true, true],
+    twoStep: true,
+  });
+  const [saved, setSaved] = useState(false);
+  const [clientId, setClientId] = useState<string | null>(null);
+  const [members, setMembers] = useState<AccessMember[]>(
+    team.map((person, index) => ({
+      id: person.id,
+      name: person.name,
+      email: person.email,
+      image: `/assets/overtrue/people/${person.id}.svg`,
+      role: index === 0 ? "Owner" : index === 1 ? "Admin" : "Member",
+    })),
+  );
+  const [audit, setAudit] = useState<AuditEvent[]>([
+    {
+      id: "workspace-created",
+      actor: "Maya Okafor",
+      action: "enabled two-step verification",
+      time: "September 18, 2026",
+      outcome: "success",
+    },
+  ]);
+  const dirty =
+    JSON.stringify({ fields, notifications, twoStep }) !==
+    JSON.stringify(snapshot);
   const field = (key: keyof typeof fields) => ({
     name: key,
     value: fields[key],
@@ -38,98 +66,87 @@ export function Settings({
       event: React.ChangeEvent<
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
       >,
-    ) => setFields({ ...fields, [key]: event.target.value }),
+    ) => setFields((current) => ({ ...current, [key]: event.target.value })),
   });
   return (
     <Scene
       id={id}
-      title={client ? "A new client relationship" : "Workspace settings"}
+      title={client ? "New client" : "Workspace settings"}
       description={
         client
-          ? "Start with the essentials. The details can grow with the relationship."
-          : "Make this space work for the way your team works."
+          ? "Create a client record before starting an engagement."
+          : "Manage your workspace identity, preferences, and team access."
       }
     >
-      <div className="scene-settings-layout">
-        <aside>
-          <FilterTabs
-            items={["General", "Notifications", "Access"]}
-            value={tab}
-            onChange={(v) => {
-              setTab(v);
-              setSaved(false);
-            }}
-          />
-          <p>
-            Explore each section. Leaving or reloading this page restores the
-            sample data.
-          </p>
-        </aside>
-        <SceneCard
-          title={
-            client
-              ? "Client details"
-              : tab === "General"
-                ? "The essentials"
-                : tab === "Notifications"
-                  ? "Less noise, more context"
-                  : "Workspace access"
-          }
+      {!client && (
+        <div className="scene-page-tabs">
+          {["General", "Notifications", "Access"].map((label) => (
+            <button
+              key={label}
+              aria-current={tab === label ? "page" : undefined}
+              onClick={() => setTab(label)}
+            >
+              {label}
+            </button>
+          ))}
+          <Link to="/settings-plan">Billing & plan</Link>
+        </div>
+      )}
+      <div className="scene-settings-surface">
+        <form
+          className="scene-form"
+          onChange={() => setSaved(false)}
+          onSubmit={(event) => {
+            event.preventDefault();
+            setSnapshot({ fields, notifications, twoStep });
+            setSaved(true);
+            if (client) {
+              const nextId = clientId ?? `CLIENT-${crypto.randomUUID()}`;
+              setClientId(nextId);
+              setClients((current) => {
+                const record = {
+                  id: nextId,
+                  name: fields.name.trim(),
+                  email: fields.email,
+                  contact: fields.contact.trim(),
+                  stage: "Onboarding",
+                  value: 0,
+                };
+                return current.some((item) => item.id === nextId)
+                  ? current.map((item) => (item.id === nextId ? record : item))
+                  : [...current, record];
+              });
+            }
+          }}
         >
-          <form
-            className="scene-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSaved(true);
-            }}
-            onChange={() => setSaved(false)}
-          >
-            {tab === "General" ? (
-              <>
-                <div className="scene-signature">
-                  <Avatar name="Maya Okafor" size={56} />
-                  <div>
-                    <strong>{client ? "New client" : "Acme Studio"}</strong>
-                    <p>
-                      {client
-                        ? "A clear beginning"
-                        : "Independent design & digital experiences"}
-                    </p>
+          {tab === "General" || client ? (
+            <>
+              <SettingsSection
+                title={client ? "Company details" : "Workspace identity"}
+                description={
+                  client
+                    ? "The name and industry shown on projects and invoices."
+                    : "Your team sees these details throughout the workspace."
+                }
+              >
+                {!client && (
+                  <div className="scene-settings-identity">
+                    <span className="scene-client-monogram">AS</span>
+                    <div>
+                      <strong>{fields.name || "Workspace"}</strong>
+                      <small>acme-studio · Team workspace</small>
+                    </div>
                   </div>
-                </div>
-                <p className="scene-form-hint">
-                  Fields marked with * are required.
-                </p>
+                )}
                 <div className="scene-form-grid">
                   <label>
-                    <span className="scene-field-label">
-                      {client ? "Client name" : "Workspace name"}{" "}
-                      <span className="scene-required" aria-hidden="true">
-                        *
-                      </span>
-                    </span>
+                    {client ? "Client name" : "Workspace name"} *
                     <input
                       required
                       autoComplete="organization"
                       pattern=".*\S.*"
-                      {...field("name")}
                       placeholder="Company or organization"
-                    />
-                  </label>
-                  <label>
-                    <span className="scene-field-label">
-                      Contact email{" "}
-                      <span className="scene-required" aria-hidden="true">
-                        *
-                      </span>
-                    </span>
-                    <input
-                      type="email"
-                      autoComplete="email"
-                      spellCheck={false}
-                      required
-                      {...field("email")}
-                      placeholder="hello@example.com"
+                      {...field("name")}
                     />
                   </label>
                   <label>
@@ -141,6 +158,56 @@ export function Settings({
                       <option>Retail & hospitality</option>
                     </select>
                   </label>
+                </div>
+                <label className="scene-field">
+                  About
+                  <textarea
+                    rows={3}
+                    {...field("about")}
+                    placeholder="A short description of the organization"
+                  />
+                </label>
+              </SettingsSection>
+              <SettingsSection
+                title="Contact information"
+                description="Use a shared address so important updates reach the right people."
+              >
+                {client && (
+                  <label className="scene-field">
+                    Contact name *
+                    <input
+                      required
+                      pattern=".*\S.*"
+                      autoComplete="name"
+                      {...field("contact")}
+                    />
+                  </label>
+                )}
+                <label className="scene-field">
+                  Contact email *
+                  <input
+                    type="email"
+                    required
+                    autoComplete="email"
+                    spellCheck={false}
+                    placeholder="hello@example.com"
+                    {...field("email")}
+                  />
+                </label>
+              </SettingsSection>
+              <SettingsSection
+                title="Regional preferences"
+                description="Defaults for schedules, reports, and new invoices."
+              >
+                <div className="scene-form-grid">
+                  <label>
+                    Timezone
+                    <select className="native-select" {...field("timezone")}>
+                      <option>Europe / London</option>
+                      <option>Europe / Berlin</option>
+                      <option>Asia / Tokyo</option>
+                    </select>
+                  </label>
                   <label>
                     Default currency
                     <select className="native-select" {...field("currency")}>
@@ -150,60 +217,56 @@ export function Settings({
                     </select>
                   </label>
                 </div>
-                <label>
-                  About
-                  <textarea {...field("about")} rows={4} />
-                </label>
-                <label>
-                  Timezone
-                  <select className="native-select" {...field("timezone")}>
-                    <option>Europe / London</option>
-                    <option>Europe / Berlin</option>
-                    <option>Asia / Tokyo</option>
-                  </select>
-                </label>
-              </>
-            ) : tab === "Notifications" ? (
-              <>
+              </SettingsSection>
+            </>
+          ) : tab === "Notifications" ? (
+            <>
+              <SettingsSection
+                title="Email notifications"
+                description="Choose which updates reach your inbox. Project activity is always available in the workspace."
+              >
                 {[
                   "Project mentions and direct messages",
                   "Weekly workspace digest",
                   "Client review requests",
                   "Billing and account updates",
-                ].map((s, i) => (
-                  <label className="scene-toggle-row" key={s}>
+                ].map((label, index) => (
+                  <label className="scene-toggle-row" key={label}>
                     <span>
-                      <strong>{s}</strong>
+                      <strong>{label}</strong>
                       <small>
-                        {i === 1
-                          ? "A short summary every Monday morning."
-                          : "Only updates relevant to your work."}
+                        {
+                          [
+                            "When someone needs your input.",
+                            "A short summary every Monday morning.",
+                            "When a deliverable is ready for your decision.",
+                            "Invoices, receipts, and changes to your plan.",
+                          ][index]
+                        }
                       </small>
                     </span>
                     <input
                       type="checkbox"
-                      checked={notifications[i]}
-                      onChange={(e) =>
-                        setNotifications(
-                          notifications.map((value, index) =>
-                            index === i ? e.target.checked : value,
+                      checked={notifications[index]}
+                      onChange={(event) =>
+                        setNotifications((current) =>
+                          current.map((value, i) =>
+                            i === index ? event.target.checked : value,
                           ),
                         )
                       }
                     />
                   </label>
                 ))}
-              </>
-            ) : (
-              <>
-                <div className="scene-status-banner">
-                  <span className="scene-status-dot" />
-                  <div>
-                    <strong>Your workspace is private</strong>
-                    <p>Only invited members can view projects.</p>
-                  </div>
-                </div>
-                <label>
+              </SettingsSection>
+            </>
+          ) : (
+            <>
+              <SettingsSection
+                title="Workspace security"
+                description="Set the default access policy for new invitations."
+              >
+                <label className="scene-field">
                   Default member role
                   <select className="native-select" {...field("role")}>
                     <option>Member</option>
@@ -212,36 +275,95 @@ export function Settings({
                   </select>
                 </label>
                 <label className="scene-toggle-row">
-                  <span>Require two-step verification</span>
+                  <span>
+                    <strong>Require two-step verification</strong>
+                    <small>
+                      Members verify their identity before signing in.
+                    </small>
+                  </span>
                   <input
                     type="checkbox"
                     checked={twoStep}
-                    onChange={(e) => setTwoStep(e.target.checked)}
+                    onChange={(event) => setTwoStep(event.target.checked)}
                   />
                 </label>
-                <Go to="/users">Manage members</Go>
-              </>
-            )}
-            <div className="scene-form-footer">
-              <Action primary type="submit">
-                {client ? "Save client" : "Save changes"}
-              </Action>
-              {saved && (
-                <div className="scene-form-result" role="status">
-                  <IconCheck size={18} aria-hidden="true" />
+              </SettingsSection>
+            </>
+          )}
+          <div className="scene-settings-save">
+            <div role="status">
+              {saved ? (
+                <span className="scene-form-result">
+                  <IconCheck size={16} />
                   {client
-                    ? "Client saved in this preview."
+                    ? "Client saved in this workspace session."
                     : "Your changes have been saved in this preview."}
-                </div>
+                </span>
+              ) : dirty ? (
+                "You have unsaved changes"
+              ) : (
+                "All changes saved"
               )}
             </div>
-          </form>
-        </SceneCard>
+            <div>
+              <Action
+                disabled={!dirty}
+                onClick={() => {
+                  setFields(snapshot.fields);
+                  setNotifications(snapshot.notifications);
+                  setTwoStep(snapshot.twoStep);
+                  setSaved(false);
+                }}
+              >
+                Discard
+              </Action>
+              <Action primary type="submit" disabled={!dirty && !client}>
+                {client ? "Save client" : "Save changes"}
+              </Action>
+            </div>
+          </div>
+          {saved && client && (
+            <Go to="/client-overview">View client directory</Go>
+          )}
+        </form>
+        {tab === "Access" && !client && (
+          <div className="scene-product-primary mt-8">
+            <TeamAccess
+              members={members}
+              onRoleChange={(id, role) => {
+                const member = members.find((item) => item.id === id)!;
+                setMembers((current) =>
+                  current.map((item) =>
+                    item.id === id ? { ...item, role } : item,
+                  ),
+                );
+                setAudit((current) => [
+                  {
+                    id: crypto.randomUUID(),
+                    actor: "Maya Okafor",
+                    action: "changed access for",
+                    target: member.name,
+                    time: "Just now",
+                    changes: [
+                      { field: "Role", before: member.role, after: role },
+                    ],
+                  },
+                  ...current,
+                ]);
+              }}
+            />
+            <SceneCard title="Access history">
+              <AuditTrail events={audit} />
+            </SceneCard>
+          </div>
+        )}
       </div>
     </Scene>
   );
 }
 export function Wizard({ id = "wizard" }: { id?: string }) {
+  const { projects, setProjects, clients } = useWorkData();
+  const [createdId, setCreatedId] = useState<string | null>(null);
   const [step, setStep] = useState(0),
     [name, setName] = useState(""),
     [client, setClient] = useState("Culture venue"),
@@ -251,19 +373,12 @@ export function Wizard({ id = "wizard" }: { id?: string }) {
   return (
     <Scene
       id={id}
-      title={
-        id === "onboarding"
-          ? "A good place to begin"
-          : "Make space for a new project"
-      }
-      description="A few clear decisions now make the rest of the work easier."
+      title={id === "onboarding" ? "Set up your first project" : "New project"}
+      description="Define the scope, invite your team, and review before creating."
     >
       <div className="scene-wizard">
         <aside>
-          <img
-            src="/assets/overtrue/illustration-start.webp"
-            alt="A new project taking shape"
-          />
+          <p className="scene-eyebrow">Project setup</p>
           {["The brief", "The team", "Ready to begin"].map((s, i) => (
             <div className={i === step ? "is-current" : ""} key={s}>
               <b>{i + 1}</b>
@@ -290,14 +405,36 @@ export function Wizard({ id = "wizard" }: { id?: string }) {
               />
               <h2>{name}</h2>
               <p>Created in this demo session for {client}.</p>
-              <Go to="/tasks">Open project board</Go>
+              <Go to={`/datagrid?project=${createdId}`}>Open project</Go>
             </div>
           ) : (
             <form
               className="scene-form"
               onSubmit={(e) => {
                 e.preventDefault();
-                step === 2 ? setDone(true) : setStep(step + 1);
+                if (step < 2) {
+                  setStep(step + 1);
+                  return;
+                }
+                const projectId = `PRJ-${Math.max(...projects.map((project) => Number(project.id.replace(/\D/g, "")))) + 1}`;
+                setProjects((current) => [
+                  ...current,
+                  {
+                    id: projectId,
+                    name: name.trim(),
+                    client,
+                    owner: team[0].name,
+                    category: "New engagement",
+                    progress: 0,
+                    budget: 0,
+                    due: "To be scheduled",
+                    status: "Planned",
+                    image: "/assets/overtrue/project-06.webp",
+                    brief,
+                  },
+                ]);
+                setCreatedId(projectId);
+                setDone(true);
               }}
             >
               {step === 0 ? (
@@ -318,13 +455,8 @@ export function Wizard({ id = "wizard" }: { id?: string }) {
                       value={client}
                       onChange={(e) => setClient(e.target.value)}
                     >
-                      {[
-                        "Culture venue",
-                        "Member collective",
-                        "Ceramics studio",
-                        "Supply company",
-                      ].map((c) => (
-                        <option key={c}>{c}</option>
+                      {clients.map((client) => (
+                        <option key={client.id}>{client.name}</option>
                       ))}
                     </select>
                   </label>

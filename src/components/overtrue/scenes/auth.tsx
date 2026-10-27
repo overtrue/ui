@@ -1,5 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  IconCheck,
+  IconFolderPlus,
+  IconAlertTriangle,
+  IconSearch,
+  IconTool,
+  IconClock,
+} from "@tabler/icons-react";
 import { Action, Avatar } from "./shared";
 export function Auth({ id = "sign-in" }: { id?: string }) {
   const [done, setDone] = useState(false),
@@ -12,16 +20,16 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
     setup = id === "2-step-verification" && !codeRequested,
     lock = id === "auth-lock";
   const title = signup
-    ? "A shared home for your best work."
+    ? "Create your workspace"
     : reset
-      ? "Let’s get you back in."
+      ? "Reset your password"
       : verify
-        ? "One more step to your workspace."
+        ? "Verify your identity"
         : lock
-          ? "Welcome back, Maya."
+          ? "Unlock your session"
           : link
-            ? "Your next step is in your inbox."
-            : "Good to see you again.";
+            ? "Sign in with email"
+            : "Sign in to Acme Studio";
   return (
     <main
       data-workspace-page={id}
@@ -39,18 +47,13 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
           overtrue/ui
         </a>
         <div>
-          <span className="scene-eyebrow">
-            A little structure, a lot of possibility.
-          </span>
+          <span className="scene-eyebrow">ACME STUDIO</span>
           <h2>
-            Make room
+            Your team’s work,
             <br />
-            for good work.
+            all in one place.
           </h2>
-          <p>
-            Projects, people, and the details in between.
-            <br />A calmer place to bring it all together.
-          </p>
+          <p>Plan projects, share feedback, and keep delivery moving.</p>
         </div>
         {id.includes("cover") ? (
           <img
@@ -72,14 +75,14 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
             overtrue/ui
           </a>
           <span className="scene-eyebrow">
-            {signup ? "Your next chapter" : "Acme Studio"}
+            {signup ? "GET STARTED" : "Acme Studio"}
           </span>
           {lock && (
             <div className="scene-lock-avatar">
               <Avatar name="Maya Okafor" size={64} />
             </div>
           )}
-          <h1>{setup ? "Protect your workspace." : title}</h1>
+          <h1>{setup ? "Set up two-step verification" : title}</h1>
           <p>
             {reset
               ? "Enter your email and we’ll prepare a reset link."
@@ -89,17 +92,14 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
                   : codeRequested
                     ? "Enter the six-digit code to finish this demo."
                     : "Use the six-digit code from your authenticator app."
-                : "Pick up where you left off. Your team is here."}
+                : "Use your work email to continue."}
           </p>
           {done ? (
             <div role="status" className="scene-auth-result">
-              <img
-                src="/assets/overtrue/illustration-connected.webp"
-                alt="Ready to continue"
-              />
-              <h2>
-                {reset || link ? "Request prepared" : "You’re ready to explore"}
-              </h2>
+              <span className="scene-state-icon">
+                <IconCheck size={28} />
+              </span>
+              <h2>{reset || link ? "Request prepared" : "Demo complete"}</h2>
               <p>
                 This is a demo. No account was created, no email was sent, and
                 no credentials were stored.
@@ -241,7 +241,7 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
             </form>
           )}
           <footer>
-            {signup ? "Already have a workspace?" : "New to overtrue/ui?"}{" "}
+            {signup ? "Already have a workspace?" : "Need a workspace?"}{" "}
             <Link to={signup ? "/sign-in" : "/sign-up"}>
               {signup ? "Sign in" : "Create a workspace"}
             </Link>
@@ -252,57 +252,111 @@ export function Auth({ id = "sign-in" }: { id?: string }) {
   );
 }
 export function Empty({ id = "empty" }: { id?: string }) {
-  const missing = id === "error-404",
-    failed = id === "error-500",
-    maintenance = id === "error-maintenance",
-    trial = id === "trial-ended";
-  const title = missing
-    ? "This page took a different path."
-    : failed
-      ? "Something interrupted the connection."
-      : maintenance
-        ? "A little care behind the scenes."
-        : trial
-          ? "Keep your good work going."
-          : id === "blank"
-            ? "A clean page. A clear starting point."
-            : "Your next project starts here.";
+  const [retried, setRetried] = useState(false);
+  const states = {
+    "error-404": {
+      icon: IconSearch,
+      label: "404 · Page not found",
+      title: "We couldn’t find that page",
+      copy: "The link may be outdated, or the page may have moved. Return to your workspace to find the project.",
+      action: "Back to workspace",
+      to: "/",
+    },
+    "error-500": {
+      icon: IconAlertTriangle,
+      label: "500 · Request failed",
+      title: "The workspace couldn’t load",
+      copy: "Please retry the request. If it keeps failing, check service status for an ongoing incident.",
+      action: "View service status",
+      to: "/uptime",
+    },
+    "error-maintenance": {
+      icon: IconTool,
+      label: "Scheduled maintenance",
+      title: "We’ll be back shortly",
+      copy: "Workspace access is paused for a scheduled update. Existing project files are unaffected.",
+      action: "View service status",
+      to: "/uptime",
+    },
+    "trial-ended": {
+      icon: IconClock,
+      label: "Acme Studio · Trial ended",
+      title: "Choose a plan to continue",
+      copy: "Your 14-day trial has ended. Compare plans or review your billing settings before continuing.",
+      action: "Compare plans",
+      to: "/pricing",
+    },
+    blank: {
+      icon: IconFolderPlus,
+      label: "New workspace",
+      title: "Set up your first project",
+      copy: "Start with a project name and brief, then invite the people who will help deliver it.",
+      action: "Create a project",
+      to: "/wizard",
+    },
+    empty: {
+      icon: IconFolderPlus,
+      label: "Projects",
+      title: "No projects yet",
+      copy: "Create a project to keep its tasks, files, and reviews together. Your team will see it here.",
+      action: "Create a project",
+      to: "/wizard",
+    },
+  };
+  const state = states[id as keyof typeof states] ?? states.empty;
+  const Icon = state.icon;
   return (
-    <main data-workspace-page={id} className="scene-empty-page">
-      <a href="/" className="scene-wordmark">
-        overtrue/ui
-      </a>
-      <img
-        src={`/assets/overtrue/illustration-${missing ? "search" : failed ? "connected" : maintenance ? "secure" : "start"}.webp`}
-        alt="Workspace illustration"
-      />
-      <span className="scene-eyebrow">
-        {id.startsWith("error")
-          ? id === "error-404" ? "Error 404" : id === "error-500" ? "Error 500" : "Maintenance"
-          : "A little room to grow"}
+    <main
+      data-workspace-page={id}
+      className="scene-empty-page scene-state-page"
+    >
+      <span className="scene-state-icon">
+        <Icon size={30} />
       </span>
-      <h1>{title}</h1>
-      <p>
-        {missing
-          ? "The link may have moved. Your workspace is still right where you left it."
-          : failed
-            ? "Please try again in a moment. Your work is safe."
-            : maintenance
-              ? "We’re making the workspace a little better. Please check back shortly."
-              : trial
-                ? "Your sample trial has ended. Explore the available plans to find the right fit."
-                : "Give an idea a name, invite your team, and take the first small step together."}
-      </p>
-      <Link
-        className="scene-button is-primary"
-        to={trial ? "/pricing" : id.startsWith("error") ? "/" : "/wizard"}
-      >
-        {trial
-          ? "Explore plans"
-          : id.startsWith("error")
-            ? "Back to workspace"
-            : "Create a project"}
-      </Link>
+      <span className="scene-eyebrow">{state.label}</span>
+      <h1>{state.title}</h1>
+      <p>{state.copy}</p>
+      {id === "error-maintenance" && (
+        <dl className="scene-state-details">
+          <div>
+            <dt>Maintenance window</dt>
+            <dd>Sep 22 · 02:00–02:30 UTC</dd>
+          </div>
+          <div>
+            <dt>Affected service</dt>
+            <dd>Workspace web application</dd>
+          </div>
+        </dl>
+      )}
+      <div className="scene-actions">
+        {id === "error-500" && (
+          <Action primary onClick={() => setRetried(true)}>
+            Retry request
+          </Action>
+        )}
+        <Link
+          className={"scene-button" + (id !== "error-500" ? " is-primary" : "")}
+          to={state.to}
+        >
+          {state.action}
+        </Link>
+      </div>
+      {retried && (
+        <p role="status">
+          The example request still fails. Open service status to inspect the
+          incident.
+        </p>
+      )}
+      {id === "trial-ended" && (
+        <Link className="scene-state-secondary" to="/settings-plan">
+          Review billing settings
+        </Link>
+      )}
+      {id === "empty" && (
+        <Link className="scene-state-secondary" to="/search-results">
+          Read the getting started guide
+        </Link>
+      )}
     </main>
   );
 }

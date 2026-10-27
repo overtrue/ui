@@ -5,6 +5,7 @@ import { WorkspaceSurface } from "@/components/overtrue/workspace/primitives";
 import { ToastProviderBridge } from "@/components/ui/toast";
 import { workspacePages } from "@/data/workspace/routes";
 import pages from "@/data/workspace/pages.json";
+import { WorkDataProvider } from "@/components/overtrue/workspace/work-data";
 
 const aliases: Record<string, string> = {
   "/blank": "/empty",
@@ -25,50 +26,52 @@ export default function App() {
   }, [pathname]);
   return (
     <ToastProviderBridge>
-      <Suspense
-        fallback={
-          <div
-            className="workspace-loading"
-            role="status"
-            aria-label="Loading page"
-          />
-        }
-      >
-        <Routes>
-          {pages.map((meta) => {
-            const Page =
-              workspacePages[meta.path as keyof typeof workspacePages];
-            return (
+      <WorkDataProvider>
+        <Suspense
+          fallback={
+            <div
+              className="workspace-loading"
+              role="status"
+              aria-label="Loading page"
+            />
+          }
+        >
+          <Routes>
+            {pages.map((meta) => {
+              const Page =
+                workspacePages[meta.path as keyof typeof workspacePages];
+              return (
+                <Route
+                  key={meta.path}
+                  path={meta.path}
+                  element={
+                    <WorkspaceShell bare={meta.bare} layout={meta.layout}>
+                      <WorkspaceSurface key={meta.path}>
+                        <Page />
+                      </WorkspaceSurface>
+                    </WorkspaceShell>
+                  }
+                />
+              );
+            })}
+            {Object.entries(aliases).map(([from, to]) => (
               <Route
-                key={meta.path}
-                path={meta.path}
-                element={
-                  <WorkspaceShell bare={meta.bare} layout={meta.layout}>
-                    <WorkspaceSurface key={meta.path}>
-                      <Page />
-                    </WorkspaceSurface>
-                  </WorkspaceShell>
-                }
+                key={from}
+                path={from}
+                element={<Navigate to={to} replace />}
               />
-            );
-          })}
-          {Object.entries(aliases).map(([from, to]) => (
-            <Route
-              key={from}
-              path={from}
-              element={<Navigate to={to} replace />}
-            />
-          ))}
-          {pages.map((meta) => (
-            <Route
-              key={meta.file}
-              path={`/${meta.file}`}
-              element={<Navigate to={meta.path} replace />}
-            />
-          ))}
-          <Route path="*" element={<Navigate to="/error-404" replace />} />
-        </Routes>
-      </Suspense>
+            ))}
+            {pages.map((meta) => (
+              <Route
+                key={meta.file}
+                path={`/${meta.file}`}
+                element={<Navigate to={meta.path} replace />}
+              />
+            ))}
+            <Route path="*" element={<Navigate to="/error-404" replace />} />
+          </Routes>
+        </Suspense>
+      </WorkDataProvider>
     </ToastProviderBridge>
   );
 }

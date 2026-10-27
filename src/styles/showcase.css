@@ -333,7 +333,8 @@
 }
 .scene-media-row[aria-pressed="true"] {
   background: color-mix(in srgb, var(--scene-accent) 8%, var(--scene-surface));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--scene-accent) 22%, transparent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--scene-accent) 22%, transparent);
 }
 .scene-saved-note {
   border: 1px solid var(--scene-line);
@@ -912,11 +913,7 @@
     .scene-table {
     min-width: 740px;
   }
-  :is(
-      [data-workspace-page="tasks-list"],
-      [data-workspace-page="datatables"],
-      [data-workspace-page="tables"]
-    )
+  :is([data-workspace-page="datatables"], [data-workspace-page="tables"])
     .scene-table
     :is(th, td):first-child {
     width: min(40vw, 160px);

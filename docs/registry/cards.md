@@ -1,6 +1,6 @@
 # Example card blocks
 
-The Blocks library includes 368 card patterns extracted from the workspace examples, alongside 14 composed forms, business cards, and screens. A mapped group of cards is one collection: the source keeps its demo records and interactions instead of duplicating a block for every person or project.
+The Blocks library includes 174 card patterns extracted from the workspace examples, alongside 14 composed forms, business cards, and screens. A mapped group of cards is one collection: the source keeps its demo records and interactions instead of duplicating a block for every person or project.
 
 ## Source and maintenance
 
@@ -19,10 +19,10 @@ npx shadcn@latest add https://ui.overtrue.xyz/r/card-overview-revenue-delivery-2
 ```
 
 ```tsx
-import Block from "@/components/overtrue/blocks/overview-revenue-delivery-2"
+import Block from "@/components/overtrue/blocks/overview-revenue-delivery-2";
 
 export default function Page() {
-  return <Block />
+  return <Block />;
 }
 ```
 

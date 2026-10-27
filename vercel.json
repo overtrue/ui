@@ -183,6 +183,16 @@
       "source": "/components/integration-list",
       "destination": "/blocks/integration-list",
       "permanent": true
+    },
+    {
+      "source": "/components/approval-queue",
+      "destination": "/blocks/approval-queue",
+      "permanent": true
+    },
+    {
+      "source": "/components/team-workload",
+      "destination": "/blocks/team-workload",
+      "permanent": true
     }
   ]
 }

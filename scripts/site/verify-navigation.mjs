@@ -316,6 +316,7 @@ try {
       .press("Shift+Tab");
     assert.ok(
       await page
+        .getByRole("navigation", { name: "Main navigation", exact: true })
         .getByRole("link", { name: "Board", exact: true })
         .evaluate((element) => {
           const style = getComputedStyle(element);

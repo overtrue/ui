@@ -7,7 +7,9 @@ const index = JSON.parse(readFileSync("public/r/registry.json", "utf8"));
 const cards = JSON.parse(readFileSync("src/blocks/catalog.json", "utf8"));
 for (const directory of ["src/blocks/generated", "src/blocks/registry"]) {
   assert.deepEqual(
-    readdirSync(directory).filter((file) => file.endsWith(".tsx")).sort(),
+    readdirSync(directory)
+      .filter((file) => file.endsWith(".tsx"))
+      .sort(),
     cards.map((card) => `${card.id}.tsx`).sort(),
     `${directory}: generated modules must match the current catalog`,
   );
@@ -33,10 +35,18 @@ const foundation = JSON.parse(
 for (const entry of index.items) {
   const item = JSON.parse(readFileSync(`public/r/${entry.name}.json`, "utf8"));
   assert.equal(item.name, entry.name);
-  const catalogItem = catalog.find(candidate => candidate.name === item.name);
+  const catalogItem = catalog.find((candidate) => candidate.name === item.name);
   if (catalogItem) {
-    assert.equal(item.type, catalogItem.category === "Blocks" ? "registry:block" : "registry:component");
-    assert.ok(item.docs.includes(catalogPath(catalogItem)), `${item.name}: incorrect documentation URL`);
+    assert.equal(
+      item.type,
+      catalogItem.category === "Blocks"
+        ? "registry:block"
+        : "registry:component",
+    );
+    assert.ok(
+      item.docs.includes(catalogPath(catalogItem)),
+      `${item.name}: incorrect documentation URL`,
+    );
   }
   assert.ok(item.description);
   const ownTargets = new Set((item.files ?? []).map((file) => file.target));
@@ -107,21 +117,42 @@ for (const entry of index.items) {
         dependencies.some((dependency) => dependency.startsWith("recharts@")),
       );
     if (file.content.includes('from "recharts-analytics"'))
-      assert.ok(dependencies.includes("recharts-analytics@npm:recharts@3.10.1"), `${item.name}: missing analytics chart runtime`);
+      assert.ok(
+        dependencies.includes("recharts-analytics@npm:recharts@3.10.1"),
+        `${item.name}: missing analytics chart runtime`,
+      );
     if (file.content.includes('from "@radix-ui/react-popover"'))
-      assert.ok(dependencies.includes("@radix-ui/react-popover"), `${item.name}: missing popover runtime`);
+      assert.ok(
+        dependencies.some(
+          (dependency) =>
+            dependency === "@radix-ui/react-popover" ||
+            dependency.startsWith("@radix-ui/react-popover@"),
+        ),
+        `${item.name}: missing popover runtime`,
+      );
     if (file.content.includes('from "@tanstack/react-table"'))
-      assert.ok(dependencies.includes("@tanstack/react-table@9.2.4"), `${item.name}: missing table runtime`);
+      assert.ok(
+        dependencies.includes("@tanstack/react-table@9.2.4"),
+        `${item.name}: missing table runtime`,
+      );
   }
 }
 console.log(
   `Verified ${index.items.length} registry items: current sources, complete local and external dependencies, unique installation targets, Tabler Icons.`,
 );
 
-const installedTheme = JSON.parse(readFileSync("public/r/overtrue-theme.json", "utf8"));
+const installedTheme = JSON.parse(
+  readFileSync("public/r/overtrue-theme.json", "utf8"),
+);
 for (const mode of ["light", "dark"]) {
-  const expected = Object.fromEntries(Object.entries(themeVariables(DEFAULT_STUDIO, mode, false))
-    .filter(([name]) => !name.startsWith("--site-"))
-    .map(([name, value]) => [name.slice(2), value]));
-  assert.deepEqual(installedTheme.cssVars[mode], expected, `Installed ${mode} theme must match the gallery`);
+  const expected = Object.fromEntries(
+    Object.entries(themeVariables(DEFAULT_STUDIO, mode, false))
+      .filter(([name]) => !name.startsWith("--site-"))
+      .map(([name, value]) => [name.slice(2), value]),
+  );
+  assert.deepEqual(
+    installedTheme.cssVars[mode],
+    expected,
+    `Installed ${mode} theme must match the gallery`,
+  );
 }

@@ -34,7 +34,9 @@ import { cn } from "@/lib/utils";
 
 function HeaderActions() {
   const { resolvedScheme, setTheme } = useThemeState();
-  const [openMenu, setOpenMenu] = React.useState<"notifications" | "account" | null>(null);
+  const [openMenu, setOpenMenu] = React.useState<
+    "notifications" | "account" | null
+  >(null);
   return (
     <div className="workspace-header-actions">
       <a
@@ -85,7 +87,10 @@ function HeaderActions() {
           </Button>
         </Dropdown.Trigger>
         <Dropdown.Portal>
-          <div className="overtrue-workspace workspace-portal" data-state={openMenu === "notifications" ? "open" : "closed"}>
+          <div
+            className="overtrue-workspace workspace-portal"
+            data-state={openMenu === "notifications" ? "open" : "closed"}
+          >
             <Dropdown.Content
               className="pn-dropdown-menu pn-show workspace-dropdown-content workspace-notification-menu"
               align="end"
@@ -144,7 +149,10 @@ function HeaderActions() {
           </Button>
         </Dropdown.Trigger>
         <Dropdown.Portal>
-          <div className="overtrue-workspace workspace-portal" data-state={openMenu === "account" ? "open" : "closed"}>
+          <div
+            className="overtrue-workspace workspace-portal"
+            data-state={openMenu === "account" ? "open" : "closed"}
+          >
             <Dropdown.Content
               className="pn-dropdown-menu pn-show workspace-dropdown-content"
               align="end"
@@ -375,7 +383,7 @@ export function WorkspaceShell({
           )}
           style={
             {
-              "--sidebar-width": "16rem",
+              "--sidebar-width": "15rem",
               "--sidebar-width-icon": "4rem",
             } as React.CSSProperties
           }

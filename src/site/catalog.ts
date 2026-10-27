@@ -1,11 +1,13 @@
 import cards from "../blocks/catalog.json" with { type: "json" };
 import { dashboardCatalog } from "./dashboard-catalog.ts";
 import { liveCatalog } from "./live-catalog.ts";
+import { productCatalog } from "./product-catalog.ts";
 
 export const cardCount = cards.length;
 const items = [
   ...dashboardCatalog,
   ...liveCatalog,
+  ...productCatalog,
   {
     name: "integration-list",
     title: "Integration list",
@@ -659,7 +661,11 @@ export const componentCategories = [
 ] as const;
 const categoryRank = (category: string) => {
   const index = (componentCategories as readonly string[]).indexOf(category);
-  return category === "Blocks" ? -1 : index < 0 ? componentCategories.length : index;
+  return category === "Blocks"
+    ? -1
+    : index < 0
+      ? componentCategories.length
+      : index;
 };
 // Within a category, browse from everyday pieces to specialized ones.
 const displayOrder: readonly string[] = [
@@ -817,11 +823,12 @@ export const blockCollections: readonly {
       "integration-list",
       "settings-panel",
       "member-card",
+      "team-workload",
     ],
   },
   { label: "Billing", names: ["invoice-list", "pricing-card"] },
   {
     label: "Operations",
-    names: ["task-list", "activity-feed", "storage-meter"],
+    names: ["task-list", "activity-feed", "storage-meter", "approval-queue"],
   },
 ];

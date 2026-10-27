@@ -2,6 +2,8 @@ import { BusinessExample } from "./business-examples";
 import { ReusableExample } from "./reusable-examples";
 import { DashboardExample } from "./dashboard-examples";
 import { LiveExample } from "./live-examples";
+import { ProductExample } from "./product-examples";
+import { productCatalog } from "./product-catalog";
 import { liveCatalog } from "./live-catalog";
 import { dashboardCatalog } from "./dashboard-catalog";
 import { CompositionExample } from "./composition-examples";
@@ -41,6 +43,8 @@ export function Example({
   const [step, setStep] = useState(1);
   const [created, setCreated] = useState(false);
   const [chosen, setChosen] = useState(false);
+  if (productCatalog.some((item) => item.name === name))
+    return <ProductExample name={name} />;
   if (dashboardCatalog.some((item) => item.name === name))
     return <DashboardExample name={name} expanded={expanded} />;
   if (liveCatalog.some((item) => item.name === name))

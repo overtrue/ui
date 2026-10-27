@@ -1,7 +1,13 @@
 import { ServiceStatus as ServiceStatusBlock } from "@/registry/overtrue/service-status";
 import { DetailList } from "@/registry/overtrue/detail-list";
 import { useState } from "react";
-import { projects, team } from "@/data/workspace/studio";
+import { Link, NavLink, useSearchParams } from "react-router-dom";
+import { TaskChecklist } from "@/registry/overtrue/task-checklist";
+import { FileBrowser } from "@/registry/overtrue/file-browser";
+import { AuditTrail } from "@/registry/overtrue/audit-trail";
+import { projectActivity } from "@/data/workspace/operations";
+import { useWorkData } from "../workspace/work-data";
+
 import {
   Scene,
   SceneCard,
@@ -15,41 +21,62 @@ import {
   FilterTabs,
 } from "./shared";
 export function Records({ id = "datatables" }: { id?: string }) {
-  const [query, setQuery] = useState(""),
-    [sort, setSort] = useState(false);
+  const { projects } = useWorkData();
+  const [params] = useSearchParams();
+  const [query, setQuery] = useState(params.get("q") ?? "");
+  const [sort, setSort] = useState(false);
+  const [status, setStatus] = useState("All projects");
   const rows = projects
-    .filter((p) =>
-      (p.name + p.client).toLowerCase().includes(query.toLowerCase()),
+    .filter(
+      (project) =>
+        (status === "All projects" || project.status === status) &&
+        (project.name + project.client)
+          .toLowerCase()
+          .includes(query.trim().toLowerCase()),
     )
     .sort((a, b) => (sort ? b.budget - a.budget : a.budget - b.budget));
   return (
     <Scene
       id={id}
       title="Project register"
-      description="One reliable record of the work we’ve agreed to deliver."
+      description="Agreed budgets, accountable owners, and upcoming delivery dates."
       actions={
         <DownloadButton
+          name="project-register"
           rows={[
-            ["Project", "Client", "Budget"],
-            ...rows.map((p) => [p.name, p.client, String(p.budget)]),
+            ["Project", "Client", "Budget", "Status", "Delivery"],
+            ...rows.map((project) => [
+              project.name,
+              project.client,
+              String(project.budget),
+              project.status,
+              project.due,
+            ]),
           ]}
         />
       }
     >
-      <SceneCard
-        title="Current engagements"
-        description="Sample client records · September 2026"
-      >
-        <div className="scene-toolbar">
-          <SearchField
-            value={query}
-            onChange={setQuery}
-            placeholder="Search projects or clients…"
-          />
-          <Action onClick={() => setSort(!sort)}>
-            Budget: {sort ? "highest first" : "lowest first"}
-          </Action>
-        </div>
+      <div className="scene-page-tabs">
+        <Link to="/cards">Portfolio</Link>
+        <span aria-current="page">Register</span>
+        <Link to="/tasks-list">Work queue</Link>
+        <span className="scene-tabs-context">
+          {projects.length} engagements
+        </span>
+      </div>
+      <div className="scene-toolbar">
+        <FilterTabs
+          items={["All projects", "In progress", "In review", "Complete"]}
+          value={status}
+          onChange={setStatus}
+        />
+        <SearchField
+          value={query}
+          onChange={setQuery}
+          placeholder="Search projects or clients…"
+        />
+      </div>
+      <SceneCard className="scene-table-card">
         <div
           className="scene-table-wrap"
           tabIndex={0}
@@ -62,33 +89,64 @@ export function Records({ id = "datatables" }: { id?: string }) {
                 <th>Project</th>
                 <th>Owner</th>
                 <th>Status</th>
-                <th className="scene-number">Budget</th>
+                <th
+                  className="scene-number"
+                  aria-sort={sort ? "descending" : "ascending"}
+                >
+                  <button
+                    className="scene-table-sort"
+                    onClick={() => setSort(!sort)}
+                  >
+                    Budget {sort ? "↓" : "↑"}
+                  </button>
+                </th>
                 <th>Delivery</th>
+                <th>Progress</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map((p) => (
-                <tr key={p.id}>
+              {rows.map((project) => (
+                <tr key={project.id}>
                   <td>
-                    <strong>{p.name}</strong>
+                    <Link to={`/datagrid?project=${project.id}`}>
+                      <strong>{project.name}</strong>
+                    </Link>
                     <small>
-                      {p.id} · {p.client}
+                      {project.id} · {project.client}
                     </small>
                   </td>
                   <td>
-                    <Person name={p.owner} />
+                    <Person name={project.owner} />
                   </td>
                   <td>
-                    <Pill>{p.status}</Pill>
+                    <Pill>{project.status}</Pill>
                   </td>
-                  <td className="scene-number">${p.budget.toLocaleString()}</td>
-                  <td>{p.due}</td>
+                  <td className="scene-number">
+                    ${project.budget.toLocaleString("en-US")}
+                  </td>
+                  <td>{project.due}</td>
+                  <td>
+                    <div className="scene-progress-cell">
+                      <Progress value={project.progress} />
+                      <small>{project.progress}%</small>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
           {!rows.length && (
-            <p className="scene-empty">No projects match this search.</p>
+            <div className="scene-empty-search">
+              <h3>No projects match this search</h3>
+              <Action
+                onClick={() => {
+                  setQuery("");
+                  setStatus("All projects");
+                }}
+              >
+                Clear filters
+              </Action>
+            </div>
           )}
         </div>
         <div className="scene-table-summary" role="status">
@@ -100,85 +158,201 @@ export function Records({ id = "datatables" }: { id?: string }) {
             <strong>
               $
               {rows
-                .reduce((total, project) => total + project.budget, 0)
-                .toLocaleString()}
+                .reduce((sum, project) => sum + project.budget, 0)
+                .toLocaleString("en-US")}
             </strong>
           </span>
         </div>
       </SceneCard>
-      <div className="scene-grid-two">
-        <SceneCard title="A shared source of context">
-          <p>
-            The register connects each project to its owner, agreed budget, and
-            next delivery date. Review it before adding new work to the
-            schedule.
-          </p>
-        </SceneCard>
-        <SceneCard title="Ready for the next review?">
-          <p>
-            Open the work queue to see individual deliverables and update their
-            status.
-          </p>
-          <Go to="/tasks-list">View work queue</Go>
-        </SceneCard>
-      </div>
     </Scene>
   );
 }
+const projectBriefs: Record<string, string> = {
+  "PRJ-241":
+    "Help visitors feel welcome from the moment they arrive. Connect physical wayfinding with clear digital guidance, and make the next step obvious at every touchpoint.",
+  "PRJ-242":
+    "Give members one reliable place to manage their profile, discover resources, and participate in their community. Keep permissions clear for members, editors, and reviewers.",
+  "PRJ-243":
+    "Create a consistent identity for the studio’s next chapter. Deliver a flexible logo system, a concise brand guide, and production-ready print and digital assets.",
+  "PRJ-244":
+    "Understand where new customers need help. Test an onboarding journey that gets each customer to their first useful outcome with fewer hand-offs.",
+  "PRJ-245":
+    "Give the editorial team reusable templates for a consistent publication. Document the system so editors can publish without waiting for a designer.",
+  "PRJ-246":
+    "Introduce the community with a clear story and a focused launch campaign. Align the landing page, invitation, and first member experience.",
+};
 export function ProjectDetails() {
-  const p = projects[0];
+  const [params] = useSearchParams();
+  const { projects, tasks, setTasks } = useWorkData();
+  const project =
+    projects.find((item) => item.id === params.get("project")) ?? projects[0];
+  const [tab, setTab] = useState("Overview");
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const work = tasks.filter((task) => task.project === project.client);
+  const files = [
+    {
+      id: project.id + "-visual",
+      name: `${project.name} — visual direction`,
+      kind: "image" as const,
+      preview: project.image,
+      downloadUrl: project.image,
+      updated: "Sep 21, 2026",
+      owner: project.owner,
+    },
+    {
+      id: project.id + "-brief",
+      name: `${project.name} — project brief.txt`,
+      owner: project.owner,
+      updated: "Sep 18, 2026",
+      downloadUrl: `data:text/plain;charset=utf-8,${encodeURIComponent(project.name + "\n\n" + (project.brief || projectBriefs[project.id] || "Brief to be confirmed with the project team."))}`,
+    },
+  ];
+  const checklist = (
+    <TaskChecklist
+      title="Deliverables"
+      description="Work assigned to this project"
+      items={work.map((task) => ({
+        id: task.id,
+        title: task.title,
+        description: task.person,
+        checked: task.status === "Complete",
+        meta: task.due,
+      }))}
+      onCheckedChange={(id, checked) =>
+        setTasks((current) =>
+          current.map((task) =>
+            task.id === id
+              ? { ...task, status: checked ? "Complete" : "In progress" }
+              : task,
+          ),
+        )
+      }
+    />
+  );
   return (
     <Scene
       id="datagrid"
-      title={p.name}
-      description="The brief, the people, and the decisions that keep this project moving."
-      actions={<Go to="/tasks">Open board</Go>}
+      title={project.name}
+      description={`${project.id} · ${project.client}`}
+      actions={
+        <Go to={`/tasks-list?q=${encodeURIComponent(project.client)}`}>
+          Open work queue
+        </Go>
+      }
     >
-      <div className="scene-grid-main">
-        <SceneCard title="Project brief">
-          <p>
-            Help visitors feel welcome from the moment they arrive. Connect
-            physical wayfinding with clear digital guidance, and make the next
-            step obvious at every touchpoint.
-          </p>
-          <div className="scene-form-grid">
+      <div className="scene-page-tabs">
+        {["Overview", "Deliverables", "Files", "Activity"].map((label) => (
+          <button
+            key={label}
+            aria-current={tab === label ? "page" : undefined}
+            onClick={() => setTab(label)}
+          >
+            {label}
+          </button>
+        ))}
+        <span className="scene-tabs-context">
+          <Pill>{project.status}</Pill>
+        </span>
+      </div>
+      <div className="scene-product-grid">
+        <div className="scene-product-primary">
+          {tab === "Overview" && (
+            <>
+              <SceneCard title="Project brief">
+                <p className="scene-project-brief">
+                  {project.brief ||
+                    projectBriefs[project.id] ||
+                    "The project has been created. Agree the scope with the team before starting delivery."}
+                </p>
+                <div className="scene-project-milestones">
+                  <div>
+                    <small>Current phase</small>
+                    <strong>
+                      {project.status === "Complete"
+                        ? "Delivered"
+                        : project.status === "In review"
+                          ? "Client review"
+                          : "Design & delivery"}
+                    </strong>
+                  </div>
+                  <div>
+                    <small>Next milestone</small>
+                    <strong>
+                      {project.due} ·{" "}
+                      {project.status === "Complete"
+                        ? "Final handover"
+                        : "Project review"}
+                    </strong>
+                  </div>
+                </div>
+              </SceneCard>
+              {checklist}
+              <SceneCard title="Recent decisions">
+                <AuditTrail
+                  events={projectActivity.filter(
+                    (event) => event.actor === project.owner,
+                  )}
+                />
+              </SceneCard>
+            </>
+          )}
+          {tab === "Deliverables" && checklist}
+          {tab === "Files" && (
+            <FileBrowser
+              files={files}
+              selectedIds={selectedFiles}
+              onSelectionChange={setSelectedFiles}
+            />
+          )}
+          {tab === "Activity" && (
+            <SceneCard title="Project activity">
+              <AuditTrail
+                events={projectActivity.filter(
+                  (event) => event.actor === project.owner,
+                )}
+              />
+            </SceneCard>
+          )}
+        </div>
+        <aside className="scene-product-aside">
+          <SceneCard title="Project details">
             <DetailList
               items={[
-                ["Client", p.client],
-                ["Project code", p.id],
-                ["Discipline", p.category],
-                ["Delivery", p.due + ", 2026"],
-              ].map(([label, value]) => ({ id: label, label, value }))}
+                {
+                  id: "owner",
+                  label: "Owner",
+                  value: <Person name={project.owner} />,
+                },
+                { id: "client", label: "Client", value: project.client },
+                {
+                  id: "discipline",
+                  label: "Discipline",
+                  value: project.category,
+                },
+                {
+                  id: "budget",
+                  label: "Budget",
+                  value: `$${project.budget.toLocaleString("en-US")}`,
+                },
+                { id: "due", label: "Delivery", value: project.due + ", 2026" },
+                {
+                  id: "visibility",
+                  label: "Visibility",
+                  value: "Project team & guests",
+                },
+              ]}
             />
-            <DetailList
-              items={[
-                ["Budget", "$18,400"],
-                ["Stage", "Concept review"],
-                ["Started", "September 02, 2026"],
-                ["Visibility", "Project team & guests"],
-              ].map(([label, value]) => ({ id: label, label, value }))}
-            />
-          </div>
-          <h3>What success looks like</h3>
-          <p>
-            Visitors can plan their visit, find the right entrance, and
-            understand the experience without needing to ask for help.
-          </p>
-        </SceneCard>
-        <aside>
-          <SceneCard title="Project team">
-            {[team[0], team[2], team[4]].map((p) => (
-              <div className="scene-resource" key={p.id}>
-                <Person name={p.name} subtitle={p.discipline} />
-              </div>
-            ))}
           </SceneCard>
           <SceneCard title="Delivery progress">
             <div className="scene-big-number">
-              72<span>% complete</span>
+              {project.progress}
+              <span>% complete</span>
             </div>
-            <Progress value={72} />
-            <p>Next milestone: client concept review.</p>
+            <Progress value={project.progress} />
+            <p>
+              {work.filter((task) => task.status === "Complete").length} of{" "}
+              {work.length} tracked deliverables completed.
+            </p>
           </SceneCard>
         </aside>
       </div>
@@ -207,20 +381,35 @@ const events = [
   ["10:35:08", "INFO", "asset-delivery", "Image variants generated", "326 ms"],
 ];
 export function EventLog() {
-  const [filter, setFilter] = useState("All events"),
-    [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("All events");
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState(events[0]);
   const rows = events.filter(
-    (e) =>
-      (filter === "All events" || e[1] === filter) &&
-      e.join(" ").toLowerCase().includes(query.toLowerCase()),
+    (event) =>
+      (filter === "All events" || event[1] === filter) &&
+      event.join(" ").toLowerCase().includes(query.toLowerCase()),
   );
   return (
     <Scene
       id="logs"
-      title="Event stream"
-      description="A practical view of what your workspace services are doing."
-      actions={<DownloadButton name="workspace-events" rows={events} />}
+      title="Event log"
+      description="September 21, 2026 · UTC · Sample service records"
+      actions={
+        <DownloadButton
+          name="workspace-events"
+          rows={[["Time", "Level", "Service", "Event", "Duration"], ...rows]}
+        />
+      }
     >
+      <nav className="scene-page-tabs">
+        <NavLink end to="/operations-overview">
+          Operations
+        </NavLink>
+        <NavLink end to="/uptime">
+          Availability
+        </NavLink>
+        <span aria-current="page">Event log</span>
+      </nav>
       <div className="scene-toolbar">
         <FilterTabs
           items={["All events", "INFO", "WARN", "ERROR"]}
@@ -230,46 +419,89 @@ export function EventLog() {
         <SearchField
           value={query}
           onChange={setQuery}
-          placeholder="Search events or services…"
+          placeholder="Search events or services"
         />
       </div>
-      <SceneCard title="September 21, 2026" description="UTC · Demo event data">
-        <div className="scene-table-wrap">
-          <table className="scene-table">
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Level</th>
-                <th>Service & event</th>
-                <th>Duration</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((e) => (
-                <tr key={e[0]}>
-                  <td>
-                    <code>{e[0]}</code>
-                  </td>
-                  <td>
-                    <Pill>{e[1]}</Pill>
-                  </td>
-                  <td>
-                    <strong>{e[3]}</strong>
-                    <small>{e[2]}</small>
-                  </td>
-                  <td>{e[4]}</td>
+      <div className="scene-product-grid">
+        <SceneCard
+          title="Service events"
+          description={`${rows.length} matching records`}
+          className="scene-table-card"
+        >
+          <div
+            className="scene-table-wrap"
+            tabIndex={0}
+            role="region"
+            aria-label="Scrollable records"
+          >
+            <table className="scene-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Level</th>
+                  <th>Event</th>
+                  <th>Duration</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </SceneCard>
-      <div className="scene-note">
-        <h3>A retry is already scheduled.</h3>
-        <p>
-          The deferred email will be retried automatically. No workspace data
-          was lost, and other services are operating normally.
-        </p>
+              </thead>
+              <tbody>
+                {rows.map((event) => (
+                  <tr key={event[0]}>
+                    <td>
+                      <code>{event[0]}</code>
+                    </td>
+                    <td>
+                      <Pill>{event[1]}</Pill>
+                    </td>
+                    <td>
+                      <button
+                        className="scene-text-button"
+                        aria-pressed={selected[0] === event[0]}
+                        onClick={() => setSelected(event)}
+                      >
+                        {event[3]}
+                      </button>
+                      <small>{event[2]}</small>
+                    </td>
+                    <td>{event[4]}</td>
+                  </tr>
+                ))}
+                {!rows.length && (
+                  <tr>
+                    <td colSpan={4}>No events match these filters.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </SceneCard>
+        <aside className="scene-product-aside">
+          <SceneCard title="Event details">
+            <Pill>{selected[1]}</Pill>
+            <h3>{selected[3]}</h3>
+            <DetailList
+              items={[
+                { id: "service", label: "Service", value: selected[2] },
+                {
+                  id: "time",
+                  label: "Recorded at",
+                  value: `${selected[0]} UTC`,
+                },
+                { id: "duration", label: "Duration", value: selected[4] },
+                { id: "level", label: "Level", value: selected[1] },
+              ]}
+            />
+            <p>
+              {selected[1] === "ERROR"
+                ? "The request was deferred and a retry is scheduled. Check the next delivery event before taking action."
+                : selected[1] === "WARN"
+                  ? "The build queue is nearing capacity. Review active jobs and worker availability."
+                  : "The service completed the operation successfully."}
+            </p>
+          </SceneCard>
+          <SceneCard title="Related views">
+            <Go to="/tracking">Scheduled job history</Go>
+          </SceneCard>
+        </aside>
       </div>
     </Scene>
   );
@@ -279,10 +511,8 @@ export function ServiceStatus({ id = "uptime" }: { id?: string }) {
   return (
     <Scene
       id={id}
-      title={
-        id === "uptime" ? "A workspace you can count on" : "Delivery history"
-      }
-      description="Service health and recent events, with enough context to understand the signal."
+      title={id === "uptime" ? "Service availability" : "Delivery history"}
+      description="Current service state, uptime history, and incident notes."
       actions={
         <FilterTabs
           items={["7 days", "30 days", "90 days"]}
@@ -291,6 +521,15 @@ export function ServiceStatus({ id = "uptime" }: { id?: string }) {
         />
       }
     >
+      <nav className="scene-page-tabs">
+        <NavLink end to="/operations-overview">
+          Operations
+        </NavLink>
+        <span aria-current="page">Availability</span>
+        <NavLink end to="/logs">
+          Event log
+        </NavLink>
+      </nav>
       <div className="scene-status-banner">
         <span className="scene-status-dot" />
         <div>
@@ -299,8 +538,8 @@ export function ServiceStatus({ id = "uptime" }: { id?: string }) {
         </div>
         <Pill>Healthy</Pill>
       </div>
-      <div className="scene-grid-main">
-        <div>
+      <div className="scene-product-grid">
+        <div className="scene-product-primary">
           <ServiceStatusBlock
             className="mb-6"
             description={"Observed over the last " + period}
@@ -316,10 +555,13 @@ export function ServiceStatus({ id = "uptime" }: { id?: string }) {
               samples: Array.from({ length: parseInt(period) }, (_, j) => ({
                 id: String(j),
                 label: `${parseInt(period) - j} days ago`,
-                status: i === 2 && j === 8 ? "degraded" : "operational",
+                status:
+                  i === 2 && j === parseInt(period) - 9
+                    ? "degraded"
+                    : "operational",
               })),
               startLabel: `${period} ago`,
-              endLabel: `Today · ${i === 2 ? "99.94" : "100"}%`,
+              endLabel: `Today · ${i === 2 && parseInt(period) >= 9 ? (100 - (18 / (parseInt(period) * 24 * 60)) * 100).toFixed(2) : "100"}%`,
             }))}
           />
           <SceneCard title="Recent incident notes">
@@ -348,7 +590,7 @@ export function ServiceStatus({ id = "uptime" }: { id?: string }) {
             </div>
           </SceneCard>
         </div>
-        <aside>
+        <aside className="scene-product-aside">
           <SceneCard title="Response time">
             <div className="scene-big-number">
               142<span>ms median</span>

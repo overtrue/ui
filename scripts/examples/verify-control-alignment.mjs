@@ -97,24 +97,21 @@ try {
         }
       }
       // The installable block must carry the same styles as its workspace source.
-      for (const id of [
-        "client-form-01-organization-1",
-        "client-form-03-billing-preferences-3",
-        "settings-settings-1-1",
-        "onboarding-welcome-to-1",
-        "wizard-wizard-1-1",
-      ]) {
-        await page.goto(`${origin}/card-preview.html?id=${id}&theme=${theme}`);
-        await checkSelects();
-      }
-      await page.goto(`${origin}/workspace/#/tasks`);
+      await page.goto(
+        `${origin}/card-preview.html?id=wizard-wizard-1-1&theme=${theme}`,
+      );
+      await checkSelects();
+      await page.goto(`${origin}/workspace/#/users`);
       const search = page.getByRole("searchbox", {
-        name: "Search tasks…",
+        name: "Search people or disciplines…",
         exact: true,
       });
       await search.fill("A long search query that reaches the clear control");
       await page
-        .getByRole("button", { name: "Clear search tasks…", exact: true })
+        .getByRole("button", {
+          name: "Clear search people or disciplines…",
+          exact: true,
+        })
         .waitFor();
       assert.ok(
         await search.evaluate((input) => {
@@ -131,7 +128,10 @@ try {
         "search text reserves space for both controls",
       );
       await page
-        .getByRole("button", { name: "Clear search tasks…", exact: true })
+        .getByRole("button", {
+          name: "Clear search people or disciplines…",
+          exact: true,
+        })
         .click();
       await page.waitForFunction(
         () =>
@@ -142,31 +142,39 @@ try {
       await search.and(page.locator(":focus")).waitFor();
 
       await page.goto(`${origin}/workspace/#/form-elements`);
-      await page
-        .getByRole("button", { name: "Select & search", exact: true })
-        .click();
-      assert.ok(
-        await page
-          .locator("select[multiple]")
-          .evaluateAll(
-            (elements) =>
-              elements.length > 0 &&
-              elements.every(
-                (element) =>
-                  getComputedStyle(element).backgroundImage === "none",
-              ),
-          ),
-        "multi-selects have no dropdown indicator",
+      const reviewers = page.getByRole("combobox", {
+        name: "Reviewers *",
+        exact: true,
+      });
+      await reviewers.click();
+      const option = page.getByRole("option", { name: /Leo Nakamura/ });
+      await option.click();
+      assert.equal(
+        await option.getAttribute("aria-selected"),
+        "true",
+        "reviewer selection remains selected",
       );
+      await page.keyboard.press("Escape");
+      // Exercise native multiple/invalid styling on an actual application select.
+      const native = page.locator("select.native-select").first();
+      await native.evaluate((el) => (el.multiple = true));
+      assert.equal(
+        await native.evaluate((el) => getComputedStyle(el).backgroundImage),
+        "none",
+      );
+      await native.evaluate((el) => {
+        el.multiple = false;
+        el.setAttribute("aria-invalid", "true");
+      });
       assert.ok(
-        await page.locator("select.pn-is-invalid").evaluate((element) => {
-          const style = getComputedStyle(element);
+        await native.evaluate((el) => {
+          const s = getComputedStyle(el);
           return (
-            parseFloat(style.paddingInlineEnd) >= 80 &&
-            style.backgroundPosition.includes("48px")
+            parseFloat(s.paddingInlineEnd) >= 40 &&
+            s.backgroundPosition === "calc(100% - 12px) 50%"
           );
         }),
-        "validation and dropdown indicators have separate space",
+        "invalid native select retains clear dropdown spacing",
       );
 
       await page.goto(`${origin}/blocks`);

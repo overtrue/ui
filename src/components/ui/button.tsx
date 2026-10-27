@@ -66,6 +66,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         data-slot="button"
+        data-variant={variant ?? "default"}
         className={
           variant === "workspace"
             ? className

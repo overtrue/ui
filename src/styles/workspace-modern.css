@@ -4,17 +4,25 @@
  * every accent, base palette, radius and font choice still applies.
  */
 .dark [data-brand-mark],
-html:is([data-workspace-navbar-theme="dark"], [data-workspace-navbar-theme="primary"])
-  :is(.workspace-logo, .workspace-sidebar-brand) [data-brand-mark] {
+html:is(
+    [data-workspace-navbar-theme="dark"],
+    [data-workspace-navbar-theme="primary"]
+  )
+  :is(.workspace-logo, .workspace-sidebar-brand)
+  [data-brand-mark] {
   color: #ffffff;
   --brand-dot: #ffffff;
 }
 
 .overtrue-workspace {
   --ws-hairline: hsl(var(--border));
+  --ws-action-line: color-mix(
+    in oklab,
+    hsl(var(--foreground)) 10%,
+    hsl(var(--border))
+  );
   --ws-hover: color-mix(in oklab, hsl(var(--foreground)) 5%, transparent);
-  --ws-raise:
-    0 1px 2px rgb(0 0 0 / 0.025);
+  --ws-raise: 0 1px 2px rgb(0 0 0 / 0.025);
   --ws-float:
     0 2px 4px -1px rgb(0 0 0 / 0.04), 0 12px 32px -8px rgb(0 0 0 / 0.14);
   --ws-ring: 0 0 0 3px color-mix(in oklab, hsl(var(--primary)) 24%, transparent);
@@ -24,13 +32,15 @@ html:is([data-workspace-navbar-theme="dark"], [data-workspace-navbar-theme="prim
   --pn-border-radius: calc(var(--radius) * 1.25);
   --pn-border-radius-lg: calc(var(--radius) * 1.5);
   --scene-control-line: hsl(var(--input));
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.55;
   font-feature-settings: "cv11" 1;
   -webkit-font-smoothing: antialiased;
 }
 .dark .overtrue-workspace {
   --ws-raise: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 1px 2px rgb(0 0 0 / 0.5);
-  --ws-float: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 50px -20px rgb(0 0 0 / 0.8);
+  --ws-float:
+    0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 50px -20px rgb(0 0 0 / 0.8);
 }
 
 /* A quiet canvas keeps emphasis on the content and primary action. */
@@ -44,25 +54,30 @@ html:is([data-workspace-navbar-theme="dark"], [data-workspace-navbar-theme="prim
 }
 
 /* Type ------------------------------------------------------------------- */
-.overtrue-workspace :is(h1, h2, h3, .pn-page-title, .pn-card-title):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
+.overtrue-workspace
+  :is(h1, h2, h3, .pn-page-title, .pn-card-title):not(
+    :where([data-slot]:not([data-slot^="sidebar"])) *
+  ) {
   letter-spacing: -0.015em;
 }
-.overtrue-workspace :is(.scene-heading h1, .form-workbench-heading h1, .pn-page-title) {
-  font-size: clamp(24px, 2.2vw, 30px);
-  font-stretch: 104%;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
+.overtrue-workspace
+  :is(.scene-heading h1, .form-workbench-heading h1, .pn-page-title) {
+  font-size: clamp(26px, 2.4vw, 34px);
+  font-stretch: 100%;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
 }
 .overtrue-workspace .scene-heading {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 .overtrue-workspace .scene-heading h1 {
-  margin-block: 8px;
+  margin-block: 0 7px;
 }
 .overtrue-workspace .scene-heading p:not(.scene-eyebrow) {
-  font-size: 14px;
-  line-height: 1.65;
+  max-width: 68ch;
+  font-size: 15px;
+  line-height: 1.6;
 }
 .overtrue-workspace :is(.scene-eyebrow, .pn-page-pretitle) {
   font-size: 12px;
@@ -72,7 +87,8 @@ html:is([data-workspace-navbar-theme="dark"], [data-workspace-navbar-theme="prim
   color: var(--pn-secondary);
 }
 .overtrue-workspace :is(code, kbd, pre, .font-monospace) {
-  font-family: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family:
+    "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /* Header ----------------------------------------------------------------- */
@@ -170,7 +186,9 @@ html:is([data-workspace-navbar-theme="dark"], [data-workspace-navbar-theme="prim
 }
 .overtrue-workspace .workspace-user:hover img,
 .overtrue-workspace .workspace-user[data-state="open"] img {
-  box-shadow: 0 0 0 3px var(--ws-hover), 0 0 0 1px var(--ws-hairline);
+  box-shadow:
+    0 0 0 3px var(--ws-hover),
+    0 0 0 1px var(--ws-hairline);
 }
 
 /* Sidebar ----------------------------------------------------------------
@@ -179,18 +197,26 @@ html:is([data-workspace-navbar-theme="dark"], [data-workspace-navbar-theme="prim
  */
 .workspace-app-sidebar {
   --workspace-sidebar-selected: hsl(var(--card));
-  --workspace-sidebar-ink: color-mix(in oklab, hsl(var(--sidebar-foreground)) 80%, transparent);
+  --workspace-sidebar-ink: color-mix(
+    in oklab,
+    hsl(var(--sidebar-foreground)) 80%,
+    transparent
+  );
 }
 .workspace-app-sidebar [data-slot="sidebar-inner"] {
   background: hsl(var(--sidebar));
   border-color: var(--ws-hairline);
 }
 .dark .workspace-app-sidebar [data-slot="sidebar-inner"] {
-  background: color-mix(in srgb, hsl(var(--sidebar)) 55%, hsl(var(--background)));
+  background: color-mix(
+    in srgb,
+    hsl(var(--sidebar)) 55%,
+    hsl(var(--background))
+  );
 }
 .workspace-app-sidebar .workspace-sidebar-heading {
-  height: 56px;
-  margin-top: 8px;
+  height: 64px;
+  margin-top: 0;
   padding: 0 18px;
   flex-direction: row;
   align-items: center;
@@ -229,7 +255,7 @@ html:is([data-workspace-navbar-theme="dark"], [data-workspace-navbar-theme="prim
   height: 32px;
   gap: 10px;
   padding: 0 10px;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--workspace-sidebar-ink);
   border-radius: calc(var(--radius) * 1.1);
@@ -260,13 +286,17 @@ html:is([data-workspace-navbar-theme="dark"], [data-workspace-navbar-theme="prim
   margin-inline-start: auto;
   opacity: 0.4 !important;
 }
-.workspace-app-sidebar [data-sidebar="menu-button"]:hover > .workspace-sidebar-chevron {
+.workspace-app-sidebar
+  [data-sidebar="menu-button"]:hover
+  > .workspace-sidebar-chevron {
   opacity: 0.75 !important;
 }
 .workspace-app-sidebar .workspace-sidebar-section[data-current-group="true"] {
   color: hsl(var(--sidebar-foreground));
 }
-.workspace-app-sidebar .workspace-sidebar-section[data-current-group="true"] > svg:first-child {
+.workspace-app-sidebar
+  .workspace-sidebar-section[data-current-group="true"]
+  > svg:first-child {
   opacity: 1;
 }
 .workspace-app-sidebar [data-sidebar="menu-sub"] {
@@ -292,14 +322,16 @@ html:is([data-workspace-navbar-theme="dark"], [data-workspace-navbar-theme="prim
 }
 .workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"],
 html[data-workspace-navbar-theme="primary"]
-  .workspace-app-sidebar [data-sidebar="menu-sub-button"][data-active="true"] {
+  .workspace-app-sidebar
+  [data-sidebar="menu-sub-button"][data-active="true"] {
   background: var(--ws-hover);
   color: hsl(var(--sidebar-foreground));
   font-weight: 560;
 }
 /* The guide line carries the marker, so the row itself stays a clean pill.
    It hangs off the item because the button clips its own overflow. */
-.workspace-app-sidebar [data-sidebar="menu-sub-item"]:has(> [data-active="true"])::before {
+.workspace-app-sidebar
+  [data-sidebar="menu-sub-item"]:has(> [data-active="true"])::before {
   content: "";
   position: absolute;
   z-index: 1;
@@ -313,7 +345,11 @@ html[data-workspace-navbar-theme="primary"]
 /* Long trees scroll under a soft fade instead of a hard cut at the footer. */
 .workspace-app-sidebar [data-sidebar="content"] {
   padding-bottom: 20px;
-  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - 28px),
+    transparent
+  );
   mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
 }
 .workspace-app-sidebar [data-sidebar="footer"] {
@@ -342,7 +378,7 @@ html[data-workspace-navbar-theme="primary"]
 .overtrue-workspace :is(.pn-card, .scene-card) {
   border-color: var(--ws-hairline);
   border-radius: calc(var(--radius) * 1.5);
-  box-shadow: var(--ws-raise);
+  box-shadow: none;
 }
 .overtrue-workspace .pn-card {
   --pn-card-spacer-x: 24px;
@@ -364,28 +400,38 @@ html[data-workspace-navbar-theme="primary"]
   background: transparent;
   border-bottom-color: var(--ws-hairline);
 }
-.overtrue-workspace :is(.scene-card h2, .pn-card-title):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
-  font-size: 16px;
+.overtrue-workspace
+  :is(.scene-card > header h2, .pn-card-title):not(
+    :where([data-slot]:not([data-slot^="sidebar"])) *
+  ) {
+  font-size: 14px;
   font-weight: 600;
-  line-height: 1.4;
+  letter-spacing: -0.025em;
+  line-height: 20px;
 }
 .overtrue-workspace .scene-card > header h2 {
   margin: 0;
 }
 .overtrue-workspace .scene-card > header p {
-  margin-top: 6px;
-  line-height: 1.6;
+  margin-top: 4px;
+  line-height: 20px;
 }
 .overtrue-workspace .scene-card-content > :first-child {
   margin-top: 0;
 }
-.overtrue-workspace .scene-card-content > :last-child:not(.scene-table-wrap, .scene-table-summary) {
+.overtrue-workspace
+  .scene-card-content
+  > :last-child:not(.scene-table-wrap, .scene-table-summary) {
   margin-bottom: 0;
 }
 .overtrue-workspace :is(.scene-people-grid, [data-slot="portfolio-grid"]) {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
 }
-.overtrue-workspace :is([data-slot="member-card"], [data-slot="portfolio-grid"] > [data-slot="media-card"]) {
+.overtrue-workspace
+  :is(
+    [data-slot="member-card"],
+    [data-slot="portfolio-grid"] > [data-slot="media-card"]
+  ) {
   border-color: var(--ws-hairline);
   border-radius: calc(var(--radius) * 1.5);
   box-shadow: var(--ws-raise);
@@ -415,7 +461,10 @@ html[data-workspace-navbar-theme="primary"]
   background: hsl(var(--card));
   color: var(--pn-body-color);
 }
-.overtrue-workspace .scene-overview-metrics > :first-child > :is(p:first-child, div) {
+.overtrue-workspace
+  .scene-overview-metrics
+  > :first-child
+  > :is(p:first-child, div) {
   color: var(--pn-secondary);
 }
 .overtrue-workspace .scene-overview-metrics > :first-child > p:nth-child(2) {
@@ -431,14 +480,19 @@ html[data-workspace-navbar-theme="primary"]
 .overtrue-workspace :is(.pn-btn, .scene-button) {
   --pn-btn-border-radius: calc(var(--radius) * 1.25);
   border-radius: var(--pn-btn-border-radius);
-  font-weight: 560;
+  font-weight: 500;
   transition:
     background-color 160ms,
     border-color 160ms,
     box-shadow 200ms,
     transform 120ms;
 }
-.overtrue-workspace :is(.pn-btn, .scene-button):active:not(:disabled, [aria-disabled="true"], [aria-busy="true"]) {
+.overtrue-workspace
+  :is(.pn-btn, .scene-button):active:not(
+    :disabled,
+    [aria-disabled="true"],
+    [aria-busy="true"]
+  ) {
   transform: translateY(1px);
 }
 .overtrue-workspace .pn-btn-pill {
@@ -451,7 +505,9 @@ html[data-workspace-navbar-theme="primary"]
   --pn-dark: hsl(var(--foreground));
   --pn-dark-fg: hsl(var(--background));
 }
-html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-ghost) {
+html:not(.dark)
+  .overtrue-workspace
+  .pn-btn-light:is(.pn-btn-outline, .pn-btn-ghost) {
   --pn-light: hsl(var(--muted-foreground));
   --pn-light-fg: hsl(var(--card));
 }
@@ -473,83 +529,137 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   --pn-btn-padding-y: 11px;
   --pn-btn-padding-x: 20px;
 }
-.overtrue-workspace .pn-btn:not([class*="pn-btn-ghost"]):not(.pn-btn-link):not(.pn-btn-action):not(.pn-btn-close) {
-  box-shadow: var(--ws-raise);
+.overtrue-workspace
+  .pn-btn:not([class*="pn-btn-ghost"]):not(.pn-btn-link):not(
+    .pn-btn-action
+  ):not(.pn-btn-close) {
+  box-shadow: none;
 }
-/* Primary actions are lit from above and edged a shade darker; no colored glow. */
+/* Actions share the homepage's flat fill and quiet edge. */
 .overtrue-workspace :is(.pn-btn-primary, .scene-button.is-primary) {
-  background-image: linear-gradient(rgb(255 255 255 / 0.12), rgb(255 255 255 / 0));
-  border-color: color-mix(in oklab, hsl(var(--primary)) 80%, black);
-  box-shadow:
-    0 1px 0 rgb(255 255 255 / 0.18) inset,
-    0 1px 2px rgb(13 20 36 / 0.16) !important;
+  background-image: none;
+  border-color: transparent;
+  box-shadow: none;
 }
-.dark .overtrue-workspace :is(.pn-btn-primary, .scene-button.is-primary) {
-  border-color: color-mix(in oklab, hsl(var(--primary)) 85%, white);
-  box-shadow:
-    0 1px 0 rgb(255 255 255 / 0.22) inset,
-    0 1px 2px rgb(0 0 0 / 0.5) !important;
-}
-/* One size for every scene action, whether it is a link or a button (the
-   workspace reset otherwise lets buttons inherit the 14px body size). */
+/* Links and buttons use the same action type size, independent of body copy. */
 .overtrue-workspace .scene-button {
   min-height: 36px;
-  font-size: 13px;
-  font-weight: 550;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  box-shadow: none;
 }
 /* Secondary actions read as ink whether they are links or buttons. */
 .overtrue-workspace .scene-button:not(.is-primary):not(.scene-table *),
 .overtrue-workspace .scene-button:not(.is-primary):not(.scene-table *):hover {
   color: var(--pn-body-color);
 }
-.overtrue-workspace :is(.pn-btn, .scene-button, .pn-btn-close, .workspace-icon-button, .workspace-user):focus-visible {
+.overtrue-workspace
+  :is(
+    .pn-btn,
+    .scene-button,
+    .pn-btn-close,
+    .workspace-icon-button,
+    .workspace-user
+  ):focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
   box-shadow: none !important;
 }
-.overtrue-workspace .scene-button:not(.is-primary) {
-  border-color: var(--scene-control-line);
+.overtrue-workspace .scene-button:not(.is-primary),
+.overtrue-workspace
+  [data-slot="button"][data-variant="outline"]:where(:not(:focus-visible)),
+.overtrue-workspace
+  [data-slot="button"][data-variant="light"]:where(:not(:focus-visible)) {
+  border-color: var(--ws-action-line);
+  box-shadow: none;
 }
-.overtrue-workspace :is(.pn-btn, .scene-button):is(:disabled, [aria-disabled="true"], .pn-disabled) {
+.overtrue-workspace .scene-button:not(.is-primary):hover,
+.overtrue-workspace [data-slot="button"][data-variant="outline"]:hover,
+.overtrue-workspace [data-slot="button"][data-variant="light"]:hover {
+  border-color: color-mix(
+    in oklab,
+    hsl(var(--foreground)) 25%,
+    hsl(var(--border))
+  );
+}
+.overtrue-workspace
+  :is(.pn-btn, .scene-button):is(
+    :disabled,
+    [aria-disabled="true"],
+    .pn-disabled
+  ) {
   opacity: 0.5;
   pointer-events: none;
   transform: none;
   box-shadow: none !important;
 }
-.overtrue-workspace [data-workspace-page="buttons"] .pn-row-cards > [class*="pn-col"] > .pn-card {
+.overtrue-workspace
+  [data-workspace-page="buttons"]
+  .pn-row-cards
+  > [class*="pn-col"]
+  > .pn-card {
   height: 100%;
 }
 
 /* Inputs ----------------------------------------------------------------- */
 /* :where() keeps the type exclusions at zero specificity so the focus and
    invalid rules below can still win on border-color. */
-.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"])), .scene select, .scene textarea):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
+.overtrue-workspace
+  :is(
+    .pn-form-control,
+    .pn-form-select,
+    .scene
+      input:where(
+        :not([type="checkbox"], [type="radio"], [type="range"], [type="color"])
+      ),
+    .scene select,
+    .scene textarea
+  ):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
   border-radius: calc(var(--radius) * 1.25);
   border-color: var(--scene-control-line);
-  box-shadow: 0 1px 1px rgb(13 20 36 / 0.03);
+  box-shadow: none;
   transition:
     border-color 160ms,
     box-shadow 160ms;
 }
-.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input, .scene select, .scene textarea):focus:not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
+.overtrue-workspace
+  :is(
+    .pn-form-control,
+    .pn-form-select,
+    .scene input,
+    .scene select,
+    .scene textarea
+  ):focus:not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
   border-color: hsl(var(--primary));
   box-shadow: var(--ws-ring);
   outline: none;
 }
 /* Invalid fields keep their error border even while focused. */
-.overtrue-workspace :is(.pn-form-control, .pn-form-select, .scene input, .scene select, .scene textarea):is([aria-invalid="true"], :user-invalid):not(:where([data-slot]:not([data-slot^="sidebar"])) *) {
+.overtrue-workspace
+  :is(
+    .pn-form-control,
+    .pn-form-select,
+    .scene input,
+    .scene select,
+    .scene textarea
+  ):is([aria-invalid="true"], :user-invalid):not(
+    :where([data-slot]:not([data-slot^="sidebar"])) *
+  ) {
   border-color: hsl(var(--destructive));
-  box-shadow: 0 0 0 3px color-mix(in oklab, hsl(var(--destructive)) 15%, transparent);
+  box-shadow: 0 0 0 3px
+    color-mix(in oklab, hsl(var(--destructive)) 15%, transparent);
 }
 .overtrue-workspace .pn-form-label {
   font-size: 13px;
-  font-weight: 560;
+  font-weight: 500;
   line-height: 1.5;
 }
 .overtrue-workspace .pn-form-control.pn-form-control-rounded {
   border-radius: var(--pn-border-radius-pill);
 }
-.overtrue-workspace .pn-form-check-input[type="checkbox"]:not(.pn-form-switch *) {
+.overtrue-workspace
+  .pn-form-check-input[type="checkbox"]:not(.pn-form-switch *) {
   border-radius: min(5px, calc(var(--radius) * 0.625));
 }
 .overtrue-workspace .form-workbench-note {
@@ -558,10 +668,18 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
 .overtrue-workspace .scene-form label:not(.scene-toggle-row) {
   min-width: 0;
   font-size: 13px;
-  font-weight: 560;
+  font-weight: 500;
   line-height: 1.5;
 }
-.overtrue-workspace .scene-form :is(input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"])), select, textarea) {
+.overtrue-workspace
+  .scene-form
+  :is(
+    input:where(
+      :not([type="checkbox"], [type="radio"], [type="range"], [type="color"])
+    ),
+    select,
+    textarea
+  ) {
   min-height: 40px;
   font-size: 14px;
   line-height: 1.5;
@@ -583,15 +701,24 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   border-color: hsl(var(--primary));
 }
 /* Joined fields have one continuous outline, including in RTL layouts. */
-.overtrue-workspace .pn-input-group > :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn) {
+.overtrue-workspace
+  .pn-input-group
+  > :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn) {
   border-color: var(--scene-control-line);
   box-shadow: none;
 }
-.overtrue-workspace .pn-input-group > :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn):has(~ :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn)) {
+.overtrue-workspace
+  .pn-input-group
+  > :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn):has(
+    ~ :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn)
+  ) {
   border-start-end-radius: 0;
   border-end-end-radius: 0;
 }
-.overtrue-workspace .pn-input-group > :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn) ~ :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn) {
+.overtrue-workspace
+  .pn-input-group
+  > :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn)
+  ~ :is(.pn-form-control, .pn-form-select, .pn-input-group-text, .pn-btn) {
   border-start-start-radius: 0;
   border-end-start-radius: 0;
   margin-inline-start: -1px;
@@ -602,21 +729,32 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
 .overtrue-workspace .pn-input-group > .pn-btn {
   box-shadow: none !important;
 }
-.overtrue-workspace .pn-input-group.pn-input-group-flat > :is(.pn-form-control, .pn-input-group-text) {
+.overtrue-workspace
+  .pn-input-group.pn-input-group-flat
+  > :is(.pn-form-control, .pn-input-group-text) {
   margin-inline-start: 0;
 }
 .overtrue-workspace .pn-input-group-flat:focus-within {
   box-shadow: var(--ws-ring);
 }
-.overtrue-workspace .pn-input-group-flat:focus-within > :is(.pn-form-control, .pn-input-group-text) {
+.overtrue-workspace
+  .pn-input-group-flat:focus-within
+  > :is(.pn-form-control, .pn-input-group-text) {
   border-color: hsl(var(--primary)) !important;
   box-shadow: none;
 }
-.overtrue-workspace .pn-input-group:not(.pn-input-group-flat) > :is(.pn-form-control, .pn-form-select):focus {
+.overtrue-workspace
+  .pn-input-group:not(.pn-input-group-flat)
+  > :is(.pn-form-control, .pn-form-select):focus {
   border-color: hsl(var(--primary));
   box-shadow: var(--ws-ring);
 }
-.overtrue-workspace .pn-input-group > :is(.pn-form-control, .pn-form-select):is([aria-invalid="true"], :user-invalid) {
+.overtrue-workspace
+  .pn-input-group
+  > :is(.pn-form-control, .pn-form-select):is(
+    [aria-invalid="true"],
+    :user-invalid
+  ) {
   border-color: hsl(var(--destructive)) !important;
 }
 .overtrue-workspace .tox-hugerte {
@@ -705,7 +843,10 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
 .overtrue-workspace .scene-table td {
   padding-block: 14px;
 }
-.overtrue-workspace [data-workspace-page="pay"] .scene-table :is(th, td):nth-child(3) {
+.overtrue-workspace
+  [data-workspace-page="pay"]
+  .scene-table
+  :is(th, td):nth-child(3) {
   white-space: nowrap;
 }
 .overtrue-workspace .scene-table td > small,
@@ -749,7 +890,13 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   .overtrue-workspace .scene-wizard > aside > div {
     padding: 8px 12px;
   }
-  .overtrue-workspace :is([data-workspace-page="tasks-list"], [data-workspace-page="datatables"], [data-workspace-page="tables"]) .scene-table {
+  .overtrue-workspace
+    :is(
+      [data-workspace-page="tasks-list"],
+      [data-workspace-page="datatables"],
+      [data-workspace-page="tables"]
+    )
+    .scene-table {
     min-width: 740px;
   }
 }
@@ -776,7 +923,15 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   .overtrue-workspace .scene-card > header {
     padding: 20px 18px;
   }
-  .overtrue-workspace .scene-form :is(input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"])), select, textarea) {
+  .overtrue-workspace
+    .scene-form
+    :is(
+      input:where(
+        :not([type="checkbox"], [type="radio"], [type="range"], [type="color"])
+      ),
+      select,
+      textarea
+    ) {
     min-height: 44px;
     font-size: 16px;
   }
@@ -798,7 +953,11 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
 }
 .overtrue-workspace .pn-progress-bar {
   border-radius: 999px;
-  background-image: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.25));
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 0.25)
+  );
   transition: width 600ms var(--ws-ease);
 }
 
@@ -869,9 +1028,17 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   border-radius: var(--radius);
   font-size: 13px;
   line-height: 20px;
-  transition: background-color 120ms, color 120ms;
+  transition:
+    background-color 120ms,
+    color 120ms;
 }
-.overtrue-workspace .pn-dropdown-item:is(:hover, [data-highlighted]):not(:disabled, [data-disabled], [aria-disabled="true"], .pn-disabled) {
+.overtrue-workspace
+  .pn-dropdown-item:is(:hover, [data-highlighted]):not(
+    :disabled,
+    [data-disabled],
+    [aria-disabled="true"],
+    .pn-disabled
+  ) {
   background: var(--ws-hover);
   color: var(--pn-body-color);
 }
@@ -879,7 +1046,8 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   outline: 2px solid hsl(var(--primary));
   outline-offset: -2px;
 }
-.overtrue-workspace .pn-dropdown-item:is([data-disabled], [aria-disabled="true"], .pn-disabled) {
+.overtrue-workspace
+  .pn-dropdown-item:is([data-disabled], [aria-disabled="true"], .pn-disabled) {
   opacity: 0.5;
   color: var(--pn-secondary);
   background: transparent;
@@ -952,7 +1120,9 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   color: var(--pn-secondary);
   opacity: 1;
   border-radius: var(--radius);
-  transition: background-color 120ms, color 120ms;
+  transition:
+    background-color 120ms,
+    color 120ms;
 }
 .overtrue-workspace .pn-btn-close::after {
   content: "";
@@ -1017,28 +1187,56 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   }
 }
 @keyframes ws-overlay-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes ws-portal-exit {
-  from { opacity: 1; }
-  to { opacity: 1; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes ws-overlay-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 @keyframes ws-dialog-in {
-  from { transform: translateY(8px); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 @keyframes ws-menu-in {
-  from { opacity: 0; transform: scale(0.98); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 @keyframes ws-menu-out {
-  from { opacity: 1; transform: scale(1); }
-  to { opacity: 0; transform: scale(0.98); }
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
 }
 .overtrue-workspace .pn-alert {
   border-radius: calc(var(--radius) * 1.5);
@@ -1093,7 +1291,8 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
 /* Scrollbars ------------------------------------------------------------- */
 .overtrue-workspace * {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in oklab, hsl(var(--foreground)) 18%, transparent) transparent;
+  scrollbar-color: color-mix(in oklab, hsl(var(--foreground)) 18%, transparent)
+    transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1124,7 +1323,46 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
  * (scene-*, showcase-*, pn-* classes) keeps the workspace styles.
  */
 .overtrue-workspace
-  :is(h1, h2, h3, h4, h5, h6, p, blockquote, figure, dl, dt, dd, ul, ol, table, caption, th, td, tr, thead, tbody, tfoot, label, small, b, strong, a, code, kbd, pre, hr, legend, fieldset, button, input, select, textarea):where(
+  :is(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    blockquote,
+    figure,
+    dl,
+    dt,
+    dd,
+    ul,
+    ol,
+    table,
+    caption,
+    th,
+    td,
+    tr,
+    thead,
+    tbody,
+    tfoot,
+    label,
+    small,
+    b,
+    strong,
+    a,
+    code,
+    kbd,
+    pre,
+    hr,
+    legend,
+    fieldset,
+    summary,
+    button,
+    input,
+    select,
+    textarea
+  ):where(
     [data-slot]:not([data-slot^="sidebar"]),
     [data-slot]:not([data-slot^="sidebar"]) *
   ):where(
@@ -1133,7 +1371,14 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
       [class*="showcase-"],
       [class*="workspace-"],
       [class*="pn-"],
-      :where([data-slot]:not([data-slot^="sidebar"])) :is([class*="scene-"], [class*="showcase-"], [class*="workspace-"], [class*="pn-"]) *
+      :where([data-slot]:not([data-slot^="sidebar"]))
+        :is(
+          [class*="scene-"],
+          [class*="showcase-"],
+          [class*="workspace-"],
+          [class*="pn-"]
+        )
+        *
     )
   ) {
   display: revert-layer;
@@ -1163,11 +1408,33 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   outline-offset: revert-layer;
 }
 .overtrue-workspace
-  :is(a:hover, :is(input, select, textarea):is(:focus, :focus-visible, [aria-invalid="true"], :user-invalid), :is(a, button):focus-visible):where(
+  :is(
+    a:hover,
+    :is(input, select, textarea):is(
+      :focus,
+      :focus-visible,
+      [aria-invalid="true"],
+      :user-invalid
+    ),
+    :is(a, button):focus-visible
+  ):where(
     [data-slot]:not([data-slot^="sidebar"]),
     [data-slot]:not([data-slot^="sidebar"]) *
   ):where(
-    :not([class*="scene-"], [class*="showcase-"], [class*="workspace-"], [class*="pn-"])
+    :not(
+      [class*="scene-"],
+      [class*="showcase-"],
+      [class*="workspace-"],
+      [class*="pn-"],
+      :where([data-slot]:not([data-slot^="sidebar"]))
+        :is(
+          [class*="scene-"],
+          [class*="showcase-"],
+          [class*="workspace-"],
+          [class*="pn-"]
+        )
+        *
+    )
   ) {
   border-color: revert-layer;
   box-shadow: revert-layer;
@@ -1176,30 +1443,30 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   color: revert-layer;
   text-decoration: revert-layer;
 }
-.overtrue-workspace :is(input, textarea):where([data-slot]:not([data-slot^="sidebar"]), [data-slot]:not([data-slot^="sidebar"]) *)::placeholder {
+.overtrue-workspace
+  :is(input, textarea):where(
+    [data-slot]:not([data-slot^="sidebar"]),
+    [data-slot]:not([data-slot^="sidebar"]) *
+  )::placeholder {
   color: revert-layer;
   opacity: revert-layer;
 }
+/* Search inputs keep their icon gutters when nested inside a scene-owned pane. */
+.overtrue-workspace [data-slot="search-field"] input {
+  padding: revert-layer;
+}
 
-/* Auth pages: the card sits under a soft light on a measured grid. */
+/* Auth pages use one quiet form surface. */
 .overtrue-workspace .scene-auth.is-centered {
-  background:
-    radial-gradient(
-      900px 520px at 50% 0%,
-      color-mix(in oklab, hsl(var(--primary)) 14%, transparent),
-      transparent 70%
-    ),
-    linear-gradient(var(--ws-hairline) 1px, transparent 1px) 0 0 / 40px 40px,
-    linear-gradient(90deg, var(--ws-hairline) 1px, transparent 1px) 0 0 / 40px 40px,
-    hsl(var(--background));
+  background: hsl(var(--muted) / 0.3);
 }
 .overtrue-workspace .scene-auth.is-centered > section {
-  border: 1px solid var(--ws-hairline);
-  border-radius: calc(var(--radius) * 2.25);
-  background: color-mix(in srgb, hsl(var(--card)) 86%, transparent);
-  box-shadow: var(--ws-float);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  padding: 0;
+  max-width: 430px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 /* Customizer ---------------------------------------------------------------- */
@@ -1245,18 +1512,19 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   box-shadow: var(--ws-ring);
 }
 
-/* App frame ------------------------------------------------------------------
- * The sidebar sits on the frame; each page floats in a raised panel.
- */
+/* App frame: a fixed navigation rail and a continuous working canvas. */
 .overtrue-workspace.workspace-sidebar-shell {
-  --ws-frame: hsl(var(--muted));
+  --ws-frame: color-mix(in srgb, hsl(var(--muted)) 48%, hsl(var(--background)));
   background: var(--ws-frame);
 }
 .dark .overtrue-workspace.workspace-sidebar-shell {
   --ws-frame: hsl(var(--background));
 }
 .workspace-sidebar-shell .workspace-app-sidebar [data-slot="sidebar-inner"],
-.dark .workspace-sidebar-shell .workspace-app-sidebar [data-slot="sidebar-inner"] {
+.dark
+  .workspace-sidebar-shell
+  .workspace-app-sidebar
+  [data-slot="sidebar-inner"] {
   background: var(--ws-frame);
 }
 .workspace-sidebar-shell .workspace-app-sidebar[data-slot="sidebar-container"],
@@ -1264,22 +1532,22 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   border: 0;
 }
 .overtrue-workspace.workspace-sidebar-shell .workspace-sidebar-inset {
-  margin: 8px 8px 8px 0;
-  min-height: calc(100svh - 16px);
-  border: 1px solid var(--ws-hairline);
-  border-radius: 16px;
+  margin: 0;
+  min-height: 100svh;
+  border: 0;
+  border-inline-start: 1px solid var(--ws-hairline);
+  border-radius: 0;
   background: hsl(var(--background));
-  box-shadow:
-    0 1px 2px rgb(0 0 0 / 0.025);
+  box-shadow: none;
   overflow: clip;
 }
 .dark .overtrue-workspace.workspace-sidebar-shell .workspace-sidebar-inset {
-  box-shadow:
-    0 1px 0 rgb(255 255 255 / 0.04) inset,
-    0 20px 60px -30px rgb(0 0 0 / 0.9);
+  box-shadow: none;
 }
 .overtrue-workspace.workspace-layout-vertical-right .workspace-sidebar-inset {
-  margin: 8px 0 8px 8px;
+  margin: 0;
+  border-inline-start: 0;
+  border-inline-end: 1px solid var(--ws-hairline);
 }
 /* Keep the collapse affordance away from the panel's rounded corners. */
 .workspace-sidebar-shell .workspace-app-sidebar [data-sidebar="rail"]::after {
@@ -1353,7 +1621,9 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
     background: transparent;
     box-shadow: none;
   }
-  .overtrue-workspace .workspace-search-trigger :is(.page-search-trigger-text, .page-search-trigger-key) {
+  .overtrue-workspace
+    .workspace-search-trigger
+    :is(.page-search-trigger-text, .page-search-trigger-key) {
     display: none;
   }
 }
@@ -1409,7 +1679,9 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   opacity: 0.45;
 }
 @media (max-width: 1199px) {
-  .overtrue-workspace .workspace-sidebar-breadcrumb > span:not([aria-current="page"]),
+  .overtrue-workspace
+    .workspace-sidebar-breadcrumb
+    > span:not([aria-current="page"]),
   .overtrue-workspace .workspace-sidebar-breadcrumb > svg {
     display: none;
   }
@@ -1427,7 +1699,8 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
 .dark .workspace-app-sidebar .workspace-sidebar-link[data-active="true"],
 .dark .workspace-app-sidebar .workspace-sidebar-link[data-active="true"]:hover {
   background: color-mix(in oklab, hsl(var(--foreground)) 8%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in oklab, hsl(var(--foreground)) 7%, transparent);
+  box-shadow: 0 0 0 1px
+    color-mix(in oklab, hsl(var(--foreground)) 7%, transparent);
 }
 .workspace-app-sidebar .workspace-sidebar-link[data-active="true"] > svg {
   color: hsl(var(--primary));
@@ -1459,7 +1732,17 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
 
 /* Labels are sentence case everywhere; the legacy base shouted section and
    header labels in tracked capitals. */
-.overtrue-workspace :is(.pn-datagrid-title, .pn-dropdown-header, .pn-hr-text, .pn-list-group-header, .pn-nav-section-title, .pn-page-item-subtitle, .pn-subheader, .fc-col-header-cell),
+.overtrue-workspace
+  :is(
+    .pn-datagrid-title,
+    .pn-dropdown-header,
+    .pn-hr-text,
+    .pn-list-group-header,
+    .pn-nav-section-title,
+    .pn-page-item-subtitle,
+    .pn-subheader,
+    .fc-col-header-cell
+  ),
 .overtrue-workspace .pn-prose > table thead th {
   letter-spacing: 0;
   text-transform: none;
@@ -1467,7 +1750,9 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
 
 /* High-order showcase: each section's previews are the framed surfaces, so the
    section itself is a heading and a stack, not another card around them. */
-.overtrue-workspace [data-workspace-page="high-order"] [data-slot="section-card"]:not([data-slot="section-card"] *) {
+.overtrue-workspace
+  [data-workspace-page="high-order"]
+  [data-slot="section-card"]:not([data-slot="section-card"] *) {
   margin-bottom: 36px;
   border: 0;
   border-radius: 0;
@@ -1475,30 +1760,51 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   box-shadow: none;
   overflow: visible;
 }
-.overtrue-workspace [data-workspace-page="high-order"] [data-slot="section-card"]:not([data-slot="section-card"] *) > :first-child:not(:only-child) {
+.overtrue-workspace
+  [data-workspace-page="high-order"]
+  [data-slot="section-card"]:not([data-slot="section-card"] *)
+  > :first-child:not(:only-child) {
   padding: 0 0 12px;
   border-bottom: 0;
 }
-.overtrue-workspace [data-workspace-page="high-order"] [data-slot="section-card"]:not([data-slot="section-card"] *) > :last-child {
+.overtrue-workspace
+  [data-workspace-page="high-order"]
+  [data-slot="section-card"]:not([data-slot="section-card"] *)
+  > :last-child {
   padding: 0;
 }
 
 /* Alerts: ink text on a faint tint; the variant color marks the icon, the
    edge and the action, so warning and success copy stays readable. */
 .overtrue-workspace .pn-alert:not(.pn-alert-important) {
-  --pn-alert-bg: color-mix(in oklab, var(--pn-alert-variant-color) 7%, var(--pn-bg-surface));
-  --pn-alert-border-color: color-mix(in oklab, var(--pn-alert-variant-color) 26%, var(--pn-bg-surface));
+  --pn-alert-bg: color-mix(
+    in oklab,
+    var(--pn-alert-variant-color) 7%,
+    var(--pn-bg-surface)
+  );
+  --pn-alert-border-color: color-mix(
+    in oklab,
+    var(--pn-alert-variant-color) 26%,
+    var(--pn-bg-surface)
+  );
   color: var(--pn-body-color);
 }
-.overtrue-workspace .pn-alert:not(.pn-alert-important) :is(.pn-alert-action, .pn-alert-link) {
-  color: color-mix(in oklab, var(--pn-alert-variant-color) 70%, var(--pn-body-color));
+.overtrue-workspace
+  .pn-alert:not(.pn-alert-important)
+  :is(.pn-alert-action, .pn-alert-link) {
+  color: color-mix(
+    in oklab,
+    var(--pn-alert-variant-color) 70%,
+    var(--pn-body-color)
+  );
 }
 .overtrue-workspace .pn-alert:not(.pn-alert-important) .pn-alert-heading {
   color: var(--pn-body-color);
   font-weight: 600;
 }
 /* Solid alerts keep white text only on colors dark enough to carry it. */
-.overtrue-workspace .pn-alert-important:is(.pn-alert-warning, .pn-alert-success, .pn-alert-info) {
+.overtrue-workspace
+  .pn-alert-important:is(.pn-alert-warning, .pn-alert-success, .pn-alert-info) {
   --pn-alert-color: #10141f;
 }
 
@@ -1538,31 +1844,88 @@ html:not(.dark) .overtrue-workspace .pn-btn-light:is(.pn-btn-outline, .pn-btn-gh
   margin-top: 12px;
   font-size: 12px;
 }
-.overtrue-workspace .workspace-custom-color input[type="color"] { width: 30px; height: 30px; padding: 0; cursor: pointer; }
-.overtrue-workspace .workspace-setting input[type="range"] { width: 100%; accent-color: hsl(var(--primary)); }
-.overtrue-workspace .workspace-setting legend output { margin-left: 8px; color: hsl(var(--muted-foreground)); font-weight: 400; }
+.overtrue-workspace .workspace-custom-color input[type="color"] {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  cursor: pointer;
+}
+.overtrue-workspace .workspace-setting input[type="range"] {
+  width: 100%;
+  accent-color: hsl(var(--primary));
+}
+.overtrue-workspace .workspace-setting legend output {
+  margin-left: 8px;
+  color: hsl(var(--muted-foreground));
+  font-weight: 400;
+}
 html[data-contrast="high"] .overtrue-workspace {
   --workspace-sidebar-ink: hsl(var(--sidebar-foreground));
   --ws-ring: 0 0 0 2px hsl(var(--ring));
+  --ws-action-line: hsl(var(--input));
 }
-html[data-contrast="high"] .overtrue-workspace :is([class*="text-muted-foreground/"], [class*="text-foreground/"]) { color: hsl(var(--muted-foreground)); }
-html[data-contrast="high"] .overtrue-workspace :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 3px; }
-html[data-contrast="high"] .overtrue-workspace ::placeholder { color: hsl(var(--muted-foreground)); opacity: 1; }
-html[data-contrast="high"] .overtrue-workspace .workspace-header { background: var(--pn-bg-surface); backdrop-filter: none; }
-html[data-contrast="high"] .overtrue-workspace .workspace-sidebar-footer small { color: hsl(var(--sidebar-foreground)); }
+html[data-contrast="high"]
+  .overtrue-workspace
+  :is([class*="text-muted-foreground/"], [class*="text-foreground/"]) {
+  color: hsl(var(--muted-foreground));
+}
+html[data-contrast="high"] .overtrue-workspace :focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+html[data-contrast="high"] .overtrue-workspace ::placeholder {
+  color: hsl(var(--muted-foreground));
+  opacity: 1;
+}
+html[data-contrast="high"] .overtrue-workspace .workspace-header {
+  background: var(--pn-bg-surface);
+  backdrop-filter: none;
+}
+html[data-contrast="high"] .overtrue-workspace .workspace-sidebar-footer small {
+  color: hsl(var(--sidebar-foreground));
+}
 @media (forced-colors: active) {
-  .overtrue-workspace :focus-visible { outline: 2px solid Highlight; outline-offset: 3px; }
-  .overtrue-workspace :is(button, input, select, textarea, [role="tab"]) { border-color: ButtonText; }
+  .overtrue-workspace :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 3px;
+  }
+  .overtrue-workspace :is(button, input, select, textarea, [role="tab"]) {
+    border-color: ButtonText;
+  }
 }
 
-html[data-contrast="high"] .workspace-app-sidebar { --workspace-sidebar-ink: hsl(var(--sidebar-foreground)); }
-html[data-contrast="high"] .workspace-app-sidebar [data-sidebar="menu-sub-button"] { color: hsl(var(--sidebar-foreground)); }
-html[data-contrast="high"] .workspace-app-sidebar [data-sidebar="menu-button"] > svg { opacity: 1; }
-html[data-contrast="high"][data-workspace-navbar-theme="primary"] .workspace-app-sidebar [data-sidebar="group-label"] { color: hsl(var(--sidebar-foreground)); }
-html[data-contrast="high"][data-workspace-navbar-theme="dark"] .workspace-app-sidebar { --sidebar-border: 0 0% 55%; }
-html[data-contrast="high"][data-workspace-navbar-theme="dark"] :is(.workspace-header, .workspace-navbar) { --pn-secondary: #d4d4d4; --pn-border-color: #8c8c8c; }
+html[data-contrast="high"] .workspace-app-sidebar {
+  --workspace-sidebar-ink: hsl(var(--sidebar-foreground));
+}
+html[data-contrast="high"]
+  .workspace-app-sidebar
+  [data-sidebar="menu-sub-button"] {
+  color: hsl(var(--sidebar-foreground));
+}
+html[data-contrast="high"]
+  .workspace-app-sidebar
+  [data-sidebar="menu-button"]
+  > svg {
+  opacity: 1;
+}
+html[data-contrast="high"][data-workspace-navbar-theme="primary"]
+  .workspace-app-sidebar
+  [data-sidebar="group-label"] {
+  color: hsl(var(--sidebar-foreground));
+}
+html[data-contrast="high"][data-workspace-navbar-theme="dark"]
+  .workspace-app-sidebar {
+  --sidebar-border: 0 0% 55%;
+}
+html[data-contrast="high"][data-workspace-navbar-theme="dark"]
+  :is(.workspace-header, .workspace-navbar) {
+  --pn-secondary: #d4d4d4;
+  --pn-border-color: #8c8c8c;
+}
 
-html[data-workspace-navbar-theme="primary"] :is(.workspace-logo, .workspace-sidebar-brand) [data-brand-mark] {
+html[data-workspace-navbar-theme="primary"]
+  :is(.workspace-logo, .workspace-sidebar-brand)
+  [data-brand-mark] {
   color: hsl(var(--primary-foreground));
   --brand-dot: hsl(var(--primary-foreground));
 }

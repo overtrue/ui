@@ -126,6 +126,7 @@ try {
     }
     await page.setViewportSize({width:390,height:844});
     await page.goto(${JSON.stringify(origin)});
+    await page.locator('.library-directory summary').click();
     const index = page.getByRole('navigation',{name:'All components and blocks'});
     const lastEntry = index.getByRole('link').last();
     await lastEntry.focus();

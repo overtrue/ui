@@ -1,6 +1,9 @@
 import { ResourceProgress } from "@/registry/overtrue/resource-progress";
 import { MetricGroup } from "@/registry/overtrue/metric-group";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { DetailList } from "@/registry/overtrue/detail-list";
+import { AuditTrail } from "@/registry/overtrue/audit-trail";
 import { invoices } from "@/data/workspace/studio";
 import {
   Scene,
@@ -15,46 +18,71 @@ import {
 export function Billing({ id = "pay" }: { id?: string }) {
   const [filter, setFilter] = useState("All invoices");
   const shown = invoices.filter(
-    (i) => filter === "All invoices" || i.status === filter,
+    (invoice) => filter === "All invoices" || invoice.status === filter,
   );
+  const total = (status: string) =>
+    invoices
+      .filter((invoice) => invoice.status === status)
+      .reduce((sum, invoice) => sum + invoice.amount, 0);
   return (
     <Scene
       id={id}
       title="Billing & payments"
-      description="Keep project income, invoices, and payment dates in view."
+      description="Track project income, follow up on invoices, and keep payment dates in view."
       actions={
         <DownloadButton
           name="workspace-invoices"
           rows={[
-            ["Invoice", "Client", "Amount", "Status"],
-            ...shown.map((i) => [i.id, i.client, String(i.amount), i.status]),
+            ["Invoice", "Client", "Amount", "Status", "Due"],
+            ...shown.map((invoice) => [
+              invoice.id,
+              invoice.client,
+              String(invoice.amount),
+              invoice.status,
+              invoice.due,
+            ]),
           ]}
         />
       }
     >
+      <div className="scene-page-tabs">
+        <span aria-current="page">Invoices</span>
+        <Link to="/revenue">Revenue</Link>
+        <Link to="/settings-plan">Plan & usage</Link>
+        <Link to="/payment-providers">Payment methods</Link>
+        <span className="scene-tabs-context">September 2026 · USD</span>
+      </div>
       <MetricGroup className="mb-6">
-        <Metric label="Collected this month" value="$11,550" change="+14.2%" />
+        <Metric
+          label="Collected"
+          value={`$${total("Paid").toLocaleString("en-US")}`}
+          note={`${invoices.filter((invoice) => invoice.status === "Paid").length} paid invoices`}
+        />
         <Metric
           label="Awaiting payment"
-          value="$4,410"
-          note="1 invoice due in October"
+          value={`$${total("Pending").toLocaleString("en-US")}`}
+          note="Issued invoices, not yet due"
         />
-        <Metric label="Overdue" value="$3,395" note="Supply company · 3 days" />
         <Metric
-          label="Draft invoices"
-          value="1"
-          note="$5,355 ready to review"
+          label="Overdue"
+          value={`$${total("Overdue").toLocaleString("en-US")}`}
+          note="Follow up with the client"
+        />
+        <Metric
+          label="In draft"
+          value={`$${total("Draft").toLocaleString("en-US")}`}
+          note="Ready for internal review"
         />
       </MetricGroup>
-      <SceneCard
-        title="Invoices"
-        action={<Go to="/invoice">View sample invoice</Go>}
-      >
+      <div className="scene-toolbar">
         <FilterTabs
           items={["All invoices", "Paid", "Pending", "Overdue", "Draft"]}
           value={filter}
           onChange={setFilter}
         />
+        <span>{shown.length} invoices</span>
+      </div>
+      <SceneCard className="scene-table-card">
         <div
           className="scene-table-wrap"
           tabIndex={0}
@@ -67,24 +95,30 @@ export function Billing({ id = "pay" }: { id?: string }) {
                 <th>Invoice</th>
                 <th>Client</th>
                 <th>Issued</th>
+                <th>Due date</th>
                 <th className="scene-number">Amount</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              {shown.map((i) => (
-                <tr key={i.id}>
+              {shown.map((invoice) => (
+                <tr key={invoice.id}>
                   <td>
-                    <Go to={"/invoice?invoice=" + i.id}>{i.id}</Go>
+                    <Link to={`/invoice?invoice=${invoice.id}`}>
+                      <strong>{invoice.id}</strong>
+                    </Link>
                   </td>
                   <td>
-                    <strong>{i.client}</strong>
-                    <small>{i.description}</small>
+                    <strong>{invoice.client}</strong>
+                    <small>{invoice.description}</small>
                   </td>
-                  <td>{i.issued}</td>
-                  <td className="scene-number">${i.amount.toLocaleString()}</td>
+                  <td>{invoice.issued}</td>
+                  <td>{invoice.due}</td>
+                  <td className="scene-number">
+                    ${invoice.amount.toLocaleString("en-US")}
+                  </td>
                   <td>
-                    <Pill>{i.status}</Pill>
+                    <Pill>{invoice.status}</Pill>
                   </td>
                 </tr>
               ))}
@@ -94,15 +128,14 @@ export function Billing({ id = "pay" }: { id?: string }) {
         <div className="scene-table-summary" role="status">
           <span>
             {shown.length} of {invoices.length} invoices
-            {filter !== "All invoices" ? ` · ${filter}` : ""}
           </span>
           <span>
             View total{" "}
             <strong>
               $
               {shown
-                .reduce((total, invoice) => total + invoice.amount, 0)
-                .toLocaleString()}
+                .reduce((sum, invoice) => sum + invoice.amount, 0)
+                .toLocaleString("en-US")}
             </strong>
           </span>
         </div>
@@ -122,90 +155,148 @@ export function Invoice() {
       description={`${inv.client} · Project deposit`}
       actions={<Action onClick={() => window.print()}>Print invoice</Action>}
     >
-      <div className="scene-invoice">
-        <header>
-          <div className="scene-wordmark">
-            overtrue/ui<span>Acme Studio</span>
+      <div className="scene-page-tabs pn-d-print-none">
+        <Link to="/pay">All invoices</Link>
+        <span aria-current="page">{inv.id}</span>
+        <span className="scene-tabs-context">
+          <Pill>{inv.status}</Pill>
+        </span>
+      </div>
+      <div className="scene-product-grid scene-billing-detail">
+        <div className="scene-invoice">
+          <header>
+            <div className="scene-wordmark">
+              overtrue/ui<span>Acme Studio</span>
+            </div>
+            <div>
+              <h2>Invoice</h2>
+              <Pill>{inv.status}</Pill>
+            </div>
+          </header>
+          <div className="scene-invoice-addresses">
+            <div>
+              <small>FROM</small>
+              <strong>Acme Studio</strong>
+              <p>
+                24 Workshop Lane
+                <br />
+                London, UK
+                <br />
+                billing@acme.example
+              </p>
+            </div>
+            <div>
+              <small>BILL TO</small>
+              <strong>{inv.client}</strong>
+              <p>
+                Client project office
+                <br />
+                accounts@client.example
+              </p>
+            </div>
+            <dl>
+              <dt>Invoice number</dt>
+              <dd>{inv.id}</dd>
+              <dt>Issued</dt>
+              <dd>{inv.issued}</dd>
+              <dt>Payment due</dt>
+              <dd>{inv.due}</dd>
+            </dl>
           </div>
-          <div>
-            <h2>Invoice</h2>
-            <Pill>{inv.status}</Pill>
-          </div>
-        </header>
-        <div className="scene-invoice-addresses">
-          <div>
-            <small>FROM</small>
-            <strong>Acme Studio</strong>
+          <table className="scene-table">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th className="scene-number">Qty</th>
+                <th className="scene-number">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>{inv.description}</strong>
+                  <small>
+                    Discovery & initial direction · 35% project deposit
+                  </small>
+                </td>
+                <td className="scene-number">1</td>
+                <td className="scene-number">
+                  ${inv.amount.toLocaleString()}.00
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="scene-invoice-total">
             <p>
-              24 Workshop Lane
-              <br />
-              London, UK
-              <br />
-              billing@acme.example
+              <span>Subtotal</span>
+              <b>${inv.amount.toLocaleString()}.00</b>
+            </p>
+            <p>
+              <span>Tax (0%)</span>
+              <b>$0.00</b>
+            </p>
+            <p>
+              <span>
+                {inv.status === "Paid"
+                  ? "Total paid"
+                  : inv.status === "Draft"
+                    ? "Estimated total"
+                    : "Total due"}
+              </span>
+              <strong>${inv.amount.toLocaleString()}.00 USD</strong>
             </p>
           </div>
-          <div>
-            <small>BILL TO</small>
-            <strong>{inv.client}</strong>
+          <footer>
+            <strong>Thank you for building with us.</strong>
             <p>
-              Client project office
-              <br />
-              accounts@client.example
+              Please include the invoice number with your payment. This is
+              sample data; no payment is requested.
             </p>
-          </div>
-          <dl>
-            <dt>Invoice number</dt>
-            <dd>{inv.id}</dd>
-            <dt>Issued</dt>
-            <dd>{inv.issued}</dd>
-            <dt>Payment due</dt>
-            <dd>{inv.due}</dd>
-          </dl>
+          </footer>
         </div>
-        <table className="scene-table">
-          <thead>
-            <tr>
-              <th>Description</th>
-              <th className="scene-number">Qty</th>
-              <th className="scene-number">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <strong>{inv.description}</strong>
-                <small>
-                  Discovery & initial direction · 35% project deposit
-                </small>
-              </td>
-              <td className="scene-number">1</td>
-              <td className="scene-number">
-                ${inv.amount.toLocaleString()}.00
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div className="scene-invoice-total">
-          <p>
-            <span>Subtotal</span>
-            <b>${inv.amount.toLocaleString()}.00</b>
-          </p>
-          <p>
-            <span>Tax (0%)</span>
-            <b>$0.00</b>
-          </p>
-          <p>
-            <span>Total due</span>
-            <strong>${inv.amount.toLocaleString()}.00 USD</strong>
-          </p>
-        </div>
-        <footer>
-          <strong>Thank you for building with us.</strong>
-          <p>
-            Please include the invoice number with your payment. This is sample
-            data; no payment is requested.
-          </p>
-        </footer>
+        <aside className="scene-product-aside pn-d-print-none">
+          <SceneCard title="Invoice summary">
+            <DetailList
+              items={[
+                {
+                  id: "status",
+                  label: "Status",
+                  value: <Pill>{inv.status}</Pill>,
+                },
+                {
+                  id: "amount",
+                  label: "Amount",
+                  value: `$${inv.amount.toLocaleString("en-US")}.00`,
+                },
+                { id: "due", label: "Due", value: inv.due },
+                { id: "currency", label: "Currency", value: "USD" },
+              ]}
+            />
+          </SceneCard>
+          <SceneCard title="History">
+            <AuditTrail
+              events={[
+                {
+                  id: "created",
+                  actor: "Alina Petrova",
+                  action: "created this invoice",
+                  time: inv.issued,
+                },
+                ...(inv.status !== "Draft"
+                  ? [
+                      {
+                        id: "issued",
+                        actor: "Alina Petrova",
+                        action: "issued the project deposit invoice",
+                        time: inv.issued,
+                      },
+                    ]
+                  : []),
+              ]}
+            />
+          </SceneCard>
+          <Go to="/pay">Back to invoices</Go>
+        </aside>
       </div>
     </Scene>
   );
@@ -216,8 +307,8 @@ export function Plans({ id = "pricing" }: { id?: string }) {
   return (
     <Scene
       id={id}
-      title="A little structure. More room to grow."
-      description="Choose the space your team needs. Every plan includes the essentials."
+      title="Choose a plan"
+      description="Compare limits and features for your team’s next stage."
       actions={
         <FilterTabs
           items={["Monthly", "Yearly"]}
@@ -226,6 +317,11 @@ export function Plans({ id = "pricing" }: { id?: string }) {
         />
       }
     >
+      <div className="scene-page-tabs">
+        <span aria-current="page">Plans</span>
+        <Link to="/pricing-table">Feature comparison</Link>
+        <Link to="/settings-plan">Current subscription</Link>
+      </div>
       <div className="scene-plan-grid">
         {[
           {
@@ -330,8 +426,8 @@ export function PlanComparison() {
   return (
     <Scene
       id="pricing-table"
-      title="Find the right amount of room"
-      description="Compare the details before choosing a home for your team."
+      title="Compare plans"
+      description="Features, limits, and pricing side by side."
       actions={
         <FilterTabs
           items={["Monthly", "Yearly"]}
@@ -340,8 +436,13 @@ export function PlanComparison() {
         />
       }
     >
+      <div className="scene-page-tabs">
+        <Link to="/pricing">Plans</Link>
+        <span aria-current="page">Feature comparison</span>
+        <Link to="/settings-plan">Current subscription</Link>
+      </div>
       <SceneCard
-        title="Every plan starts with the essentials"
+        title="Included in each plan"
         description="Prices per seat, per month. Annual billing saves 20%."
       >
         <div className="scene-table-wrap">
@@ -399,12 +500,17 @@ export function PlanSettings() {
   return (
     <Scene
       id="settings-plan"
-      title="Your plan & usage"
+      title="Plan & usage"
       description="A clear picture of what your workspace includes, and how you’re using it."
       actions={<Go to="/pricing-table">Compare plans</Go>}
     >
-      <div className="scene-grid-main">
-        <div>
+      <div className="scene-page-tabs">
+        <Link to="/settings">Workspace settings</Link>
+        <span aria-current="page">Plan & usage</span>
+        <Link to="/pay">Invoices</Link>
+      </div>
+      <div className="scene-product-grid">
+        <div className="scene-product-primary">
           <SceneCard title="Studio plan" action={<Pill>Active</Pill>}>
             <div className="scene-plan-current">
               <div>
@@ -457,7 +563,7 @@ export function PlanSettings() {
             </form>
           </SceneCard>
         </div>
-        <aside>
+        <aside className="scene-product-aside">
           <SceneCard title="Workspace usage">
             <ResourceProgress
               className="mb-6"

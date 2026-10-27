@@ -271,15 +271,24 @@ try {
   checks.push(
     "Card iframe updates live with the gallery; full-screen preview retains contrast and an independent scheme.",
   );
-  await page.goto(origin + "/blocks/alerts-basic-1");
-  const alertFrame = page.frameLocator(".card-block-page iframe");
-  await alertFrame.locator(".pn-alert-warning").waitFor();
-  const alertColors = await alertFrame.locator(".overtrue-block").evaluate((block) => ({
-    text: getComputedStyle(block.querySelector(".pn-card")).color,
-    alerts: [...block.querySelectorAll(".pn-alert")].map((alert) => getComputedStyle(alert).color),
-  }));
-  assert.ok(alertColors.alerts.length === 4 && alertColors.alerts.every((color) => color === alertColors.text));
-  checks.push("Installed card previews retain the workspace typography and readable alert text.");
+  const headingType = async (element) => {
+    await document.fonts.ready;
+    const style = getComputedStyle(element);
+    return { family: style.fontFamily.split(",")[0].trim(), size: style.fontSize, weight: style.fontWeight, color: style.color };
+  };
+  // Workspace font choices are local; compare exports with the default face.
+  await page.evaluate(() => {
+    const key = "overtrue-workspace-theme-v3";
+    localStorage.setItem(key, JSON.stringify({ ...JSON.parse(localStorage.getItem(key)), font: "sans" }));
+  });
+  await page.goto(origin + "/workspace/#/alerts");
+  const heading = { name: "Before approving", exact: true };
+  const workspaceType = await page.getByRole("heading", heading).evaluate(headingType);
+  await page.goto(origin + "/blocks/review-queue-before-approving-2");
+  const reviewFrame = page.frameLocator(".card-block-page iframe");
+  const previewType = await reviewFrame.getByRole("heading", heading).evaluate(headingType);
+  assert.deepEqual(previewType, workspaceType);
+  checks.push("Installed card previews retain the workspace heading typography and high-contrast text color.");
   for (const width of [1440, 390, 320]) {
     await page.setViewportSize({ width, height: 1000 });
     for (const dark of [false, true]) {

@@ -1,102 +1,129 @@
 import { useState } from "react";
-import { IconPalette } from "@tabler/icons-react";
 import { WorkspaceColorpicker } from "@/components/overtrue/workspace/plugins";
-import { Scene, SceneCard } from "@/components/overtrue/scenes/shared";
-const colors = [
-  ["Blue", "#4263c7"],
-  ["Azure", "#4299e1"],
-  ["Indigo", "#4263eb"],
-  ["Purple", "#ae3ec9"],
-  ["Pink", "#d6336c"],
-  ["Red", "#d63939"],
-  ["Orange", "#f76707"],
-  ["Yellow", "#f59f00"],
-  ["Lime", "#74b816"],
-  ["Green", "#2fb344"],
-  ["Teal", "#0ca678"],
-  ["Cyan", "#17a2b8"],
-];
+import { SettingsSection } from "@/registry/overtrue/settings-section";
+import {
+  Scene,
+  SceneCard,
+  Action,
+  Person,
+  Go,
+} from "@/components/overtrue/scenes/shared";
+const defaults = {
+  primary: "#4263eb",
+  secondary: "#14836b",
+  surface: "#f5f7fb",
+};
 export default function Page() {
-  const [color, setColor] = useState("#4263c7");
+  const [colors, setColors] = useState(defaults);
+  const [saved, setSaved] = useState(defaults);
+  const [notice, setNotice] = useState("");
   return (
     <Scene
       id="colorpicker"
-      title="Find the right color"
-      description="Explore a palette, fine-tune a value, and see it in the context of a real card."
+      title="Brand palette"
+      description="Set the colors used in the client portal’s project previews."
+      actions={<Go to="/patterns">Project appearance</Go>}
     >
-      <div className="scene-grid-main">
-        <SceneCard
-          title="Workspace palette"
-          description="Click a swatch to open the picker. You can also enter a color value directly."
-        >
-          <div className="showcase-palette">
-            {colors.map(([name, value], i) => (
-              <label key={name}>
-                {name}
-                <WorkspaceColorpicker
-                  id={`colorpicker-${i + 1}`}
-                  aria-label={`${name} color value`}
-                  defaultValue={value}
-                  onInput={(event) => {
-                    const value = event.currentTarget.value;
-                    if (CSS.supports("color", value)) setColor(value);
-                  }}
-                />
-              </label>
-            ))}
-          </div>
-          <p className="showcase-palette-note">
-            HEX, RGB, and HSL values are supported. Changes apply to the live
-            preview in this example.
-          </p>
-        </SceneCard>
-        <SceneCard title="Selected color">
-          <div
-            className="showcase-color-sample"
-            style={{ background: color }}
-          />
-          <div className="showcase-divider">
-            <strong>Current value</strong>
-            <code aria-live="polite">{color}</code>
-          </div>
-          <p>
-            Keep color paired with a label or icon so the meaning is clear to
-            everyone.
-          </p>
-        </SceneCard>
-      </div>
-      <SceneCard
-        title="In context"
-        description="A subtle accent brings hierarchy to the content without taking over."
-      >
-        <div
-          className="showcase-color-context"
-          style={{
-            borderColor: color,
-            background: `color-mix(in srgb, ${color} 8%, var(--scene-surface))`,
-          }}
-        >
-          <span
-            className="showcase-icon"
-            style={{
-              color,
-              background: `color-mix(in srgb, ${color} 12%, var(--scene-surface))`,
+      <div className="scene-product-grid">
+        <SceneCard title="Portal colors">
+          <form
+            className="scene-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSaved(colors);
+              setNotice("Palette saved in this preview.");
             }}
           >
-            <IconPalette />
-          </span>
-          <div>
-            <h3>Identity directions</h3>
-            <p>Three concepts are ready for the next studio review.</p>
-          </div>
-          <span
-            className="showcase-color-dot"
-            style={{ background: color }}
-            aria-hidden="true"
-          />
-          <small>In review</small>
-        </div>
-      </SceneCard>
+            {(
+              [
+                {
+                  key: "primary",
+                  title: "Primary accent",
+                  description: "Project markers and key actions.",
+                },
+                {
+                  key: "secondary",
+                  title: "Secondary accent",
+                  description: "Supporting labels and categories.",
+                },
+                {
+                  key: "surface",
+                  title: "Preview surface",
+                  description: "The background behind artwork previews.",
+                },
+              ] as const
+            ).map(({ key, title, description }, i) => (
+              <SettingsSection
+                key={key}
+                title={title}
+                description={description}
+              >
+                <label className="scene-field">
+                  Color value
+                  <WorkspaceColorpicker
+                    id={`brand-color-${i}`}
+                    aria-label={title}
+                    value={colors[key]}
+                    onInput={(e) => {
+                      const value = e.currentTarget.value;
+                      if (CSS.supports("color", value)) {
+                        setColors((items) => ({ ...items, [key]: value }));
+                        setNotice("");
+                      }
+                    }}
+                    onChange={() => {}}
+                  />
+                </label>
+              </SettingsSection>
+            ))}
+            <div className="scene-actions">
+              <Action type="submit" primary>
+                Save palette
+              </Action>
+              <Action
+                onClick={() => {
+                  setColors(saved);
+                  setNotice("");
+                }}
+              >
+                Discard
+              </Action>
+            </div>
+            <p role="status">{notice}</p>
+          </form>
+        </SceneCard>
+        <aside className="scene-product-aside">
+          <SceneCard title="Portal preview">
+            <div
+              className="scene-brand-preview"
+              style={{
+                background: colors.surface,
+                borderTopColor: colors.primary,
+              }}
+            >
+              <div className="scene-brand-preview-content">
+                <span>ACME STUDIO</span>
+                <h3>Visitor experience</h3>
+                <p>Concept review · Version 03</p>
+              </div>
+              <span
+                className="scene-brand-marker"
+                style={{ background: colors.secondary }}
+                aria-hidden="true"
+              />
+            </div>
+            <div className="scene-record-list">
+              <div>
+                <Person name="Maya Okafor" subtitle="Project owner" />
+              </div>
+            </div>
+            <p>
+              Keep status colors consistent and pair color with a clear text
+              label.
+            </p>
+          </SceneCard>
+        </aside>
+      </div>
     </Scene>
   );
 }

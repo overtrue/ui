@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { catalog } from "../../src/site/catalog.ts";
 
 export async function verifyHomeSections(page, origin, output) {
   await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -7,7 +8,7 @@ export async function verifyHomeSections(page, origin, output) {
   const links = await directory
     .locator("a")
     .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("href")));
-  assert.equal(links.length, 102);
+  assert.equal(links.length, catalog.length);
   assert.equal(new Set(links).size, links.length);
   await directory.locator("summary").click();
 

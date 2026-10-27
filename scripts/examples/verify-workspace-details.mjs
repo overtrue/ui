@@ -29,6 +29,7 @@ try {
       const page = await browser.newPage({ viewport: { width, height: 900 } });
       page.on("pageerror", (error) => errors.push(error.message));
       await page.addInitScript((scheme) => {
+        localStorage.setItem("overtrue-site-theme", scheme);
         localStorage.setItem(
           "overtrue-workspace-theme-v3",
           JSON.stringify({ scheme }),
@@ -37,11 +38,11 @@ try {
       await page.goto(`${origin}/workspace/#/form-layout`);
       await page.locator('[data-workspace-page="form-layout"]').waitFor();
       const company = page.getByRole("textbox", {
-        name: "Client name",
+        name: "Client name *",
         exact: true,
       });
       const email = page.getByRole("textbox", {
-        name: "Contact email",
+        name: "Contact email *",
         exact: true,
       });
       assert.equal(
@@ -53,12 +54,10 @@ try {
         .getByRole("button", { name: "Save client", exact: true })
         .click();
       await page.waitForFunction(
-        () => document.activeElement?.getAttribute("name") === "organization",
+        () => document.activeElement?.getAttribute("name") === "name",
       );
       await page.waitForFunction(() =>
-        document
-          .querySelector('input[name="organization"]')
-          .matches(":user-invalid"),
+        document.querySelector('input[name="name"]').matches(":user-invalid"),
       );
       await page.waitForFunction(hasErrorBorder, await company.elementHandle());
       await page.waitForFunction(hasErrorBorder, await email.elementHandle());
@@ -79,7 +78,7 @@ try {
       );
       await company.fill("QA Studio");
       await page
-        .getByRole("textbox", { name: "Contact name", exact: true })
+        .getByRole("textbox", { name: "Contact name *", exact: true })
         .fill("Alex Example");
       await email.fill("alex@acme.example");
       await page
@@ -87,7 +86,7 @@ try {
         .click();
       await page
         .getByRole("status")
-        .filter({ hasText: "QA Studio saved in this preview" })
+        .filter({ hasText: "Client saved in this workspace session." })
         .waitFor();
       assert.equal(
         await company.evaluate((input) => input.matches(":user-invalid")),
@@ -174,10 +173,21 @@ try {
         await page.goto(`${origin}/workspace/#/${route}`);
         await page.locator(`[data-workspace-page="${route}"]`).waitFor();
         if (route === "email-inbox") {
+          await page.locator(".scene-thread-list > button").first().click();
           await page
             .getByRole("button", { name: "Archive", exact: true })
             .click();
         }
+        if (
+          route === "email-inbox" &&
+          width < 768 &&
+          (await page
+            .getByRole("button", { name: "Back to conversations", exact: true })
+            .isVisible())
+        )
+          await page
+            .getByRole("button", { name: "Back to conversations", exact: true })
+            .click();
         const search = page.getByRole("searchbox");
         await search.fill("no-matching-record");
         await page
@@ -219,7 +229,7 @@ try {
         }
         if (route === "email-inbox") {
           assert.equal(
-            await page.locator(".scene-inbox > aside > button").count(),
+            await page.locator(".scene-thread-list > button").count(),
             3,
             "clearing a search preserves archived conversations",
           );
@@ -240,6 +250,13 @@ try {
             `${route} leaves room for data beside the pinned mobile column`,
           );
           if (route === "tasks-list") {
+            const widths = await table
+              .locator("thead th")
+              .evaluateAll((cells) =>
+                cells.map((cell) => cell.getBoundingClientRect().width),
+              );
+            assert.ok(widths[0] <= 60, "selection column stays compact");
+            assert.ok(widths[1] >= 240, "task names retain a readable column");
             const status = page.getByRole("combobox", {
               name: "Status of WK-182",
               exact: true,
@@ -256,30 +273,24 @@ try {
                 );
                 return hit === element;
               }),
-              "the pinned task name does not cover the status control",
+              "the pinned selection column does not cover the status control",
             );
           }
         }
       }
       await page.goto(
-        `${origin}/card-preview.html?id=client-form-02-primary-contact-2&theme=${scheme}`,
+        `${origin}/card-preview.html?id=wizard-wizard-1-1&theme=${scheme}`,
       );
-      const cardEmail = page.getByRole("textbox", {
-        name: "Contact email",
-        exact: true,
-      });
-      await cardEmail.pressSequentially("invalid");
-      await cardEmail.press("Tab");
+      const cardName = page.getByLabel("Project name", { exact: true });
+      await page.getByRole("button", { name: "Continue", exact: true }).click();
       await page.waitForFunction(
         hasErrorBorder,
-        await cardEmail.elementHandle(),
+        await cardName.elementHandle(),
       );
       assert.notEqual(
-        await cardEmail.evaluate(
-          (element) => getComputedStyle(element).boxShadow,
-        ),
+        await cardName.evaluate((el) => getComputedStyle(el).boxShadow),
         "none",
-        "installed cards retain the shared error ring with full-color theme tokens",
+        "installed forms retain the shared invalid ring",
       );
       checked++;
       await page.close();

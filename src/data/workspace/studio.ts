@@ -287,7 +287,7 @@ export const invoices = projects.map((project, i) => ({
   description: project.name,
   amount: Math.round(project.budget * 0.35),
   issued: `Sep ${8 + i * 2}, 2026`,
-  due: `Oct ${8 + i * 2}, 2026`,
+  due: i === 3 ? "Sep 18, 2026" : `Oct ${8 + i * 2}, 2026`,
   status: ["Paid", "Pending", "Paid", "Overdue", "Paid", "Draft"][i],
 }));
 export const documents = [

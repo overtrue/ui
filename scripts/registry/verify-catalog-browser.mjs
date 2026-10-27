@@ -334,33 +334,33 @@ try {
   );
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 1000 });
-    await page.goto(
-      origin + "/blocks?q=Form%20elements%202#card-collection-title",
+    const tall = cards.find(
+      (card) => card.id === "article-a-predictable-folder-structure-1",
     );
-    const cardLink = page.getByRole("link", {
-      name: "Select and multi-select inputs Forms & settings",
-      exact: true,
-    });
+    await page.goto(
+      origin +
+        "/blocks?q=" +
+        encodeURIComponent(tall.title) +
+        "#card-collection-title",
+    );
+    const cardLink = page.locator('a[href="/blocks/' + tall.id + '"]');
     await cardLink.scrollIntoViewIfNeeded();
     await cardLink
       .locator("iframe")
       .contentFrame()
       .locator(".overtrue-block")
       .waitFor();
-    await page.waitForFunction(() => {
-      const preview = document.querySelector(
-        ".card-library-link .fit-preview-content",
-      );
-      return preview && preview.offsetHeight > 1000;
-    });
+    await page.waitForFunction(
+      () =>
+        document.querySelector(".card-library-link .fit-preview-content")
+          ?.offsetHeight > 1000,
+    );
     const scale = await cardLink
       .locator(".fit-preview-content")
-      .evaluate(
-        (element) => new DOMMatrix(getComputedStyle(element).transform).a,
-      );
+      .evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).a);
     assert.ok(
       scale > (width === 1440 ? 0.8 : 0.4),
-      `Long card content is illegible at ${width}px`,
+      "long previews retain legible type",
     );
     assert.equal(
       await cardLink.locator("[inert][aria-hidden=true]").count(),
@@ -368,19 +368,15 @@ try {
     );
     await cardLink.focus();
     await page.keyboard.press("Enter");
-    await page.waitForURL(origin + "/blocks/form-elements-form-elements-2-2");
+    await page.waitForURL(origin + "/blocks/" + tall.id);
     await page
-      .getByRole("heading", {
-        name: "Select and multi-select inputs",
-        exact: true,
-      })
+      .getByRole("heading", { name: tall.title, exact: true })
       .waitFor();
     const preview = page.locator(".card-live-preview iframe").contentFrame();
-    await preview.getByText("Select multiple", { exact: true }).waitFor();
-    const select = preview.locator("select").first();
-    await select.selectOption("2");
-    assert.equal(await select.inputValue(), "2");
-
+    await preview.locator(".overtrue-block").waitFor();
+    assert.ok(
+      (await preview.locator(".overtrue-block").innerText()).includes("folder"),
+    );
     await page.goto(origin + "/blocks?q=AvatarStack#card-collection-title");
     await page
       .getByRole("link", {
@@ -388,51 +384,56 @@ try {
         exact: true,
       })
       .waitFor();
-    await page.goto(
-      origin + "/blocks?q=Social%20referrals#card-collection-title",
+    const compact = cards.find(
+      (card) => card.id === "privacy-preferences-cookie-choices-1",
     );
-    const chartLink = page.getByRole("link", {
-      name: "Social referrals Charts & metrics",
-      exact: true,
-    });
-    await chartLink.scrollIntoViewIfNeeded();
-    await chartLink
+    await page.goto(
+      origin +
+        "/blocks?q=" +
+        encodeURIComponent(compact.title) +
+        "#card-collection-title",
+    );
+    const compactLink = page.locator('a[href="/blocks/' + compact.id + '"]');
+    await compactLink.scrollIntoViewIfNeeded();
+    await compactLink
       .locator("iframe")
       .contentFrame()
       .locator(".overtrue-block")
+      .first()
       .waitFor();
     await page.waitForFunction(() => {
-      const viewport = document.querySelector(".card-library-link .fit-preview");
-      const content = viewport?.querySelector(".fit-preview-content");
+      const view = document.querySelector(".card-library-link .fit-preview");
       return (
-        viewport &&
-        content &&
-        content.offsetHeight > 0 &&
-        viewport.getBoundingClientRect().height <= 321
+        view?.querySelector(".fit-preview-content")?.offsetHeight > 0 &&
+        view.getBoundingClientRect().height <= 321
       );
     });
-    const chartLayout = await chartLink.locator(".fit-preview").evaluate(
-      (viewport) => {
-        const content = viewport.querySelector(".fit-preview-content");
+    const layout = await compactLink
+      .locator(".fit-preview")
+      .evaluate((view) => {
+        const content = view.querySelector(".fit-preview-content");
         return {
           scale: new DOMMatrix(getComputedStyle(content).transform).a,
-          overflow: content.scrollWidth - viewport.clientWidth,
+          overflow: content.scrollWidth - view.clientWidth,
         };
-      },
-    );
-    assert.equal(chartLayout.scale, 1, "Card thumbnails should keep readable type");
-    assert.ok(chartLayout.overflow <= 1, "Card thumbnails should reflow to their frame");
-    await page.goto(origin + "/blocks?q=Facebook#card-collection-title");
-    const socialCard = page.getByRole("link", {
-      name: "Facebook shares Charts & metrics",
+      });
+    assert.equal(layout.scale, 1, "card thumbnails keep readable type");
+    assert.ok(layout.overflow <= 1, "card thumbnails reflow");
+    await compactLink.click({ position: { x: 40, y: 40 } });
+    await page.waitForURL(origin + "/blocks/" + compact.id);
+    const privacy = page.locator(".card-live-preview iframe").contentFrame();
+    const toggle = privacy.getByRole("checkbox", {
+      name: "Allow analytics",
       exact: true,
     });
-    await socialCard.scrollIntoViewIfNeeded();
-    await socialCard.click({ position: { x: 40, y: 40 } });
-    await page.waitForURL(origin + "/blocks/social-icons-social-icons-2-2");
+    await toggle.check();
+    assert.ok(
+      await toggle.isChecked(),
+      "live exported card remains interactive",
+    );
   }
   console.log(
-    "Verified descriptive card names, legacy searches, readable thumbnails, and mouse/keyboard access to live previews",
+    "Verified long and compact previews, legacy searches, readable type, keyboard/mouse navigation, and exported privacy controls",
   );
   for (const item of catalog.filter((item) => item.category === "Blocks")) {
     await page.goto(origin + `/components/${item.name}`);
@@ -700,9 +701,10 @@ try {
   }
   for (const width of [1440, 768, 390, 320]) {
     await page.setViewportSize({ width, height: 1000 });
-    await page.goto(origin + "/blocks/roles-room-to-do-your-best-work-1");
-    const frame = page.locator(".card-live-preview iframe").contentFrame();
-    const card = frame.locator('[data-slot="media-card"]');
+    await page.goto(origin + "/components/media-card");
+    const card = page
+      .locator('.detail-preview [data-slot="media-card"]')
+      .last();
     await card.waitFor();
     const fits = await card.evaluate(async (element) => {
       await element.ownerDocument.fonts.ready;

@@ -53,7 +53,11 @@ export function WorkspaceCalendar(props: PluginProps) {
     end: new Date(2026, 9, 1),
   });
   const editEvent = (item: { id: string; title: string; start: Date }) =>
-    setDraft({ id: item.id, title: item.title, date: `${item.start.getFullYear()}-${String(item.start.getMonth() + 1).padStart(2, "0")}-${String(item.start.getDate()).padStart(2, "0")}` });
+    setDraft({
+      id: item.id,
+      title: item.title,
+      date: `${item.start.getFullYear()}-${String(item.start.getMonth() + 1).padStart(2, "0")}-${String(item.start.getDate()).padStart(2, "0")}`,
+    });
   return (
     <div {...props}>
       {draft && (
@@ -120,7 +124,12 @@ export function WorkspaceCalendar(props: PluginProps) {
         initialDate="2026-09-21"
         initialView="dayGridMonth"
         eventDisplay="block"
-        datesSet={(info) => setVisibleRange({ start: info.view.currentStart, end: info.view.currentEnd })}
+        datesSet={(info) =>
+          setVisibleRange({
+            start: info.view.currentStart,
+            end: info.view.currentEnd,
+          })
+        }
         eventDidMount={(info) => {
           info.el.title = info.event.title;
           info.el.setAttribute("aria-label", info.event.title);
@@ -156,15 +165,32 @@ export function WorkspaceCalendar(props: PluginProps) {
           )
         }
       />
-      <section className="workspace-calendar-agenda" aria-label="Events this month">
+      <section
+        className="workspace-calendar-agenda"
+        aria-label="Events this month"
+      >
         <h3>Events this month</h3>
-        {data.filter(item => item.start >= visibleRange.start && item.start < visibleRange.end)
+        {data
+          .filter(
+            (item) =>
+              item.start >= visibleRange.start && item.start < visibleRange.end,
+          )
           .sort((a, b) => a.start.getTime() - b.start.getTime())
-          .map(item => <button key={item.id} type="button" onClick={() => editEvent(item)}>
-            <time dateTime={item.start.toISOString()}>{item.start.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</time>
-            <span>{item.title}</span>
-          </button>)}
-        {!data.some(item => item.start >= visibleRange.start && item.start < visibleRange.end) && <p>No events planned this month.</p>}
+          .map((item) => (
+            <button key={item.id} type="button" onClick={() => editEvent(item)}>
+              <time dateTime={item.start.toISOString()}>
+                {item.start.toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                })}
+              </time>
+              <span>{item.title}</span>
+            </button>
+          ))}
+        {!data.some(
+          (item) =>
+            item.start >= visibleRange.start && item.start < visibleRange.end,
+        ) && <p>No events planned this month.</p>}
       </section>
     </div>
   );
@@ -458,7 +484,9 @@ export function WorkspaceColorpicker({
         closeLabel: "Done",
         alpha: config.alpha ?? true,
         format: (config.format || "hex") as "hex",
-        themeMode: document.documentElement.classList.contains("dark") ? "dark" : "light",
+        themeMode: document.documentElement.classList.contains("dark")
+          ? "dark"
+          : "light",
         swatches: [
           "blue",
           "azure",
@@ -559,12 +587,18 @@ export function WorkspaceDropzone({ id, className, children }: PluginProps) {
 export function WorkspaceEditor({
   id,
   defaultValue = "Hello, <b>overtrue/ui</b>!",
+  onChange,
 }: {
   id?: string;
   defaultValue?: string;
+  onChange?: (html: string) => void;
 }) {
   const input = React.useRef<HTMLTextAreaElement>(null);
   const content = React.useRef(defaultValue);
+  const change = React.useRef(onChange);
+  React.useEffect(() => {
+    change.current = onChange;
+  }, [onChange]);
   const { theme, resolvedScheme } = useThemeState();
   React.useEffect(() => {
     let disposed = false;
@@ -591,11 +625,14 @@ export function WorkspaceEditor({
           "undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat",
         skin: dark ? "oxide-dark" : "oxide",
         content_css: dark ? "dark" : "default",
-        content_style:
-          `body { background: hsl(${surface}); color: hsl(${foreground}); font-family: ${fontFamily}; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }`,
+        content_style: `body { background: hsl(${surface}); color: hsl(${foreground}); font-family: ${fontFamily}; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }`,
         setup: (instance) => {
           editor = instance;
           instance.on("init", () => instance.setContent(content.current));
+          instance.on("input change undo redo", () => {
+            content.current = instance.getContent();
+            change.current?.(content.current);
+          });
         },
       });
       if (disposed) instances.forEach((instance) => instance.remove());
@@ -613,6 +650,10 @@ export function WorkspaceEditor({
       ref={input}
       id={id}
       defaultValue={defaultValue}
+      onChange={(event) => {
+        content.current = event.target.value;
+        change.current?.(content.current);
+      }}
       aria-label="Description"
     />
   );
