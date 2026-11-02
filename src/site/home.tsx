@@ -6,7 +6,7 @@ import {
   IconCheck,
   IconCode,
   IconLayoutGrid,
-  IconSparkles,
+  IconInfoCircle,
 } from "@tabler/icons-react";
 import { catalog, catalogPath, componentCount, type ItemName } from "./catalog";
 import { Example } from "./examples";
@@ -215,7 +215,7 @@ export function Home() {
               aria-label="Show component details"
               onClick={() => setShowDetails((value) => !value)}
             >
-              <IconSparkles size={15} />
+              <IconInfoCircle size={15} />
               Details
             </button>
           </div>

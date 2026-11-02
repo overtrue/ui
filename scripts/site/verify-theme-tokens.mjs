@@ -46,19 +46,25 @@ for (const neutral of Object.keys(NEUTRALS))
         palettes++;
       }
 for (const neutral of Object.keys(NEUTRALS))
-  for (const mode of ["light", "dark"]) {
-    const vars = themeVariables(
-      { ...DEFAULT_STUDIO, neutral, accent: "#ffff00", contrast: "high" },
-      mode,
-    );
-    for (const [name, color] of Object.entries(vars).filter(([name]) =>
-      name.startsWith("--chart-"),
-    )) {
-      for (const surface of ["--background", "--card", "--muted"])
-        assert.ok(contrast(color, vars[surface]) >= 3, `${name} on ${surface}`);
-    }
-    assert.equal(vars["--primary"], vars["--chart-1"]);
-  }
+  for (const mode of ["light", "dark"])
+    for (const preference of ["standard", "high"])
+      for (const accent of ["#2a5bff", "#e8a317", "#ffff00"])
+        for (const harmonize of [false, true]) {
+          const vars = themeVariables(
+            { ...DEFAULT_STUDIO, neutral, accent, contrast: preference, harmonize },
+            mode,
+          );
+          for (const [name, color] of Object.entries(vars).filter(([name]) =>
+            name.startsWith("--chart-"),
+          )) {
+            for (const surface of ["--background", "--card", "--muted"])
+              assert.ok(
+                contrast(color, vars[surface]) >= 3,
+                `${neutral}/${mode}/${preference}/${accent}: ${name} on ${surface}`,
+              );
+          }
+          assert.equal(vars["--primary"], vars["--chart-1"]);
+        }
 const auto = exportCss(DEFAULT_STUDIO);
 assert.ok(auto.includes("@media (prefers-contrast: more)"));
 assert.ok(

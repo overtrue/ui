@@ -18,7 +18,7 @@ import {
   IconRefresh as Refresh,
   IconSearch as Search,
   IconSelector as Selector,
-  IconSparkles as Sparkles,
+  IconMessage2 as Message,
   IconThumbDown as ThumbDown,
   IconThumbDownFilled as ThumbDownFilled,
   IconThumbUp as ThumbUp,
@@ -1648,7 +1648,7 @@ function AssistantAnswer({
 
       {streaming && !message.content && !running && (
         <div className={cn("flex items-center gap-2", compact ? "text-xs" : "text-[13px]")}>
-          <Sparkles aria-hidden="true" className="size-3.5 text-primary motion-safe:animate-pulse" />
+          <Loader aria-hidden="true" className="size-3.5 text-muted-foreground motion-safe:animate-spin" />
           <span className={shimmer}>{labels.thinking}</span>
         </div>
       )}
@@ -2099,7 +2099,7 @@ export function AssistantPanel({
       aria-label={labels.send}
       title={labels.send}
       className={cn(
-        "inline-flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_1px_2px_rgb(0_0_0/0.14)] dark:shadow-[0_4px_14px_-4px_color-mix(in_oklab,var(--color-primary)_70%,transparent)] transition-[background-color,color,opacity,scale,box-shadow] duration-150 hover:opacity-90 active:scale-95 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none motion-reduce:transition-none",
+        "inline-flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xs transition-[background-color,color,opacity,scale,box-shadow] duration-150 hover:opacity-90 active:scale-95 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none motion-reduce:transition-none",
         focusRing,
       )}
     >
@@ -2123,16 +2123,6 @@ export function AssistantPanel({
       <style href="overtrue-assistant-panel" precedence="default">
         {styles}
       </style>
-      {/* Soft light from above; it brightens while the assistant works. */}
-      <span
-        aria-hidden="true"
-        data-slot="assistant-light"
-        className={cn(
-          "pointer-events-none absolute inset-x-0 top-0 -z-10 h-44 bg-[radial-gradient(120%_70%_at_50%_-10%,color-mix(in_oklab,var(--color-primary)_10%,transparent),transparent_65%)] transition-opacity duration-700 motion-reduce:transition-none",
-          busy ? "opacity-100" : "opacity-70",
-        )}
-      />
-
       <div
         data-slot="assistant-header"
         className={cn(
@@ -2143,11 +2133,11 @@ export function AssistantPanel({
         <span
           aria-hidden="true"
           className={cn(
-            "flex shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-card text-primary shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-primary)_6%,transparent)] dark:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-primary)_6%,transparent),0_2px_10px_-2px_color-mix(in_oklab,var(--color-primary)_35%,transparent)]",
+            "flex shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground",
             compact ? "size-6" : "size-7",
           )}
         >
-          <Sparkles className={cn(compact ? "size-3.5" : "size-4", busy && "motion-safe:animate-pulse")} stroke={1.75} />
+          <Message className={compact ? "size-3.5" : "size-4"} stroke={1.75} />
         </span>
         <div className="flex min-w-0 flex-1 items-baseline gap-2">
           <h2
@@ -2221,9 +2211,9 @@ export function AssistantPanel({
                   >
                     <span
                       aria-hidden="true"
-                      className="flex size-11 items-center justify-center rounded-2xl border border-primary/20 bg-card text-primary shadow-[0_0_0_5px_color-mix(in_oklab,var(--color-primary)_5%,transparent),0_1px_2px_rgb(0_0_0/0.06)] dark:shadow-[0_0_0_5px_color-mix(in_oklab,var(--color-primary)_5%,transparent),0_8px_24px_-8px_color-mix(in_oklab,var(--color-primary)_45%,transparent)]"
+                      className="flex size-11 items-center justify-center rounded-2xl bg-muted text-muted-foreground"
                     >
-                      <Sparkles className="size-5" stroke={1.6} />
+                      <Message className="size-5" stroke={1.6} />
                     </span>
                     <p className="mt-3.5 text-[15px] font-semibold tracking-tight text-foreground">
                       {labels.emptyTitle}
@@ -2257,7 +2247,7 @@ export function AssistantPanel({
                                 )}
                               >
                                 <span aria-hidden="true" className="shrink-0 text-muted-foreground transition-colors duration-150 group-hover/suggestion:text-primary [&_svg]:size-4">
-                                  {item.icon ?? <Sparkles className="size-4" stroke={1.75} />}
+                                  {item.icon ?? <Message className="size-4" stroke={1.75} />}
                                 </span>
                                 <span className="min-w-0 flex-1">{item.label}</span>
                                 <ArrowUp

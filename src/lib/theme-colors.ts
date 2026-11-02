@@ -332,10 +332,10 @@ export function semanticPalette(
 // The default palette, described relative to Ultramarine's hue.
 const SERIES = [
   { offset: 0, light: [0.55, 0.24], dark: [0.72, 0.16] },
-  { offset: -104, light: [0.6, 0.13], dark: [0.77, 0.14] },
-  { offset: -189, light: [0.73, 0.16], dark: [0.84, 0.16] },
-  { offset: 31, light: [0.6, 0.22], dark: [0.73, 0.15] },
-  { offset: 86, light: [0.63, 0.2], dark: [0.74, 0.16] },
+  { offset: -104, light: [0.6, 0.095], dark: [0.77, 0.11] },
+  { offset: -189, light: [0.7, 0.115], dark: [0.81, 0.115] },
+  { offset: 31, light: [0.59, 0.12], dark: [0.74, 0.105] },
+  { offset: 86, light: [0.61, 0.115], dark: [0.75, 0.11] },
 ];
 const CLASSIC = {
   light: ["#2a5bff", "#0f9f6e", "#e19a0b", "#8b5cf6", "#e5487d"],
@@ -368,8 +368,6 @@ export function chartColors(
             }),
       );
   return colors.map((color) =>
-    high
-      ? ensureContrast(color, [n.bg, n.subtle, n.card, n.muted], 3.05)
-      : color,
+    ensureContrast(color, [n.bg, n.subtle, n.card, n.muted], 3.05),
   );
 }

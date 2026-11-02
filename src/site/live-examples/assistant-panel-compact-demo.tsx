@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { IconSparkles, IconX } from "@tabler/icons-react";
+import { IconMessage2, IconX } from "@tabler/icons-react";
 import {
   AssistantPanel,
   type AssistantFeedback,
@@ -112,7 +112,7 @@ export default function Demo() {
           }}
           className="inline-flex h-10 items-center gap-2 rounded-full border border-border/70 bg-card pr-4 pl-3 text-sm font-medium shadow-[0_8px_24px_-12px_rgb(0_0_0/0.25)] transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/30"
         >
-          <IconSparkles className="size-4 text-primary" aria-hidden="true" stroke={1.75} />
+          <IconMessage2 className="size-4 text-primary" aria-hidden="true" stroke={1.75} />
           Ask Copilot
         </button>
       </div>

@@ -39,6 +39,7 @@ Numbers are always tabular. Units and currency symbols are quieter than the digi
 ## Data marks
 
 - **Lines** are 2px with round caps and joins. In dark mode they glow: `filter: drop-shadow(0 0 6px color-mix(in oklab, <series color> 50%, transparent))`.
+- **Palette** keeps the primary series in the brand accent and uses calmer companion colors. Every series maintains at least 3:1 contrast against page, card and inset surfaces in both standard and high-contrast modes.
 - **Areas** use a vertical gradient from about 32% opacity at the line to 0% at the baseline.
 - **Bars** have 4px rounded ends and a gentle gradient from the full color to 72%. Hovering one dims the others to 40%.
 - **Points** are small solid dots with a halo ring at 18% opacity. Live endpoints pulse once per update.
@@ -58,4 +59,5 @@ Numbers are always tabular. Units and currency symbols are quieter than the digi
 - Every chart has a hover readout and the same readout from the keyboard.
 - Selected and focused items get `ring-2 ring-primary/30`; in dark mode they may add a faint primary glow.
 - Header actions are 28px ghost icon buttons with accessible names.
+- Assistant panels use conversation icons and neutral inset surfaces; progress is shown by the working label and spinner, without decorative halos.
 - Root and key parts expose `data-slot` and state attributes so applications can restyle them.

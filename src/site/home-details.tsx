@@ -6,7 +6,7 @@ import {
   IconLayoutGrid,
   IconChartLine,
   IconActivity,
-  IconSparkles,
+  IconCpu,
   IconReceipt2,
   IconTopologyStar3,
 } from "@tabler/icons-react";
@@ -30,7 +30,7 @@ const featured = [
     name: "model-usage",
     title: "AI gateway",
     label: "AI usage",
-    icon: IconSparkles,
+    icon: IconCpu,
     description: "Know what every model costs you.",
     detail:
       "Requests, tokens, and spend by model, gateway latency, and a written summary. Select a model to isolate it.",
