@@ -248,7 +248,7 @@ const KINDS: Record<string, KindStyle> = {
   alert: {
     Icon: IconAlertTriangle,
     tile: "bg-amber-500/12 text-amber-700 ring-amber-500/20 dark:bg-amber-400/12 dark:text-amber-400 dark:ring-amber-400/20",
-    badge: "bg-amber-500 text-white dark:bg-amber-400 dark:text-black",
+    badge: "bg-amber-500 text-amber-950 dark:bg-amber-400",
   },
   system: { Icon: IconBell, tone: "var(--color-muted-foreground)" },
 };
@@ -790,7 +790,7 @@ function Panel({
           <span
             aria-hidden="true"
             data-slot="notification-center-dot"
-            className="absolute start-2 top-[22px] size-2 rounded-full bg-primary shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-primary)_16%,transparent)] dark:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-primary)_16%,transparent),0_0_8px_color-mix(in_oklab,var(--color-primary)_55%,transparent)]"
+            className="absolute start-2 top-[23px] size-1.5 rounded-full bg-primary"
           />
         )}
         <Avatar notification={item} />

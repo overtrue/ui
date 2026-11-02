@@ -131,12 +131,19 @@ function ApprovalRow({
         <span
           role="status"
           className={cn(
-            "text-xs font-medium",
+            "inline-flex items-center gap-1.5 text-xs font-medium",
             request.status === "approved"
-              ? "text-primary"
-              : "text-muted-foreground",
+              ? "text-emerald-700 dark:text-emerald-400"
+              : request.status === "changes-requested"
+                ? "text-amber-700 dark:text-amber-300"
+                : "text-muted-foreground",
           )}
         >
+          {request.status === "approved" ? (
+            <IconCheck size={14} aria-hidden="true" />
+          ) : request.status === "changes-requested" ? (
+            <IconArrowBackUp size={14} aria-hidden="true" />
+          ) : null}
           {request.status === "approved"
             ? "Approved"
             : request.status === "changes-requested"

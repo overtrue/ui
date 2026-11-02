@@ -60,9 +60,9 @@ const bandShade: Record<BulletChartQuality, string> = {
 type Status = "met" | "behind" | "at-risk";
 
 const statusFill: Record<Status, string> = {
-  met: "bg-emerald-600 dark:bg-emerald-500",
-  behind: "bg-amber-500 dark:bg-amber-400",
-  "at-risk": "bg-red-600 dark:bg-red-500",
+  met: "bg-emerald-700 dark:bg-emerald-500",
+  behind: "bg-amber-700 dark:bg-amber-400",
+  "at-risk": "bg-red-600 dark:bg-red-400",
 };
 
 function niceCeil(value: number) {
@@ -363,7 +363,9 @@ export function BulletChart({
                       className={
                         row.status === "met"
                           ? "text-emerald-400 dark:text-emerald-700"
-                          : "text-red-400 dark:text-red-700"
+                          : row.status === "behind"
+                            ? "text-amber-300 dark:text-amber-800"
+                            : "text-red-400 dark:text-red-700"
                       }
                     >
                       {row.gapShort}

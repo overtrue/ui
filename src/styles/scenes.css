@@ -309,18 +309,23 @@
   font-size: 13px;
 }
 .scene-attention-banner {
+  --scene-attention-ink: color-mix(
+    in srgb,
+    hsl(var(--warning)) 70%,
+    var(--scene-ink)
+  );
   display: flex;
   gap: 14px;
   align-items: flex-start;
   padding: 20px;
   border: 1px solid
-    color-mix(in srgb, hsl(var(--warning)) 40%, var(--scene-line));
+    color-mix(in srgb, hsl(var(--warning)) 28%, var(--scene-line));
   border-radius: calc(var(--radius) * 1.5);
-  background: var(--scene-surface);
+  background: color-mix(in srgb, hsl(var(--warning)) 4%, var(--scene-surface));
 }
 .scene-attention-banner > svg {
   flex-shrink: 0;
-  color: var(--scene-muted);
+  color: var(--scene-attention-ink);
 }
 .scene-attention-banner > div {
   min-width: 0;
@@ -337,7 +342,7 @@
 }
 .scene-attention-banner a {
   font-size: 12px;
-  color: var(--scene-accent);
+  color: var(--scene-attention-ink);
 }
 .scene-label-list {
   display: flex;
@@ -1183,9 +1188,9 @@
   height: 48px;
   display: grid;
   place-items: center;
-  background: #eef0e8;
+  background: hsl(var(--muted));
   border-radius: calc(var(--radius, 0.5rem) * 0.875);
-  color: #657452;
+  color: var(--scene-muted);
   font-size: 15px;
   font-weight: 550;
 }

@@ -1282,7 +1282,7 @@ export function KanbanBoard<T extends KanbanCard = KanbanCard>({
                 <div data-slot="kanban-column-header" className="flex h-11 shrink-0 items-center gap-2 pr-2 pl-3.5">
                   <span
                     aria-hidden="true"
-                    className="size-2 shrink-0 rounded-full bg-[var(--kanban-accent)] shadow-[0_0_0_3px_color-mix(in_oklab,var(--kanban-accent)_18%,transparent)]"
+                    className="size-2 shrink-0 rounded-full bg-[var(--kanban-accent)]"
                   />
                   <h3 id={titleId} className="min-w-0 truncate text-sm font-semibold tracking-tight text-foreground">
                     {column.title}
@@ -1293,12 +1293,12 @@ export function KanbanBoard<T extends KanbanCard = KanbanCard>({
                     className={cn(
                       "inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-card px-1.5 text-[11px] font-medium text-muted-foreground tabular-nums ring-1 ring-border/60 ring-inset",
                       over &&
-                        "bg-amber-500/10 text-amber-700 ring-amber-600/25 dark:bg-amber-400/10 dark:text-amber-400 dark:ring-amber-400/25",
+                        "bg-amber-500/10 text-amber-800 ring-amber-600/25 dark:bg-amber-400/10 dark:text-amber-400 dark:ring-amber-400/25",
                     )}
                   >
                     {visibleCount}
                     {column.limit !== undefined && (
-                      <span className={cn("ml-px", over ? "opacity-70" : "text-muted-foreground/65")}>/{column.limit}</span>
+                      <span className="ml-px">/{column.limit}</span>
                     )}
                   </span>
                   <span className="flex-1" />
