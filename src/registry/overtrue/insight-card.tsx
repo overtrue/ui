@@ -7,9 +7,9 @@ import {
   IconArrowUpRight as ArrowUpRight,
   IconCheck as Check,
   IconCopy as Copy,
+  IconFileAnalytics as FileAnalytics,
   IconPlayerStopFilled as Stop,
   IconRefresh as Refresh,
-  IconSparkles as Sparkles,
   IconThumbDown as ThumbDown,
   IconThumbDownFilled as ThumbDownFilled,
   IconThumbUp as ThumbUp,
@@ -70,9 +70,9 @@ export interface InsightCardLabels {
 }
 
 export interface InsightCardColors {
-  /** Caret, sparkle and the moving border. */
+  /** Caret, summary icon and the optional moving border. */
   accent?: string;
-  /** Second stop of the moving border. */
+  /** Enables the working border and glow with this second color. */
   glow?: string;
   positive?: string;
   negative?: string;
@@ -85,7 +85,7 @@ export interface InsightCardProps extends Omit<
   title?: React.ReactNode;
   /** Model, dataset or time range, shown at the top right. */
   source?: React.ReactNode;
-  /** Replaces the sparkle. */
+  /** Replaces the summary icon. */
   icon?: React.ReactNode;
   /** The insight, with optional `{{kind:arg|arg}}` tokens. Append to it while streaming. */
   text?: string;
@@ -592,7 +592,9 @@ export function InsightCard({
   const paragraphs: { nodes: React.ReactNode[]; prose: boolean }[] = [
     { nodes: [], prose: false },
   ];
+  let attachedCitation = -1;
   segments.forEach((segment, index) => {
+    if (index === attachedCitation) return;
     if (typeof segment !== "string") {
       paragraphs[paragraphs.length - 1].nodes.push(
         <React.Fragment key={index}>
@@ -601,7 +603,14 @@ export function InsightCard({
       );
       return;
     }
-    segment.split(/\n{2,}/).forEach((chunk, part) => {
+    // Keep a citation with its last word, including in narrow previews.
+    const next = segments[index + 1];
+    const lastWord =
+      typeof next === "object" && next.kind === "cite" && !/[\r\n]$/.test(segment)
+        ? segment.match(/(\S+[^\S\r\n]*)$/)
+        : null;
+    const content = lastWord ? segment.slice(0, lastWord.index) : segment;
+    content.split(/\n{2,}/).forEach((chunk, part) => {
       if (part > 0) paragraphs.push({ nodes: [], prose: false });
       chunk.split("\n").forEach((line, row) => {
         const target = paragraphs[paragraphs.length - 1];
@@ -616,6 +625,17 @@ export function InsightCard({
           );
       });
     });
+    if (lastWord) {
+      const target = paragraphs[paragraphs.length - 1];
+      target.prose = true;
+      target.nodes.push(
+        <span key={`${index}-citation`} className="inline-block max-w-full">
+          {lastWord[0]}
+          {renderSegment(next, index + 1)}
+        </span>,
+      );
+      attachedCitation = index + 1;
+    }
   });
 
   const busy = status === "thinking" || status === "streaming";
@@ -650,46 +670,40 @@ export function InsightCard({
         {styles}
       </style>
 
-      {/* Moving border and soft glow while the model works. */}
-      <span
-        aria-hidden="true"
-        data-slot="insight-glow"
-        className={cn(
-          "pointer-events-none absolute -inset-px -z-10 rounded-[inherit] blur-md transition-opacity duration-700 motion-safe:animate-[insight-spin_3.2s_linear_infinite] motion-reduce:transition-none",
-          busy ? "opacity-35 dark:opacity-45" : "opacity-0",
-        )}
-        style={{ background: ring }}
-      />
-      {/* The surface sits above the glow so only its spill outside the card shows. */}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-5 rounded-[inherit] bg-card"
-      />
-      <span
-        aria-hidden="true"
-        className={cn(
-          "pointer-events-none absolute -inset-px rounded-[inherit] transition-opacity duration-700 motion-safe:animate-[insight-spin_3.2s_linear_infinite] motion-reduce:transition-none",
-          busy ? "opacity-100" : "opacity-0",
-        )}
-        style={{ ...ringMask, background: ring }}
-      />
-      {/* A faint wash behind the header keeps the card recognisable as generated. */}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-24 rounded-t-[inherit] bg-[radial-gradient(120%_100%_at_0%_0%,color-mix(in_oklab,var(--insight-accent)_9%,transparent),transparent_60%)]"
-      />
+      {colors?.glow && (
+        <>
+          <span
+            aria-hidden="true"
+            data-slot="insight-glow"
+            className={cn(
+              "pointer-events-none absolute -inset-px -z-10 rounded-[inherit] blur-md transition-opacity duration-700 motion-safe:animate-[insight-spin_3.2s_linear_infinite] motion-reduce:transition-none",
+              busy ? "opacity-35 dark:opacity-45" : "opacity-0",
+            )}
+            style={{ background: ring }}
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 -z-5 rounded-[inherit] bg-card"
+          />
+          <span
+            aria-hidden="true"
+            className={cn(
+              "pointer-events-none absolute -inset-px rounded-[inherit] transition-opacity duration-700 motion-safe:animate-[insight-spin_3.2s_linear_infinite] motion-reduce:transition-none",
+              busy ? "opacity-100" : "opacity-0",
+            )}
+            style={{ ...ringMask, background: ring }}
+          />
+        </>
+      )}
 
       <div className="relative flex flex-wrap items-center gap-x-3 gap-y-2 px-4 pt-3.5 @sm/insight:px-5 @sm/insight:pt-4">
         <div className="flex min-w-0 flex-1 basis-full items-center gap-2.5 @lg/insight:basis-44">
           <span
             aria-hidden="true"
-            className="relative flex size-7 shrink-0 items-center justify-center rounded-lg border border-(--insight-accent)/20 bg-[linear-gradient(135deg,color-mix(in_oklab,var(--insight-accent)_16%,var(--color-card)),color-mix(in_oklab,var(--insight-glow)_14%,var(--color-card)))] text-(--insight-accent)"
+            className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-(--insight-accent)"
           >
             {icon ?? (
-              <Sparkles
-                className={cn("size-4", busy && "motion-safe:animate-pulse")}
-                stroke={1.75}
-              />
+              <FileAnalytics className="size-4" stroke={1.75} />
             )}
           </span>
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
@@ -778,7 +792,7 @@ export function InsightCard({
                   focusRing,
                 )}
               >
-                <Sparkles className="size-3.5" aria-hidden="true" />
+                <FileAnalytics className="size-3.5" aria-hidden="true" />
                 {labels.generate}
               </button>
             )}

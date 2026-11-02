@@ -1,0 +1,2 @@
+# Preserve third-party skill files, including their upstream whitespace.
+.agents/skills/stageshow/** linguist-vendored -whitespace

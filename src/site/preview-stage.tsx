@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   IconArrowsMaximize,
@@ -33,6 +33,7 @@ export function PreviewStage({ item }: { item: CatalogItem }) {
     item.category === "Blocks" ? "desktop" : "tablet",
   );
   const [dark, setDark] = useState(false);
+  const widthGroup = useId();
   const frame = useRef<HTMLIFrameElement>(null);
   const src = `${catalogPath(item)}?${STAGE_PARAM}=1`;
   const width = sizes.find((entry) => entry.id === size)?.width ?? 0;
@@ -66,17 +67,21 @@ export function PreviewStage({ item }: { item: CatalogItem }) {
               aria-label="Preview width"
             >
               {sizes.map(({ id, label, width, Icon }) => (
-                <button
+                <label
                   key={id}
-                  type="button"
-                  role="radio"
-                  aria-checked={size === id}
                   title={width ? `${label}, ${width}px` : label}
-                  onClick={() => setSize(id)}
                 >
+                  <input
+                    type="radio"
+                    className="sr-only"
+                    name={widthGroup}
+                    value={id}
+                    checked={size === id}
+                    onChange={() => setSize(id)}
+                  />
                   <Icon size={15} aria-hidden="true" />
                   <span>{label}</span>
-                </button>
+                </label>
               ))}
             </div>
             <div className="stage-actions">
@@ -127,8 +132,21 @@ export function PreviewStage({ item }: { item: CatalogItem }) {
 export function StageFrame({ name }: { name: ItemName }) {
   useEffect(() => {
     document.documentElement.dataset.stage = "";
+    // Let menus in the preview consume Escape before passing it to the dialog.
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      window.frameElement?.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "Escape",
+          bubbles: true,
+          cancelable: true,
+        }),
+      );
+    };
+    window.addEventListener("keydown", onKeyDown);
     return () => {
       delete document.documentElement.dataset.stage;
+      window.removeEventListener("keydown", onKeyDown);
     };
   }, []);
   return (

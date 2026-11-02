@@ -42,6 +42,7 @@ export default function Demo() {
 
   return (
     <InsightCard
+      className="mx-auto max-w-3xl"
       title="Weekly summary"
       source={
         <>

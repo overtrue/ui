@@ -266,10 +266,39 @@ try {
   await stage.getByRole("button", { name: "Preview in light theme" }).click();
   assert.equal(await staged.locator("html.dark").count(), 0);
   assert.equal(await page.locator("html.dark").count(), 1);
+  const phone = stage.getByRole("radio", { name: "Phone", exact: true });
+  await selectRadio(stage, "Phone");
+  await phone.press("ArrowRight");
+  assert.ok(
+    await stage.getByRole("radio", { name: "Tablet", exact: true }).isChecked(),
+    "Preview width responds to the right arrow",
+  );
+  await page.keyboard.press("ArrowLeft");
+  assert.ok(await phone.isChecked(), "Preview width responds to the left arrow");
+  await staged.getByTitle("Collapse all", { exact: true }).focus();
   await page.keyboard.press("Escape");
+  await stage.waitFor({ state: "hidden" });
+  assert.ok(
+    await page.getByRole("button", { name: "Full screen", exact: true }).evaluate(
+      (button) => button === document.activeElement,
+    ),
+    "Escape from the preview restores focus to its trigger",
+  );
+  await page.goto(origin + "/components/multi-select");
+  await page.getByRole("button", { name: "Full screen", exact: true }).click();
+  const multi = page.frameLocator(".stage iframe");
+  const reviewers = multi.getByRole("combobox", { name: "Reviewers", exact: true });
+  await reviewers.focus();
+  await reviewers.press("Escape");
+  await multi.getByRole("listbox", { name: "People", exact: true }).waitFor({
+    state: "hidden",
+  });
+  assert.ok(await stage.isVisible(), "Escape closes a preview menu first");
+  await reviewers.press("Escape");
+  await stage.waitFor({ state: "hidden" });
   console.log("Completed theme check", checks.length + 1);
   checks.push(
-    "Card iframe updates live with the gallery; full-screen preview retains contrast and an independent scheme.",
+    "Card iframe updates live; full-screen preview retains contrast and an independent scheme, supports arrow keys, and closes nested menus before restoring trigger focus on Escape.",
   );
   const headingType = async (element) => {
     await document.fonts.ready;

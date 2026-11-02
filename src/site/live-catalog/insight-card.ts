@@ -9,7 +9,7 @@ export default {
   usage:
     '<InsightCard\n  title="Weekly summary"\n  source="Oct 6–12"\n  text="Revenue grew {{metric:Revenue|+12.8%}} on annual upgrades {{cite:1}}, and churn fell {{metric:Churn|-0.4 pts|positive}}."\n  sources={[{ id: "billing", label: "Billing · revenue by plan" }]}\n  onRegenerate={() => console.log("regenerate")}\n  onFeedback={(value) => console.log("feedback", value)}\n/>',
   notes:
-    "Pass a growing `text` with `streaming`, or hand an `AsyncIterable<string>` to `stream` and the card reads it itself, moving through thinking, streaming, done and error; pass a new iterable to regenerate. New text is revealed at `speed` characters per second (catching up if the source runs ahead), while text present on mount appears at once. Inline tokens use `{{kind:arg|arg|arg}}`: `{{metric:Revenue|+12.8%}}` becomes a delta chip toned by its sign, a third argument (`positive`, `negative`, `neutral`) overrides it for metrics where down is good, and `{{cite:1}}` links to the first entry in `sources`. Unknown kinds render their label; return JSX from `renderToken` to draw any token yourself, or replace the grammar with `parse`. Screen readers hear the finished text once through a polite live region, never each token. The moving border, shimmer and caret stop under prefers-reduced-motion and text appears without the typing reveal. Style parts through `data-slot` (`insight-token`, `insight-sources`, `insight-caret`) and recolor with `colors` or the `--insight-accent`, `--insight-positive` and `--insight-negative` variables.",
+    "Pass a growing `text` with `streaming`, or hand an `AsyncIterable<string>` to `stream` and the card reads it itself, moving through thinking, streaming, done and error; pass a new iterable to regenerate. New text is revealed at `speed` characters per second (catching up if the source runs ahead), while text present on mount appears at once. Inline tokens use `{{kind:arg|arg|arg}}`: `{{metric:Revenue|+12.8%}}` becomes a delta chip toned by its sign, a third argument (`positive`, `negative`, `neutral`) overrides it for metrics where down is good, and `{{cite:1}}` links to the first entry in `sources`. Unknown kinds render their label; return JSX from `renderToken` to draw any token yourself, or replace the grammar with `parse`. Screen readers hear the finished text once through a polite live region, never each token. Status and the caret show progress on a quiet surface; set `colors.glow` to add a moving border. The border, shimmer and caret stop under prefers-reduced-motion and text appears without the typing reveal. Style parts through `data-slot` (`insight-token`, `insight-sources`, `insight-caret`) and recolor with `colors` or the `--insight-accent`, `--insight-positive` and `--insight-negative` variables.",
   previewWidth: 720,
   examples: [
     {
@@ -30,9 +30,9 @@ export default {
     ["streaming?", "boolean", 'Shorthand for status="streaming" while you append to text.'],
     ["stream?", "AsyncIterable<string>", "Read internally, driving thinking, streaming, done and error. Pass a new iterable to regenerate."],
     ["status?", '"idle" | "thinking" | "streaming" | "done" | "error"', "Override the status derived from text, streaming and stream."],
-    ["title?", "React.ReactNode", 'Heading next to the sparkle. Defaults to "Insight".'],
+    ["title?", "React.ReactNode", 'Heading next to the summary icon. Defaults to "Insight".'],
     ["source?", "React.ReactNode", "Model, dataset or time range at the top right."],
-    ["icon?", "React.ReactNode", "Replaces the sparkle."],
+    ["icon?", "React.ReactNode", "Replaces the summary icon."],
     ["error?", "React.ReactNode", "Detail shown under the error message."],
     ["sources?", "{ id: string; label: string; href?: string }[]", "Numbered citation chips shown when the text is done. {{cite:n}} refers to them by number or id."],
     ["onRegenerate?", "() => void", "Shows Regenerate, Generate when idle, and Try again on error."],
@@ -46,7 +46,7 @@ export default {
     ["speed?", "number", "Characters per second for revealing new text. 0 shows it at once. Defaults to 90."],
     ["onStreamEnd?", "() => void", "Called once streamed text has finished revealing."],
     ["actions?", "React.ReactNode", "Extra buttons after Copy."],
-    ["colors?", "{ accent?, glow?, positive?, negative? }", "Any CSS colors for the caret and moving border, and for rising and falling chips."],
+    ["colors?", "{ accent?, glow?, positive?, negative? }", "Any CSS colors for the caret, summary icon and metric chips. Set glow to enable a moving working border with a second color."],
     ["labels?", "Partial<InsightCardLabels>", "Replace any visible or accessible text for translation."],
     ["...props", 'React.ComponentProps<"div">', "Forwarded to the root element, including ref."],
     ["parseInsight", "(text: string) => InsightSegment[]", "The default parser, for reuse in your own renderers."],

@@ -245,6 +245,7 @@ export function prepareCardRegistry(origin) {
     if (node.type !== "atrule" || !["import", "custom-variant", "theme"].includes(node.name))
       node.remove();
   }
+  previewTheme.append('@source not "../../../.agents";');
   previewTheme.walkDecls((declaration) => {
     declaration.value = declaration.value.replace(/hsl\(var\((--[^)]+)\)\)/g, "var($1)");
   });

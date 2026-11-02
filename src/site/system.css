@@ -2167,7 +2167,7 @@ kbd {
   border-radius: calc(var(--radius) * 1.25);
   background: var(--site-subtle);
 }
-.stage-sizes button {
+.stage-sizes label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -2177,18 +2177,19 @@ kbd {
   color: var(--site-graphite);
   font-size: 13px;
   font-weight: 520;
+  cursor: pointer;
 }
-.stage-sizes button:hover {
+.stage-sizes label:hover {
   color: var(--site-ink);
 }
-.stage-sizes button[aria-checked="true"] {
+.stage-sizes label:has(input:checked) {
   background: var(--card);
   color: var(--site-ink);
   box-shadow:
     0 0 0 1px var(--border),
     var(--shadow-raise);
 }
-.stage-sizes button:focus-visible {
+.stage-sizes label:has(input:focus-visible) {
   outline: 2px solid var(--ring);
   outline-offset: 1px;
 }
