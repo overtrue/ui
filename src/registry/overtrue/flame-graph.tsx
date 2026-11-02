@@ -90,8 +90,8 @@ export interface FlameGraphProps extends Omit<
   colorBy?: FlameGraphColorBy;
   /**
    * Group palette, hashed by group. With `colorBy="self"`, the stops of the heat
-   * scale from cold to hot. Defaults to chart-1 … chart-5, and to a neutral, amber
-   * and destructive ramp.
+   * scale from cold to hot. Defaults to accent-to-neutral group tones, and to a
+   * neutral, amber and destructive heat ramp.
    */
   colors?: string[];
   /** Controlled zoom: the id of the frame drawn at full width, or null for the root. */
@@ -160,11 +160,11 @@ const labelFits = (frame: { name: string }, px: number) =>
 const FALLBACK_WIDTH = 640;
 
 const defaultPalette = [
-  "var(--color-chart-1)",
-  "var(--color-chart-2)",
-  "var(--color-chart-3)",
-  "var(--color-chart-4)",
-  "var(--color-chart-5)",
+  "var(--color-primary)",
+  "color-mix(in oklab, var(--color-primary) 80%, var(--color-muted-foreground))",
+  "color-mix(in oklab, var(--color-primary) 60%, var(--color-muted-foreground))",
+  "color-mix(in oklab, var(--color-primary) 40%, var(--color-muted-foreground))",
+  "var(--color-muted-foreground)",
 ];
 
 const AMBER = "var(--color-amber-400, oklch(82.8% 0.189 84.429))";
@@ -326,9 +326,10 @@ function percent(share: number) {
   return `${+pct.toFixed(1)}%`;
 }
 
-/** Light or dark ink picked from the fill's own lightness. */
+/** Pick black or white from relative luminance (XYZ Y), with D65's white point. */
 function inkFor(fill: string) {
-  return `oklch(from ${fill} clamp(0.21, (0.66 - l) * 1000, 0.985) min(c, 0.035) h)`;
+  const light = "clamp(0, (0.179 - y) * 100000000, 1)";
+  return `color(from ${fill} xyz-d65 calc(${light} * 0.95047) ${light} calc(${light} * 1.08883))`;
 }
 
 function mix(a: string, b: string, t: number) {
@@ -457,8 +458,7 @@ const FlameFrame = React.memo(function FlameFrame({
       : ancestor
         ? `color-mix(in oklab, ${baseFill} 48%, var(--color-card))`
         : baseFill;
-  const ink =
-    dimmed && !active ? "var(--color-muted-foreground)" : inkFor(fill);
+  const ink = inkFor(fill);
   return (
     <button
       type="button"
@@ -497,9 +497,6 @@ const FlameFrame = React.memo(function FlameFrame({
         data-slot="flame-graph-frame-fill"
         className={cn(
           "absolute inset-0 rounded-[inherit] transition-[background-color,box-shadow] duration-150 motion-reduce:transition-none",
-          // A soft top light gives each frame a little depth without changing its hue.
-          !dimmed &&
-            "bg-[linear-gradient(to_bottom,rgb(255_255_255/0.18),rgb(255_255_255/0)_75%)] dark:bg-[linear-gradient(to_bottom,rgb(255_255_255/0.12),rgb(255_255_255/0)_75%)]",
           match &&
             "shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--frame-fill)_55%,var(--color-foreground))] dark:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.4),0_0_14px_-3px_var(--frame-fill)]",
           "group-data-[active]/frame:shadow-[inset_0_0_0_1.5px_color-mix(in_oklab,var(--color-foreground)_82%,transparent),0_0_18px_-4px_var(--frame-fill)]",
@@ -756,7 +753,7 @@ function FlameGraph({
       } else {
         const palette = custom ?? defaultPalette;
         const base = palette[hash(frame.group) % palette.length];
-        // Group picks the hue; the function picks one of three tints within it.
+        // Group picks the tone; the function picks one of three tints within it.
         const tint = hash(frame.name) % 3;
         fill = `color-mix(in oklab, ${base} var(--flame-tint-${tint}), var(--color-card))`;
       }
