@@ -89,6 +89,22 @@ writeFileSync(
   ) + "\n",
 );
 mkdirSync("public", { recursive: true });
+mkdirSync("public/r", { recursive: true });
+// The index keeps file descriptors; installable items include their source text.
+writeFileSync("public/r/registry.json", readFileSync("registry.json"));
+for (const item of items) {
+  const output = {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    ...item,
+    ...(item.files && {
+      files: item.files.map((file) => ({
+        ...file,
+        content: readFileSync(file.path, "utf8"),
+      })),
+    }),
+  };
+  writeFileSync(`public/r/${item.name}.json`, JSON.stringify(output, null, 2) + "\n");
+}
 writeFileSync(
   "public/llms.txt",
   `# overtrue/ui\n\nEditable admin components for React, TypeScript, Tailwind CSS v4, and shadcn/ui.\n\n- Documentation: ${origin}/docs\n- Design principles: ${origin}/docs/design\n- Building a page: ${origin}/docs/composition\n- Extending components: ${origin}/docs/extending\n- Accessibility: ${origin}/docs/accessibility\n- Troubleshooting: ${origin}/docs/troubleshooting\n- Registry index: ${origin}/r/registry.json\n- Components: ${origin}/components\n- Workspace examples: ${origin}/examples\n\nInstall by URL: npx shadcn@latest add ${origin}/r/stat-card.json\n\nFor the @overtrue namespace, configure components.json registries with "@overtrue": "${origin}/r/{name}.json". The namespace is not in the official public directory.\n\n${items.map((item) => `- ${item.name}: ${origin}/r/${item.name}.json — ${item.description}`).join("\n")}\n`,

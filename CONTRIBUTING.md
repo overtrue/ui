@@ -27,6 +27,8 @@ Use semantic theme colors and Tabler Icons. Check keyboard interaction, visible 
 
 Do not edit generated card sources or registry JSON. Change their original source and run `pnpm registry:build`. The public registry builder includes local dependencies automatically; declare external packages and shadcn dependencies when needed.
 
+Registry JSON is generated directly by the project scripts. The shadcn CLI is used by consumers to install items, but is not a build dependency.
+
 ## Before submitting
 
 ```sh
