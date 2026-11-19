@@ -165,19 +165,21 @@ The website, workspace, and isolated card preview are separate Vite entries. Wor
 
 ## Deploy
 
-The `overtrue/ui` GitHub repository is connected to the `overtrue-ui` Vercel project. Pushes to `main` deploy to [ui.overtrue.xyz](https://ui.overtrue.xyz); pull requests get preview deployments.
+Production is a static Vite build on Cloudflare Pages. The project is `overtrue-ui` (`https://overtrue-ui.pages.dev`). Point `ui.overtrue.xyz` at that hostname with a CNAME. Pull requests get preview deployments once the GitHub integration is connected.
 
-For your own deployment, import the repository into Vercel as a Vite project. The checked-in `vercel.json` uses `npm run build`, publishes `dist/`, and configures website routes and registry headers.
+`pnpm build` writes `dist/`, including one HTML entry per public route, `404.html`, and the registry under `dist/r/`. The same command refreshes `public/_redirects` and `public/_headers` from `vercel.json`: legacy 301s, directory rewrites, and the registry CORS headers. Pages reads those two files. `vercel.json` remains the route list the checks compare against.
 
-Set this build environment variable for a stable public registry origin:
+Set this build variable on the production environment only:
 
 ```text
 REGISTRY_ORIGIN=https://ui.overtrue.xyz
 ```
 
-Without it, registry generation uses `https://$VERCEL_URL` on Vercel or `http://localhost:5173` locally. Visible install commands use the website's current origin. For another domain, also update canonical metadata in `vite.config.ts` and `index.html`.
+Preview deployments should leave it unset. Generation then uses `CF_PAGES_URL`, so install URLs point at that preview. A Vercel build still uses `https://$VERCEL_URL`. Locally the fallback is `http://localhost:5173`. Visible install commands in the browser use the website's current origin. For another domain, also update canonical metadata in `vite.config.ts` and `index.html`.
 
-The output is static and can be hosted elsewhere. Preserve the generated page paths, `/workspace/`, `/card-preview.html`, and `/r/`; registry JSON needs to remain publicly accessible. Verify the deployed pages and installation URLs after publishing. Local checks do not establish deployment or DNS status.
+The Pages build image needs Node.js 22.18 or newer. This repository pins pnpm 10.32.1 with the `packageManager` field. Set `NODE_VERSION` on both Production and Preview when the build image default is older.
+
+Preserve `/workspace/`, `/card-preview.html`, and `/r/`. Registry JSON has to stay public. Pages redirects a directory path such as `/components/stat-card` to `/components/stat-card/`. The site routes match both forms. Verify the deployed pages and installation URLs after publishing. Local checks do not establish deployment or DNS status.
 
 ## Demo boundaries
 

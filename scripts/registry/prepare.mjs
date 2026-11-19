@@ -5,10 +5,19 @@ import { prepareCardRegistry } from "../blocks/registry.mjs";
 
 const origin = (
   process.env.REGISTRY_ORIGIN ||
-  (process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:5173")
+  process.env.CF_PAGES_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
+  "http://localhost:5173"
 ).replace(/\/$/, "");
+if (
+  process.env.CF_PAGES === "1" &&
+  process.env.CF_PAGES_BRANCH === "main" &&
+  !process.env.REGISTRY_ORIGIN
+) {
+  console.warn(
+    "REGISTRY_ORIGIN is unset on the production branch. Registry URLs will use the pages.dev deployment URL.",
+  );
+}
 // Follow local imports so every install contains its complete composition.
 function sourceFiles(name, found = new Set()) {
   if (found.has(name)) return found;

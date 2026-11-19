@@ -55,7 +55,7 @@ The `CI checks` job passes only when every build and browser job passes. Each br
 
 Browser tooling is pinned in the lockfile. Run `pnpm exec playwright-cli install-browser chrome --with-deps` before your first browser check. Dependabot opens weekly updates for dependencies and pinned GitHub Actions.
 
-Vercel handles deployment through its GitHub integration. CI does not need deployment tokens; a successful Vercel deployment does not replace the `CI checks` result.
+Cloudflare Pages deploys the static build. CI does not need deployment tokens; a successful Pages deployment does not replace the `CI checks` result.
 
 ## Pull requests
 

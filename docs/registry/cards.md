@@ -34,7 +34,7 @@ A card can use an existing React Router context. Outside one, its frame provides
 
 `/blocks` supports category filtering, text search, and pagination. Each `/blocks/:id` route includes the interactive card, a source tab, installation command, and links back to the examples. Previews load in a separate HTML entry to keep workspace styling out of the website. Only the current page of cards is mounted, and iframe loading is deferred.
 
-Every detail route gets its own initial HTML metadata and sitemap entry. Vercel routes are generated alongside the other website pages.
+Every detail route gets its own initial HTML metadata and sitemap entry. The same build writes the other website pages.
 
 ## Verification
 

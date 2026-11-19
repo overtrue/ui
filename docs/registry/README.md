@@ -36,11 +36,11 @@ Each component installs under `components/overtrue/`. Core UI dependencies are d
 - `/llms.txt`: discovery links and installation guidance.
 - `/sitemap.xml`, `/robots.txt`, `/social.png`: discovery and link-sharing assets.
 
-The public website routes are declared in `src/site/pages.ts`. The build writes an HTML entry with its own title, description, canonical URL, and sharing metadata for each route; the page body is still rendered by React. Vercel rewrites and the local preview middleware serve those entries directly. A `404.html` entry provides recovery for unknown production routes. The website remains independent of the workspace entry.
+The public website routes are declared in `src/site/pages.ts`. The build writes an HTML entry with its own title, description, canonical URL, and sharing metadata for each route; the page body is still rendered by React. Deployment rewrites and the local preview middleware serve those entries directly. A `404.html` entry provides recovery for unknown production routes. The website remains independent of the workspace entry.
 
 Run `node scripts/site/verify.mjs` against the built preview to check static metadata, deployment destinations, handbook navigation, featured blocks, keyboard behavior, themes, narrow layouts, and internal link targets. See [Website refinement](website-refinement.md) for the latest evidence.
 
-Light and dark mode are separate from the workspace gallery's theme settings. Registry URLs in visible installation commands use the current origin. Registry metadata uses `REGISTRY_ORIGIN`, `VERCEL_URL`, or a localhost fallback, in that order.
+Light and dark mode are separate from the workspace gallery's theme settings. Registry URLs in visible installation commands use the current origin. Registry metadata uses `REGISTRY_ORIGIN`, then `CF_PAGES_URL`, then `VERCEL_URL`, then a localhost fallback.
 
 ## Behavior and limits
 
