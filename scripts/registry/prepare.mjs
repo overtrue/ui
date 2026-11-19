@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { catalog, catalogPath } from "../../src/site/catalog.ts";
 import { DEFAULT_STUDIO, themeVariables } from "../../src/site/theme-tokens.ts";
 import { prepareCardRegistry } from "../blocks/registry.mjs";
+import { publishHostedAssets } from "./publish-assets.mjs";
 
 const origin = (
   process.env.REGISTRY_ORIGIN ||
@@ -9,6 +10,12 @@ const origin = (
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
   "http://localhost:5173"
 ).replace(/\/$/, "");
+const registryFileContent = (filePath) => {
+  const content = readFileSync(filePath, "utf8");
+  return filePath.startsWith("src/blocks/registry/")
+    ? publishHostedAssets(content, origin)
+    : content;
+};
 if (
   process.env.CF_PAGES === "1" &&
   process.env.CF_PAGES_BRANCH === "main" &&
@@ -108,7 +115,7 @@ for (const item of items) {
     ...(item.files && {
       files: item.files.map((file) => ({
         ...file,
-        content: readFileSync(file.path, "utf8"),
+        content: registryFileContent(file.path),
       })),
     }),
   };

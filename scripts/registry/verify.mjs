@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { DEFAULT_STUDIO, themeVariables } from "../../src/site/theme-tokens.ts";
 import { catalog, catalogPath } from "../../src/site/catalog.ts";
+import { publishHostedAssets } from "./publish-assets.mjs";
 const index = JSON.parse(readFileSync("public/r/registry.json", "utf8"));
 const cards = JSON.parse(readFileSync("src/blocks/catalog.json", "utf8"));
 for (const directory of ["src/blocks/generated", "src/blocks/registry"]) {
@@ -71,9 +72,22 @@ for (const entry of index.items) {
     ...(isCard ? foundation.dependencies : []),
   ];
   for (const file of item.files ?? []) {
+    const source = readFileSync(file.path, "utf8");
+    const expected = file.path.startsWith("src/blocks/registry/")
+      ? publishHostedAssets(source, index.homepage.replace(/\/$/, ""))
+      : source;
+    if (
+      file.path.startsWith("src/blocks/registry/") &&
+      /\.tsx?$/.test(file.path)
+    ) {
+      assert.ok(
+        !/[`'"]https?:\/\/[^`'"]+\/assets\//.test(source),
+        `${file.path}: card preview sources must keep relative /assets/ URLs`,
+      );
+    }
     assert.equal(
       file.content,
-      readFileSync(file.path, "utf8"),
+      expected,
       `${file.path}: stale generated source`,
     );
     assert.ok(file.target.startsWith("components/overtrue/"));
