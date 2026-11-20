@@ -94,7 +94,6 @@ export function prepareCardRegistry(origin) {
           );
         },
       )
-      .replaceAll("/assets/", origin + "/assets/")
       .replaceAll(
         "overtrue-workspace workspace-portal",
         "overtrue-workspace overtrue-block workspace-portal",
